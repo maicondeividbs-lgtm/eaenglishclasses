@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Início — EA English Classes</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  /* Homepage specific */
+  .hero {
+    padding: 140px 0 100px;
+    position: relative;
+    overflow: hidden;
+    background: var(--off-white);
+  }
+  .hero-blob-1 { top: -100px; right: -100px; width: 500px; height: 500px; background: var(--orange); opacity: 0.12; }
+  .hero-blob-2 { bottom: -200px; left: -150px; width: 600px; height: 600px; background: var(--blue); opacity: 0.08; }
+  .hero-blob-3 { top: 40%; right: 30%; width: 300px; height: 300px; background: var(--mango); opacity: 0.1; }
+  
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 18px;
+    background: var(--navy);
+    color: var(--white);
+    border-radius: var(--r-full);
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow-md);
+  }
+  .hero-badge-dot {
+    width: 8px; height: 8px;
+    background: var(--orange);
+    border-radius: 50%;
+    animation: pulse-slow 2s ease-in-out infinite;
+  }
+  
+  .hero h1 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    line-height: 1.05;
+    margin-bottom: 24px;
+    color: var(--navy);
+  }
+  .hero h1 .highlight {
+    position: relative;
+    display: inline-block;
+    color: var(--orange);
+    font-style: italic;
+    font-weight: 900;
+  }
+  .hero h1 .highlight::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background: var(--mango);
+    opacity: 0.4;
+    z-index: -1;
+    border-radius: 4px;
+  }
+  
+  .hero-desc {
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--g500);
+    margin-bottom: 36px;
+    max-width: 520px;
+  }
+  
+  .hero-actions {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 48px;
+  }
+  
+  .hero-stats {
+    display: flex;
+    gap: 40px;
+    padding-top: 32px;
+    border-top: 2px dashed var(--g200);
+  }
+  .hero-stat h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 40px;
+    color: var(--orange);
+    font-weight: 900;
+    line-height: 1;
+  }
+  .hero-stat p {
+    font-size: 13px;
+    color: var(--g500);
+    font-weight: 500;
+    margin-top: 4px;
+  }
+  
+  /* Hero visual - video card */
+  .hero-visual {
+    position: relative;
+  }
+  .hero-video-card {
+    background: var(--white);
+    border-radius: var(--r-xl);
+    padding: 20px;
+    box-shadow: var(--shadow-xl);
+    position: relative;
+    z-index: 2;
+    transform: rotate(-2deg);
+    transition: transform 0.4s ease;
+  }
+  .hero-video-card:hover {
+    transform: rotate(0deg) scale(1.02);
+  }
+  .hero-video-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding: 0 8px;
+  }
+  .hero-video-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .hero-video-dot {
+    width: 10px; height: 10px;
+    background: var(--orange);
+    border-radius: 50%;
+    animation: pulse-slow 1.5s ease-in-out infinite;
+    box-shadow: 0 0 0 6px rgba(243,107,46,0.2);
+  }
+  .hero-video-live {
+    padding: 5px 12px;
+    background: var(--orange-soft);
+    color: var(--orange);
+    border-radius: var(--r-full);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .hero-video-player {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border-radius: var(--r-md);
+    overflow: hidden;
+    background: var(--navy);
+  }
+  .hero-video-player video {
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+  
+  /* Floating badges around hero */
+  .hero-float-card {
+    position: absolute;
+    background: var(--white);
+    padding: 14px 18px;
+    border-radius: var(--r-md);
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 3;
+  }
+  .hero-float-1 {
+    top: 10px;
+    right: -30px;
+    animation: float 4s ease-in-out infinite;
+  }
+  .hero-float-2 {
+    bottom: 30px;
+    left: -40px;
+    animation: float 4s ease-in-out infinite 2s;
+  }
+  .hero-float-icon {
+    width: 36px; height: 36px;
+    border-radius: var(--r-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .hero-float-text {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .hero-float-text small {
+    display: block;
+    font-weight: 500;
+    color: var(--g500);
+    font-size: 11px;
+    margin-top: 2px;
+  }
+  
+  /* Features / Methodology */
+  .features {
+    padding: 100px 0;
+    background: var(--white);
+    position: relative;
+    overflow: hidden;
+  }
+  .features-header {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+  .features-header .section-subtitle {
+    margin: 0 auto;
+  }
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  .feature-card {
+    padding: 36px 28px;
+    border-radius: var(--r-lg);
+    transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+    position: relative;
+    overflow: hidden;
+    border: 2px solid transparent;
+  }
+  .feature-card.orange { background: var(--orange-soft); }
+  .feature-card.mango { background: var(--mango-soft); }
+  .feature-card.ocean { background: var(--ocean); }
+  .feature-card.blue { background: var(--blue-soft); }
+  
+  .feature-card:hover {
+    transform: translateY(-8px) rotate(-1deg);
+    box-shadow: var(--shadow-xl);
+  }
+  .feature-icon {
+    width: 56px; height: 56px;
+    border-radius: var(--r-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .feature-card.orange .feature-icon { background: var(--orange); }
+  .feature-card.mango .feature-icon { background: var(--mango); }
+  .feature-card.ocean .feature-icon { background: var(--navy); }
+  .feature-card.blue .feature-icon { background: var(--blue); }
+  
+  .feature-card h3 {
+    font-size: 22px;
+    color: var(--navy);
+    margin-bottom: 10px;
+  }
+  .feature-card p {
+    font-size: 14px;
+    color: var(--g700);
+    line-height: 1.6;
+  }
+  
+  /* About / Why us */
+  .about {
+    padding: 100px 0;
+    background: var(--navy);
+    color: var(--white);
+    position: relative;
+    overflow: hidden;
+  }
+  .about::before {
+    content: '';
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(243,107,46,0.15), transparent 60%);
+    border-radius: 50%;
+  }
+  .about::after {
+    content: '';
+    position: absolute;
+    bottom: -150px;
+    left: -150px;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(196,231,229,0.1), transparent 60%);
+    border-radius: 50%;
+  }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+  .about h2 {
+    color: var(--white);
+    margin-bottom: 24px;
+  }
+  .about h2 em {
+    color: var(--mango);
+    font-style: italic;
+    font-weight: 900;
+  }
+  .about-desc {
+    font-size: 17px;
+    line-height: 1.8;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 36px;
+  }
+  .about-checks {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .about-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+    background: rgba(255,255,255,0.06);
+    border-radius: var(--r-md);
+    border: 1px solid rgba(255,255,255,0.08);
+    transition: all 0.3s;
+  }
+  .about-check:hover {
+    background: rgba(255,255,255,0.1);
+    transform: translateY(-2px);
+  }
+  .about-check-icon {
+    width: 32px; height: 32px;
+    min-width: 32px;
+    border-radius: 50%;
+    background: var(--orange);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .about-check h4 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+  .about-check p {
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.5;
+  }
+  
+  .about-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .about-stat {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--r-lg);
+    padding: 32px 24px;
+    text-align: center;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .about-stat:hover {
+    background: rgba(255,255,255,0.12);
+    transform: translateY(-6px) rotate(-1deg);
+  }
+  .about-stat:nth-child(1) { transform: rotate(-1deg); }
+  .about-stat:nth-child(2) { transform: rotate(1deg); }
+  .about-stat:nth-child(3) { transform: rotate(1deg); }
+  .about-stat:nth-child(4) { transform: rotate(-1deg); }
+  
+  .about-stat h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 48px;
+    color: var(--mango);
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .about-stat p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.8);
+    font-weight: 500;
+  }
+  
+  /* Team */
+  .team {
+    padding: 100px 0;
+    background: var(--off-white);
+    position: relative;
+  }
+  .team-header { text-align: center; margin-bottom: 64px; }
+  .team-header .section-subtitle { margin: 0 auto; }
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .team-card {
+    text-align: center;
+    padding: 32px 24px;
+    border-radius: var(--r-lg);
+    background: var(--white);
+    transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+    border: 2px solid var(--g100);
+    position: relative;
+    overflow: hidden;
+  }
+  .team-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, var(--orange), var(--mango));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+  .team-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
+    border-color: transparent;
+  }
+  .team-card:hover::before { transform: scaleX(1); }
+  
+  .team-avatar {
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    overflow: hidden;
+    border: 4px solid var(--ocean);
+    transition: all 0.4s ease;
+    position: relative;
+  }
+  .team-card:hover .team-avatar {
+    border-color: var(--mango);
+    transform: scale(1.05);
+  }
+  .team-avatar img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+  .team-card:hover .team-avatar img {
+    transform: scale(1.1);
+  }
+  .team-card h3 {
+    font-size: 22px;
+    color: var(--navy);
+    margin-bottom: 4px;
+  }
+  .team-role {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--orange);
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .team-bio {
+    font-size: 14px;
+    color: var(--g500);
+    line-height: 1.6;
+  }
+  
+  /* Instagram Gallery */
+  .instagram {
+    padding: 100px 0;
+    background: var(--white);
+    position: relative;
+    overflow: hidden;
+  }
+  .instagram-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .instagram-header .section-subtitle {
+    margin: 0 auto 24px;
+  }
+  .instagram-handle {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #833AB4, #FD1D1D, #F77737, #FCAF45);
+    background-size: 200% 200%;
+    animation: shimmer 4s linear infinite;
+    color: var(--white);
+    border-radius: var(--r-full);
+    font-weight: 700;
+    font-size: 15px;
+    text-decoration: none;
+    transition: transform 0.3s;
+    box-shadow: var(--shadow-lg);
+  }
+  .instagram-handle:hover {
+    transform: translateY(-2px) scale(1.05);
+  }
+  
+  .instagram-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .insta-post {
+    aspect-ratio: 1;
+    border-radius: var(--r-md);
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+    background: var(--g100);
+  }
+  .insta-post:hover {
+    transform: scale(1.05) rotate(-2deg);
+    z-index: 2;
+    box-shadow: var(--shadow-xl);
+  }
+  .insta-post-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    text-align: center;
+    color: var(--white);
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 1.3;
+    position: relative;
+  }
+  .insta-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(25,36,78,0.85);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+    gap: 4px;
+  }
+  .insta-post:hover .insta-overlay { opacity: 1; }
+  .insta-overlay svg { width: 28px; height: 28px; fill: white; }
+  .insta-overlay p { color: white; font-size: 11px; font-weight: 700; margin-top: 4px; }
+  
+  /* FAQ */
+  .faq {
+    padding: 100px 0;
+    background: var(--off-white);
+  }
+  .faq-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .faq-header .section-subtitle {
+    margin: 0 auto;
+  }
+  .faq-list {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .faq-item {
+    background: var(--white);
+    border-radius: var(--r-md);
+    margin-bottom: 12px;
+    overflow: hidden;
+    border: 2px solid var(--g100);
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .faq-item:hover {
+    border-color: var(--orange);
+  }
+  .faq-item.open {
+    border-color: var(--orange);
+    background: var(--cream);
+  }
+  .faq-q {
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+  .faq-q h4 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .faq-toggle {
+    width: 32px; height: 32px;
+    min-width: 32px;
+    border-radius: 50%;
+    background: var(--orange-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--orange);
+    font-weight: 700;
+    font-size: 18px;
+    transition: all 0.3s;
+  }
+  .faq-item.open .faq-toggle {
+    background: var(--orange);
+    color: white;
+    transform: rotate(45deg);
+  }
+  .faq-a {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.4s ease;
+    padding: 0 24px;
+  }
+  .faq-item.open .faq-a {
+    max-height: 200px;
+    padding: 0 24px 20px;
+  }
+  .faq-a p {
+    font-size: 14px;
+    color: var(--g500);
+    line-height: 1.7;
+  }
+  
+  /* CTA Final */
+  .cta-final {
+    padding: 100px 0;
+    background: linear-gradient(135deg, var(--orange), var(--mango));
+    color: var(--white);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-final::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: 
+      radial-gradient(circle at 10% 20%, rgba(255,255,255,0.1) 0%, transparent 30%),
+      radial-gradient(circle at 90% 80%, rgba(255,255,255,0.1) 0%, transparent 30%);
+  }
+  .cta-final h2 {
+    font-size: clamp(2.2rem, 4vw, 3.4rem);
+    color: var(--white);
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .cta-final p {
+    font-size: 18px;
+    max-width: 560px;
+    margin: 0 auto 32px;
+    opacity: 0.95;
+    position: relative;
+  }
+  .cta-final .btn {
+    position: relative;
+    background: var(--navy);
+    color: var(--white);
+    padding: 18px 40px;
+    font-size: 16px;
+    box-shadow: 0 12px 32px rgba(25,36,78,0.3);
+  }
+  .cta-final .btn:hover {
+    background: var(--white);
+    color: var(--navy);
+  }
+  
+  /* Responsive */
+  @media(max-width:1024px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+    .hero-float-1, .hero-float-2 { display: none; }
+    .features-grid { grid-template-columns: repeat(2, 1fr); }
+    .about-grid { grid-template-columns: 1fr; gap: 48px; }
+    .team-grid { grid-template-columns: 1fr; max-width: 380px; }
+    .instagram-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media(max-width:640px) {
+    .features-grid { grid-template-columns: 1fr; }
+    .hero-stats { flex-wrap: wrap; gap: 20px; }
+    .about-checks, .about-stats { grid-template-columns: 1fr; }
+    .instagram-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><div class="nav-logo-icon" style="width:44px;height:44px"><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAAAAAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/wAALCABkAGQBAREA/8QAHAABAAEFAQEAAAAAAAAAAAAAAAcEBQYICQID/8QANhAAAQMDAwIDBQQLAAAAAAAAAQACAwQFEQYHEhMhCDFBFCJRYZEVgaGiCRYXGCNCRFViktL/2gAIAQEAAD8A3LRERERERERERERERERERERERERERERWDci51dl271JeLe8R1lBaaqpp3uaHBsjInOaSD2PcDsuff72O9WMfb9BnH9rg/wCVv/tbqE6r2407qR7mukuVtgqJeIwBI5gLxj5O5BZIiIiIiKDvG7fb1p7Y6a42G7V1qrBcqZgqKOodDJxJdkcmkHBx5LQmt3T3KraKeirNfanqKaojdFNFLdJnMkY4Yc1wLsEEEgheLppY0m01j1dxPK4Xetoyf8Yo6ct/F8n0W+vgSvhvHh4tdM54fJaqqooXH1wH9Ro/1kH0U6oiIiIixrcjQ+ndwNNO09qikkqre6ZkxjjmdEeTM8TlpB9Stf8Ae7w3bTaY2j1RqCz2KrhuFBbZZ6eR1wneGvaOx4l2D96jXczRwovARoetEZE8FxbcJXY/kqTMB+Dovosq/RqXwOoNYabe7HTlp66Jvx5B0bz+Vi3FRERERFBHjpudxtOxE1Xa7hV0FQLnStEtNM6N+CXZGWkHC591ms9XVtJLSVmqb5U08zSyWKW4SvY9p9C0uwR8ipJ1f4idV6l2kbtpWWPT0NnZSU1LHJDFKJmNgLCwgmQjPuDPb1Kv3gAvn2Xv7Fb3ScWXe21FLxJ7FzQJh9/8M/VdFERERERYNvftxRbo6GfpWvuNRb4XVMVR1oGNc7LCcDDu3fKg23+CjSNNX09RLq271McUrHvhfTRcZACCWn5EDH3qXtW7J7a1+lbvRUGgdM01ZU0U0UE0NsiY+KRzHBrmkNyCCQQQudexl6dpjefSl2kJjbS3aAT57YY54ZJ+Vzl1hHkiIiIiKOYd59EyvZEyprPaJGB8MJpzylDpHRtx3x3c0+ZGPN2FWVu62kaQROmqKrjLA+oDhTniI2GYOcSTj+nk7eZAyARnFVbtx9M3Cst1NRzVEwuEcckMzYT0wJOr0+Ts4HIQSkefZue2RmAp9vvDNXOdfBYr0faWitMjKipjA5slm7DmMYbDIcD1HEZOQNj9Gaotmp6WoltntHCleyKTrNDTyMbX/E57Pb38j6Ejur8iIiIiw2Xa3QUsPSl07TyARuiaXySFzGFwcWtcXZaMgYAIx6YXv9meieiIDYo3Qh3IROnlLAQZCPdLsYBlkLR5NLyRhfap290hUdHnaAzoxtjj6VRLHhrXPc0e64ZwZZMZ8g9w8iQqd21+hDT+zfq9Tim4BggEsgiawFzg0MDuIbye52AMcjy8wCr5YNPWixGodbKV0T6jpiWR8z5XvDGhjAXPJOGtGAM4Hf4lXVERERERERERERERERERERERERERERf/2Q==" alt="EA"></div><div class="nav-logo-text">EA<span>.</span></div></a>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Início</a></li>
+      <li><a href="cursos.html">Cursos</a></li>
+      <li><a href="contato.html">Contato</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="login.html" class="btn btn-outline">Área Restrita</a>
+      <a href="contato.html" class="btn btn-primary">Agendar Teste</a>
+    </div>
+    <button class="mobile-toggle" onclick="document.getElementById('mm').classList.add('open')"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mm">
+  <button class="mobile-close" onclick="document.getElementById('mm').classList.remove('open')">✕</button>
+  <a href="index.html">Início</a><a href="cursos.html">Cursos</a><a href="contato.html">Contato</a>
+  <div style="margin-top:24px;display:flex;flex-direction:column;gap:12px;align-items:center">
+    <a href="login.html" class="btn btn-outline btn-lg" style="border-color:#fff;color:#fff">Área Restrita</a>
+    <a href="contato.html" class="btn btn-primary btn-lg">Agendar Teste</a>
+  </div>
+</div>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero" id="inicio">
+  <div class="blob hero-blob-1"></div>
+  <div class="blob hero-blob-2"></div>
+  <div class="blob hero-blob-3"></div>
+  
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-badge">
+          <span class="hero-badge-dot"></span>
+          +10 anos transformando vidas pelo inglês
+        </div>
+        <h1>
+          Fluência em inglês<br>
+          é mais <span class="highlight">simples</span> do que parece
+        </h1>
+        <p class="hero-desc">
+          Aulas online ao vivo pelo Google Meet com foco em conversação, gramática e as 4 habilidades essenciais. Metodologia personalizada para o seu ritmo.
+        </p>
+        <div class="hero-actions">
+          <a href="contato.html" class="btn btn-primary btn-lg">
+            Agendar Nivelamento Grátis
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a href="cursos.html" class="btn btn-outline btn-lg">Conhecer Cursos</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <h3>Muitos</h3>
+            <p>Alunos formados</p>
+          </div>
+          <div class="hero-stat">
+            <h3 data-count="10" data-suffix="+">0</h3>
+            <p>Anos de experiência</p>
+          </div>
+          <div class="hero-stat">
+            <h3 data-count="98" data-suffix="%">0</h3>
+            <p>Aprovação</p>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-video-card">
+          <div class="hero-video-header">
+            <div class="hero-video-title">
+              <span class="hero-video-dot"></span>
+              Aula ao Vivo
+            </div>
+            <span class="hero-video-live">● Online</span>
+          </div>
+          <div class="hero-video-player">
+            <video src="https://i.imgur.com/wawSBLv.mp4" autoplay muted loop playsinline></video>
+          </div>
+        </div>
+        <div class="hero-float-card hero-float-1">
+          <div class="hero-float-icon" style="background: var(--mango-soft)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 15c2.21 0 4-1.79 4-4V5c0-2.21-1.79-4-4-4S8 2.79 8 5v6c0 2.21 1.79 4 4 4zm-7-4c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2c0 2.76-2.24 5-5 5s-5-2.24-5-5H5z" fill="#f59a1e"/></svg>
+          </div>
+          <div class="hero-float-text">
+            Speaking fluente
+            <small>Conversação real</small>
+          </div>
+        </div>
+        <div class="hero-float-card hero-float-2">
+          <div class="hero-float-icon" style="background: var(--blue-soft)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z" fill="#253c96"/></svg>
+          </div>
+          <div class="hero-float-text">
+            Progresso real
+            <small>Acompanhamento 100%</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FEATURES / METHODOLOGY ═══ -->
+<section class="features reveal" id="metodologia">
+  <div class="container">
+    <div class="features-header">
+      <div class="section-label orange">Nossa Metodologia</div>
+      <h2 class="section-title">As <em>4 habilidades</em> que vão mudar seu inglês</h2>
+      <p class="section-subtitle">Desenvolvemos cada habilidade linguística de forma integrada, com foco na comunicação real e confiança para se expressar.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card orange stagger-item">
+        <div class="feature-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+        </div>
+        <h3>Speaking</h3>
+        <p>Conversação prática com situações reais do dia a dia. Ganhe confiança para falar inglês naturalmente desde a primeira aula.</p>
+      </div>
+      <div class="feature-card mango stagger-item">
+        <div class="feature-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M12 3c-4.97 0-9 4.03-9 9v7c0 1.1.9 2 2 2h4v-8H5v-1c0-3.87 3.13-7 7-7s7 3.13 7 7v1h-4v8h4c1.1 0 2-.9 2-2v-7c0-4.97-4.03-9-9-9z"/></svg>
+        </div>
+        <h3>Listening</h3>
+        <p>Compreensão auditiva com materiais autênticos. Treine seu ouvido para diferentes sotaques e velocidades de fala.</p>
+      </div>
+      <div class="feature-card ocean stagger-item">
+        <div class="feature-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zm0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z"/></svg>
+        </div>
+        <h3>Reading</h3>
+        <p>Leitura de textos reais e acadêmicos que expandem vocabulário e aprofundam o domínio do idioma com naturalidade.</p>
+      </div>
+      <div class="feature-card blue stagger-item">
+        <div class="feature-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+        </div>
+        <h3>Writing</h3>
+        <p>Produção escrita com feedback personalizado do professor. De e-mails profissionais a textos acadêmicos completos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ABOUT / WHY US ═══ -->
+<section class="about reveal">
+  <div class="container">
+    <div class="about-grid">
+      <div>
+        <div class="section-label" style="background: rgba(245,154,30,0.15); color: var(--mango)">Por que a EA?</div>
+        <h2>Mais de uma década<br>formando <em>pessoas</em></h2>
+        <p class="about-desc">
+          Fundada em Osasco, SP, a EA English Classes nasceu da paixão pelo ensino de idiomas. Com mais de 10 anos de experiência, desenvolvemos uma metodologia que une gramática sólida à conversação natural, preparando alunos para o mundo real.
+        </p>
+        <div class="about-checks">
+          <div class="about-check">
+            <div class="about-check-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+            </div>
+            <div>
+              <h4>Professores qualificados</h4>
+              <p>Equipe com formação e vivência internacional</p>
+            </div>
+          </div>
+          <div class="about-check">
+            <div class="about-check-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+            </div>
+            <div>
+              <h4>100% Online</h4>
+              <p>Aulas ao vivo pelo Google Meet</p>
+            </div>
+          </div>
+          <div class="about-check">
+            <div class="about-check-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+            </div>
+            <div>
+              <h4>Acompanhamento real</h4>
+              <p>Feedback personalizado para cada aluno</p>
+            </div>
+          </div>
+          <div class="about-check">
+            <div class="about-check-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+            </div>
+            <div>
+              <h4>Material de ponta</h4>
+              <p>Série Interchange — referência mundial</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="about-stats">
+        <div class="about-stat stagger-item">
+          <h3>Muitos</h3>
+          <p>Alunos formados</p>
+        </div>
+        <div class="about-stat stagger-item">
+          <h3 data-count="10" data-suffix="+">0</h3>
+          <p>Anos de mercado</p>
+        </div>
+        <div class="about-stat stagger-item">
+          <h3 >6</h3>
+          <p>Níveis de ensino</p>
+        </div>
+        <div class="about-stat stagger-item">
+          <h3 data-count="98" data-suffix="%">0</h3>
+          <p>Satisfação</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TEAM ═══ -->
+<section class="team reveal" id="equipe">
+  <div class="container">
+    <div class="team-header">
+      <div class="section-label">Nossa Equipe</div>
+      <h2 class="section-title">Conheça quem vai te <em>guiar</em></h2>
+      <p class="section-subtitle">Professores apaixonados pelo ensino e comprometidos com o seu progresso.</p>
+    </div>
+    <div class="team-grid">
+      <div class="team-card stagger-item">
+        <div class="team-avatar"><img src="data:image/jpeg;base64,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" alt="Ed"></div>
+        <h3>Ed</h3>
+        <div class="team-role">Coordenador Pedagógico</div>
+        <p class="team-bio">Responsável pela gestão pedagógica e pelo acompanhamento do desempenho de alunos e professores.</p>
+      </div>
+      <div class="team-card stagger-item">
+        <div class="team-avatar"><img src="data:image/jpeg;base64,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" alt="Teacher Luiz"></div>
+        <h3>Teacher Luiz</h3>
+        <div class="team-role">Professor</div>
+        <p class="team-bio">Professor dedicado com ampla experiência no ensino de inglês e metodologia dinâmica para todos os níveis.</p>
+      </div>
+      <div class="team-card stagger-item">
+        <div class="team-avatar"><img src="data:image/jpeg;base64,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" alt="Teacher Maicon"></div>
+        <h3>Teacher Maicon</h3>
+        <div class="team-role">Professor</div>
+        <p class="team-bio">Professor comprometido com o desenvolvimento completo dos alunos, do básico ao avançado.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ INSTAGRAM GALLERY ═══ -->
+<section class="instagram reveal">
+  <div class="container">
+    <div class="instagram-header">
+      <div class="section-label mango">Redes Sociais</div>
+      <h2 class="section-title">Siga a EA no <em>Instagram</em></h2>
+      <p class="section-subtitle">Dicas de inglês, bastidores das aulas e muito conteúdo para impulsionar seu aprendizado.</p>
+      <a href="https://www.instagram.com/contatoea" target="_blank" rel="noopener" class="instagram-handle">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.3.1 4.8 1.7 4.9 4.9.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.2-1.7 4.8-4.9 4.9-1.3.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-3.3-.1-4.8-1.7-4.9-4.9C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8C2.4 4 4 2.4 7.2 2.3 8.4 2.2 8.8 2.2 12 2.2zM12 0C8.7 0 8.3 0 7.1.1 2.7.3.3 2.7.1 7.1 0 8.3 0 8.7 0 12s0 3.7.1 4.9c.2 4.4 2.6 6.8 7 7 1.2.1 1.6.1 4.9.1s3.7 0 4.9-.1c4.4-.2 6.8-2.6 7-7 .1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9C23.7 2.7 21.3.3 16.9.1 15.7 0 15.3 0 12 0zm0 5.8C8.6 5.8 5.8 8.6 5.8 12s2.8 6.2 6.2 6.2 6.2-2.8 6.2-6.2S15.4 5.8 12 5.8zM12 16c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4zm6.4-11.8c-.8 0-1.4.6-1.4 1.4s.6 1.4 1.4 1.4 1.4-.6 1.4-1.4-.6-1.4-1.4-1.4z"/></svg>
+        @contatoea
+      </a>
+    </div>
+    <div class="instagram-grid">
+      <a href="https://www.instagram.com/contatoea" target="_blank" class="insta-post stagger-item" style="background:linear-gradient(135deg,#f36b2e,#f59a1e)">
+        <div class="insta-post-content">💡 Dica de Grammar<br>Present Perfect</div>
+        <div class="insta-overlay"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.3.1 4.8 1.7 4.9 4.9.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.2-1.7 4.8-4.9 4.9-1.3.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-3.3-.1-4.8-1.7-4.9-4.9C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8C2.4 4 4 2.4 7.2 2.3 8.4 2.2 8.8 2.2 12 2.2zM12 0C8.7 0 8.3 0 7.1.1 2.7.3.3 2.7.1 7.1 0 8.3 0 8.7 0 12s0 3.7.1 4.9c.2 4.4 2.6 6.8 7 7 1.2.1 1.6.1 4.9.1s3.7 0 4.9-.1c4.4-.2 6.8-2.6 7-7 .1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9C23.7 2.7 21.3.3 16.9.1 15.7 0 15.3 0 12 0zm0 5.8C8.6 5.8 5.8 8.6 5.8 12s2.8 6.2 6.2 6.2 6.2-2.8 6.2-6.2S15.4 5.8 12 5.8zM12 16c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4zm6.4-11.8c-.8 0-1.4.6-1.4 1.4s.6 1.4 1.4 1.4 1.4-.6 1.4-1.4-.6-1.4-1.4-1.4z"/></svg><p>Ver no Instagram</p></div>
+      </a>
+      <a href="https://www.instagram.com/contatoea" target="_blank" class="insta-post stagger-item" style="background:linear-gradient(135deg,#253c96,#4a60be)">
+        <div class="insta-post-content">🎯 Vocabulário<br>Words of the Week</div>
+        <div class="insta-overlay"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.3.1 4.8 1.7 4.9 4.9.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.2-1.7 4.8-4.9 4.9-1.3.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-3.3-.1-4.8-1.7-4.9-4.9C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8C2.4 4 4 2.4 7.2 2.3 8.4 2.2 8.8 2.2 12 2.2zM12 0C8.7 0 8.3 0 7.1.1 2.7.3.3 2.7.1 7.1 0 8.3 0 8.7 0 12s0 3.7.1 4.9c.2 4.4 2.6 6.8 7 7 1.2.1 1.6.1 4.9.1s3.7 0 4.9-.1c4.4-.2 6.8-2.6 7-7 .1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9C23.7 2.7 21.3.3 16.9.1 15.7 0 15.3 0 12 0zm0 5.8C8.6 5.8 5.8 8.6 5.8 12s2.8 6.2 6.2 6.2 6.2-2.8 6.2-6.2S15.4 5.8 12 5.8zM12 16c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4z"/></svg><p>Ver no Instagram</p></div>
+      </a>
+      <a href="https://www.instagram.com/contatoea" target="_blank" class="insta-post stagger-item" style="background:linear-gradient(135deg,#19244e,#253c96)">
+        <div class="insta-post-content">📚 Phrasal Verbs<br>com Teacher Luiz</div>
+        <div class="insta-overlay"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.3.1 4.8 1.7 4.9 4.9.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.2-1.7 4.8-4.9 4.9-1.3.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-3.3-.1-4.8-1.7-4.9-4.9C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8C2.4 4 4 2.4 7.2 2.3 8.4 2.2 8.8 2.2 12 2.2zM12 0C8.7 0 8.3 0 7.1.1 2.7.3.3 2.7.1 7.1 0 8.3 0 8.7 0 12s0 3.7.1 4.9c.2 4.4 2.6 6.8 7 7 1.2.1 1.6.1 4.9.1s3.7 0 4.9-.1c4.4-.2 6.8-2.6 7-7 .1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9C23.7 2.7 21.3.3 16.9.1 15.7 0 15.3 0 12 0zm0 5.8C8.6 5.8 5.8 8.6 5.8 12s2.8 6.2 6.2 6.2 6.2-2.8 6.2-6.2S15.4 5.8 12 5.8zM12 16c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4z"/></svg><p>Ver no Instagram</p></div>
+      </a>
+      <a href="https://www.instagram.com/contatoea" target="_blank" class="insta-post stagger-item" style="background:linear-gradient(135deg,#c4e7e5,#4a60be)">
+        <div class="insta-post-content" style="color:#19244e">🌟 Aluno em Destaque<br>Rafael S.</div>
+        <div class="insta-overlay"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.3.1 4.8 1.7 4.9 4.9.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.2-1.7 4.8-4.9 4.9-1.3.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-3.3-.1-4.8-1.7-4.9-4.9C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8C2.4 4 4 2.4 7.2 2.3 8.4 2.2 8.8 2.2 12 2.2zM12 0C8.7 0 8.3 0 7.1.1 2.7.3.3 2.7.1 7.1 0 8.3 0 8.7 0 12s0 3.7.1 4.9c.2 4.4 2.6 6.8 7 7 1.2.1 1.6.1 4.9.1s3.7 0 4.9-.1c4.4-.2 6.8-2.6 7-7 .1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9C23.7 2.7 21.3.3 16.9.1 15.7 0 15.3 0 12 0zm0 5.8C8.6 5.8 5.8 8.6 5.8 12s2.8 6.2 6.2 6.2 6.2-2.8 6.2-6.2S15.4 5.8 12 5.8zM12 16c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4z"/></svg><p>Ver no Instagram</p></div>
+      </a>
+      <a href="https://www.instagram.com/contatoea" target="_blank" class="insta-post stagger-item" style="background:linear-gradient(135deg,#f59a1e,#f36b2e)">
+        <div class="insta-post-content">🎓 Dica de Pronúncia<br>TH Sound</div>
+        <div class="insta-overlay"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.3.1 4.8 1.7 4.9 4.9.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.2-1.7 4.8-4.9 4.9-1.3.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-3.3-.1-4.8-1.7-4.9-4.9C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8C2.4 4 4 2.4 7.2 2.3 8.4 2.2 8.8 2.2 12 2.2zM12 0C8.7 0 8.3 0 7.1.1 2.7.3.3 2.7.1 7.1 0 8.3 0 8.7 0 12s0 3.7.1 4.9c.2 4.4 2.6 6.8 7 7 1.2.1 1.6.1 4.9.1s3.7 0 4.9-.1c4.4-.2 6.8-2.6 7-7 .1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9C23.7 2.7 21.3.3 16.9.1 15.7 0 15.3 0 12 0zm0 5.8C8.6 5.8 5.8 8.6 5.8 12s2.8 6.2 6.2 6.2 6.2-2.8 6.2-6.2S15.4 5.8 12 5.8zM12 16c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4z"/></svg><p>Ver no Instagram</p></div>
+      </a>
+      <a href="https://www.instagram.com/contatoea" target="_blank" class="insta-post stagger-item" style="background:linear-gradient(135deg,#4a60be,#c4e7e5)">
+        <div class="insta-post-content">🗓️ Aula ao Vivo<br>Toda terça às 19h</div>
+        <div class="insta-overlay"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.3.1 4.8 1.7 4.9 4.9.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.2-1.7 4.8-4.9 4.9-1.3.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-3.3-.1-4.8-1.7-4.9-4.9C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8C2.4 4 4 2.4 7.2 2.3 8.4 2.2 8.8 2.2 12 2.2zM12 0C8.7 0 8.3 0 7.1.1 2.7.3.3 2.7.1 7.1 0 8.3 0 8.7 0 12s0 3.7.1 4.9c.2 4.4 2.6 6.8 7 7 1.2.1 1.6.1 4.9.1s3.7 0 4.9-.1c4.4-.2 6.8-2.6 7-7 .1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9C23.7 2.7 21.3.3 16.9.1 15.7 0 15.3 0 12 0zm0 5.8C8.6 5.8 5.8 8.6 5.8 12s2.8 6.2 6.2 6.2 6.2-2.8 6.2-6.2S15.4 5.8 12 5.8zM12 16c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4z"/></svg><p>Ver no Instagram</p></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FAQ ═══ -->
+<section class="faq reveal">
+  <div class="container">
+    <div class="faq-header">
+      <div class="section-label">Perguntas Frequentes</div>
+      <h2 class="section-title">Dúvidas? A gente <em>responde</em></h2>
+      <p class="section-subtitle">As perguntas que mais recebemos de alunos novos.</p>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q">
+          <h4>Como funcionam as aulas online?</h4>
+          <div class="faq-toggle">+</div>
+        </div>
+        <div class="faq-a">
+          <p>As aulas acontecem ao vivo pelo Google Meet, em horários pré-agendados. Você precisa apenas de um computador ou celular com conexão à internet e o aplicativo instalado. O material didático é compartilhado digitalmente.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">
+          <h4>Preciso já saber inglês para começar?</h4>
+          <div class="faq-toggle">+</div>
+        </div>
+        <div class="faq-a">
+          <p>Não! Temos turmas desde o nível Intro (iniciante absoluto) até B2 (intermediário superior). O teste de nivelamento gratuito define exatamente qual curso é ideal para você.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">
+          <h4>Qual é a duração de cada curso?</h4>
+          <div class="faq-toggle">+</div>
+        </div>
+        <div class="faq-a">
+          <p>Cada nível (Intro, Interchange 1, 2 e 3) tem duração média de 6 a 9 meses, com aulas semanais. O ritmo pode ser personalizado conforme a disponibilidade do aluno.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">
+          <h4>O teste de nivelamento é realmente gratuito?</h4>
+          <div class="faq-toggle">+</div>
+        </div>
+        <div class="faq-a">
+          <p>Sim, 100% gratuito e sem compromisso. Você faz o teste online pelo Google Meet com nosso coordenador, recebe uma avaliação completa do seu nível e uma recomendação do curso ideal — tudo isso sem pagar nada.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">
+          <h4>Como acompanho meu progresso?</h4>
+          <div class="faq-toggle">+</div>
+        </div>
+        <div class="faq-a">
+          <p>Através da nossa plataforma exclusiva, você tem acesso a um dashboard com suas tarefas, feedbacks do professor, histórico de atividades e evolução nas 4 habilidades. Tudo centralizado e sempre atualizado.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA FINAL ═══ -->
+<section class="cta-final reveal">
+  <div class="container">
+    <h2>Pronto para começar sua jornada?</h2>
+    <p>Agende agora mesmo seu teste de nivelamento gratuito e descubra o inglês que pode transformar sua vida.</p>
+    <a href="contato.html" class="btn">
+      Começar Gratuitamente
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="index.html" class="nav-logo" style="margin-bottom:16px"><div class="nav-logo-icon" style="width:40px;height:40px"><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAAAAAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/wAALCABkAGQBAREA/8QAHAABAAEFAQEAAAAAAAAAAAAAAAcEBQYICQID/8QANhAAAQMDAwIDBQQLAAAAAAAAAQACAwQFEQYHEhMhCDFBFCJRYZEVgaGiCRYXGCNCRFViktL/2gAIAQEAAD8A3LRERERERERERERERERERERERERERERWDci51dl271JeLe8R1lBaaqpp3uaHBsjInOaSD2PcDsuff72O9WMfb9BnH9rg/wCVv/tbqE6r2407qR7mukuVtgqJeIwBI5gLxj5O5BZIiIiIiKDvG7fb1p7Y6a42G7V1qrBcqZgqKOodDJxJdkcmkHBx5LQmt3T3KraKeirNfanqKaojdFNFLdJnMkY4Yc1wLsEEEgheLppY0m01j1dxPK4Xetoyf8Yo6ct/F8n0W+vgSvhvHh4tdM54fJaqqooXH1wH9Ro/1kH0U6oiIiIixrcjQ+ndwNNO09qikkqre6ZkxjjmdEeTM8TlpB9Stf8Ae7w3bTaY2j1RqCz2KrhuFBbZZ6eR1wneGvaOx4l2D96jXczRwovARoetEZE8FxbcJXY/kqTMB+Dovosq/RqXwOoNYabe7HTlp66Jvx5B0bz+Vi3FRERERFBHjpudxtOxE1Xa7hV0FQLnStEtNM6N+CXZGWkHC591ms9XVtJLSVmqb5U08zSyWKW4SvY9p9C0uwR8ipJ1f4idV6l2kbtpWWPT0NnZSU1LHJDFKJmNgLCwgmQjPuDPb1Kv3gAvn2Xv7Fb3ScWXe21FLxJ7FzQJh9/8M/VdFERERERYNvftxRbo6GfpWvuNRb4XVMVR1oGNc7LCcDDu3fKg23+CjSNNX09RLq271McUrHvhfTRcZACCWn5EDH3qXtW7J7a1+lbvRUGgdM01ZU0U0UE0NsiY+KRzHBrmkNyCCQQQudexl6dpjefSl2kJjbS3aAT57YY54ZJ+Vzl1hHkiIiIiKOYd59EyvZEyprPaJGB8MJpzylDpHRtx3x3c0+ZGPN2FWVu62kaQROmqKrjLA+oDhTniI2GYOcSTj+nk7eZAyARnFVbtx9M3Cst1NRzVEwuEcckMzYT0wJOr0+Ts4HIQSkefZue2RmAp9vvDNXOdfBYr0faWitMjKipjA5slm7DmMYbDIcD1HEZOQNj9Gaotmp6WoltntHCleyKTrNDTyMbX/E57Pb38j6Ejur8iIiIiw2Xa3QUsPSl07TyARuiaXySFzGFwcWtcXZaMgYAIx6YXv9meieiIDYo3Qh3IROnlLAQZCPdLsYBlkLR5NLyRhfap290hUdHnaAzoxtjj6VRLHhrXPc0e64ZwZZMZ8g9w8iQqd21+hDT+zfq9Tim4BggEsgiawFzg0MDuIbye52AMcjy8wCr5YNPWixGodbKV0T6jpiWR8z5XvDGhjAXPJOGtGAM4Hf4lXVERERERERERERERERERERERERERERf/2Q==" alt="EA"></div><div class="nav-logo-text" style="color:#fff;font-size:20px">EA<span>.</span></div></a>
+        <p style="font-size:14px;line-height:1.7;margin-top:16px;max-width:320px;color:rgba(255,255,255,0.6)">Transformando vidas através do inglês há mais de <strong style="color:#f59a1e">10 anos</strong>. Aulas online ao vivo com foco em resultados reais.</p>
+        <div class="footer-social">
+          <a href="https://www.instagram.com/contatoea" target="_blank" title="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.3.1 4.8 1.7 4.9 4.9.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.2-1.7 4.8-4.9 4.9-1.3.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-3.3-.1-4.8-1.7-4.9-4.9C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8C2.4 4 4 2.4 7.2 2.3 8.4 2.2 8.8 2.2 12 2.2zM12 0C8.7 0 8.3 0 7.1.1 2.7.3.3 2.7.1 7.1 0 8.3 0 8.7 0 12s0 3.7.1 4.9c.2 4.4 2.6 6.8 7 7 1.2.1 1.6.1 4.9.1s3.7 0 4.9-.1c4.4-.2 6.8-2.6 7-7 .1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9C23.7 2.7 21.3.3 16.9.1 15.7 0 15.3 0 12 0zm0 5.8C8.6 5.8 5.8 8.6 5.8 12s2.8 6.2 6.2 6.2 6.2-2.8 6.2-6.2S15.4 5.8 12 5.8zM12 16c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4zm6.4-11.8c-.8 0-1.4.6-1.4 1.4s.6 1.4 1.4 1.4 1.4-.6 1.4-1.4-.6-1.4-1.4-1.4z"/></svg></a>
+          <a href="#" title="WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8.9-.9 1.1-.2.2-.3.2-.6.1-1.8-.9-3-1.6-4.2-3.6-.3-.5.3-.5.9-1.6.1-.2 0-.4 0-.5s-.7-1.6-.9-2.2c-.2-.6-.5-.5-.7-.5H8c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3 1.8.8 2.5.8 3.4.7.5-.1 1.8-.7 2-1.5.3-.8.3-1.4.2-1.5-.1-.1-.3-.2-.5-.3zM20.5 3.5C18.2 1.2 15.2 0 12 0 5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.3-1.6c1.7.9 3.7 1.4 5.7 1.4 6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.3zM12 22c-1.8 0-3.6-.5-5.2-1.4l-.4-.2-3.7.9L3.7 18l-.2-.4C2.5 15.9 2 13.9 2 12c0-5.5 4.5-10 10-10 2.7 0 5.2 1 7.1 2.9 1.9 1.9 2.9 4.4 2.9 7.1 0 5.5-4.5 10-10 10z"/></svg></a>
+          <a href="mailto:contato@eaenglish.com.br" title="E-mail"><svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Navegação</h4>
+        <a href="index.html">Início</a>
+        <a href="cursos.html">Cursos</a>
+        <a href="contato.html">Contato</a>
+      </div>
+      <div class="footer-col">
+        <h4>Plataforma</h4>
+        <a href="dashboard-aluno.html">Área do Aluno</a>
+        <a href="dashboard-professor.html">Área do Professor</a>
+        <a href="dashboard-coordenacao.html">Coordenação</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contato</h4>
+        <a href="mailto:contato@eaenglish.com.br">contato@eaenglish.com.br</a>
+        <a href="#">Osasco, SP — Brasil</a>
+        <a href="https://www.instagram.com/contatoea" target="_blank">@contatoea</a>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 EA English Classes. Todos os direitos reservados.</div>
+  </div>
+</footer>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  const reveals=document.querySelectorAll('.reveal');
+  const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible')})},{threshold:0.08,rootMargin:'0px 0px -50px 0px'});
+  reveals.forEach(el=>obs.observe(el));
+  window.addEventListener('scroll',()=>{document.getElementById('nav')?.classList.toggle('scrolled',window.scrollY>50)},{passive:true});
+  const counters=document.querySelectorAll('[data-count]');
+  const countObs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting && !x.target.dataset.done){x.target.dataset.done='1';const target=parseInt(x.target.dataset.count);const suffix=x.target.dataset.suffix||'';const start=performance.now();const step=(n)=>{const p=Math.min((n-start)/1500,1);x.target.textContent=Math.floor((1-Math.pow(1-p,3))*target)+suffix;if(p<1)requestAnimationFrame(step);};requestAnimationFrame(step);}});},{threshold:0.5});
+  counters.forEach(c=>countObs.observe(c));
+  document.querySelectorAll('.faq-item').forEach(item=>{item.addEventListener('click',()=>item.classList.toggle('open'));});
+});
+</script>
+</body></html>

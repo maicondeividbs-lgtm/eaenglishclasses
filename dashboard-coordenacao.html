@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coordenação — EA English Classes</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body style="background:var(--g50)">
+<style>
+  body {
+    background: var(--g50);
+    overflow-x: hidden;
+  }
+  .dash-layout {
+    display: flex;
+    min-height: 100vh;
+  }
+  .sidebar {
+    width: 260px;
+    background: var(--navy);
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    z-index: 100;
+  }
+  .sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 8px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 20px;
+  }
+  .sidebar-logo .nav-logo-text {
+    color: var(--white);
+    font-size: 18px;
+    font-family: 'Fraunces',serif;
+    font-weight: 900;
+  }
+  .sidebar-logo .nav-logo-text span { color: var(--orange); }
+  
+  .sidebar-badge {
+    padding: 10px 14px;
+    background: #f59a1e20;
+    border: 1px solid #f59a1e40;
+    border-radius: var(--r-md);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .sidebar-badge-emoji { font-size: 18px; }
+  .sidebar-badge-text { font-size: 12px; font-weight: 700; color: #f59a1e; }
+  
+  .sidebar-nav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: var(--r-sm);
+    color: rgba(255,255,255,0.5);
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  .sidebar-link:hover {
+    background: rgba(255,255,255,0.05);
+    color: var(--white);
+  }
+  .sidebar-link.active {
+    background: #f59a1e20;
+    color: #f59a1e;
+    font-weight: 700;
+  }
+  .sidebar-link svg { min-width: 18px; }
+  
+  .sidebar-bottom {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .sidebar-bottom a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: var(--r-sm);
+    color: rgba(255,255,255,0.5);
+    font-size: 13px;
+    transition: all 0.2s;
+  }
+  .sidebar-bottom a:hover {
+    background: rgba(255,255,255,0.05);
+    color: var(--white);
+  }
+  
+  .main {
+    margin-left: 260px;
+    flex: 1;
+    min-height: 100vh;
+  }
+  .topbar {
+    height: 72px;
+    background: rgba(247,248,250,0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--g100);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .topbar-search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: var(--white);
+    border-radius: var(--r-full);
+    border: 1px solid var(--g200);
+    width: 320px;
+  }
+  .topbar-search input {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 13px;
+    flex: 1;
+    font-family: inherit;
+    color: var(--navy);
+  }
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .topbar-icon-btn {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: var(--white);
+    border: 1px solid var(--g200);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s;
+  }
+  .topbar-icon-btn:hover { border-color: #f59a1e; }
+  .topbar-icon-btn .badge {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 8px; height: 8px;
+    background: var(--orange);
+    border-radius: 50%;
+    border: 2px solid var(--white);
+  }
+  .topbar-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f59a1e, #f59a1ecc);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 800;
+    font-size: 14px;
+    box-shadow: var(--shadow-sm);
+  }
+  
+  .dash-content {
+    padding: 32px;
+  }
+  .dash-header {
+    margin-bottom: 28px;
+  }
+  .dash-header h1 {
+    font-size: 28px;
+    color: var(--navy);
+    margin-bottom: 4px;
+  }
+  .dash-header h1 em { color: #f59a1e; font-style: italic; font-weight: 900; }
+  .dash-header p {
+    font-size: 14px;
+    color: var(--g500);
+  }
+  
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .stat-card {
+    background: var(--white);
+    border-radius: var(--r-lg);
+    padding: 20px;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    border: 1px solid var(--g100);
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: #f59a1e;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: transparent;
+  }
+  .stat-card:hover::before { transform: scaleX(1); }
+  
+  .stat-icon {
+    width: 48px; height: 48px;
+    min-width: 48px;
+    border-radius: var(--r-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+  }
+  .stat-label {
+    font-size: 12px;
+    color: var(--g500);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .stat-value {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--navy);
+    line-height: 1;
+  }
+  .stat-trend {
+    font-size: 11px;
+    color: var(--g500);
+    margin-top: 4px;
+  }
+  
+  .panel {
+    background: var(--white);
+    border-radius: var(--r-lg);
+    border: 1px solid var(--g100);
+    overflow: hidden;
+  }
+  .panel-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--g100);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .panel-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--navy);
+  }
+  .panel-link {
+    font-size: 13px;
+    color: #f59a1e;
+    font-weight: 700;
+  }
+  
+  .activity-item {
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--g100);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    transition: background 0.2s;
+  }
+  .activity-item:last-child { border-bottom: none; }
+  .activity-item:hover { background: var(--g50); }
+  .activity-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 2px;
+  }
+  .activity-subtitle {
+    font-size: 12px;
+    color: var(--g500);
+  }
+  .activity-status {
+    padding: 5px 12px;
+    border-radius: var(--r-full);
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  
+  .proto-note {
+    font-size: 11px;
+    color: var(--g500);
+    text-align: center;
+    margin-top: 24px;
+    opacity: 0.6;
+  }
+  
+  @media(max-width:1024px) {
+    .sidebar { transform: translateX(-100%); }
+    .main { margin-left: 0; }
+    .stats-grid { grid-template-columns: repeat(2,1fr); }
+    .topbar-search { display: none; }
+  }
+  @media(max-width:640px) {
+    .stats-grid { grid-template-columns: 1fr; }
+    .dash-content { padding: 20px; }
+  }
+</style>
+
+<div class="dash-layout">
+  <aside class="sidebar">
+    <a href="index.html" class="sidebar-logo">
+      <div class="nav-logo-icon" style="width:36px;height:36px"><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAAAAAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/wAALCABkAGQBAREA/8QAHAABAAEFAQEAAAAAAAAAAAAAAAcEBQYICQID/8QANhAAAQMDAwIDBQQLAAAAAAAAAQACAwQFEQYHEhMhCDFBFCJRYZEVgaGiCRYXGCNCRFViktL/2gAIAQEAAD8A3LRERERERERERERERERERERERERERERWDci51dl271JeLe8R1lBaaqpp3uaHBsjInOaSD2PcDsuff72O9WMfb9BnH9rg/wCVv/tbqE6r2407qR7mukuVtgqJeIwBI5gLxj5O5BZIiIiIiKDvG7fb1p7Y6a42G7V1qrBcqZgqKOodDJxJdkcmkHBx5LQmt3T3KraKeirNfanqKaojdFNFLdJnMkY4Yc1wLsEEEgheLppY0m01j1dxPK4Xetoyf8Yo6ct/F8n0W+vgSvhvHh4tdM54fJaqqooXH1wH9Ro/1kH0U6oiIiIixrcjQ+ndwNNO09qikkqre6ZkxjjmdEeTM8TlpB9Stf8Ae7w3bTaY2j1RqCz2KrhuFBbZZ6eR1wneGvaOx4l2D96jXczRwovARoetEZE8FxbcJXY/kqTMB+Dovosq/RqXwOoNYabe7HTlp66Jvx5B0bz+Vi3FRERERFBHjpudxtOxE1Xa7hV0FQLnStEtNM6N+CXZGWkHC591ms9XVtJLSVmqb5U08zSyWKW4SvY9p9C0uwR8ipJ1f4idV6l2kbtpWWPT0NnZSU1LHJDFKJmNgLCwgmQjPuDPb1Kv3gAvn2Xv7Fb3ScWXe21FLxJ7FzQJh9/8M/VdFERERERYNvftxRbo6GfpWvuNRb4XVMVR1oGNc7LCcDDu3fKg23+CjSNNX09RLq271McUrHvhfTRcZACCWn5EDH3qXtW7J7a1+lbvRUGgdM01ZU0U0UE0NsiY+KRzHBrmkNyCCQQQudexl6dpjefSl2kJjbS3aAT57YY54ZJ+Vzl1hHkiIiIiKOYd59EyvZEyprPaJGB8MJpzylDpHRtx3x3c0+ZGPN2FWVu62kaQROmqKrjLA+oDhTniI2GYOcSTj+nk7eZAyARnFVbtx9M3Cst1NRzVEwuEcckMzYT0wJOr0+Ts4HIQSkefZue2RmAp9vvDNXOdfBYr0faWitMjKipjA5slm7DmMYbDIcD1HEZOQNj9Gaotmp6WoltntHCleyKTrNDTyMbX/E57Pb38j6Ejur8iIiIiw2Xa3QUsPSl07TyARuiaXySFzGFwcWtcXZaMgYAIx6YXv9meieiIDYo3Qh3IROnlLAQZCPdLsYBlkLR5NLyRhfap290hUdHnaAzoxtjj6VRLHhrXPc0e64ZwZZMZ8g9w8iQqd21+hDT+zfq9Tim4BggEsgiawFzg0MDuIbye52AMcjy8wCr5YNPWixGodbKV0T6jpiWR8z5XvDGhjAXPJOGtGAM4Hf4lXVERERERERERERERERERERERERERERf/2Q==" alt="EA"></div>
+      <div class="nav-logo-text">EA<span>.</span></div>
+    </a>
+    <div class="sidebar-badge">
+      <span class="sidebar-badge-emoji">📊</span>
+      <span class="sidebar-badge-text">Coordenação</span>
+    </div>
+    <nav class="sidebar-nav">
+      
+        <a href="#" class="sidebar-link active">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="#" class="sidebar-link ">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+          <span>Gestão de Usuários</span>
+        </a>
+        <a href="#" class="sidebar-link ">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+          <span>Comunicados</span>
+        </a>
+        <a href="#" class="sidebar-link ">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
+          <span>Nivelamentos</span>
+        </a>
+        <a href="#" class="sidebar-link ">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5C21.27 7.61 17 4.5 12 4.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+          <span>Supervisão</span>
+        </a>
+        <a href="#" class="sidebar-link ">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/></svg>
+          <span>Relatórios</span>
+        </a>
+    </nav>
+    <div class="sidebar-bottom">
+      <a href="login.html">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        Trocar Portal
+      </a>
+      <a href="index.html">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        Voltar ao Site
+      </a>
+    </div>
+  </aside>
+  
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="#6b7280"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        <input type="text" placeholder="Buscar..."/>
+      </div>
+      <div class="topbar-right">
+        <button class="topbar-icon-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="#6b7280"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+          <span class="badge"></span>
+        </button>
+        <div class="topbar-avatar">C</div>
+      </div>
+    </div>
+    
+    <div class="dash-content">
+      <div class="dash-header">
+        <h1>Olá! <em>📊</em></h1>
+        <p>Painel da Coordenação</p>
+      </div>
+      
+      <div class="stats-grid">
+        
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#f59a1e18;color:#f59a1e">
+            🎓
+          </div>
+          <div class="stat-body">
+            <div class="stat-label">Total de Alunos</div>
+            <div class="stat-value">47</div>
+            <div class="stat-trend">+3 este mês</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#f59a1e18;color:#f59a1e">
+            👨‍🏫
+          </div>
+          <div class="stat-body">
+            <div class="stat-label">Professores</div>
+            <div class="stat-value">2</div>
+            <div class="stat-trend">Ativos</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#f59a1e18;color:#f59a1e">
+            📚
+          </div>
+          <div class="stat-body">
+            <div class="stat-label">Aulas Realizadas</div>
+            <div class="stat-value">156</div>
+            <div class="stat-trend">Este semestre</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#f59a1e18;color:#f59a1e">
+            📈
+          </div>
+          <div class="stat-body">
+            <div class="stat-label">Progresso Médio</div>
+            <div class="stat-value">64%</div>
+            <div class="stat-trend">Todos os alunos</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">📋 Atividade Recente</div>
+          <a href="#" class="panel-link">Ver tudo →</a>
+        </div>
+        
+        <div class="activity-item">
+          <div class="activity-info">
+            <div class="activity-title">Teacher Luiz enviou tarefa</div>
+            <div class="activity-subtitle">Interchange 2 • Hoje, 14:32</div>
+          </div>
+          <span class="activity-status" style="background:#253c9618;color:#253c96">Tarefa</span>
+        </div>
+        <div class="activity-item">
+          <div class="activity-info">
+            <div class="activity-title">Nova aluna matriculada: Fernanda Lima</div>
+            <div class="activity-subtitle">Nível Intro • Hoje, 13:15</div>
+          </div>
+          <span class="activity-status" style="background:#6daf5f18;color:#6daf5f">Matrícula</span>
+        </div>
+        <div class="activity-item">
+          <div class="activity-info">
+            <div class="activity-title">Teacher Maicon registrou feedback</div>
+            <div class="activity-subtitle">Aluno: Pedro H. • Hoje, 11:00</div>
+          </div>
+          <span class="activity-status" style="background:#f36b2e18;color:#f36b2e">Feedback</span>
+        </div>
+        <div class="activity-item">
+          <div class="activity-info">
+            <div class="activity-title">Agendamento de nivelamento</div>
+            <div class="activity-subtitle">João Vitor • 15/04 às 10h</div>
+          </div>
+          <span class="activity-status" style="background:#f59a1e18;color:#f59a1e">Agendamento</span>
+        </div>
+        <div class="activity-item">
+          <div class="activity-info">
+            <div class="activity-title">Teacher Luiz completou avaliações</div>
+            <div class="activity-subtitle">Unit 6 • Ontem</div>
+          </div>
+          <span class="activity-status" style="background:#253c9618;color:#253c96">Avaliação</span>
+        </div>
+      </div>
+      
+      <p class="proto-note">⚠️ Protótipo visual — dados simulados para demonstração</p>
+    </div>
+  </main>
+</div>
+
+</body></html>

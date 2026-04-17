@@ -141,13 +141,15 @@
     <div class="login-card">
       <h2>Bem-<em>vindo</em> de volta!</h2>
       <p>Acesse sua área restrita para continuar.</p>
-      <div class="form-group"><label>E-mail</label><input type="email" placeholder="seu@email.com"></div>
-      <div class="form-group"><label>Senha</label><input type="password" placeholder="••••••••"></div>
+      <div id="loginError" style="display:none;padding:12px;background:#fee2e2;border:2px solid #ef4444;border-radius:10px;color:#991b1b;font-size:13px;font-weight:600;text-align:center;margin-bottom:16px"></div>
+      <form id="loginForm">
+      <div class="form-group"><label>E-mail</label><input type="email" id="loginEmail" placeholder="seu@email.com" required></div>
+      <div class="form-group"><label>Senha</label><input type="password" id="loginPassword" placeholder="••••••••" required></div>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;font-size:13px">
         <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" style="width:auto"> Lembrar-me</label>
         <a href="#" style="color:var(--orange);font-weight:600">Esqueci a senha</a>
       </div>
-      <button class="btn btn-primary btn-full btn-lg">Entrar</button>
+      <button type="submit" id="loginBtn" class="btn btn-primary btn-full btn-lg">Entrar</button></form>
       
       <div class="portal-demo">
         <p>Ou acesse o protótipo das áreas:</p>
@@ -172,6 +174,64 @@ document.addEventListener('DOMContentLoaded',()=>{
   const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible')})},{threshold:0.08,rootMargin:'0px 0px -50px 0px'});
   reveals.forEach(el=>obs.observe(el));
   window.addEventListener('scroll',()=>{document.getElementById('nav')?.classList.toggle('scrolled',window.scrollY>50)},{passive:true});
+});
+</script>
+
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const loginForm = document.getElementById('loginForm');
+  const loginBtn = document.getElementById('loginBtn');
+  const loginError = document.getElementById('loginError');
+
+  // Check if already logged in
+  (async () => {
+    const profile = await getUserProfile();
+    if (profile) {
+      redirectByRole(profile.role);
+    }
+  })();
+
+  if (loginForm) {
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      loginBtn.disabled = true;
+      loginBtn.textContent = 'Entrando...';
+      loginError.style.display = 'none';
+
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+
+      try {
+        const data = await signIn(email, password);
+        
+        // Get user profile to determine role
+        const profile = await getUserProfile();
+        if (profile) {
+          redirectByRole(profile.role);
+        } else {
+          window.location.href = 'dashboard-aluno.html';
+        }
+        
+      } catch (err) {
+        console.error('Login error:', err);
+        let msg = 'E-mail ou senha incorretos.';
+        if (err.message?.includes('Invalid login')) {
+          msg = 'E-mail ou senha incorretos. Verifique e tente novamente.';
+        } else if (err.message?.includes('Email not confirmed')) {
+          msg = 'Confirme seu e-mail antes de fazer login. Verifique sua caixa de entrada.';
+        }
+        loginError.textContent = msg;
+        loginError.style.display = 'block';
+      } finally {
+        loginBtn.disabled = false;
+        loginBtn.textContent = 'Entrar';
+      }
+    });
+  }
 });
 </script>
 </body></html>

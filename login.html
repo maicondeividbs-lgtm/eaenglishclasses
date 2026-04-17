@@ -208,12 +208,32 @@ document.addEventListener('DOMContentLoaded', () => {
       try {
         const data = await signIn(email, password);
         
+        // Wait a moment for session to settle
+        await new Promise(r => setTimeout(r, 500));
+        
         // Get user profile to determine role
         const profile = await getUserProfile();
-        if (profile) {
+        console.log('Profile loaded:', profile);
+        
+        if (profile && profile.role) {
+          console.log('Redirecting by role:', profile.role);
           redirectByRole(profile.role);
         } else {
-          window.location.href = 'dashboard-aluno.html';
+          // Fallback: try fetching directly
+          const session = await getSession();
+          if (session) {
+            const { data: p2 } = await db
+              .from('profiles')
+              .select('role')
+              .eq('id', session.user.id)
+              .maybeSingle();
+            console.log('Fallback profile:', p2);
+            if (p2 && p2.role) {
+              redirectByRole(p2.role);
+            } else {
+              window.location.href = 'dashboard-aluno.html';
+            }
+          }
         }
         
       } catch (err) {

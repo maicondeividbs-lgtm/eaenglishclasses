@@ -171,16 +171,21 @@
       <div class="contato-form-card">
         <h3>📅 Agendar Nivelamento Grátis</h3>
         <p class="subtitle">Preencha seus dados e nossa coordenação entrará em contato.</p>
-        <div class="form-group"><label>Nome completo</label><input type="text" placeholder="Seu nome completo"></div>
-        <div class="form-group"><label>E-mail</label><input type="email" placeholder="seu@email.com"></div>
-        <div class="form-group"><label>WhatsApp</label><input type="tel" placeholder="(11) 99999-9999"></div>
-        <div class="form-row">
-          <div class="form-group"><label>Data preferida</label><input type="date"></div>
-          <div class="form-group"><label>Horário</label><select><option>Manhã</option><option>Tarde</option><option>Noite</option></select></div>
+        <div id="successMsg" style="display:none;padding:16px;background:#d1fae5;border:2px solid #10b981;border-radius:12px;color:#065f46;font-weight:600;text-align:center;margin-bottom:16px">
+          ✅ Agendamento enviado com sucesso! Nossa coordenação entrará em contato em breve.
         </div>
-        <div class="form-group"><label>Qual é seu nível atual?</label><select><option>Nunca estudei inglês</option><option>Básico — sei frases simples</option><option>Intermediário — converso com dificuldade</option><option>Avançado — já tenho fluência</option><option>Não tenho certeza</option></select></div>
-        <div class="form-group"><label>Mensagem (opcional)</label><textarea rows="3" placeholder="Conte-nos seus objetivos com o inglês..."></textarea></div>
-        <button class="btn btn-primary btn-full btn-lg" style="margin-top:12px">Agendar Teste Gratuito</button>
+        <div id="errorMsg" style="display:none;padding:16px;background:#fee2e2;border:2px solid #ef4444;border-radius:12px;color:#991b1b;font-weight:600;text-align:center;margin-bottom:16px"></div>
+        <form id="placementForm">
+        <div class="form-group"><label>Nome completo</label><input type="text" id="fname" placeholder="Seu nome completo" required></div>
+        <div class="form-group"><label>E-mail</label><input type="email" id="femail" placeholder="seu@email.com" required></div>
+        <div class="form-group"><label>WhatsApp</label><input type="tel" id="fphone" placeholder="(11) 99999-9999" required></div>
+        <div class="form-row">
+          <div class="form-group"><label>Data preferida</label><input type="date" id="fdate"></div>
+          <div class="form-group"><label>Horário</label><select id="ftime"><option value="">Selecione</option><option>Manhã</option><option>Tarde</option><option>Noite</option></select></div>
+        </div>
+        <div class="form-group"><label>Qual é seu nível atual?</label><select id="flevel"><option>Nunca estudei inglês</option><option>Básico — sei frases simples</option><option>Intermediário — converso com dificuldade</option><option>Avançado — já tenho fluência</option><option>Não tenho certeza</option></select></div>
+        <div class="form-group"><label>Mensagem (opcional)</label><textarea rows="3" id="fmessage" placeholder="Conte-nos seus objetivos com o inglês..."></textarea></div>
+        <button type="submit" id="submitBtn" class="btn btn-primary btn-full btn-lg" style="margin-top:12px">Agendar Teste Gratuito</button></form>
       </div>
       <div class="contato-info">
         <div class="info-card">
@@ -256,6 +261,57 @@ document.addEventListener('DOMContentLoaded',()=>{
   const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible')})},{threshold:0.08,rootMargin:'0px 0px -50px 0px'});
   reveals.forEach(el=>obs.observe(el));
   window.addEventListener('scroll',()=>{document.getElementById('nav')?.classList.toggle('scrolled',window.scrollY>50)},{passive:true});
+});
+</script>
+
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('placementForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const successMsg = document.getElementById('successMsg');
+  const errorMsg = document.getElementById('errorMsg');
+
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Enviando...';
+      errorMsg.style.display = 'none';
+      successMsg.style.display = 'none';
+
+      try {
+        const formData = {
+          fullName: document.getElementById('fname').value.trim(),
+          email: document.getElementById('femail').value.trim(),
+          phone: document.getElementById('fphone').value.trim(),
+          preferredDate: document.getElementById('fdate').value || null,
+          preferredTime: document.getElementById('ftime').value || null,
+          currentLevel: document.getElementById('flevel').value,
+          message: document.getElementById('fmessage')?.value.trim() || null
+        };
+
+        await submitPlacementTest(formData);
+        
+        successMsg.style.display = 'block';
+        form.reset();
+        
+        // Scroll to success message
+        successMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+      } catch (err) {
+        console.error('Error:', err);
+        errorMsg.textContent = 'Ocorreu um erro ao enviar. Tente novamente.';
+        errorMsg.style.display = 'block';
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Agendar Teste Gratuito';
+      }
+    });
+  }
 });
 </script>
 </body></html>

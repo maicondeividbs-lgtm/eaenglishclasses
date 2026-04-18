@@ -3,494 +3,535 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Área do Professor — EA English Classes</title>
+<title>Professor — EA English Classes</title>
 <link rel="stylesheet" href="style.css">
-</head>
-<body style="background:var(--g50)">
 <style>
-  body {
-    background: var(--g50);
-    overflow-x: hidden;
-  }
-  .dash-layout {
-    display: flex;
-    min-height: 100vh;
-  }
-  .sidebar {
-    width: 260px;
-    background: var(--navy);
-    padding: 24px 16px;
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    top: 0; left: 0; bottom: 0;
-    z-index: 100;
-  }
-  .sidebar-logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 0 8px 20px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    margin-bottom: 20px;
-  }
-  .sidebar-logo .nav-logo-text {
-    color: var(--white);
-    font-size: 18px;
-    font-family: 'Fraunces',serif;
-    font-weight: 900;
-  }
-  .sidebar-logo .nav-logo-text span { color: var(--orange); }
-  
-  .sidebar-badge {
-    padding: 10px 14px;
-    background: #f36b2e20;
-    border: 1px solid #f36b2e40;
-    border-radius: var(--r-md);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 24px;
-  }
-  .sidebar-badge-emoji { font-size: 18px; }
-  .sidebar-badge-text { font-size: 12px; font-weight: 700; color: #f36b2e; }
-  
-  .sidebar-nav {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-  .sidebar-link {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 14px;
-    border-radius: var(--r-sm);
-    color: rgba(255,255,255,0.5);
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.2s;
-  }
-  .sidebar-link:hover {
-    background: rgba(255,255,255,0.05);
-    color: var(--white);
-  }
-  .sidebar-link.active {
-    background: #f36b2e20;
-    color: #f36b2e;
-    font-weight: 700;
-  }
-  .sidebar-link svg { min-width: 18px; }
-  
-  .sidebar-bottom {
-    border-top: 1px solid rgba(255,255,255,0.08);
-    padding-top: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  .sidebar-bottom a {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 14px;
-    border-radius: var(--r-sm);
-    color: rgba(255,255,255,0.5);
-    font-size: 13px;
-    transition: all 0.2s;
-  }
-  .sidebar-bottom a:hover {
-    background: rgba(255,255,255,0.05);
-    color: var(--white);
-  }
-  
-  .main {
-    margin-left: 260px;
-    flex: 1;
-    min-height: 100vh;
-  }
-  .topbar {
-    height: 72px;
-    background: rgba(247,248,250,0.95);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--g100);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 32px;
-    position: sticky;
-    top: 0;
-    z-index: 50;
-  }
-  .topbar-search {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    background: var(--white);
-    border-radius: var(--r-full);
-    border: 1px solid var(--g200);
-    width: 320px;
-  }
-  .topbar-search input {
-    border: none;
-    outline: none;
-    background: transparent;
-    font-size: 13px;
-    flex: 1;
-    font-family: inherit;
-    color: var(--navy);
-  }
-  .topbar-right {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-  .topbar-icon-btn {
-    width: 40px;
-    height: 40px;
-    border: none;
-    background: var(--white);
-    border: 1px solid var(--g200);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    position: relative;
-    transition: all 0.2s;
-  }
-  .topbar-icon-btn:hover { border-color: #f36b2e; }
-  .topbar-icon-btn .badge {
-    position: absolute;
-    top: 6px;
-    right: 6px;
-    width: 8px; height: 8px;
-    background: var(--orange);
-    border-radius: 50%;
-    border: 2px solid var(--white);
-  }
-  .topbar-avatar {
-    width: 40px; height: 40px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #f36b2e, #f36b2ecc);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: 800;
-    font-size: 14px;
-    box-shadow: var(--shadow-sm);
-  }
-  
-  .dash-content {
-    padding: 32px;
-  }
-  .dash-header {
-    margin-bottom: 28px;
-  }
-  .dash-header h1 {
-    font-size: 28px;
-    color: var(--navy);
-    margin-bottom: 4px;
-  }
-  .dash-header h1 em { color: #f36b2e; font-style: italic; font-weight: 900; }
-  .dash-header p {
-    font-size: 14px;
-    color: var(--g500);
-  }
-  
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    margin-bottom: 28px;
-  }
-  .stat-card {
-    background: var(--white);
-    border-radius: var(--r-lg);
-    padding: 20px;
-    display: flex;
-    gap: 14px;
-    align-items: center;
-    border: 1px solid var(--g100);
-    transition: all 0.3s;
-    position: relative;
-    overflow: hidden;
-  }
-  .stat-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    background: #f36b2e;
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.3s;
-  }
-  .stat-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
-    border-color: transparent;
-  }
-  .stat-card:hover::before { transform: scaleX(1); }
-  
-  .stat-icon {
-    width: 48px; height: 48px;
-    min-width: 48px;
-    border-radius: var(--r-md);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-  }
-  .stat-label {
-    font-size: 12px;
-    color: var(--g500);
-    font-weight: 600;
-    margin-bottom: 4px;
-  }
-  .stat-value {
-    font-family: 'Fraunces', serif;
-    font-size: 28px;
-    font-weight: 900;
-    color: var(--navy);
-    line-height: 1;
-  }
-  .stat-trend {
-    font-size: 11px;
-    color: var(--g500);
-    margin-top: 4px;
-  }
-  
-  .panel {
-    background: var(--white);
-    border-radius: var(--r-lg);
-    border: 1px solid var(--g100);
-    overflow: hidden;
-  }
-  .panel-header {
-    padding: 20px 24px;
-    border-bottom: 1px solid var(--g100);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .panel-title {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 15px;
-    font-weight: 800;
-    color: var(--navy);
-  }
-  .panel-link {
-    font-size: 13px;
-    color: #f36b2e;
-    font-weight: 700;
-  }
-  
-  .activity-item {
-    padding: 16px 24px;
-    border-bottom: 1px solid var(--g100);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-    transition: background 0.2s;
-  }
-  .activity-item:last-child { border-bottom: none; }
-  .activity-item:hover { background: var(--g50); }
-  .activity-title {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--navy);
-    margin-bottom: 2px;
-  }
-  .activity-subtitle {
-    font-size: 12px;
-    color: var(--g500);
-  }
-  .activity-status {
-    padding: 5px 12px;
-    border-radius: var(--r-full);
-    font-size: 11px;
-    font-weight: 700;
-    white-space: nowrap;
-  }
-  
-  .proto-note {
-    font-size: 11px;
-    color: var(--g500);
-    text-align: center;
-    margin-top: 24px;
-    opacity: 0.6;
-  }
-  
-  @media(max-width:1024px) {
-    .sidebar { transform: translateX(-100%); }
-    .main { margin-left: 0; }
-    .stats-grid { grid-template-columns: repeat(2,1fr); }
-    .topbar-search { display: none; }
-  }
-  @media(max-width:640px) {
-    .stats-grid { grid-template-columns: 1fr; }
-    .dash-content { padding: 20px; }
-  }
-</style>
+body { background: var(--g50); margin: 0; }
+.dash { display: flex; min-height: 100vh; }
 
-<div class="dash-layout">
-  <aside class="sidebar">
-    <a href="index.html" class="sidebar-logo">
-      <div class="nav-logo-icon" style="width:36px;height:36px"><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAAAAAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/wAALCABkAGQBAREA/8QAHAABAAEFAQEAAAAAAAAAAAAAAAcEBQYICQID/8QANhAAAQMDAwIDBQQLAAAAAAAAAQACAwQFEQYHEhMhCDFBFCJRYZEVgaGiCRYXGCNCRFViktL/2gAIAQEAAD8A3LRERERERERERERERERERERERERERERWDci51dl271JeLe8R1lBaaqpp3uaHBsjInOaSD2PcDsuff72O9WMfb9BnH9rg/wCVv/tbqE6r2407qR7mukuVtgqJeIwBI5gLxj5O5BZIiIiIiKDvG7fb1p7Y6a42G7V1qrBcqZgqKOodDJxJdkcmkHBx5LQmt3T3KraKeirNfanqKaojdFNFLdJnMkY4Yc1wLsEEEgheLppY0m01j1dxPK4Xetoyf8Yo6ct/F8n0W+vgSvhvHh4tdM54fJaqqooXH1wH9Ro/1kH0U6oiIiIixrcjQ+ndwNNO09qikkqre6ZkxjjmdEeTM8TlpB9Stf8Ae7w3bTaY2j1RqCz2KrhuFBbZZ6eR1wneGvaOx4l2D96jXczRwovARoetEZE8FxbcJXY/kqTMB+Dovosq/RqXwOoNYabe7HTlp66Jvx5B0bz+Vi3FRERERFBHjpudxtOxE1Xa7hV0FQLnStEtNM6N+CXZGWkHC591ms9XVtJLSVmqb5U08zSyWKW4SvY9p9C0uwR8ipJ1f4idV6l2kbtpWWPT0NnZSU1LHJDFKJmNgLCwgmQjPuDPb1Kv3gAvn2Xv7Fb3ScWXe21FLxJ7FzQJh9/8M/VdFERERERYNvftxRbo6GfpWvuNRb4XVMVR1oGNc7LCcDDu3fKg23+CjSNNX09RLq271McUrHvhfTRcZACCWn5EDH3qXtW7J7a1+lbvRUGgdM01ZU0U0UE0NsiY+KRzHBrmkNyCCQQQudexl6dpjefSl2kJjbS3aAT57YY54ZJ+Vzl1hHkiIiIiKOYd59EyvZEyprPaJGB8MJpzylDpHRtx3x3c0+ZGPN2FWVu62kaQROmqKrjLA+oDhTniI2GYOcSTj+nk7eZAyARnFVbtx9M3Cst1NRzVEwuEcckMzYT0wJOr0+Ts4HIQSkefZue2RmAp9vvDNXOdfBYr0faWitMjKipjA5slm7DmMYbDIcD1HEZOQNj9Gaotmp6WoltntHCleyKTrNDTyMbX/E57Pb38j6Ejur8iIiIiw2Xa3QUsPSl07TyARuiaXySFzGFwcWtcXZaMgYAIx6YXv9meieiIDYo3Qh3IROnlLAQZCPdLsYBlkLR5NLyRhfap290hUdHnaAzoxtjj6VRLHhrXPc0e64ZwZZMZ8g9w8iQqd21+hDT+zfq9Tim4BggEsgiawFzg0MDuIbye52AMcjy8wCr5YNPWixGodbKV0T6jpiWR8z5XvDGhjAXPJOGtGAM4Hf4lXVERERERERERERERERERERERERERERf/2Q==" alt="EA"></div>
-      <div class="nav-logo-text">EA<span>.</span></div>
-    </a>
-    <div class="sidebar-badge">
-      <span class="sidebar-badge-emoji">👨‍🏫</span>
-      <span class="sidebar-badge-text">Área do Professor</span>
+/* Sidebar */
+.sb { width: 260px; background: var(--navy); padding: 20px 14px; display: flex; flex-direction: column; position: fixed; top: 0; bottom: 0; left: 0; z-index: 100; }
+.sb-logo { display: flex; align-items: center; gap: 12px; padding: 0 10px 18px; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 18px; cursor: pointer; }
+.sb-logo .nav-logo-text { color: #fff; font-family: 'Fraunces',serif; font-weight: 900; font-size: 18px; }
+.sb-logo .nav-logo-text span { color: var(--orange); }
+.sb-badge { padding: 10px 14px; background: rgba(243,107,46,0.15); border: 1px solid rgba(243,107,46,0.3); border-radius: 12px; display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
+.sb-badge-icon { font-size: 18px; }
+.sb-badge-text { font-size: 12px; font-weight: 700; color: var(--orange); }
+.sb-nav { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.sb-link { display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-radius: 10px; color: rgba(255,255,255,0.5); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; border: none; background: none; width: 100%; text-align: left; font-family: inherit; }
+.sb-link:hover { background: rgba(255,255,255,0.05); color: #fff; }
+.sb-link.active { background: rgba(243,107,46,0.15); color: var(--orange); font-weight: 700; }
+.sb-bottom { border-top: 1px solid rgba(255,255,255,0.06); padding-top: 14px; }
+.sb-bottom a { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 10px; color: rgba(255,255,255,0.4); font-size: 13px; transition: all 0.2s; }
+.sb-bottom a:hover { background: rgba(255,255,255,0.05); color: #fff; }
+.sb-logout { color: rgba(239,68,68,0.7) !important; }
+.sb-logout:hover { color: #ef4444 !important; background: rgba(239,68,68,0.1) !important; }
+
+/* Main */
+.main { margin-left: 260px; flex: 1; }
+.topbar { height: 68px; background: rgba(247,248,250,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--g100); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; position: sticky; top: 0; z-index: 50; }
+.topbar-title { font-size: 15px; font-weight: 700; color: var(--navy); }
+.topbar-user { display: flex; align-items: center; gap: 12px; }
+.topbar-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--orange), var(--mango)); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; font-weight: 800; }
+.topbar-name { font-size: 13px; font-weight: 600; color: var(--navy); }
+
+.content { padding: 28px 32px; }
+
+/* Section panels */
+.section { display: none; }
+.section.active { display: block; }
+
+/* Cards & Forms */
+.panel { background: #fff; border-radius: 16px; border: 1px solid var(--g100); overflow: hidden; margin-bottom: 20px; }
+.panel-head { padding: 18px 24px; border-bottom: 1px solid var(--g100); display: flex; justify-content: space-between; align-items: center; }
+.panel-title { font-family: 'Plus Jakarta Sans',sans-serif; font-size: 15px; font-weight: 800; color: var(--navy); }
+.panel-body { padding: 20px 24px; }
+
+.stat-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-bottom: 24px; }
+.stat-card { background: #fff; border-radius: 14px; padding: 18px; border: 1px solid var(--g100); position: relative; overflow: hidden; transition: all 0.3s; }
+.stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--orange); }
+.stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+.stat-icon { font-size: 20px; margin-bottom: 10px; }
+.stat-label { font-size: 12px; color: var(--g500); font-weight: 600; }
+.stat-value { font-family: 'Fraunces',serif; font-size: 32px; font-weight: 900; color: var(--navy); line-height: 1; margin-top: 4px; }
+
+/* Form elements */
+.form-card { background: #fff; border-radius: 16px; border: 2px solid var(--ocean); padding: 28px; margin-bottom: 20px; }
+.form-card h3 { font-size: 18px; color: var(--navy); margin-bottom: 6px; }
+.form-card .sub { font-size: 13px; color: var(--g500); margin-bottom: 20px; }
+.f-group { margin-bottom: 14px; }
+.f-group label { display: block; font-size: 12px; font-weight: 600; color: var(--navy); margin-bottom: 5px; }
+.f-group input, .f-group select, .f-group textarea {
+  width: 100%; padding: 11px 14px; border: 2px solid var(--g200); border-radius: 10px;
+  font-family: inherit; font-size: 13px; color: var(--navy); background: #fff; outline: none; transition: all 0.2s;
+}
+.f-group input:focus, .f-group select:focus, .f-group textarea:focus {
+  border-color: var(--orange); box-shadow: 0 0 0 4px rgba(243,107,46,0.08);
+}
+.f-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.btn-send {
+  width: 100%; padding: 13px; border: none; border-radius: 10px; background: var(--orange);
+  color: #fff; font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer;
+  transition: all 0.2s; margin-top: 8px;
+}
+.btn-send:hover { background: var(--orange-light); box-shadow: 0 6px 20px rgba(243,107,46,0.3); }
+.btn-send:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* List items */
+.list-item {
+  padding: 14px 24px; border-bottom: 1px solid var(--g100);
+  display: flex; justify-content: space-between; align-items: center;
+  transition: background 0.2s;
+}
+.list-item:last-child { border-bottom: none; }
+.list-item:hover { background: var(--g50); }
+.list-title { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 2px; }
+.list-sub { font-size: 12px; color: var(--g500); }
+.badge { padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; }
+.badge-pending { background: rgba(245,154,30,0.12); color: var(--mango); }
+.badge-done { background: rgba(16,185,129,0.12); color: #10b981; }
+.badge-graded { background: rgba(37,60,150,0.12); color: var(--blue); }
+.badge-time { background: rgba(107,114,128,0.08); color: var(--g500); }
+
+.empty-state {
+  text-align: center; padding: 48px 20px; color: var(--g400);
+}
+.empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; opacity: 0.4; }
+.empty-state p { font-size: 14px; }
+
+/* Responsive */
+@media(max-width:1024px) {
+  .sb { transform: translateX(-100%); }
+  .main { margin-left: 0; }
+  .stat-row { grid-template-columns: repeat(2,1fr); }
+}
+</style>
+</head>
+<body>
+
+<div class="dash">
+  <!-- SIDEBAR -->
+  <aside class="sb">
+    <a href="index.html" class="sb-logo"><div class="nav-logo-icon" style="width:36px;height:36px"><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAAAAAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/wAALCABkAGQBAREA/8QAHAABAAEFAQEAAAAAAAAAAAAAAAcEBQYICQID/8QANhAAAQMDAwIDBQQLAAAAAAAAAQACAwQFEQYHEhMhCDFBFCJRYZEVgaGiCRYXGCNCRFViktL/2gAIAQEAAD8A3LRERERERERERERERERERERERERERERWDci51dl271JeLe8R1lBaaqpp3uaHBsjInOaSD2PcDsuff72O9WMfb9BnH9rg/wCVv/tbqE6r2407qR7mukuVtgqJeIwBI5gLxj5O5BZIiIiIiKDvG7fb1p7Y6a42G7V1qrBcqZgqKOodDJxJdkcmkHBx5LQmt3T3KraKeirNfanqKaojdFNFLdJnMkY4Yc1wLsEEEgheLppY0m01j1dxPK4Xetoyf8Yo6ct/F8n0W+vgSvhvHh4tdM54fJaqqooXH1wH9Ro/1kH0U6oiIiIixrcjQ+ndwNNO09qikkqre6ZkxjjmdEeTM8TlpB9Stf8Ae7w3bTaY2j1RqCz2KrhuFBbZZ6eR1wneGvaOx4l2D96jXczRwovARoetEZE8FxbcJXY/kqTMB+Dovosq/RqXwOoNYabe7HTlp66Jvx5B0bz+Vi3FRERERFBHjpudxtOxE1Xa7hV0FQLnStEtNM6N+CXZGWkHC591ms9XVtJLSVmqb5U08zSyWKW4SvY9p9C0uwR8ipJ1f4idV6l2kbtpWWPT0NnZSU1LHJDFKJmNgLCwgmQjPuDPb1Kv3gAvn2Xv7Fb3ScWXe21FLxJ7FzQJh9/8M/VdFERERERYNvftxRbo6GfpWvuNRb4XVMVR1oGNc7LCcDDu3fKg23+CjSNNX09RLq271McUrHvhfTRcZACCWn5EDH3qXtW7J7a1+lbvRUGgdM01ZU0U0UE0NsiY+KRzHBrmkNyCCQQQudexl6dpjefSl2kJjbS3aAT57YY54ZJ+Vzl1hHkiIiIiKOYd59EyvZEyprPaJGB8MJpzylDpHRtx3x3c0+ZGPN2FWVu62kaQROmqKrjLA+oDhTniI2GYOcSTj+nk7eZAyARnFVbtx9M3Cst1NRzVEwuEcckMzYT0wJOr0+Ts4HIQSkefZue2RmAp9vvDNXOdfBYr0faWitMjKipjA5slm7DmMYbDIcD1HEZOQNj9Gaotmp6WoltntHCleyKTrNDTyMbX/E57Pb38j6Ejur8iIiIiw2Xa3QUsPSl07TyARuiaXySFzGFwcWtcXZaMgYAIx6YXv9meieiIDYo3Qh3IROnlLAQZCPdLsYBlkLR5NLyRhfap290hUdHnaAzoxtjj6VRLHhrXPc0e64ZwZZMZ8g9w8iQqd21+hDT+zfq9Tim4BggEsgiawFzg0MDuIbye52AMcjy8wCr5YNPWixGodbKV0T6jpiWR8z5XvDGhjAXPJOGtGAM4Hf4lXVERERERERERERERERERERERERERERf/2Q==" alt="EA"></div><div class="nav-logo-text">EA<span>.</span></div></a>
+    <div class="sb-badge">
+      <span class="sb-badge-icon">👨‍🏫</span>
+      <span class="sb-badge-text">Área do Professor</span>
     </div>
-    <nav class="sidebar-nav">
-      
-        <a href="#" class="sidebar-link active">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-          <span>Dashboard</span>
-        </a>
-        <a href="#" class="sidebar-link ">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
-          <span>Meus Alunos</span>
-        </a>
-        <a href="#" class="sidebar-link ">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-          <span>Enviar Tarefas</span>
-        </a>
-        <a href="#" class="sidebar-link ">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
-          <span>Feedbacks</span>
-        </a>
-        <a href="#" class="sidebar-link ">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
-          <span>Avisos</span>
-        </a>
-        <a href="#" class="sidebar-link ">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-          <span>Atividades Writing</span>
-        </a>
+    <nav class="sb-nav" id="sidebarNav">
+      <button class="sb-link active" data-section="overview">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        <span>Visão Geral</span>
+      </button>
+      <button class="sb-link" data-section="homework">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+        <span>Homework</span>
+      </button>
+      <button class="sb-link" data-section="feedback">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+        <span>Feedbacks</span>
+      </button>
+      <button class="sb-link" data-section="announcements">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+        <span>Avisos</span>
+      </button>
+      <button class="sb-link" data-section="writing">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.996.996 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+        <span>Redação</span>
+      </button>
+      <button class="sb-link" data-section="pronunciation">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm-1-9c0-.55.45-1 1-1s1 .45 1 1v6c0 .55-.45 1-1 1s-1-.45-1-1V6zm6 6c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-2.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+        <span>Pronúncia</span>
+      </button>
+      <button class="sb-link" data-section="messages">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        <span>Mensagens</span>
+      </button>
     </nav>
-    <div class="sidebar-bottom">
+    <div class="sb-bottom">
       <a href="login.html">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
         Trocar Portal
       </a>
-      <a href="index.html">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-        Voltar ao Site
+      <a href="#" class="sb-logout" onclick="signOut();return false;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+        Sair
       </a>
     </div>
   </aside>
-  
+
+  <!-- MAIN CONTENT -->
   <main class="main">
     <div class="topbar">
-      <div class="topbar-search">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="#6b7280"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-        <input type="text" placeholder="Buscar..."/>
-      </div>
-      <div class="topbar-right">
-        <button class="topbar-icon-btn">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="#6b7280"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
-          <span class="badge"></span>
-        </button>
-        <div class="topbar-avatar">Á</div>
+      <span class="topbar-title" id="topbarTitle">Visão Geral</span>
+      <div class="topbar-user">
+        <span class="topbar-name" id="userName">Professor</span>
+        <div class="topbar-avatar" id="userAvatar">P</div>
       </div>
     </div>
-    
-    <div class="dash-content">
-      <div class="dash-header">
-        <h1>Olá! <em>👨‍🏫</em></h1>
-        <p>Painel da Área do Professor</p>
-      </div>
-      
-      <div class="stats-grid">
-        
-        <div class="stat-card">
-          <div class="stat-icon" style="background:#f36b2e18;color:#f36b2e">
-            👥
-          </div>
-          <div class="stat-body">
-            <div class="stat-label">Alunos Ativos</div>
-            <div class="stat-value">6</div>
-            <div class="stat-trend">Neste semestre</div>
-          </div>
+
+    <div class="content">
+      <!-- ═══ OVERVIEW ═══ -->
+      <div class="section active" id="sec-overview">
+        <h2 style="font-size:24px;font-weight:800;color:var(--navy);margin-bottom:4px" id="greeting">Olá, Professor! 👨‍🏫</h2>
+        <p style="font-size:14px;color:var(--g500);margin-bottom:24px">Aqui está o resumo da sua área.</p>
+        <div class="stat-row">
+          <div class="stat-card"><div class="stat-icon">📝</div><div class="stat-label">Homeworks Enviados</div><div class="stat-value" id="statTasks">-</div></div>
+          <div class="stat-card"><div class="stat-icon">💬</div><div class="stat-label">Feedbacks</div><div class="stat-value" id="statFeedbacks">-</div></div>
+          <div class="stat-card"><div class="stat-icon">✍️</div><div class="stat-label">Redações p/ Corrigir</div><div class="stat-value" id="statWriting">-</div></div>
+          <div class="stat-card"><div class="stat-icon">📢</div><div class="stat-label">Avisos Publicados</div><div class="stat-value" id="statAnnouncements">-</div></div>
         </div>
-        <div class="stat-card">
-          <div class="stat-icon" style="background:#f36b2e18;color:#f36b2e">
-            📝
-          </div>
-          <div class="stat-body">
-            <div class="stat-label">Tarefas Pendentes</div>
-            <div class="stat-value">8</div>
-            <div class="stat-trend">Para revisar</div>
-          </div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon" style="background:#f36b2e18;color:#f36b2e">
-            💬
-          </div>
-          <div class="stat-body">
-            <div class="stat-label">Feedbacks</div>
-            <div class="stat-value">3</div>
-            <div class="stat-trend">A registrar</div>
-          </div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon" style="background:#f36b2e18;color:#f36b2e">
-            📅
-          </div>
-          <div class="stat-body">
-            <div class="stat-label">Aulas Hoje</div>
-            <div class="stat-value">4</div>
-            <div class="stat-trend">Próxima: 09h</div>
-          </div>
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">📋 Atividade Recente</div></div>
+          <div id="recentActivity"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhuma atividade ainda. Comece enviando um homework!</p></div></div>
         </div>
       </div>
-      
-      <div class="panel">
-        <div class="panel-header">
-          <div class="panel-title">📅 Aulas de Hoje</div>
-          <a href="#" class="panel-link">Ver tudo →</a>
-        </div>
-        
-        <div class="activity-item">
-          <div class="activity-info">
-            <div class="activity-title">09:00 — Ana Beatriz</div>
-            <div class="activity-subtitle">Interchange 1 • Unit 10 — Travel</div>
+
+      <!-- ═══ HOMEWORK ═══ -->
+      <div class="section" id="sec-homework">
+        <div class="form-card">
+          <h3>📝 Enviar Homework</h3>
+          <p class="sub">Crie uma tarefa e envie para seus alunos.</p>
+          <div class="f-group"><label>Título da tarefa</label><input type="text" id="hwTitle" placeholder="Ex: Unit 7 — Grammar Exercises"></div>
+          <div class="f-group"><label>Descrição / Instruções</label><textarea id="hwDesc" rows="3" placeholder="Descreva o que o aluno deve fazer..."></textarea></div>
+          <div class="f-row">
+            <div class="f-group"><label>Aluno</label><select id="hwStudent"><option value="">Carregando...</option></select></div>
+            <div class="f-group"><label>Prazo (opcional)</label><input type="date" id="hwDue"></div>
           </div>
-          <span class="activity-status" style="background:#6daf5f18;color:#6daf5f">Confirmada</span>
+          <button class="btn-send" id="hwSend" onclick="sendHomework()">Enviar Homework</button>
         </div>
-        <div class="activity-item">
-          <div class="activity-info">
-            <div class="activity-title">14:00 — Pedro Henrique</div>
-            <div class="activity-subtitle">Interchange 3 • Unit 4 — Passive Voice</div>
-          </div>
-          <span class="activity-status" style="background:#6daf5f18;color:#6daf5f">Confirmada</span>
-        </div>
-        <div class="activity-item">
-          <div class="activity-info">
-            <div class="activity-title">19:00 — Camila Almeida</div>
-            <div class="activity-subtitle">Interchange 2 • Unit 7 — Future Plans</div>
-          </div>
-          <span class="activity-status" style="background:#6daf5f18;color:#6daf5f">Confirmada</span>
-        </div>
-        <div class="activity-item">
-          <div class="activity-info">
-            <div class="activity-title">20:00 — Rafael Santos</div>
-            <div class="activity-subtitle">Interchange 2 • Unit 7 — Future Plans</div>
-          </div>
-          <span class="activity-status" style="background:#6daf5f18;color:#6daf5f">Confirmada</span>
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">📚 Homeworks Enviados</div></div>
+          <div id="hwList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhum homework enviado ainda.</p></div></div>
         </div>
       </div>
-      
-      <p class="proto-note">⚠️ Protótipo visual — dados simulados para demonstração</p>
+
+      <!-- ═══ FEEDBACKS ═══ -->
+      <div class="section" id="sec-feedback">
+        <div class="form-card">
+          <h3>💬 Enviar Feedback</h3>
+          <p class="sub">Registre um feedback para seu aluno.</p>
+          <div class="f-group"><label>Aluno</label><select id="fbStudent"><option value="">Carregando...</option></select></div>
+          <div class="f-group"><label>Título</label><input type="text" id="fbTitle" placeholder="Ex: Progresso em Speaking"></div>
+          <div class="f-group"><label>Categoria</label><select id="fbCategory"><option value="general">Geral</option><option value="speaking">Speaking</option><option value="listening">Listening</option><option value="reading">Reading</option><option value="writing">Writing</option><option value="grammar">Grammar</option></select></div>
+          <div class="f-group"><label>Conteúdo do feedback</label><textarea id="fbContent" rows="4" placeholder="Escreva o feedback detalhado..."></textarea></div>
+          <button class="btn-send" onclick="sendFeedback()">Enviar Feedback</button>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">💬 Feedbacks Enviados</div></div>
+          <div id="fbList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhum feedback registrado ainda.</p></div></div>
+        </div>
+      </div>
+
+      <!-- ═══ ANNOUNCEMENTS ═══ -->
+      <div class="section" id="sec-announcements">
+        <div class="form-card">
+          <h3>📢 Publicar Aviso</h3>
+          <p class="sub">Envie um comunicado para seus alunos.</p>
+          <div class="f-group"><label>Título do aviso</label><input type="text" id="annTitle" placeholder="Ex: Aula cancelada dia 20/04"></div>
+          <div class="f-group"><label>Conteúdo</label><textarea id="annContent" rows="4" placeholder="Escreva o aviso..."></textarea></div>
+          <button class="btn-send" onclick="sendAnnouncement()">Publicar Aviso</button>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">📢 Avisos Publicados</div></div>
+          <div id="annList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhum aviso publicado ainda.</p></div></div>
+        </div>
+      </div>
+
+      <!-- ═══ WRITING ═══ -->
+      <div class="section" id="sec-writing">
+        <div class="form-card">
+          <h3>✍️ Enviar Tema de Redação</h3>
+          <p class="sub">Proponha um tema de escrita para o aluno.</p>
+          <div class="f-group"><label>Aluno</label><select id="wrStudent"><option value="">Carregando...</option></select></div>
+          <div class="f-group"><label>Título</label><input type="text" id="wrTitle" placeholder="Ex: Describe your favorite place"></div>
+          <div class="f-group"><label>Prompt / Instrução</label><textarea id="wrPrompt" rows="4" placeholder="Descreva o que o aluno deve escrever..."></textarea></div>
+          <div class="f-group"><label>Prazo (opcional)</label><input type="date" id="wrDue"></div>
+          <button class="btn-send" onclick="sendWriting()">Enviar Tema</button>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">✍️ Redações</div></div>
+          <div id="wrList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhuma atividade de redação ainda.</p></div></div>
+        </div>
+      </div>
+
+      <!-- ═══ PRONUNCIATION ═══ -->
+      <div class="section" id="sec-pronunciation">
+        <div class="form-card">
+          <h3>🎙️ Enviar Prática de Pronúncia</h3>
+          <p class="sub">Envie palavras ou frases para o aluno praticar.</p>
+          <div class="f-row">
+            <div class="f-group"><label>Aluno</label><select id="prStudent"><option value="">Carregando...</option></select></div>
+            <div class="f-group"><label>Fonética (opcional)</label><input type="text" id="prPhonetic" placeholder="Ex: /prəˌnʌnsiˈeɪʃən/"></div>
+          </div>
+          <div class="f-group"><label>Palavra ou frase</label><input type="text" id="prWord" placeholder="Ex: Pronunciation"></div>
+          <div class="f-group"><label>Observações (opcional)</label><textarea id="prNotes" rows="2" placeholder="Dicas de pronúncia..."></textarea></div>
+          <button class="btn-send" onclick="sendPronunciation()">Enviar</button>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">🎙️ Pronúncias Enviadas</div></div>
+          <div id="prList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhuma prática de pronúncia enviada.</p></div></div>
+        </div>
+      </div>
+
+      <!-- ═══ MESSAGES ═══ -->
+      <div class="section" id="sec-messages">
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">📩 Mensagens da Coordenação</div></div>
+          <div id="msgList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhuma mensagem recebida.</p></div></div>
+        </div>
+      </div>
+
     </div>
   </main>
 </div>
 
-</body></html>
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<script>
+let currentUser = null;
+const sections = {"overview":"Visão Geral","homework":"Homework","feedback":"Feedbacks","announcements":"Avisos","writing":"Redação","pronunciation":"Pronúncia","messages":"Mensagens"};
+
+// ═══ INIT ═══
+document.addEventListener('DOMContentLoaded', async () => {
+  currentUser = await requireAuth(['teacher','coordinator']);
+  if (!currentUser) return;
+
+  document.getElementById('userName').textContent = currentUser.full_name || 'Professor';
+  document.getElementById('userAvatar').textContent = (currentUser.full_name || 'P')[0];
+  document.getElementById('greeting').textContent = 'Olá, ' + (currentUser.full_name || 'Professor') + '! 👨‍🏫';
+
+  // Sidebar navigation
+  document.querySelectorAll('.sb-link').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.sb-link').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const sec = btn.dataset.section;
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById('sec-' + sec).classList.add('active');
+      document.getElementById('topbarTitle').textContent = sections[sec] || sec;
+    });
+  });
+
+  // Load students dropdown
+  await loadStudents();
+  // Load overview stats
+  await loadOverview();
+});
+
+// ═══ LOAD STUDENTS INTO ALL SELECTS ═══
+async function loadStudents() {
+  const students = await getAllStudents();
+  const selects = ['hwStudent','fbStudent','wrStudent','prStudent'];
+  selects.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.innerHTML = '<option value="">Selecione o aluno</option>';
+    students.forEach(s => {
+      el.innerHTML += '<option value="' + s.id + '">' + s.full_name + (s.level ? ' (' + s.level + ')' : '') + '</option>';
+    });
+  });
+}
+
+// ═══ OVERVIEW ═══
+async function loadOverview() {
+  try {
+    const [tasks, feedbacks, writing, announcements] = await Promise.all([
+      getTasksByTeacher(currentUser.id),
+      getFeedbacksByTeacher(currentUser.id),
+      getWritingByTeacher(currentUser.id),
+      getAnnouncements(),
+    ]);
+    document.getElementById('statTasks').textContent = tasks.length;
+    document.getElementById('statFeedbacks').textContent = feedbacks.length;
+    document.getElementById('statWriting').textContent = writing.filter(w => w.status === 'submitted').length;
+    document.getElementById('statAnnouncements').textContent = announcements.filter(a => a.author_id === currentUser.id).length;
+
+    // Recent activity
+    const recent = [];
+    tasks.slice(0,3).forEach(t => recent.push({title:'📝 ' + t.title, sub: formatDateTime(t.created_at), type:'homework'}));
+    feedbacks.slice(0,3).forEach(f => recent.push({title:'💬 ' + f.title, sub: (f.student?.full_name||'') + ' — ' + formatDateTime(f.created_at), type:'feedback'}));
+
+    const actDiv = document.getElementById('recentActivity');
+    if (recent.length === 0) {
+      actDiv.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>Nenhuma atividade ainda. Comece enviando um homework!</p></div>';
+    } else {
+      actDiv.innerHTML = recent.map(r => '<div class="list-item"><div><div class="list-title">' + r.title + '</div><div class="list-sub">' + r.sub + '</div></div><span class="badge badge-time">' + r.type + '</span></div>').join('');
+    }
+  } catch(e) {
+    console.error('Overview error:', e);
+  }
+}
+
+// ═══ SEND HOMEWORK ═══
+async function sendHomework() {
+  const title = document.getElementById('hwTitle').value.trim();
+  const desc = document.getElementById('hwDesc').value.trim();
+  const studentId = document.getElementById('hwStudent').value;
+  const due = document.getElementById('hwDue').value;
+  if (!title) { showToast('Preencha o título da tarefa','error'); return; }
+  if (!studentId) { showToast('Selecione um aluno','error'); return; }
+  try {
+    await createTask(title, desc, currentUser.id, [studentId], due || null);
+    showToast('Homework enviado com sucesso!');
+    document.getElementById('hwTitle').value = '';
+    document.getElementById('hwDesc').value = '';
+    document.getElementById('hwStudent').value = '';
+    document.getElementById('hwDue').value = '';
+    loadHomeworkList();
+    loadOverview();
+  } catch(e) {
+    showToast('Erro ao enviar: ' + e.message, 'error');
+  }
+}
+
+async function loadHomeworkList() {
+  const tasks = await getTasksByTeacher(currentUser.id);
+  const div = document.getElementById('hwList');
+  if (!tasks.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>Nenhum homework enviado ainda.</p></div>'; return; }
+  div.innerHTML = tasks.map(t => {
+    const subs = t.task_submissions || [];
+    const pending = subs.filter(s => s.status === 'pending').length;
+    const done = subs.filter(s => s.status !== 'pending').length;
+    const names = subs.map(s => s.student?.full_name || '').join(', ');
+    return '<div class="list-item"><div><div class="list-title">' + t.title + '</div><div class="list-sub">' + names + ' — ' + formatDate(t.due_date) + '</div></div><div style="display:flex;gap:6px"><span class="badge badge-done">' + done + ' feito(s)</span><span class="badge badge-pending">' + pending + ' pendente(s)</span></div></div>';
+  }).join('');
+}
+
+// ═══ SEND FEEDBACK ═══
+async function sendFeedback() {
+  const studentId = document.getElementById('fbStudent').value;
+  const title = document.getElementById('fbTitle').value.trim();
+  const content = document.getElementById('fbContent').value.trim();
+  const category = document.getElementById('fbCategory').value;
+  if (!studentId || !title || !content) { showToast('Preencha todos os campos','error'); return; }
+  try {
+    await createFeedback(currentUser.id, studentId, title, content, category);
+    showToast('Feedback enviado!');
+    document.getElementById('fbTitle').value = '';
+    document.getElementById('fbContent').value = '';
+    document.getElementById('fbStudent').value = '';
+    loadFeedbackList();
+    loadOverview();
+  } catch(e) {
+    showToast('Erro: ' + e.message, 'error');
+  }
+}
+
+async function loadFeedbackList() {
+  const fbs = await getFeedbacksByTeacher(currentUser.id);
+  const div = document.getElementById('fbList');
+  if (!fbs.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>Nenhum feedback registrado.</p></div>'; return; }
+  div.innerHTML = fbs.map(f => '<div class="list-item"><div><div class="list-title">💬 ' + f.title + '</div><div class="list-sub">' + (f.student?.full_name||'') + ' — ' + f.category + ' — ' + formatDateTime(f.created_at) + '</div></div></div>').join('');
+}
+
+// ═══ SEND ANNOUNCEMENT ═══
+async function sendAnnouncement() {
+  const title = document.getElementById('annTitle').value.trim();
+  const content = document.getElementById('annContent').value.trim();
+  if (!title || !content) { showToast('Preencha título e conteúdo','error'); return; }
+  try {
+    await createAnnouncement(currentUser.id, title, content, 'student');
+    showToast('Aviso publicado!');
+    document.getElementById('annTitle').value = '';
+    document.getElementById('annContent').value = '';
+    loadAnnouncementList();
+    loadOverview();
+  } catch(e) {
+    showToast('Erro: ' + e.message, 'error');
+  }
+}
+
+async function loadAnnouncementList() {
+  const anns = await getAnnouncements();
+  const div = document.getElementById('annList');
+  const mine = anns.filter(a => a.author_id === currentUser.id);
+  if (!mine.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>Nenhum aviso publicado.</p></div>'; return; }
+  div.innerHTML = mine.map(a => '<div class="list-item"><div><div class="list-title">📢 ' + a.title + '</div><div class="list-sub">' + a.content.substring(0,80) + '... — ' + formatDateTime(a.created_at) + '</div></div></div>').join('');
+}
+
+// ═══ SEND WRITING ═══
+async function sendWriting() {
+  const studentId = document.getElementById('wrStudent').value;
+  const title = document.getElementById('wrTitle').value.trim();
+  const prompt = document.getElementById('wrPrompt').value.trim();
+  const due = document.getElementById('wrDue').value;
+  if (!studentId || !title || !prompt) { showToast('Preencha todos os campos','error'); return; }
+  try {
+    await createWritingActivity(currentUser.id, studentId, title, prompt, due || null);
+    showToast('Tema de redação enviado!');
+    document.getElementById('wrTitle').value = '';
+    document.getElementById('wrPrompt').value = '';
+    document.getElementById('wrStudent').value = '';
+    document.getElementById('wrDue').value = '';
+    loadWritingList();
+  } catch(e) {
+    showToast('Erro: ' + e.message, 'error');
+  }
+}
+
+async function loadWritingList() {
+  const items = await getWritingByTeacher(currentUser.id);
+  const div = document.getElementById('wrList');
+  if (!items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>Nenhuma atividade de redação.</p></div>'; return; }
+  div.innerHTML = items.map(w => {
+    const statusBadge = w.status === 'pending' ? '<span class="badge badge-pending">Pendente</span>' : w.status === 'submitted' ? '<span class="badge badge-done">Enviada — corrigir</span>' : '<span class="badge badge-graded">Corrigida: ' + (w.grade||'') + '</span>';
+    return '<div class="list-item"><div><div class="list-title">✍️ ' + w.title + '</div><div class="list-sub">' + (w.student?.full_name||'') + ' — ' + formatDateTime(w.created_at) + '</div></div>' + statusBadge + '</div>';
+  }).join('');
+}
+
+// ═══ SEND PRONUNCIATION ═══
+async function sendPronunciation() {
+  const studentId = document.getElementById('prStudent').value;
+  const word = document.getElementById('prWord').value.trim();
+  const phonetic = document.getElementById('prPhonetic').value.trim();
+  const notes = document.getElementById('prNotes').value.trim();
+  if (!studentId || !word) { showToast('Preencha o aluno e a palavra','error'); return; }
+  try {
+    await createPronunciation(currentUser.id, studentId, word, phonetic, notes);
+    showToast('Pronúncia enviada!');
+    document.getElementById('prWord').value = '';
+    document.getElementById('prPhonetic').value = '';
+    document.getElementById('prNotes').value = '';
+    loadPronunciationList();
+  } catch(e) {
+    showToast('Erro: ' + e.message, 'error');
+  }
+}
+
+async function loadPronunciationList() {
+  const items = await getPronunciationByTeacher(currentUser.id);
+  const div = document.getElementById('prList');
+  if (!items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>Nenhuma prática enviada.</p></div>'; return; }
+  div.innerHTML = items.map(p => '<div class="list-item"><div><div class="list-title">🎙️ ' + p.word + (p.phonetic ? ' <span style="color:var(--g400);font-weight:400">' + p.phonetic + '</span>' : '') + '</div><div class="list-sub">' + (p.student?.full_name||'') + ' — ' + (p.practiced ? '✅ Praticado' : '⏳ Pendente') + '</div></div><span class="badge ' + (p.practiced ? 'badge-done' : 'badge-pending') + '">' + (p.practiced ? 'Praticado' : 'Pendente') + '</span></div>').join('');
+}
+
+// ═══ LOAD MESSAGES ═══
+async function loadMessages() {
+  const msgs = await getCoordMessagesForTeacher(currentUser.id);
+  const div = document.getElementById('msgList');
+  if (!msgs.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>Nenhuma mensagem da coordenação.</p></div>'; return; }
+  div.innerHTML = msgs.map(m => '<div class="list-item" style="' + (!m.read ? 'background:var(--mango-soft);border-left:4px solid var(--mango)' : '') + '"><div><div class="list-title">📩 ' + m.title + '</div><div class="list-sub">' + m.content.substring(0,100) + ' — ' + formatDateTime(m.created_at) + '</div></div><span class="badge ' + (m.read ? 'badge-time' : 'badge-pending') + '">' + (m.read ? 'Lida' : 'Nova') + '</span></div>').join('');
+}
+
+// ═══ SIDEBAR NAVIGATION HOOKS ═══
+document.addEventListener('DOMContentLoaded', () => {
+  // Load content when switching sections
+  const observer = new MutationObserver(() => {
+    const active = document.querySelector('.section.active');
+    if (!active || !currentUser) return;
+    const id = active.id.replace('sec-','');
+    switch(id) {
+      case 'homework': loadHomeworkList(); break;
+      case 'feedback': loadFeedbackList(); break;
+      case 'announcements': loadAnnouncementList(); break;
+      case 'writing': loadWritingList(); break;
+      case 'pronunciation': loadPronunciationList(); break;
+      case 'messages': loadMessages(); break;
+    }
+  });
+  document.querySelectorAll('.section').forEach(s => observer.observe(s, {attributes:true, attributeFilter:['class']}));
+});
+</script>
+</body>
+</html>

@@ -5,495 +5,335 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Área do Aluno — EA English Classes</title>
 <link rel="stylesheet" href="style.css">
-</head>
-<body style="background:var(--g50)">
 <style>
-  body {
-    background: var(--g50);
-    overflow-x: hidden;
-  }
-  .dash-layout {
-    display: flex;
-    min-height: 100vh;
-  }
-  .sidebar {
-    width: 260px;
-    background: var(--navy);
-    padding: 24px 16px;
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    top: 0; left: 0; bottom: 0;
-    z-index: 100;
-  }
-  .sidebar-logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 0 8px 20px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    margin-bottom: 20px;
-  }
-  .sidebar-logo .nav-logo-text {
-    color: var(--white);
-    font-size: 18px;
-    font-family: 'Fraunces',serif;
-    font-weight: 900;
-  }
-  .sidebar-logo .nav-logo-text span { color: var(--orange); }
-  
-  .sidebar-badge {
-    padding: 10px 14px;
-    background: #253c9620;
-    border: 1px solid #253c9640;
-    border-radius: var(--r-md);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 24px;
-  }
-  .sidebar-badge-emoji { font-size: 18px; }
-  .sidebar-badge-text { font-size: 12px; font-weight: 700; color: #253c96; }
-  
-  .sidebar-nav {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-  .sidebar-link {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 14px;
-    border-radius: var(--r-sm);
-    color: rgba(255,255,255,0.5);
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.2s;
-  }
-  .sidebar-link:hover {
-    background: rgba(255,255,255,0.05);
-    color: var(--white);
-  }
-  .sidebar-link.active {
-    background: #253c9620;
-    color: #253c96;
-    font-weight: 700;
-  }
-  .sidebar-link svg { min-width: 18px; }
-  
-  .sidebar-bottom {
-    border-top: 1px solid rgba(255,255,255,0.08);
-    padding-top: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  .sidebar-bottom a {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 14px;
-    border-radius: var(--r-sm);
-    color: rgba(255,255,255,0.5);
-    font-size: 13px;
-    transition: all 0.2s;
-  }
-  .sidebar-bottom a:hover {
-    background: rgba(255,255,255,0.05);
-    color: var(--white);
-  }
-  
-  .main {
-    margin-left: 260px;
-    flex: 1;
-    min-height: 100vh;
-  }
-  .topbar {
-    height: 72px;
-    background: rgba(247,248,250,0.95);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--g100);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 32px;
-    position: sticky;
-    top: 0;
-    z-index: 50;
-  }
-  .topbar-search {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    background: var(--white);
-    border-radius: var(--r-full);
-    border: 1px solid var(--g200);
-    width: 320px;
-  }
-  .topbar-search input {
-    border: none;
-    outline: none;
-    background: transparent;
-    font-size: 13px;
-    flex: 1;
-    font-family: inherit;
-    color: var(--navy);
-  }
-  .topbar-right {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-  .topbar-icon-btn {
-    width: 40px;
-    height: 40px;
-    border: none;
-    background: var(--white);
-    border: 1px solid var(--g200);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    position: relative;
-    transition: all 0.2s;
-  }
-  .topbar-icon-btn:hover { border-color: #253c96; }
-  .topbar-icon-btn .badge {
-    position: absolute;
-    top: 6px;
-    right: 6px;
-    width: 8px; height: 8px;
-    background: var(--orange);
-    border-radius: 50%;
-    border: 2px solid var(--white);
-  }
-  .topbar-avatar {
-    width: 40px; height: 40px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #253c96, #253c96cc);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: 800;
-    font-size: 14px;
-    box-shadow: var(--shadow-sm);
-  }
-  
-  .dash-content {
-    padding: 32px;
-  }
-  .dash-header {
-    margin-bottom: 28px;
-  }
-  .dash-header h1 {
-    font-size: 28px;
-    color: var(--navy);
-    margin-bottom: 4px;
-  }
-  .dash-header h1 em { color: #253c96; font-style: italic; font-weight: 900; }
-  .dash-header p {
-    font-size: 14px;
-    color: var(--g500);
-  }
-  
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    margin-bottom: 28px;
-  }
-  .stat-card {
-    background: var(--white);
-    border-radius: var(--r-lg);
-    padding: 20px;
-    display: flex;
-    gap: 14px;
-    align-items: center;
-    border: 1px solid var(--g100);
-    transition: all 0.3s;
-    position: relative;
-    overflow: hidden;
-  }
-  .stat-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    background: #253c96;
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.3s;
-  }
-  .stat-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
-    border-color: transparent;
-  }
-  .stat-card:hover::before { transform: scaleX(1); }
-  
-  .stat-icon {
-    width: 48px; height: 48px;
-    min-width: 48px;
-    border-radius: var(--r-md);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-  }
-  .stat-label {
-    font-size: 12px;
-    color: var(--g500);
-    font-weight: 600;
-    margin-bottom: 4px;
-  }
-  .stat-value {
-    font-family: 'Fraunces', serif;
-    font-size: 28px;
-    font-weight: 900;
-    color: var(--navy);
-    line-height: 1;
-  }
-  .stat-trend {
-    font-size: 11px;
-    color: var(--g500);
-    margin-top: 4px;
-  }
-  
-  .panel {
-    background: var(--white);
-    border-radius: var(--r-lg);
-    border: 1px solid var(--g100);
-    overflow: hidden;
-  }
-  .panel-header {
-    padding: 20px 24px;
-    border-bottom: 1px solid var(--g100);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .panel-title {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 15px;
-    font-weight: 800;
-    color: var(--navy);
-  }
-  .panel-link {
-    font-size: 13px;
-    color: #253c96;
-    font-weight: 700;
-  }
-  
-  .activity-item {
-    padding: 16px 24px;
-    border-bottom: 1px solid var(--g100);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-    transition: background 0.2s;
-  }
-  .activity-item:last-child { border-bottom: none; }
-  .activity-item:hover { background: var(--g50); }
-  .activity-title {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--navy);
-    margin-bottom: 2px;
-  }
-  .activity-subtitle {
-    font-size: 12px;
-    color: var(--g500);
-  }
-  .activity-status {
-    padding: 5px 12px;
-    border-radius: var(--r-full);
-    font-size: 11px;
-    font-weight: 700;
-    white-space: nowrap;
-  }
-  
-  .proto-note {
-    font-size: 11px;
-    color: var(--g500);
-    text-align: center;
-    margin-top: 24px;
-    opacity: 0.6;
-  }
-  
+  body { background: var(--g50); margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+  .dash { display: flex; min-height: 100vh; }
+
+  /* Sidebar - consistente com professor/coordenacao */
+  .sb { width: 260px; background: var(--navy); padding: 20px 14px; display: flex; flex-direction: column; position: fixed; top: 0; bottom: 0; left: 0; z-index: 100; }
+  .sb-logo { display: flex; align-items: center; gap: 12px; padding: 0 10px 18px; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 18px; }
+  .sb-logo .nav-logo-text { color: #fff; font-family: 'Fraunces',serif; font-weight: 900; font-size: 18px; }
+  .sb-logo .nav-logo-text span { color: var(--orange); }
+  .sb-badge { padding: 10px 14px; background: rgba(37,60,150,0.15); border: 1px solid rgba(37,60,150,0.3); border-radius: 12px; display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
+  .sb-badge-icon { font-size: 18px; }
+  .sb-badge-text { font-size: 12px; font-weight: 700; color: #4a60be; }
+  .sb-nav { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+  .sb-link { display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-radius: 10px; color: rgba(255,255,255,0.6); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+  .sb-link:hover { background: rgba(255,255,255,0.05); color: #fff; }
+  .sb-link.active { background: rgba(37,60,150,0.2); color: #c4e7e5; font-weight: 700; }
+  .sb-bottom { border-top: 1px solid rgba(255,255,255,0.06); padding-top: 14px; }
+  .sb-bottom a { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 10px; color: rgba(255,255,255,0.5); font-size: 13px; }
+  .sb-bottom a:hover { background: rgba(255,255,255,0.05); color: #fff; }
+
+  /* Main */
+  .main { margin-left: 260px; flex: 1; }
+  .topbar { height: 68px; background: rgba(247,248,250,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--g100); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; position: sticky; top: 0; z-index: 50; }
+  .topbar-title { font-size: 15px; font-weight: 700; color: var(--navy); }
+  .topbar-user { display: flex; align-items: center; gap: 12px; }
+  .topbar-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--blue), var(--blue-light)); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; font-weight: 800; }
+
+  .content { padding: 28px 32px; }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .welcome { font-size: 28px; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+  .welcome small { font-size: 15px; color: var(--g500); font-weight: 500; }
+
+  .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 32px; }
+  .stat-card { background: #fff; border-radius: 16px; padding: 20px; border: 1px solid var(--g100); position: relative; overflow: hidden; }
+  .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(to right, var(--blue), var(--ocean)); }
+  .stat-value { font-family: 'Fraunces',serif; font-size: 36px; font-weight: 900; color: var(--navy); line-height: 1; }
+  .stat-label { font-size: 13px; color: var(--g500); font-weight: 600; margin-top: 4px; }
+
+  .panel { background: #fff; border-radius: 16px; border: 1px solid var(--g100); overflow: hidden; margin-bottom: 24px; }
+  .panel-head { padding: 18px 24px; border-bottom: 1px solid var(--g100); display: flex; justify-content: space-between; align-items: center; }
+  .panel-title { font-size: 15px; font-weight: 800; color: var(--navy); }
+
+  .list-item { padding: 16px 24px; border-bottom: 1px solid var(--g100); display: flex; justify-content: space-between; align-items: center; }
+  .list-item:last-child { border-bottom: none; }
+  .list-item:hover { background: var(--g50); }
+  .list-title { font-weight: 700; color: var(--navy); }
+  .list-sub { font-size: 13px; color: var(--g500); margin-top: 4px; }
+
+  .badge { padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+  .badge-pending { background: #fff0db; color: var(--mango); }
+  .badge-done { background: #d1fae5; color: #10b981; }
+  .badge-streak { background: #fef3c7; color: #d97706; }
+
+  .empty-state { text-align: center; padding: 60px 20px; color: var(--g400); }
+  .empty-state .empty-icon { font-size: 52px; margin-bottom: 12px; opacity: 0.5; }
+
   @media(max-width:1024px) {
-    .sidebar { transform: translateX(-100%); }
+    .sb { transform: translateX(-100%); }
     .main { margin-left: 0; }
-    .stats-grid { grid-template-columns: repeat(2,1fr); }
-    .topbar-search { display: none; }
-  }
-  @media(max-width:640px) {
-    .stats-grid { grid-template-columns: 1fr; }
-    .dash-content { padding: 20px; }
   }
 </style>
+</head>
+<body>
 
-<div class="dash-layout">
-  <aside class="sidebar">
-    <a href="index.html" class="sidebar-logo">
-      <div class="nav-logo-icon" style="width:36px;height:36px"><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAAAAAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/wAALCABkAGQBAREA/8QAHAABAAEFAQEAAAAAAAAAAAAAAAcEBQYICQID/8QANhAAAQMDAwIDBQQLAAAAAAAAAQACAwQFEQYHEhMhCDFBFCJRYZEVgaGiCRYXGCNCRFViktL/2gAIAQEAAD8A3LRERERERERERERERERERERERERERERWDci51dl271JeLe8R1lBaaqpp3uaHBsjInOaSD2PcDsuff72O9WMfb9BnH9rg/wCVv/tbqE6r2407qR7mukuVtgqJeIwBI5gLxj5O5BZIiIiIiKDvG7fb1p7Y6a42G7V1qrBcqZgqKOodDJxJdkcmkHBx5LQmt3T3KraKeirNfanqKaojdFNFLdJnMkY4Yc1wLsEEEgheLppY0m01j1dxPK4Xetoyf8Yo6ct/F8n0W+vgSvhvHh4tdM54fJaqqooXH1wH9Ro/1kH0U6oiIiIixrcjQ+ndwNNO09qikkqre6ZkxjjmdEeTM8TlpB9Stf8Ae7w3bTaY2j1RqCz2KrhuFBbZZ6eR1wneGvaOx4l2D96jXczRwovARoetEZE8FxbcJXY/kqTMB+Dovosq/RqXwOoNYabe7HTlp66Jvx5B0bz+Vi3FRERERFBHjpudxtOxE1Xa7hV0FQLnStEtNM6N+CXZGWkHC591ms9XVtJLSVmqb5U08zSyWKW4SvY9p9C0uwR8ipJ1f4idV6l2kbtpWWPT0NnZSU1LHJDFKJmNgLCwgmQjPuDPb1Kv3gAvn2Xv7Fb3ScWXe21FLxJ7FzQJh9/8M/VdFERERERYNvftxRbo6GfpWvuNRb4XVMVR1oGNc7LCcDDu3fKg23+CjSNNX09RLq271McUrHvhfTRcZACCWn5EDH3qXtW7J7a1+lbvRUGgdM01ZU0U0UE0NsiY+KRzHBrmkNyCCQQQudexl6dpjefSl2kJjbS3aAT57YY54ZJ+Vzl1hHkiIiIiKOYd59EyvZEyprPaJGB8MJpzylDpHRtx3x3c0+ZGPN2FWVu62kaQROmqKrjLA+oDhTniI2GYOcSTj+nk7eZAyARnFVbtx9M3Cst1NRzVEwuEcckMzYT0wJOr0+Ts4HIQSkefZue2RmAp9vvDNXOdfBYr0faWitMjKipjA5slm7DmMYbDIcD1HEZOQNj9Gaotmp6WoltntHCleyKTrNDTyMbX/E57Pb38j6Ejur8iIiIiw2Xa3QUsPSl07TyARuiaXySFzGFwcWtcXZaMgYAIx6YXv9meieiIDYo3Qh3IROnlLAQZCPdLsYBlkLR5NLyRhfap290hUdHnaAzoxtjj6VRLHhrXPc0e64ZwZZMZ8g9w8iQqd21+hDT+zfq9Tim4BggEsgiawFzg0MDuIbye52AMcjy8wCr5YNPWixGodbKV0T6jpiWR8z5XvDGhjAXPJOGtGAM4Hf4lXVERERERERERERERERERERERERERERf/2Q==" alt="EA"></div>
+<div class="dash">
+  <!-- SIDEBAR -->
+  <aside class="sb">
+    <a href="index.html" class="sb-logo">
+      <div class="nav-logo-icon" style="width:36px;height:36px">
+        <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAAAAAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/wAALCABkAGQBAREA/8QAHAABAAEFAQEAAAAAAAAAAAAAAAcEBQYICQID/8QANhAAAQMDAwIDBQQLAAAAAAAAAQACAwQFEQYHEhMhCDFBFCJRYZEVgaGiCRYXGCNCRFViktL/2gAIAQEAAD8A3LRERERERERERERERERERERERERERERWDci51dl271JeLe8R1lBaaqpp3uaHBsjInOaSD2PcDsuff72O9WMfb9BnH9rg/wCVv/tbqE6r2407qR7mukuVtgqJeIwBI5gLxj5O5BZIiIiIiKDvG7fb1p7Y6a42G7V1qrBcqZgqKOodDJxJdkcmkHBx5LQmt3T3KraKeirNfanqKaojdFNFLdJnMkY4Yc1wLsEEEgheLppY0m01j1dxPK4Xetoyf8Yo6ct/F8n0W+vgSvhvHh4tdM54fJaqqooXH1wH9Ro/1kH0U6oiIiIixrcjQ+ndwNNO09qikkqre6ZkxjjmdEeTM8TlpB9Stf8Ae7w3bTaY2j1RqCz2KrhuFBbZZ6eR1wneGvaOx4l2D96jXczRwovARoetEZE8FxbcJXY/kqTMB+Dovosq/RqXwOoNYabe7HTlp66Jvx5B0bz+Vi3FRERERFBHjpudxtOxE1Xa7hV0FQLnStEtNM6N+CXZGWkHC591ms9XVtJLSVmqb5U08zSyWKW4SvY9p9C0uwR8ipJ1f4idV6l2kbtpWWPT0NnZSU1LHJDFKJmNgLCwgmQjPuDPb1Kv3gAvn2Xv7Fb3ScWXe21FLxJ7FzQJh9/8M/VdFERERERYNvftxRbo6GfpWvuNRb4XVMVR1oGNc7LCcDDu3fKg23+CjSNNX09RLq271McUrHvhfTRcZACCWn5EDH3qXtW7J7a1+lbvRUGgdM01ZU0U0UE0NsiY+KRzHBrmkNyCCQQQudexl6dpjefSl2kJjbS3aAT57YY54ZJ+Vzl1hHkiIiIiKOYd59EyvZEyprPaJGB8MJpzylDpHRtx3x3c0+ZGPN2FWVu62kaQROmqKrjLA+oDhTniI2GYOcSTj+nk7eZAyARnFVbtx9M3Cst1NRzVEwuEcckMzYT0wJOr0+Ts4HIQSkefZue2RmAp9vvDNXOdfBYr0faWitMjKipjA5slm7DmMYbDIcD1HEZOQNj9Gaotmp6WoltntHCleyKTrNDTyMbX/E57Pb38j6Ejur8iIiIiw2Xa3QUsPSl07TyARuiaXySFzGFwcWtcXZaMgYAIx6YXv9meieiIDYo3Qh3IROnlLAQZCPdLsYBlkLR5NLyRhfap290hUdHnaAzoxtjj6VRLHhrXPc0e64ZwZZMZ8g9w8iQqd21+hDT+zfq9Tim4BggEsgiawFzg0MDuIbye52AMcjy8wCr5YNPWixGodbKV0T6jpiWR8z5XvDGhjAXPJOGtGAM4Hf4lXVERERERERERERERERERERERERERERf/2Q==" alt="EA">
+      </div>
       <div class="nav-logo-text">EA<span>.</span></div>
     </a>
-    <div class="sidebar-badge">
-      <span class="sidebar-badge-emoji">🎓</span>
-      <span class="sidebar-badge-text">Área do Aluno</span>
+    <div class="sb-badge">
+      <span class="sb-badge-icon">🎓</span>
+      <span class="sb-badge-text">Área do Aluno</span>
     </div>
-    <nav class="sidebar-nav">
-      
-        <a href="#" class="sidebar-link active">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-          <span>Dashboard</span>
-        </a>
-        <a href="#" class="sidebar-link ">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-          <span>Minhas Tarefas</span>
-        </a>
-        <a href="#" class="sidebar-link ">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
-          <span>Feedbacks</span>
-        </a>
-        <a href="#" class="sidebar-link ">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
-          <span>Avisos</span>
-        </a>
-        <a href="#" class="sidebar-link ">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/></svg>
-          <span>Meu Progresso</span>
-        </a>
+    <nav class="sb-nav" id="sidebarNav">
+      <button class="sb-link active" data-section="overview">📊 Visão Geral</button>
+      <button class="sb-link" data-section="tasks">📝 Minhas Tarefas</button>
+      <button class="sb-link" data-section="feedbacks">💬 Feedbacks</button>
+      <button class="sb-link" data-section="writing">✍️ Redações</button>
+      <button class="sb-link" data-section="progress">📈 Meu Progresso</button>
+      <button class="sb-link" data-section="announcements">📢 Avisos</button>
     </nav>
-    <div class="sidebar-bottom">
-      <a href="login.html">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-        Trocar Portal
-      </a>
-      <a href="index.html">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-        Voltar ao Site
-      </a>
+    <div class="sb-bottom">
+      <a href="index.html">🏠 Voltar ao Site</a>
+      <a href="#" class="sb-logout" onclick="signOut();return false;">🚪 Sair</a>
     </div>
   </aside>
-  
+
+  <!-- MAIN -->
   <main class="main">
     <div class="topbar">
-      <div class="topbar-search">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="#6b7280"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-        <input type="text" placeholder="Buscar..."/>
-      </div>
-      <div class="topbar-right">
-        <button class="topbar-icon-btn">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="#6b7280"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
-          <span class="badge"></span>
-        </button>
-        <div class="topbar-avatar">Á</div>
+      <span class="topbar-title" id="topbarTitle">Visão Geral</span>
+      <div class="topbar-user">
+        <span class="topbar-name" id="userName">Aluno</span>
+        <div class="topbar-avatar" id="userAvatar">A</div>
       </div>
     </div>
-    
-    <div class="dash-content">
-      <div class="dash-header">
-        <h1>Olá! <em>🎓</em></h1>
-        <p>Painel da Área do Aluno</p>
-      </div>
-      
-      <div class="stats-grid">
-        
-        <div class="stat-card">
-          <div class="stat-icon" style="background:#253c9618;color:#253c96">
-            📚
+
+    <div class="content">
+      <!-- OVERVIEW -->
+      <div class="section active" id="sec-overview">
+        <h2 class="welcome" id="greeting">Olá, <span id="studentName"></span>! 👋</h2>
+        <p style="color:var(--g500);margin-bottom:28px">Continue assim — você está evoluindo rápido!</p>
+
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-value" id="streak">0</div>
+            <div class="stat-label">🔥 Dias de Streak</div>
           </div>
-          <div class="stat-body">
+          <div class="stat-card">
+            <div class="stat-value" id="progress">68</div>
+            <div class="stat-label">% de Progresso no Nível</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="level">Interchange 2</div>
             <div class="stat-label">Nível Atual</div>
-            <div class="stat-value">Int. 2</div>
-            
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="pendingTasks">3</div>
+            <div class="stat-label">Tarefas Pendentes</div>
           </div>
         </div>
-        <div class="stat-card">
-          <div class="stat-icon" style="background:#253c9618;color:#253c96">
-            📈
-          </div>
-          <div class="stat-body">
-            <div class="stat-label">Progresso</div>
-            <div class="stat-value">68%</div>
-            <div class="stat-trend">+12% este mês</div>
-          </div>
+
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">📋 Próximas Atividades</div></div>
+          <div id="nextActivities"><div class="empty-state"><div class="empty-icon">📅</div><p>Carregando suas próximas tarefas...</p></div></div>
         </div>
-        <div class="stat-card">
-          <div class="stat-icon" style="background:#253c9618;color:#253c96">
-            🔥
-          </div>
-          <div class="stat-body">
-            <div class="stat-label">Sequência</div>
-            <div class="stat-value">12 dias</div>
-            <div class="stat-trend">Continue!</div>
-          </div>
+      </div>
+
+      <!-- TASKS -->
+      <div class="section" id="sec-tasks">
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">📝 Minhas Tarefas</div></div>
+          <div id="tasksList"></div>
         </div>
-        <div class="stat-card">
-          <div class="stat-icon" style="background:#253c9618;color:#253c96">
-            📝
-          </div>
-          <div class="stat-body">
-            <div class="stat-label">Pendentes</div>
-            <div class="stat-value">2</div>
-            <div class="stat-trend">Tarefas a fazer</div>
+      </div>
+
+      <!-- FEEDBACKS -->
+      <div class="section" id="sec-feedbacks">
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">💬 Meus Feedbacks</div></div>
+          <div id="feedbacksList"></div>
+        </div>
+      </div>
+
+      <!-- WRITING -->
+      <div class="section" id="sec-writing">
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">✍️ Minhas Redações</div></div>
+          <div id="writingList"></div>
+        </div>
+      </div>
+
+      <!-- PROGRESS -->
+      <div class="section" id="sec-progress">
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">📈 Meu Progresso</div></div>
+          <div style="padding:40px 24px;text-align:center;color:var(--g500)">
+            <p>Gráfico de progresso e estatísticas detalhadas em breve.</p>
+            <p style="margin-top:12px;font-size:13px">Enquanto isso, continue praticando todos os dias!</p>
           </div>
         </div>
       </div>
-      
-      <div class="panel">
-        <div class="panel-header">
-          <div class="panel-title">📝 Minhas Tarefas</div>
-          <a href="#" class="panel-link">Ver tudo →</a>
-        </div>
-        
-        <div class="activity-item">
-          <div class="activity-info">
-            <div class="activity-title">Unit 7 — Grammar Exercises</div>
-            <div class="activity-subtitle">Prazo: 15/04/2026</div>
-          </div>
-          <span class="activity-status" style="background:#f59a1e18;color:#f59a1e">Pendente</span>
-        </div>
-        <div class="activity-item">
-          <div class="activity-info">
-            <div class="activity-title">Writing: Describe your last trip</div>
-            <div class="activity-subtitle">Prazo: 17/04/2026</div>
-          </div>
-          <span class="activity-status" style="background:#f59a1e18;color:#f59a1e">Pendente</span>
-        </div>
-        <div class="activity-item">
-          <div class="activity-info">
-            <div class="activity-title">Unit 6 — Listening Practice</div>
-            <div class="activity-subtitle">Entregue em 10/04</div>
-          </div>
-          <span class="activity-status" style="background:#6daf5f18;color:#6daf5f">A</span>
-        </div>
-        <div class="activity-item">
-          <div class="activity-info">
-            <div class="activity-title">Unit 6 — Grammar Review</div>
-            <div class="activity-subtitle">Entregue em 08/04</div>
-          </div>
-          <span class="activity-status" style="background:#6daf5f18;color:#6daf5f">A+</span>
-        </div>
-        <div class="activity-item">
-          <div class="activity-info">
-            <div class="activity-title">Writing: My daily routine</div>
-            <div class="activity-subtitle">Entregue em 05/04</div>
-          </div>
-          <span class="activity-status" style="background:#253c9618;color:#253c96">B+</span>
+
+      <!-- ANNOUNCEMENTS -->
+      <div class="section" id="sec-announcements">
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">📢 Avisos Importantes</div></div>
+          <div id="announcementsList"></div>
         </div>
       </div>
-      
-      <p class="proto-note">⚠️ Protótipo visual — dados simulados para demonstração</p>
     </div>
   </main>
 </div>
 
-</body></html>
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<script>
+let currentUser = null;
+
+document.addEventListener('DOMContentLoaded', async () => {
+  currentUser = await requireAuth(['student']);
+  if (!currentUser) return;
+
+  document.getElementById('userName').textContent = currentUser.full_name || 'Aluno';
+  document.getElementById('userAvatar').textContent = (currentUser.full_name || 'A')[0].toUpperCase();
+  document.getElementById('studentName').textContent = currentUser.full_name?.split(' ')[0] || 'Aluno';
+  document.getElementById('greeting').innerHTML = `Olá, <span style="color:var(--blue)">${currentUser.full_name?.split(' ')[0] || 'Aluno'}</span>! 👋`;
+
+  // Navegação
+  document.querySelectorAll('.sb-link').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.sb-link').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const sec = btn.dataset.section;
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById('sec-' + sec).classList.add('active');
+      document.getElementById('topbarTitle').textContent = btn.textContent.trim();
+      loadSection(sec);
+    });
+  });
+
+  await loadOverview();
+});
+
+// Carregar seção ativa
+async function loadSection(section) {
+  if (section === 'tasks') await loadTasks();
+  if (section === 'feedbacks') await loadFeedbacks();
+  if (section === 'writing') await loadWriting();
+  if (section === 'announcements') await loadAnnouncements();
+}
+
+// OVERVIEW
+async function loadOverview() {
+  try {
+    const tasks = await getTasksForStudent(currentUser.id);
+    const pending = tasks.filter(t => t.status === 'pending').length;
+
+    document.getElementById('pendingTasks').textContent = pending || 0;
+    document.getElementById('streak').textContent = '12'; // simulado por enquanto
+    document.getElementById('progress').textContent = '68';
+
+    // Próximas atividades (simplificado)
+    const nextDiv = document.getElementById('nextActivities');
+    if (tasks.length === 0) {
+      nextDiv.innerHTML = `<div class="empty-state"><div class="empty-icon">🎉</div><p>Parabéns! Você não tem tarefas pendentes no momento.</p></div>`;
+    } else {
+      nextDiv.innerHTML = tasks.slice(0, 3).map(t => `
+        <div class="list-item">
+          <div>
+            <div class="list-title">${t.task?.title || 'Tarefa'}</div>
+            <div class="list-sub">Prazo: ${formatDate(t.task?.due_date)}</div>
+          </div>
+          <span class="badge badge-pending">Pendente</span>
+        </div>
+      `).join('');
+    }
+  } catch(e) { console.error(e); }
+}
+
+async function loadTasks() {
+  const tasks = await getTasksForStudent(currentUser.id);
+  const div = document.getElementById('tasksList');
+  if (!tasks.length) {
+    div.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div><p>Nenhuma tarefa atribuída ainda.</p></div>`;
+    return;
+  }
+  div.innerHTML = tasks.map(t => `
+    <div class="list-item">
+      <div>
+        <div class="list-title">${t.task?.title}</div>
+        <div class="list-sub">${t.task?.description?.substring(0,80) || ''}...</div>
+      </div>
+      <span class="badge ${t.status === 'pending' ? 'badge-pending' : 'badge-done'}">${t.status === 'pending' ? 'Pendente' : 'Entregue'}</span>
+    </div>
+  `).join('');
+}
+
+async function loadFeedbacks() {
+  const fbs = await getFeedbacksForStudent(currentUser.id);
+  const div = document.getElementById('feedbacksList');
+  if (!fbs.length) {
+    div.innerHTML = `<div class="empty-state"><div class="empty-icon">💬</div><p>Ainda não há feedbacks. Continue praticando!</p></div>`;
+    return;
+  }
+  div.innerHTML = fbs.map(f => `
+    <div class="list-item">
+      <div>
+        <div class="list-title">${f.title}</div>
+        <div class="list-sub">De: ${f.teacher?.full_name || 'Professor'} — ${f.category || 'Geral'}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function loadWriting() {
+  const items = await getWritingForStudent(currentUser.id);
+  const div = document.getElementById('writingList');
+  if (!items.length) {
+    div.innerHTML = `<div class="empty-state"><div class="empty-icon">✍️</div><p>Nenhuma redação atribuída ainda.</p></div>`;
+    return;
+  }
+  div.innerHTML = items.map(w => `
+    <div class="list-item">
+      <div>
+        <div class="list-title">${w.title}</div>
+        <div class="list-sub">Status: ${w.status}</div>
+      </div>
+      ${w.grade ? `<span class="badge badge-done">${w.grade}</span>` : ''}
+    </div>
+  `).join('');
+}
+
+async function loadAnnouncements() {
+  const anns = await getAnnouncements();
+  const div = document.getElementById('announcementsList');
+  if (!anns.length) {
+    div.innerHTML = `<div class="empty-state"><div class="empty-icon">📢</div><p>Nenhum aviso no momento.</p></div>`;
+    return;
+  }
+  div.innerHTML = anns.map(a => `
+    <div class="list-item">
+      <div>
+        <div class="list-title">${a.title}</div>
+        <div class="list-sub">${a.content.substring(0,100)}...</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Navegação automática ao mudar seção
+document.addEventListener('DOMContentLoaded', () => {
+  const observer = new MutationObserver(() => {
+    const active = document.querySelector('.section.active');
+    if (active) {
+      const id = active.id.replace('sec-','');
+      loadSection(id);
+    }
+  });
+  document.querySelectorAll('.section').forEach(s => observer.observe(s, {attributes: true, attributeFilter: ['class']}));
+});
+</script>
+</body>
+</html>

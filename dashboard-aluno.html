@@ -8,118 +8,324 @@
 </head>
 <body style="background:var(--g50)">
 <style>
-  /* Todo o CSS que você enviou foi mantido exatamente igual */
   body {
     background: var(--g50);
     overflow-x: hidden;
   }
-  .dash-layout { display: flex; min-height: 100vh; }
-  .sidebar {
-    width: 260px; background: var(--navy); padding: 24px 16px;
-    display: flex; flex-direction: column; position: fixed;
-    top: 0; left: 0; bottom: 0; z-index: 100;
+  .dash-layout {
+    display: flex;
+    min-height: 100vh;
   }
-  .sidebar-logo { display: flex; align-items: center; gap: 12px; padding: 0 8px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; }
-  .sidebar-logo .nav-logo-text { color: var(--white); font-size: 18px; font-family: 'Fraunces',serif; font-weight: 900; }
+  .sidebar {
+    width: 260px;
+    background: var(--navy);
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    z-index: 100;
+  }
+  .sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 8px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 20px;
+  }
+  .sidebar-logo .nav-logo-text {
+    color: var(--white);
+    font-size: 18px;
+    font-family: 'Fraunces',serif;
+    font-weight: 900;
+  }
   .sidebar-logo .nav-logo-text span { color: var(--orange); }
-  .sidebar-badge { padding: 10px 14px; background: #253c9620; border: 1px solid #253c9640; border-radius: var(--r-md); display: flex; align-items: center; gap: 8px; margin-bottom: 24px; }
+  
+  .sidebar-badge {
+    padding: 10px 14px;
+    background: #253c9620;
+    border: 1px solid #253c9640;
+    border-radius: var(--r-md);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
   .sidebar-badge-emoji { font-size: 18px; }
   .sidebar-badge-text { font-size: 12px; font-weight: 700; color: #253c96; }
-  .sidebar-nav { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+  
+  .sidebar-nav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
   .sidebar-link {
-    display: flex; align-items: center; gap: 12px; padding: 12px 14px;
-    border-radius: var(--r-sm); color: rgba(255,255,255,0.5);
-    font-size: 14px; font-weight: 500; transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: var(--r-sm);
+    color: rgba(255,255,255,0.5);
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
   }
-  .sidebar-link:hover { background: rgba(255,255,255,0.05); color: var(--white); }
-  .sidebar-link.active { background: #253c9620; color: #253c96; font-weight: 700; }
+  .sidebar-link:hover {
+    background: rgba(255,255,255,0.05);
+    color: var(--white);
+  }
+  .sidebar-link.active {
+    background: #253c9620;
+    color: #253c96;
+    font-weight: 700;
+  }
   .sidebar-link svg { min-width: 18px; }
-  .sidebar-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px; display: flex; flex-direction: column; gap: 4px; }
-  .sidebar-bottom a {
-    display: flex; align-items: center; gap: 8px; padding: 10px 14px;
-    border-radius: var(--r-sm); color: rgba(255,255,255,0.5);
-    font-size: 13px; transition: all 0.2s;
+  
+  .sidebar-bottom {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
   }
-  .sidebar-bottom a:hover { background: rgba(255,255,255,0.05); color: var(--white); }
-
-  .main { margin-left: 260px; flex: 1; min-height: 100vh; }
+  .sidebar-bottom a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: var(--r-sm);
+    color: rgba(255,255,255,0.5);
+    font-size: 13px;
+    transition: all 0.2s;
+  }
+  .sidebar-bottom a:hover {
+    background: rgba(255,255,255,0.05);
+    color: var(--white);
+  }
+  
+  .main {
+    margin-left: 260px;
+    flex: 1;
+    min-height: 100vh;
+  }
   .topbar {
-    height: 72px; background: rgba(247,248,250,0.95); backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--g100); display: flex; align-items: center;
-    justify-content: space-between; padding: 0 32px; position: sticky; top: 0; z-index: 50;
+    height: 72px;
+    background: rgba(247,248,250,0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--g100);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
   }
   .topbar-search {
-    display: flex; align-items: center; gap: 8px; padding: 8px 16px;
-    background: var(--white); border-radius: var(--r-full); border: 1px solid var(--g200); width: 320px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: var(--white);
+    border-radius: var(--r-full);
+    border: 1px solid var(--g200);
+    width: 320px;
   }
-  .topbar-search input { border: none; outline: none; background: transparent; font-size: 13px; flex: 1; font-family: inherit; color: var(--navy); }
-  .topbar-right { display: flex; align-items: center; gap: 16px; }
+  .topbar-search input {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 13px;
+    flex: 1;
+    font-family: inherit;
+    color: var(--navy);
+  }
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
   .topbar-icon-btn {
-    width: 40px; height: 40px; border: none; background: var(--white);
-    border: 1px solid var(--g200); border-radius: 50%; display: flex;
-    align-items: center; justify-content: center; cursor: pointer;
-    position: relative; transition: all 0.2s;
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: var(--white);
+    border: 1px solid var(--g200);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s;
   }
   .topbar-icon-btn:hover { border-color: #253c96; }
   .topbar-icon-btn .badge {
-    position: absolute; top: 6px; right: 6px; width: 8px; height: 8px;
-    background: var(--orange); border-radius: 50%; border: 2px solid var(--white);
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 8px; height: 8px;
+    background: var(--orange);
+    border-radius: 50%;
+    border: 2px solid var(--white);
   }
   .topbar-avatar {
-    width: 40px; height: 40px; border-radius: 50%;
+    width: 40px; height: 40px;
+    border-radius: 50%;
     background: linear-gradient(135deg, #253c96, #253c96cc);
-    display: flex; align-items: center; justify-content: center;
-    color: white; font-weight: 800; font-size: 14px; box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 800;
+    font-size: 14px;
+    box-shadow: var(--shadow-sm);
   }
-
-  .dash-content { padding: 32px; }
-  .dash-header { margin-bottom: 28px; }
-  .dash-header h1 { font-size: 28px; color: var(--navy); margin-bottom: 4px; }
+  
+  .dash-content {
+    padding: 32px;
+  }
+  .dash-header {
+    margin-bottom: 28px;
+  }
+  .dash-header h1 {
+    font-size: 28px;
+    color: var(--navy);
+    margin-bottom: 4px;
+  }
   .dash-header h1 em { color: #253c96; font-style: italic; font-weight: 900; }
-  .dash-header p { font-size: 14px; color: var(--g500); }
-
+  .dash-header p {
+    font-size: 14px;
+    color: var(--g500);
+  }
+  
   .stats-grid {
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
   }
   .stat-card {
-    background: var(--white); border-radius: var(--r-lg); padding: 20px;
-    display: flex; gap: 14px; align-items: center; border: 1px solid var(--g100);
-    transition: all 0.3s; position: relative; overflow: hidden;
+    background: var(--white);
+    border-radius: var(--r-lg);
+    padding: 20px;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    border: 1px solid var(--g100);
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
   }
   .stat-card::before {
-    content: ''; position: absolute; top: 0; left: 0; right: 0;
-    height: 3px; background: #253c96; transform: scaleX(0); transform-origin: left;
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: #253c96;
+    transform: scaleX(0);
+    transform-origin: left;
     transition: transform 0.3s;
   }
   .stat-card:hover {
-    transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: transparent;
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: transparent;
   }
   .stat-card:hover::before { transform: scaleX(1); }
-
-  .stat-icon { width: 48px; height: 48px; min-width: 48px; border-radius: var(--r-md); display: flex; align-items: center; justify-content: center; font-size: 22px; }
-  .stat-label { font-size: 12px; color: var(--g500); font-weight: 600; margin-bottom: 4px; }
-  .stat-value { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 900; color: var(--navy); line-height: 1; }
-  .stat-trend { font-size: 11px; color: var(--g500); margin-top: 4px; }
-
-  .panel { background: var(--white); border-radius: var(--r-lg); border: 1px solid var(--g100); overflow: hidden; }
-  .panel-header { padding: 20px 24px; border-bottom: 1px solid var(--g100); display: flex; justify-content: space-between; align-items: center; }
-  .panel-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 800; color: var(--navy); }
-  .panel-link { font-size: 13px; color: #253c96; font-weight: 700; }
-
+  
+  .stat-icon {
+    width: 48px; height: 48px;
+    min-width: 48px;
+    border-radius: var(--r-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+  }
+  .stat-label {
+    font-size: 12px;
+    color: var(--g500);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .stat-value {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--navy);
+    line-height: 1;
+  }
+  .stat-trend {
+    font-size: 11px;
+    color: var(--g500);
+    margin-top: 4px;
+  }
+  
+  .panel {
+    background: var(--white);
+    border-radius: var(--r-lg);
+    border: 1px solid var(--g100);
+    overflow: hidden;
+  }
+  .panel-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--g100);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .panel-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--navy);
+  }
+  .panel-link {
+    font-size: 13px;
+    color: #253c96;
+    font-weight: 700;
+  }
+  
   .activity-item {
-    padding: 16px 24px; border-bottom: 1px solid var(--g100);
-    display: flex; justify-content: space-between; align-items: center;
-    gap: 16px; transition: background 0.2s;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--g100);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    transition: background 0.2s;
   }
   .activity-item:last-child { border-bottom: none; }
   .activity-item:hover { background: var(--g50); }
-  .activity-title { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 2px; }
-  .activity-subtitle { font-size: 12px; color: var(--g500); }
-  .activity-status { padding: 5px 12px; border-radius: var(--r-full); font-size: 11px; font-weight: 700; white-space: nowrap; }
-
-  .empty-state { text-align: center; padding: 60px 20px; color: var(--g400); }
-  .empty-state .empty-icon { font-size: 52px; margin-bottom: 12px; opacity: 0.5; }
-
+  .activity-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 2px;
+  }
+  .activity-subtitle {
+    font-size: 12px;
+    color: var(--g500);
+  }
+  .activity-status {
+    padding: 5px 12px;
+    border-radius: var(--r-full);
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  
+  .proto-note {
+    font-size: 11px;
+    color: var(--g500);
+    text-align: center;
+    margin-top: 24px;
+    opacity: 0.6;
+  }
+  
   @media(max-width:1024px) {
     .sidebar { transform: translateX(-100%); }
     .main { margin-left: 0; }
@@ -142,40 +348,41 @@
       <span class="sidebar-badge-emoji">🎓</span>
       <span class="sidebar-badge-text">Área do Aluno</span>
     </div>
-    <nav class="sidebar-nav" id="sidebarNav">
-      <a href="#" class="sidebar-link active" data-section="overview">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-        <span>Dashboard</span>
-      </a>
-      <a href="#" class="sidebar-link" data-section="tasks">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-        <span>Minhas Tarefas</span>
-      </a>
-      <a href="#" class="sidebar-link" data-section="feedbacks">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
-        <span>Feedbacks</span>
-      </a>
-      <a href="#" class="sidebar-link" data-section="announcements">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
-        <span>Avisos</span>
-      </a>
-      <a href="#" class="sidebar-link" data-section="progress">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/></svg>
-        <span>Meu Progresso</span>
-      </a>
+    <nav class="sidebar-nav">
+      
+        <a href="#" class="sidebar-link active">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="#" class="sidebar-link ">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          <span>Minhas Tarefas</span>
+        </a>
+        <a href="#" class="sidebar-link ">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+          <span>Feedbacks</span>
+        </a>
+        <a href="#" class="sidebar-link ">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+          <span>Avisos</span>
+        </a>
+        <a href="#" class="sidebar-link ">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/></svg>
+          <span>Meu Progresso</span>
+        </a>
     </nav>
     <div class="sidebar-bottom">
+      <a href="login.html">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        Trocar Portal
+      </a>
       <a href="index.html">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
         Voltar ao Site
       </a>
-      <a href="#" onclick="signOut();return false;">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
-        Sair
-      </a>
     </div>
   </aside>
-
+  
   <main class="main">
     <div class="topbar">
       <div class="topbar-search">
@@ -187,130 +394,106 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="#6b7280"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
           <span class="badge"></span>
         </button>
-        <div class="topbar-avatar" id="userAvatar">A</div>
+        <div class="topbar-avatar">Á</div>
       </div>
     </div>
-
+    
     <div class="dash-content">
       <div class="dash-header">
-        <h1 id="greeting">Olá! <em>🎓</em></h1>
-        <p id="welcomeText">Bem-vindo de volta</p>
+        <h1>Olá! <em>🎓</em></h1>
+        <p>Painel da Área do Aluno</p>
       </div>
-
+      
       <div class="stats-grid">
+        
         <div class="stat-card">
-          <div class="stat-icon" style="background:#253c9618;color:#253c96">📚</div>
+          <div class="stat-icon" style="background:#253c9618;color:#253c96">
+            📚
+          </div>
           <div class="stat-body">
             <div class="stat-label">Nível Atual</div>
-            <div class="stat-value" id="currentLevel">Interchange 2</div>
+            <div class="stat-value">Int. 2</div>
+            
           </div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon" style="background:#253c9618;color:#253c96">📈</div>
+          <div class="stat-icon" style="background:#253c9618;color:#253c96">
+            📈
+          </div>
           <div class="stat-body">
             <div class="stat-label">Progresso</div>
-            <div class="stat-value" id="progress">68%</div>
+            <div class="stat-value">68%</div>
             <div class="stat-trend">+12% este mês</div>
           </div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon" style="background:#253c9618;color:#253c96">🔥</div>
+          <div class="stat-icon" style="background:#253c9618;color:#253c96">
+            🔥
+          </div>
           <div class="stat-body">
             <div class="stat-label">Sequência</div>
-            <div class="stat-value" id="streak">12 dias</div>
+            <div class="stat-value">12 dias</div>
             <div class="stat-trend">Continue!</div>
           </div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon" style="background:#253c9618;color:#253c96">📝</div>
+          <div class="stat-icon" style="background:#253c9618;color:#253c96">
+            📝
+          </div>
           <div class="stat-body">
             <div class="stat-label">Pendentes</div>
-            <div class="stat-value" id="pendingCount">2</div>
+            <div class="stat-value">2</div>
             <div class="stat-trend">Tarefas a fazer</div>
           </div>
         </div>
       </div>
-
-      <!-- Minhas Tarefas -->
-      <div class="panel" id="tasksPanel">
+      
+      <div class="panel">
         <div class="panel-header">
           <div class="panel-title">📝 Minhas Tarefas</div>
-          <a href="#" class="panel-link" onclick="switchToSection('tasks'); return false;">Ver tudo →</a>
+          <a href="#" class="panel-link">Ver tudo →</a>
         </div>
-        <div id="tasksList">
-          <!-- Preenchido via JS -->
+        
+        <div class="activity-item">
+          <div class="activity-info">
+            <div class="activity-title">Unit 7 — Grammar Exercises</div>
+            <div class="activity-subtitle">Prazo: 15/04/2026</div>
+          </div>
+          <span class="activity-status" style="background:#f59a1e18;color:#f59a1e">Pendente</span>
+        </div>
+        <div class="activity-item">
+          <div class="activity-info">
+            <div class="activity-title">Writing: Describe your last trip</div>
+            <div class="activity-subtitle">Prazo: 17/04/2026</div>
+          </div>
+          <span class="activity-status" style="background:#f59a1e18;color:#f59a1e">Pendente</span>
+        </div>
+        <div class="activity-item">
+          <div class="activity-info">
+            <div class="activity-title">Unit 6 — Listening Practice</div>
+            <div class="activity-subtitle">Entregue em 10/04</div>
+          </div>
+          <span class="activity-status" style="background:#6daf5f18;color:#6daf5f">A</span>
+        </div>
+        <div class="activity-item">
+          <div class="activity-info">
+            <div class="activity-title">Unit 6 — Grammar Review</div>
+            <div class="activity-subtitle">Entregue em 08/04</div>
+          </div>
+          <span class="activity-status" style="background:#6daf5f18;color:#6daf5f">A+</span>
+        </div>
+        <div class="activity-item">
+          <div class="activity-info">
+            <div class="activity-title">Writing: My daily routine</div>
+            <div class="activity-subtitle">Entregue em 05/04</div>
+          </div>
+          <span class="activity-status" style="background:#253c9618;color:#253c96">B+</span>
         </div>
       </div>
-
-      <p class="proto-note">Dados carregados em tempo real do Supabase</p>
+      
+      <p class="proto-note">⚠️ Protótipo visual — dados simulados para demonstração</p>
     </div>
   </main>
 </div>
 
-<!-- Supabase -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase.js"></script>
-<script>
-let currentUser = null;
-
-document.addEventListener('DOMContentLoaded', async () => {
-  currentUser = await requireAuth(['student']);
-  if (!currentUser) return;
-
-  document.getElementById('userAvatar').textContent = (currentUser.full_name || 'A')[0].toUpperCase();
-  document.getElementById('greeting').innerHTML = `Olá, <em>${currentUser.full_name?.split(' ')[0] || 'Aluno'}</em>! 🎓`;
-  document.getElementById('welcomeText').textContent = `Bem-vindo de volta, ${currentUser.full_name?.split(' ')[0] || 'Aluno'}`;
-
-  // Carregar dados iniciais
-  await loadDashboardData();
-
-  // Navegação entre seções (simples por enquanto)
-  document.querySelectorAll('.sidebar-link').forEach(link => {
-    link.addEventListener('click', (e) => {
-      document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
-      link.classList.add('active');
-      // Por enquanto só mostra o painel principal. Podemos expandir depois.
-    });
-  });
-});
-
-async function loadDashboardData() {
-  try {
-    const tasks = await getTasksForStudent(currentUser.id);
-    const pending = tasks.filter(t => t.status === 'pending').length;
-
-    document.getElementById('pendingCount').textContent = pending || 0;
-
-    // Preenche tarefas recentes
-    const tasksList = document.getElementById('tasksList');
-    if (tasks.length === 0) {
-      tasksList.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div><p>Nenhuma tarefa pendente no momento.</p></div>`;
-    } else {
-      tasksList.innerHTML = tasks.slice(0, 5).map(t => `
-        <div class="activity-item">
-          <div class="activity-info">
-            <div class="activity-title">${t.task?.title || 'Tarefa sem título'}</div>
-            <div class="activity-subtitle">Prazo: ${formatDate(t.task?.due_date) || 'Sem prazo'}</div>
-          </div>
-          <span class="activity-status" style="background:${t.status === 'pending' ? '#f59a1e18;color:#f59a1e' : '#6daf5f18;color:#6daf5f'}">
-            ${t.status === 'pending' ? 'Pendente' : 'Entregue'}
-          </span>
-        </div>
-      `).join('');
-    }
-  } catch (e) {
-    console.error("Erro ao carregar dados do aluno:", e);
-  }
-}
-
-function switchToSection(section) {
-  alert(`Seção "${section}" em desenvolvimento. Em breve teremos navegação completa entre painéis.`);
-}
-
-// Função auxiliar já existe em supabase.js
-function formatDate(d) {
-  return d ? new Date(d).toLocaleDateString('pt-BR') : '-';
-}
-</script>
-</body>
-</html>
+</body></html>

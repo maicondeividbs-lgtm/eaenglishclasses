@@ -498,10 +498,50 @@ async function loadWritingList() {
   const items = await getWritingByTeacher(currentUser.id);
   const div = document.getElementById('wrList');
   if (!items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>Nenhuma atividade de redação.</p></div>'; return; }
+  
   div.innerHTML = items.map(w => {
-    const statusBadge = w.status === 'pending' ? '<span class="badge badge-pending">Pendente</span>' : w.status === 'submitted' ? '<span class="badge badge-done">Enviada — corrigir</span>' : '<span class="badge badge-graded">Corrigida: ' + (w.grade||'') + '</span>';
-    return '<div class="list-item"><div><div class="list-title">✍️ ' + w.title + '</div><div class="list-sub">' + (w.student?.full_name||'') + ' — ' + formatDateTime(w.created_at) + '</div></div>' + statusBadge + '</div>';
+    let cardHtml = '';
+    
+    if (w.status === 'pending') {
+      // Student hasn't submitted yet
+      cardHtml = '<div style="padding:20px 24px;border-bottom:1px solid var(--g100)">' +
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div><div class="list-title">✍️ ' + w.title + '</div><div class="list-sub">' + (w.student?.full_name||'') + ' — Prazo: ' + formatDate(w.due_date) + '</div></div><span class="badge badge-pending">⏳ Aguardando aluno</span></div>' +
+        '<div style="background:var(--g50);padding:12px;border-radius:8px;font-size:13px;color:var(--g700);font-style:italic;margin-top:8px"><strong>Tema:</strong> ' + w.prompt + '</div></div>';
+    
+    } else if (w.status === 'submitted') {
+      // Student submitted — professor needs to grade
+      cardHtml = '<div style="padding:20px 24px;border-bottom:1px solid var(--g100);border-left:4px solid var(--orange)">' +
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px"><div><div class="list-title">✍️ ' + w.title + '</div><div class="list-sub">' + (w.student?.full_name||'') + ' — Enviada em ' + formatDateTime(w.submitted_at) + '</div></div><span class="badge badge-done">📩 Corrigir agora</span></div>' +
+        '<div style="background:var(--g50);padding:12px;border-radius:8px;font-size:13px;color:var(--g700);font-style:italic;margin-bottom:10px"><strong>Tema:</strong> ' + w.prompt + '</div>' +
+        '<div style="background:var(--cream);border:2px solid var(--ocean);padding:14px;border-radius:10px;margin-bottom:12px"><p style="font-size:11px;font-weight:700;color:var(--navy);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px">📝 Redação do aluno:</p><p style="font-size:14px;color:var(--g700);line-height:1.7;white-space:pre-wrap">' + (w.response||'').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</p></div>' +
+        '<div style="display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end"><div><label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px">Feedback / Correção</label><textarea id="wrFb-' + w.id + '" rows="4" placeholder="Escreva sua correção e comentários aqui..." style="width:100%;padding:11px 14px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;color:var(--navy);outline:none;resize:vertical"></textarea></div><div><label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px">Nota</label><select id="wrGr-' + w.id + '" style="padding:11px 14px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;color:var(--navy)"><option value="A+">A+</option><option value="A">A</option><option value="A-">A-</option><option value="B+">B+</option><option value="B">B</option><option value="B-">B-</option><option value="C+">C+</option><option value="C">C</option><option value="D">D</option></select></div></div>' +
+        '<button onclick="gradeWritingActivity(' + w.id + ')" style="margin-top:12px;padding:12px 24px;border:none;border-radius:10px;background:var(--orange);color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s">✅ Enviar Correção</button></div>';
+    
+    } else if (w.status === 'graded') {
+      // Already graded
+      cardHtml = '<div style="padding:20px 24px;border-bottom:1px solid var(--g100)">' +
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div><div class="list-title">✍️ ' + w.title + '</div><div class="list-sub">' + (w.student?.full_name||'') + ' — Corrigida em ' + formatDateTime(w.reviewed_at) + '</div></div><span class="badge badge-graded">✅ Nota: ' + (w.grade||'') + '</span></div>' +
+        '<div style="background:var(--g50);padding:10px;border-radius:8px;font-size:12px;color:var(--g500);margin-bottom:8px"><strong>Tema:</strong> ' + w.prompt + '</div>' +
+        '<div style="background:var(--cream);padding:10px;border-radius:8px;font-size:13px;color:var(--g700);margin-bottom:8px"><strong>Redação:</strong><br>' + (w.response||'').substring(0,200) + (w.response && w.response.length > 200 ? '...' : '') + '</div>' +
+        '<div style="background:var(--blue-soft);padding:10px;border-radius:8px;font-size:13px;color:var(--blue)"><strong>Seu feedback:</strong><br>' + (w.feedback||'') + '</div></div>';
+    }
+    
+    return cardHtml;
   }).join('');
+}
+
+async function gradeWritingActivity(activityId) {
+  const feedback = document.getElementById('wrFb-' + activityId).value.trim();
+  const grade = document.getElementById('wrGr-' + activityId).value;
+  if (!feedback) { showToast('Escreva o feedback antes de enviar.','error'); return; }
+  try {
+    await gradeWriting(activityId, feedback, grade);
+    showToast('Correção enviada! O aluno verá a nota e o feedback.');
+    loadWritingList();
+    loadOverview();
+  } catch(e) {
+    showToast('Erro: ' + e.message, 'error');
+  }
 }
 
 // ═══ SEND PRONUNCIATION ═══

@@ -409,7 +409,7 @@ async function loadAssessments() {
   if (!items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📄</div><p>Nenhum assessment disponível ainda. Seu professor enviará os relatórios mensais aqui.</p></div>'; return; }
   div.innerHTML = items.map(a => {
     const monthName = MONTHS[a.month] || a.month;
-    return '<div style="background:#fff;border-radius:14px;border:1px solid var(--g100);padding:20px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;transition:all 0.2s" onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,0.06)'" onmouseout="this.style.boxShadow=''">' +
+    return '<div style="background:#fff;border-radius:14px;border:1px solid var(--g100);padding:20px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;transition:all 0.2s" onmouseover="this.style.boxShadow=\'0 4px 16px rgba(0,0,0,0.06)\'" onmouseout="this.style.boxShadow=\'\'">' +
       '<div><div style="font-size:15px;font-weight:700;color:var(--navy)">📄 ' + a.title + '</div>' +
       '<div style="font-size:13px;color:var(--g500);margin-top:4px">' + monthName + ' ' + a.year + ' — Prof. ' + (a.teacher?.full_name||'') + '</div></div>' +
       '<a href="' + a.file_url + '" target="_blank" download style="padding:10px 20px;border-radius:10px;background:var(--blue);color:#fff;font-size:13px;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:6px;transition:all 0.2s"><svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>Baixar</a></div>';

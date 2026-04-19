@@ -122,6 +122,10 @@ body { background: var(--g50); margin: 0; }
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
         <span>Visão Geral</span>
       </button>
+      <button class="sb-link" data-section="students">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+        <span>Meus Alunos</span>
+      </button>
       <button class="sb-link" data-section="homework">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
         <span>Homework</span>
@@ -175,14 +179,26 @@ body { background: var(--g50); margin: 0; }
         <h2 style="font-size:24px;font-weight:800;color:var(--navy);margin-bottom:4px" id="greeting">Olá, Professor! 👨‍🏫</h2>
         <p style="font-size:14px;color:var(--g500);margin-bottom:24px">Aqui está o resumo da sua área.</p>
         <div class="stat-row">
+          <div class="stat-card"><div class="stat-icon">👥</div><div class="stat-label">Meus Alunos</div><div class="stat-value" id="statStudentCount">-</div></div>
           <div class="stat-card"><div class="stat-icon">📝</div><div class="stat-label">Homeworks Enviados</div><div class="stat-value" id="statTasks">-</div></div>
-          <div class="stat-card"><div class="stat-icon">💬</div><div class="stat-label">Feedbacks</div><div class="stat-value" id="statFeedbacks">-</div></div>
           <div class="stat-card"><div class="stat-icon">✍️</div><div class="stat-label">Redações p/ Corrigir</div><div class="stat-value" id="statWriting">-</div></div>
-          <div class="stat-card"><div class="stat-icon">📢</div><div class="stat-label">Avisos Publicados</div><div class="stat-value" id="statAnnouncements">-</div></div>
+          <div class="stat-card"><div class="stat-icon">💬</div><div class="stat-label">Feedbacks</div><div class="stat-value" id="statFeedbacks">-</div></div>
         </div>
         <div class="panel">
           <div class="panel-head"><div class="panel-title">📋 Atividade Recente</div></div>
           <div id="recentActivity"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhuma atividade ainda. Comece enviando um homework!</p></div></div>
+        </div>
+      </div>
+
+      
+      <!-- ═══ MEUS ALUNOS ═══ -->
+      <div class="section" id="sec-students">
+        <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:20px">👥 Meus Alunos</h2>
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">Alunos Vinculados</div><span class="badge badge-time" id="myStudentCount">0</span></div>
+          <div id="studentsList" style="padding:20px 24px;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px">
+            <div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">👥</div><p>Carregando...</p></div>
+          </div>
         </div>
       </div>
 
@@ -290,7 +306,7 @@ body { background: var(--g50); margin: 0; }
 <script src="supabase.js"></script>
 <script>
 let currentUser = null;
-const sections = {"overview":"Visão Geral","homework":"Homework","feedback":"Feedbacks","announcements":"Avisos","writing":"Redação","pronunciation":"Pronúncia","messages":"Mensagens"};
+const sections = {"overview":"Visão Geral","students":"Meus Alunos","homework":"Homework","feedback":"Feedbacks","announcements":"Avisos","writing":"Redação","pronunciation":"Pronúncia","messages":"Mensagens"};
 
 // ═══ INIT ═══
 document.addEventListener('DOMContentLoaded', async () => {
@@ -321,16 +337,24 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // ═══ LOAD STUDENTS INTO ALL SELECTS ═══
 async function loadStudents() {
-  const students = await getAllStudents();
+  const students = await getMyStudents(currentUser.id);
+  window._myStudents = students; // store for reuse
   const selects = ['hwStudent','fbStudent','wrStudent','prStudent'];
   selects.forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
     el.innerHTML = '<option value="">Selecione o aluno</option>';
+    if (students.length === 0) {
+      el.innerHTML = '<option value="">Nenhum aluno vinculado</option>';
+      return;
+    }
     students.forEach(s => {
-      el.innerHTML += '<option value="' + s.id + '">' + s.full_name + (s.level ? ' (' + s.level + ')' : '') + '</option>';
+      el.innerHTML += '<option value="' + s.id + '">' + s.full_name + (s.course_name ? ' (' + s.course_name + ')' : '') + '</option>';
     });
   });
+  // Update overview with student count
+  const countEl = document.getElementById('statStudentCount');
+  if (countEl) countEl.textContent = students.length;
 }
 
 // ═══ OVERVIEW ═══
@@ -345,7 +369,7 @@ async function loadOverview() {
     document.getElementById('statTasks').textContent = tasks.length;
     document.getElementById('statFeedbacks').textContent = feedbacks.length;
     document.getElementById('statWriting').textContent = writing.filter(w => w.status === 'submitted').length;
-    document.getElementById('statAnnouncements').textContent = announcements.filter(a => a.author_id === currentUser.id).length;
+    // announcements stat removed from overview
 
     // Recent activity
     const recent = [];
@@ -514,6 +538,23 @@ async function loadMessages() {
   div.innerHTML = msgs.map(m => '<div class="list-item" style="' + (!m.read ? 'background:var(--mango-soft);border-left:4px solid var(--mango)' : '') + '"><div><div class="list-title">📩 ' + m.title + '</div><div class="list-sub">' + m.content.substring(0,100) + ' — ' + formatDateTime(m.created_at) + '</div></div><span class="badge ' + (m.read ? 'badge-time' : 'badge-pending') + '">' + (m.read ? 'Lida' : 'Nova') + '</span></div>').join('');
 }
 
+
+// ═══ MY STUDENTS LIST ═══
+async function loadStudentsList() {
+  const students = window._myStudents || await getMyStudents(currentUser.id);
+  const div = document.getElementById('studentsList');
+  document.getElementById('myStudentCount').textContent = students.length + ' aluno(s)';
+  
+  if (!students.length) {
+    div.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">👥</div><p>Nenhum aluno vinculado a você. A coordenação precisa criar as matrículas.</p></div>';
+    return;
+  }
+  
+  div.innerHTML = students.map(s => {
+    return '<div style="padding:16px;border-radius:12px;border:1px solid var(--g100);display:flex;align-items:center;gap:14px;transition:all 0.2s" onmouseover="this.style.borderColor='var(--orange)';this.style.background='var(--cream)'" onmouseout="this.style.borderColor='var(--g100)';this.style.background=''"><div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--orange),var(--mango));display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:800">' + (s.full_name||'?')[0] + '</div><div><div style="font-size:14px;font-weight:700;color:var(--navy)">' + s.full_name + '</div><div style="font-size:12px;font-weight:600;color:var(--orange)">' + (s.course_name||s.level||'') + (s.cefr ? ' • ' + s.cefr : '') + '</div><div style="font-size:11px;color:var(--g500);margin-top:2px">' + s.email + '</div></div></div>';
+  }).join('');
+}
+
 // ═══ SIDEBAR NAVIGATION HOOKS ═══
 document.addEventListener('DOMContentLoaded', () => {
   // Load content when switching sections
@@ -522,6 +563,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!active || !currentUser) return;
     const id = active.id.replace('sec-','');
     switch(id) {
+      case 'students': loadStudentsList(); break;
       case 'homework': loadHomeworkList(); break;
       case 'feedback': loadFeedbackList(); break;
       case 'announcements': loadAnnouncementList(); break;

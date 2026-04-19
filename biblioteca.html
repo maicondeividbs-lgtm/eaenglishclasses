@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biblioteca do Professor — EA English Classes</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--off-white); margin: 0; }
+
+/* Header */
+.lib-header {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+  padding: 40px 32px 32px;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.lib-header::before {
+  content: '';
+  position: absolute;
+  top: -100px; right: -100px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(243,107,46,0.15), transparent 60%);
+  border-radius: 50%;
+}
+.lib-header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+}
+.lib-title { font-family: 'Fraunces', serif; font-size: 36px; font-weight: 900; margin-bottom: 8px; }
+.lib-subtitle { font-size: 15px; opacity: 0.7; }
+.lib-nav {
+  display: flex;
+  gap: 8px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+.lib-nav-btn {
+  padding: 10px 20px;
+  border-radius: 99px;
+  border: 2px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.7);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.lib-nav-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+.lib-nav-btn.active { background: var(--orange); border-color: var(--orange); color: #fff; }
+
+/* Tabs */
+.view-tabs {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px 32px;
+  display: flex;
+  gap: 8px;
+  border-bottom: 1px solid var(--g100);
+  background: #fff;
+}
+.view-tab {
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: none;
+  background: var(--g50);
+  color: var(--g500);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+.view-tab.active { background: var(--navy); color: #fff; }
+.view-tab:hover:not(.active) { background: var(--g100); }
+
+/* Content */
+.lib-content { max-width: 1200px; margin: 0 auto; padding: 24px 32px; }
+
+/* Curriculum table */
+.curr-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.curr-table thead th {
+  background: var(--navy);
+  color: #fff;
+  padding: 14px 16px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-align: left;
+}
+.curr-table tbody tr {
+  border-bottom: 1px solid var(--g100);
+  transition: background 0.2s;
+}
+.curr-table tbody tr:hover { background: var(--cream); }
+.curr-table td { padding: 12px 16px; font-size: 13px; color: var(--g700); vertical-align: top; }
+.curr-table td:first-child { font-weight: 800; color: var(--navy); text-align: center; width: 40px; }
+
+.grammar-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  background: var(--blue-soft);
+  color: var(--blue);
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+}
+.grammar-tag:hover { border-color: var(--blue); transform: scale(1.02); }
+
+/* Worksheet grid */
+.ws-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+.ws-unit-card {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid var(--g100);
+  overflow: hidden;
+  transition: all 0.3s;
+}
+.ws-unit-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  border-color: transparent;
+}
+.ws-unit-header {
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--g100);
+}
+.ws-unit-num {
+  font-family: 'Fraunces', serif;
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--navy);
+}
+.ws-unit-count {
+  padding: 4px 12px;
+  border-radius: 99px;
+  background: var(--orange-soft);
+  color: var(--orange);
+  font-size: 11px;
+  font-weight: 700;
+}
+.ws-file {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--g50);
+  font-size: 12px;
+  color: var(--g700);
+  transition: background 0.2s;
+  cursor: default;
+}
+.ws-file:last-child { border-bottom: none; }
+.ws-file:hover { background: var(--cream); }
+.ws-file-icon {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  min-width: 32px;
+}
+.ws-file-icon.pdf { background: rgba(239,68,68,0.1); }
+.ws-file-icon.mp3 { background: rgba(16,185,129,0.1); }
+.ws-file-name { flex: 1; font-weight: 600; line-height: 1.3; }
+.ws-file-badge {
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.ws-file-badge.cambridge { background: rgba(37,60,150,0.1); color: var(--blue); }
+.ws-file-badge.ea { background: rgba(243,107,46,0.1); color: var(--orange); }
+
+/* Grammar Drawer */
+.drawer {
+  position: fixed;
+  top: 0; right: 0;
+  width: 400px;
+  max-width: 90vw;
+  height: 100vh;
+  background: #fff;
+  box-shadow: -8px 0 32px rgba(0,0,0,0.15);
+  z-index: 1000;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  overflow-y: auto;
+  padding: 28px;
+}
+.drawer.open { transform: translateX(0); }
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 999;
+  display: none;
+}
+.drawer-overlay.open { display: block; }
+
+/* Search */
+.lib-search {
+  position: relative;
+  margin-top: 16px;
+}
+.lib-search input {
+  width: 100%;
+  max-width: 400px;
+  padding: 12px 16px 12px 40px;
+  border-radius: 12px;
+  border: 2px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+}
+.lib-search input::placeholder { color: rgba(255,255,255,0.4); }
+.lib-search input:focus { border-color: var(--orange); background: rgba(255,255,255,0.12); }
+.lib-search svg { position: absolute; left: 14px; top: 14px; color: rgba(255,255,255,0.4); }
+
+/* Back button */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 8px;
+  color: rgba(255,255,255,0.7);
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  transition: all 0.2s;
+}
+.back-btn:hover { background: rgba(255,255,255,0.2); color: #fff; }
+
+@media(max-width:768px) {
+  .lib-header { padding: 24px 16px 20px; }
+  .lib-title { font-size: 26px; }
+  .lib-content { padding: 16px; }
+  .view-tabs { padding: 12px 16px; overflow-x: auto; }
+  .ws-grid { grid-template-columns: 1fr; }
+  .curr-table { font-size: 11px; }
+  .drawer { width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<!-- Grammar Drawer -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="grammarDrawer">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+    <h3 style="font-size:18px;font-weight:800;color:var(--navy)" id="drawerTitle">Grammar Structure</h3>
+    <button onclick="closeDrawer()" style="border:none;background:var(--g100);width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:16px">✕</button>
+  </div>
+  <div id="drawerContent"></div>
+</div>
+
+<!-- Header -->
+<header class="lib-header">
+  <div class="lib-header-inner">
+    <a href="dashboard-professor.html" class="back-btn">← Voltar ao Dashboard</a>
+    <div class="lib-title">📚 Biblioteca do Professor</div>
+    <div class="lib-subtitle">Interchange 5th Edition — Currículo completo e materiais de apoio</div>
+    
+    <div class="lib-nav">
+      <button class="lib-nav-btn active" onclick="setLevel('intro')">Intro</button>
+      <button class="lib-nav-btn" onclick="setLevel('lvl1')">Level 1</button>
+      <button class="lib-nav-btn" onclick="setLevel('lvl2')">Level 2</button>
+      <button class="lib-nav-btn" onclick="setLevel('lvl3')">Level 3</button>
+    </div>
+    
+    <div class="lib-search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" id="searchInput" placeholder="Buscar gramática, vocabulário ou unidade...">
+    </div>
+  </div>
+</header>
+
+<!-- View Tabs -->
+<div class="view-tabs">
+  <button class="view-tab active" onclick="setView('curriculum')">📋 Currículo</button>
+  <button class="view-tab" onclick="setView('worksheets')">📄 Worksheets</button>
+</div>
+
+<!-- Content -->
+<div class="lib-content">
+  <!-- Curriculum View -->
+  <div id="view-curriculum">
+    <table class="curr-table">
+      <thead>
+        <tr>
+          <th>U.</th>
+          <th>Unidade</th>
+          <th>Vocabulário</th>
+          <th>Gramática</th>
+          <th>Objetivo</th>
+          <th>Writing</th>
+        </tr>
+      </thead>
+      <tbody id="currBody"></tbody>
+    </table>
+  </div>
+  
+  <!-- Worksheets View -->
+  <div id="view-worksheets" style="display:none">
+    <div class="ws-grid" id="wsGrid"></div>
+  </div>
+</div>
+
+<script>
+// ═══ DATA ═══
+const curriculum = {
+  intro: [
+    {u:1,t:"What's your name?",v:"Alphabet; greetings; numbers",g:"Possessive adjectives; be (affirmative)",o:"Introduce yourself",w:"Personal info"},
+    {u:2,t:"Where are my keys?",v:"Classroom objects; locations",g:"Articles; plurals; prepositions",o:"Ask/give locations",w:"Locations"},
+    {u:3,t:"Where are you from?",v:"Countries; personality adjectives",g:"Be (full forms)",o:"Talk about origin",w:"Personal questions"},
+    {u:4,t:"Is this coat yours?",v:"Clothing; weather",g:"Possessives; present continuous",o:"Describe clothing",w:"Clothing questions"},
+    {u:5,t:"What time is it?",v:"Clock time; activities",g:"Time expressions; present continuous Wh-",o:"Tell time",w:"Times"},
+    {u:6,t:"I ride my bike to school",v:"Transportation; routines",g:"Simple present",o:"Talk about routines",w:"Weekly routine"},
+    {u:7,t:"Does it have a view?",v:"Housing; furniture",g:"There is/are",o:"Describe homes",w:"Dream home"},
+    {u:8,t:"Where do you work?",v:"Jobs",g:"Simple present Wh-",o:"Talk about work",w:"About jobs"},
+    {u:9,t:"I always eat breakfast",v:"Food",g:"Count/noncount; frequency",o:"Talk about habits",w:"Eating habits"},
+    {u:10,t:"What sports do you like?",v:"Sports; abilities",g:"Can for ability",o:"Talk about free time",w:"Sports questions"},
+    {u:11,t:"I'm going to have a party",v:"Dates; holidays",g:"Going to",o:"Talk about plans",w:"Plans"},
+    {u:12,t:"How do you feel?",v:"Health",g:"Imperatives; feel + adj",o:"Give advice",w:"Advice"},
+    {u:13,t:"How do I get there?",v:"Stores; directions",g:"Prepositions; imperatives",o:"Give directions",w:"Directions"},
+    {u:14,t:"I had a good time",v:"Vacations",g:"Simple past",o:"Talk about past",w:"Last weekend"},
+    {u:15,t:"Where were you born?",v:"Biography",g:"Past of be",o:"Talk about life events",w:"Biography"},
+    {u:16,t:"Can I take a message?",v:"Invitations; phone calls",g:"Pronouns; verb + to",o:"Make invitations",w:"Messages"}
+  ],
+  lvl1: [
+    {u:1,t:"Where are you from?",v:"Countries; subjects",g:"Be questions; pronouns",o:"Exchange personal info",w:"Personal questions"},
+    {u:2,t:"What do you do?",v:"Jobs; schedules",g:"Simple present",o:"Describe routines",w:"Biography"},
+    {u:3,t:"How much are these?",v:"Shopping; clothing",g:"Demonstratives; comparisons",o:"Talk about prices",w:"About clothes"},
+    {u:4,t:"Do you play the guitar?",v:"Entertainment",g:"Do questions; would",o:"Make invitations",w:"Messages"},
+    {u:5,t:"What an interesting family!",v:"Family",g:"Present continuous; quantifiers",o:"Describe family",w:"Email"},
+    {u:6,t:"How often do you run?",v:"Sports",g:"Adverbs of frequency",o:"Talk about frequency",w:"Weekly activities"},
+    {u:7,t:"We went dancing!",v:"Free time",g:"Simple past",o:"Talk about past",w:"Blog post"},
+    {u:8,t:"How's the neighborhood?",v:"City places",g:"There is/are; quantifiers",o:"Describe neighborhood",w:"Neighborhood"},
+    {u:9,t:"What does she look like?",v:"Appearance",g:"Descriptive questions",o:"Describe people",w:"Description"},
+    {u:10,t:"Have you ever been there?",v:"Experiences",g:"Present perfect",o:"Talk about experiences",w:"Email"},
+    {u:11,t:"It's a really nice city",v:"Cities",g:"Adverbs; can/should",o:"Give suggestions",w:"Hometown"},
+    {u:12,t:"It's important to get rest",v:"Health",g:"Should/could/may",o:"Give advice",w:"Advice blog"},
+    {u:13,t:"What would you like?",v:"Food",g:"So/too/either/neither",o:"Order food",w:"Review"},
+    {u:14,t:"It's the coldest city!",v:"Geography",g:"Comparatives/superlatives",o:"Compare places",w:"Article"},
+    {u:15,t:"What are you doing later?",v:"Invitations",g:"Future forms",o:"Make plans",w:"Messages"},
+    {u:16,t:"How have you changed?",v:"Life changes",g:"Mixed tenses",o:"Describe changes",w:"Class trip plan"}
+  ],
+  lvl2: [
+    {u:1,t:"Good memories",v:"Childhood",g:"Used to; past",o:"Talk about past habits",w:"Childhood paragraph"},
+    {u:2,t:"Life in the city",v:"Transportation",g:"Quantity expressions; indirect questions",o:"Discuss city problems",w:"Community post"},
+    {u:3,t:"Making changes",v:"Lifestyle",g:"Comparisons; wish",o:"Express wishes",w:"Comparison email"},
+    {u:4,t:"Have you ever tried it?",v:"Food",g:"Past vs present perfect",o:"Describe experiences",w:"Recipe"},
+    {u:5,t:"Hit the road!",v:"Travel",g:"Future; modals",o:"Plan vacations",w:"Travel email"},
+    {u:6,t:"Sure! I'll do it.",v:"Requests",g:"Phrasal verbs; will responses",o:"Make/refuse requests",w:"Request"},
+    {u:7,t:"What do you use this for?",v:"Technology",g:"Gerunds/infinitives",o:"Explain purposes",w:"Favor request"},
+    {u:8,t:"Time to celebrate!",v:"Festivals",g:"Time clauses",o:"Describe customs",w:"Cultural entry"},
+    {u:9,t:"Only time will tell",v:"Change",g:"First conditional",o:"Speculate",w:"About change"},
+    {u:10,t:"I like working with people",v:"Careers",g:"Gerunds; because clauses",o:"Describe skills",w:"Cover letter"},
+    {u:11,t:"It's really worth seeing!",v:"Landmarks",g:"Passive voice",o:"Describe monuments",w:"Guide intro"},
+    {u:12,t:"It's a long story",v:"Storytelling",g:"Past continuous; present perfect continuous",o:"Narrate past",w:"Experience"},
+    {u:13,t:"That's entertainment!",v:"Movies",g:"Participles; relative pronouns",o:"Give opinions",w:"Review"},
+    {u:14,t:"Now I get it!",v:"Body language",g:"Modals of deduction",o:"Express deduction",w:"Rules"},
+    {u:15,t:"I wouldn't have done that",v:"Dilemmas",g:"Unreal conditionals",o:"Speculate",w:"Advice blog"},
+    {u:16,t:"Making excuses",v:"Requests",g:"Reported speech",o:"Report speech",w:"Survey report"}
+  ],
+  lvl3: [
+    {u:1,t:"That's my kind of friend!",v:"Personality",g:"Relative clauses",o:"Agree/disagree",w:"Friend description"},
+    {u:2,t:"Working 9 to 5",v:"Careers",g:"Gerund phrases; comparisons",o:"Compare careers",w:"Career comparison"},
+    {u:3,t:"Lend a hand",v:"Requests",g:"Advanced request forms",o:"Make indirect requests",w:"Request message"},
+    {u:4,t:"What happened?",v:"Media",g:"Past perfect",o:"Narrate story",w:"Personal account"},
+    {u:5,t:"Expanding your horizons",v:"Culture shock",g:"Supposed to; expected to",o:"Describe expectations",w:"Pamphlet"},
+    {u:6,t:"That needs fixing",v:"Complaints",g:"Need + gerund/passive",o:"Describe problems",w:"Review"},
+    {u:7,t:"What can we do?",v:"Environment",g:"Advanced passive",o:"Propose solutions",w:"Community post"},
+    {u:8,t:"Never stop learning",v:"Education",g:"Would rather/prefer",o:"Discuss preferences",w:"About skill"},
+    {u:9,t:"Getting things done",v:"Services",g:"Causative have/get",o:"Give advice",w:"Advice message"},
+    {u:10,t:"A matter of time",v:"History",g:"Future continuous/perfect",o:"Make predictions",w:"Biography"},
+    {u:11,t:"Rites of passage",v:"Milestones",g:"3rd conditional",o:"Express regret",w:"Apology"},
+    {u:12,t:"Keys to success",v:"Success",g:"Infinitive purpose; cause expressions",o:"Give reasons",w:"Commercial"},
+    {u:13,t:"What might have been",v:"Hypotheticals",g:"Past modals",o:"Speculate",w:"Dilemma"},
+    {u:14,t:"Creative careers",v:"Processes",g:"Passive process; non-defining clauses",o:"Describe process",w:"Process text"},
+    {u:15,t:"A law must be passed!",v:"Controversial issues",g:"Passive modals; tag questions",o:"Debate",w:"Persuasive essay"},
+    {u:16,t:"Reaching your goals",v:"Goals",g:"Future perfect; would like to have",o:"Discuss achievements",w:"Personal statement"}
+  ]
+};
+
+const worksheets = {"Intro": {"1": [{"type": "Audio", "filename": "IC5_TSS_L0U01.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_IntroLevel_Unit01_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_IntroLevel_Unit01_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_IntroLevel_Unit01_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 1 Intro.pdf", "ext": "pdf", "source": "ea"}], "2": [{"type": "Audio", "filename": "IC5_TSS_L0U02.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_IntroLevel_Unit02_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_IntroLevel_Unit02_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_IntroLevel_Unit02_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 2 Intro.pdf", "ext": "pdf", "source": "ea"}], "3": [{"type": "Audio", "filename": "IC5_TSS_L0U03.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_IntroLevel_Unit03_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_IntroLevel_Unit03_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_IntroLevel_Unit03_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 3 Intro.pdf", "ext": "pdf", "source": "ea"}], "4": [{"type": "Audio", "filename": "IC5_TSS_L0U04.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_IntroLevel_Unit04_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_IntroLevel_Unit04_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_IntroLevel_Unit04_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 4 Intro.pdf", "ext": "pdf", "source": "ea"}], "5": [{"type": "Audio", "filename": "IC5_TSS_L0U05.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_IntroLevel_Unit05_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_IntroLevel_Unit05_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_IntroLevel_Unit05_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 5 Intro.pdf", "ext": "pdf", "source": "ea"}], "6": [{"type": "Audio", "filename": "IC5_TSS_L0U06.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_IntroLevel_Unit06_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_IntroLevel_Unit06_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_IntroLevel_Unit06_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 6 Intro.pdf", "ext": "pdf", "source": "ea"}], "7": [{"type": "Audio", "filename": "IC5_TSS_L0U07.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_IntroLevel_Unit07_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_IntroLevel_Unit07_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_IntroLevel_Unit07_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 7 Intro.pdf", "ext": "pdf", "source": "ea"}], "8": [{"type": "Audio", "filename": "IC5_TSS_L0U08.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_IntroLevel_Unit08_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_IntroLevel_Unit08_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_IntroLevel_Unit08_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 8 Intro.pdf", "ext": "pdf", "source": "ea"}], "9": [{"type": "Audio", "filename": "IC5_TSS_L0U09.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_IntroLevel_Unit09_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_IntroLevel_Unit09_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_IntroLevel_Unit09_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 9 Intro.pdf", "ext": "pdf", "source": "ea"}], "10": [{"type": "Grammar", "filename": "Interchange5thEd_IntroLevel_Unit10_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_IntroLevel_Unit10_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_IntroLevel_Unit10_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 10 Intro.pdf", "ext": "pdf", "source": "ea"}], "11": [{"type": "Audio", "filename": "IC5_TSS_L0U11.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Audio", "filename": "IC5_TSS_L0U10.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_IntroLevel_Unit11_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_IntroLevel_Unit11_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_IntroLevel_Unit11_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 11 Intro.pdf", "ext": "pdf", "source": "ea"}], "12": [{"type": "Audio", "filename": "IC5_TSS_L0U12.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_IntroLevel_Unit12_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_IntroLevel_Unit12_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_IntroLevel_Unit12_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 12 Intro.pdf", "ext": "pdf", "source": "ea"}], "13": [{"type": "Audio", "filename": "IC5_TSS_L0U13.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_IntroLevel_Unit13_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_IntroLevel_Unit13_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_IntroLevel_Unit13_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 13 Intro.pdf", "ext": "pdf", "source": "ea"}], "14": [{"type": "Audio", "filename": "IC5_TSS_L0U14.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_IntroLevel_Unit14_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_IntroLevel_Unit14_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_IntroLevel_Unit14_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 14 Intro.pdf", "ext": "pdf", "source": "ea"}], "15": [{"type": "Audio", "filename": "IC5_TSS_L0U15.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_IntroLevel_Unit15_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_IntroLevel_Unit15_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_IntroLevel_Unit15_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 15 Intro.pdf", "ext": "pdf", "source": "ea"}], "16": [{"type": "Audio", "filename": "IC5_TSS_L0U16.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_IntroLevel_Unit16_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_IntroLevel_Unit16_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_IntroLevel_Unit16_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 16 Intro.pdf", "ext": "pdf", "source": "ea"}]}, "Level 1": {"1": [{"type": "Audio", "filename": "IC5_TSS_L1U01.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level1_Unit01_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level1_Unit01_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level1_Unit01_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 1 L1.pdf", "ext": "pdf", "source": "ea"}], "2": [{"type": "Audio", "filename": "IC5_TSS_L1U02.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level1_Unit02_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level1_Unit02_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level1_Unit02_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 2 L1.pdf", "ext": "pdf", "source": "ea"}], "3": [{"type": "Audio", "filename": "IC5_TSS_L1U03.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level1_Unit03_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level1_Unit03_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level1_Unit03_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 3 L1.pdf", "ext": "pdf", "source": "ea"}], "4": [{"type": "Audio", "filename": "IC5_TSS_L1U04.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level1_Unit04_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level1_Unit04_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level1_Unit04_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 4 L1.pdf", "ext": "pdf", "source": "ea"}], "5": [{"type": "Audio", "filename": "IC5_TSS_L1U05.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level1_Unit05_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level1_Unit05_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level1_Unit05_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 5 L1.pdf", "ext": "pdf", "source": "ea"}], "6": [{"type": "Audio", "filename": "IC5_TSS_L1U06.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level1_Unit06_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level1_Unit06_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level1_Unit06_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 6 L1.pdf", "ext": "pdf", "source": "ea"}], "7": [{"type": "Audio", "filename": "IC5_TSS_L1U07.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level1_Unit07_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level1_Unit07_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level1_Unit07_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 7 L1.pdf", "ext": "pdf", "source": "ea"}], "8": [{"type": "Audio", "filename": "IC5_TSS_L1U08.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level1_Unit08_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level1_Unit08_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level1_Unit08_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 8 L1.pdf", "ext": "pdf", "source": "ea"}], "9": [{"type": "Audio", "filename": "IC5_TSS_L1U09.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level1_Unit09_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level1_Unit09_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level1_Unit09_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 9 L1.pdf", "ext": "pdf", "source": "ea"}], "10": [{"type": "Audio", "filename": "IC5_TSS_L1U10.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level1_Unit10_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level1_Unit10_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level1_Unit10_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 10 L1.pdf", "ext": "pdf", "source": "ea"}], "11": [{"type": "Audio", "filename": "IC5_TSS_L1U11.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level1_Unit11_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level1_Unit11_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level1_Unit11_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 11 L1.pdf", "ext": "pdf", "source": "ea"}], "12": [{"type": "Audio", "filename": "IC5_TSS_L1U12.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level1_Unit12_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level1_Unit12_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level1_Unit12_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 12 L1.pdf", "ext": "pdf", "source": "ea"}], "13": [{"type": "Audio", "filename": "IC5_TSS_L1U13.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level1_Unit13_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level1_Unit13_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level1_Unit13_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 13 L1.pdf", "ext": "pdf", "source": "ea"}], "14": [{"type": "Audio", "filename": "IC5_TSS_L1U14.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level1_Unit14_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level1_Unit14_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level1_Unit14_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 14 L1.pdf", "ext": "pdf", "source": "ea"}], "15": [{"type": "Audio", "filename": "IC5_TSS_L1U15.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level1_Unit15_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level1_Unit15_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level1_Unit15_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 15 L1.pdf", "ext": "pdf", "source": "ea"}], "16": [{"type": "Grammar", "filename": "Interchange5thEd_Level1_Unit16_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level1_Unit16_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level1_Unit16_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 16 L1.pdf", "ext": "pdf", "source": "ea"}]}, "Level 2": {"1": [{"type": "Audio", "filename": "IC5_TSS_L2U01.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level2_Unit01_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level2_Unit01_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level2_Unit01_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 1 L2.pdf", "ext": "pdf", "source": "ea"}], "2": [{"type": "Audio", "filename": "IC5_TSS_L2U02.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level2_Unit02_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level2_Unit02_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level2_Unit02_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 2 L2.pdf", "ext": "pdf", "source": "ea"}], "3": [{"type": "Audio", "filename": "IC5_TSS_L2U03.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level2_Unit03_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level2_Unit03_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level2_Unit03_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 3 L2.pdf", "ext": "pdf", "source": "ea"}], "4": [{"type": "Audio", "filename": "IC5_TSS_L2U04.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level2_Unit04_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level2_Unit04_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level2_Unit04_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 4 L2.pdf", "ext": "pdf", "source": "ea"}], "5": [{"type": "Audio", "filename": "IC5_TSS_L2U05.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level2_Unit05_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level2_Unit05_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level2_Unit05_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 5 L2.pdf", "ext": "pdf", "source": "ea"}], "6": [{"type": "Audio", "filename": "IC5_TSS_L2U06.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level2_Unit06_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level2_Unit06_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level2_Unit06_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 6 L2.pdf", "ext": "pdf", "source": "ea"}], "7": [{"type": "Audio", "filename": "IC5_TSS_L2U07.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level2_Unit07_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level2_Unit07_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level2_Unit07_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 7 L2.pdf", "ext": "pdf", "source": "ea"}], "8": [{"type": "Audio", "filename": "IC5_TSS_L2U08.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level2_Unit08_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level2_Unit08_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level2_Unit08_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 8 L2.pdf", "ext": "pdf", "source": "ea"}], "9": [{"type": "Audio", "filename": "IC5_TSS_L2U09.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level2_Unit09_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level2_Unit09_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level2_Unit09_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 9 L2.pdf", "ext": "pdf", "source": "ea"}], "10": [{"type": "Audio", "filename": "IC5_TSS_L2U10.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level2_Unit10_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level2_Unit10_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level2_Unit10_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 10 L2.pdf", "ext": "pdf", "source": "ea"}], "11": [{"type": "Audio", "filename": "IC5_TSS_L2U11.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level2_Unit11_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level2_Unit11_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level2_Unit11_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 11 L2.pdf", "ext": "pdf", "source": "ea"}], "12": [{"type": "Audio", "filename": "IC5_TSS_L2U12.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level2_Unit12_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level2_Unit12_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level2_Unit12_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 12 L2.pdf", "ext": "pdf", "source": "ea"}], "13": [{"type": "Audio", "filename": "IC5_TSS_L2U13.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level2_Unit13_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level2_Unit13_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level2_Unit13_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 13 L2.pdf", "ext": "pdf", "source": "ea"}], "14": [{"type": "Audio", "filename": "IC5_TSS_L2U14.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level2_Unit14_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level2_Unit14_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level2_Unit14_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 14 L2.pdf", "ext": "pdf", "source": "ea"}], "15": [{"type": "Audio", "filename": "IC5_TSS_L2U15.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level2_Unit15_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level2_Unit15_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level2_Unit15_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 15 L2.pdf", "ext": "pdf", "source": "ea"}], "16": [{"type": "Audio", "filename": "IC5_TSS_L2U16.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level2_Unit16_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level2_Unit16_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level2_Unit16_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 16 L2.pdf", "ext": "pdf", "source": "ea"}]}, "Level 3": {"1": [{"type": "Audio", "filename": "IC5_TSS_L3U01.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level3_Unit01_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level3_Unit01_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level3_Unit01_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 1.pdf", "ext": "pdf", "source": "ea"}], "2": [{"type": "Audio", "filename": "IC5_TSS_L3U02.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level3_Unit02_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level3_Unit02_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level3_Unit02_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 2.pdf", "ext": "pdf", "source": "ea"}], "3": [{"type": "Audio", "filename": "IC5_TSS_L3U03.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level3_Unit03_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level3_Unit03_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level3_Unit03_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 3.pdf", "ext": "pdf", "source": "ea"}], "4": [{"type": "Audio", "filename": "IC5_TSS_L3U04.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level3_Unit04_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level3_Unit04_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level3_Unit04_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 4.pdf", "ext": "pdf", "source": "ea"}], "5": [{"type": "Audio", "filename": "IC5_TSS_L3U05.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level3_Unit05_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level3_Unit05_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level3_Unit05_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 5.pdf", "ext": "pdf", "source": "ea"}], "6": [{"type": "Audio", "filename": "IC5_TSS_L3U06.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level3_Unit06_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level3_Unit06_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level3_Unit06_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 6.pdf", "ext": "pdf", "source": "ea"}], "7": [{"type": "Audio", "filename": "IC5_TSS_L3U07.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level3_Unit07_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level3_Unit07_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level3_Unit07_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 7.pdf", "ext": "pdf", "source": "ea"}], "8": [{"type": "Audio", "filename": "IC5_TSS_L3U08.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level3_Unit08_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level3_Unit08_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level3_Unit08_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 8.pdf", "ext": "pdf", "source": "ea"}], "9": [{"type": "Audio", "filename": "IC5_TSS_L3U09.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level3_Unit09_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level3_Unit09_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level3_Unit09_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 9.pdf", "ext": "pdf", "source": "ea"}], "10": [{"type": "Audio", "filename": "IC5_TSS_L3U10.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level3_Unit10_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level3_Unit10_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level3_Unit10_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 10.pdf", "ext": "pdf", "source": "ea"}], "11": [{"type": "Audio", "filename": "IC5_TSS_L3U11.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level3_Unit11_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level3_Unit11_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Other", "filename": "interchange4-level3-unit11-vocabulary-worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 11.pdf", "ext": "pdf", "source": "ea"}], "12": [{"type": "Audio", "filename": "IC5_TSS_L3U12.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level3_Unit12_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level3_Unit12_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level3_Unit12_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 12.pdf", "ext": "pdf", "source": "ea"}], "13": [{"type": "Audio", "filename": "IC5_TSS_L3U13.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level3_Unit13_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level3_Unit13_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level3_Unit13_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 13.pdf", "ext": "pdf", "source": "ea"}], "14": [{"type": "Audio", "filename": "IC5_TSS_L3U14.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level3_Unit14_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level3_Unit14_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Other", "filename": "interchange4-level3-unit14-vocabulary-worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 14.pdf", "ext": "pdf", "source": "ea"}], "15": [{"type": "Audio", "filename": "IC5_TSS_L3U15.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level3_Unit15_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level3_Unit15_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Other", "filename": "interchange4-level3-unit15-vocabulary-worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 15.pdf", "ext": "pdf", "source": "ea"}], "16": [{"type": "Audio", "filename": "IC5_TSS_L3U16.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level3_Unit16_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level3_Unit16_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level3_Unit16_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 16.pdf", "ext": "pdf", "source": "ea"}]}};
+
+const levelMap = {'intro':'Intro','lvl1':'Level 1','lvl2':'Level 2','lvl3':'Level 3'};
+const colorMap = {'intro':'#f59a1e','lvl1':'#f36b2e','lvl2':'#253c96','lvl3':'#19244e'};
+const labelMap = {'intro':'INTRO','lvl1':'LEVEL 1','lvl2':'LEVEL 2','lvl3':'LEVEL 3'};
+
+let currentLevel = 'intro';
+let currentView = 'curriculum';
+
+function setLevel(lvl) {
+  currentLevel = lvl;
+  document.querySelectorAll('.lib-nav-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  render();
+}
+
+function setView(view) {
+  currentView = view;
+  document.querySelectorAll('.view-tab').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('view-curriculum').style.display = view === 'curriculum' ? '' : 'none';
+  document.getElementById('view-worksheets').style.display = view === 'worksheets' ? '' : 'none';
+  render();
+}
+
+function render() {
+  if (currentView === 'curriculum') renderCurriculum();
+  else renderWorksheets();
+}
+
+function renderCurriculum() {
+  const units = curriculum[currentLevel];
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const filtered = search ? units.filter(u => 
+    u.t.toLowerCase().includes(search) || u.g.toLowerCase().includes(search) || u.v.toLowerCase().includes(search)
+  ) : units;
+  
+  document.getElementById('currBody').innerHTML = filtered.map(u => `
+    <tr>
+      <td>${u.u}</td>
+      <td style="font-weight:700;color:var(--navy)">${u.t}</td>
+      <td>${u.v}</td>
+      <td><span class="grammar-tag" onclick="showGrammar('${u.g.replace(/'/g, "\\'")}')">${u.g}</span></td>
+      <td style="color:var(--g500)">${u.o}</td>
+      <td style="color:var(--g400);font-style:italic;font-size:12px">${u.w}</td>
+    </tr>
+  `).join('');
+}
+
+function renderWorksheets() {
+  const lvlName = levelMap[currentLevel];
+  const data = worksheets[lvlName] || {};
+  const grid = document.getElementById('wsGrid');
+  
+  const unitNums = Object.keys(data).map(Number).sort((a,b) => a-b);
+  
+  if (!unitNums.length) {
+    grid.innerHTML = '<div style="text-align:center;padding:48px;color:var(--g400);grid-column:1/-1"><p style="font-size:48px;margin-bottom:12px;opacity:0.3">📄</p><p>Nenhum worksheet disponível para este nível.</p></div>';
+    return;
+  }
+  
+  grid.innerHTML = unitNums.map(unit => {
+    const files = data[unit];
+    const icons = {'pdf':'📄','mp3':'🎵'};
+    const typeIcons = {'Grammar':'📐','Vocabulary':'📝','Listening':'👂','Audio':'🎵','EA Worksheet':'🔶','Other':'📎'};
+    
+    const filesHtml = files.map(f => {
+      const icon = typeIcons[f.type] || '📄';
+      const badge = f.source === 'cambridge' ? '<span class="ws-file-badge cambridge">Cambridge</span>' : '<span class="ws-file-badge ea">EA Original</span>';
+      const shortName = f.type || f.filename.substring(0, 30);
+      return `<div class="ws-file"><div class="ws-file-icon ${f.ext}">${icon}</div><div class="ws-file-name">${shortName}</div>${badge}</div>`;
+    }).join('');
+    
+    return `<div class="ws-unit-card"><div class="ws-unit-header"><div><span class="ws-unit-num">U${unit}</span></div><span class="ws-unit-count">${files.length} arquivos</span></div>${filesHtml}</div>`;
+  }).join('');
+}
+
+// ═══ GRAMMAR DRAWER ═══
+const grammarDB = {
+  "Possessive adjectives": { formula: "my, your, his, her, its, our, their + noun", example: "Her name is Sarah.", teaching: "Focar na concordância de gênero (his vs her)." },
+  "be (affirmative)": { formula: "Subject + am/is/are", example: "I am a student.", teaching: "Use contrações desde cedo." },
+  "Articles": { formula: "a + consoante / an + vogal / the + específico", example: "A book, an umbrella.", teaching: "Foque no som, não na letra." },
+  "Simple present": { formula: "Subject + verb (-s/es 3ª pessoa)", example: "She works in a bank.", teaching: "Foco no -s/es no He/She/It." },
+  "There is/are": { formula: "There + is (singular) / are (plural)", example: "There is a sofa.", teaching: "Praticar com some/any." },
+  "Going to": { formula: "be + going to + verb", example: "I am going to travel.", teaching: "Planos já decididos." },
+  "Simple past": { formula: "Regular: +ed | Irregular: list", example: "I visited my family.", teaching: "Dividir irregulares em grupos sonoros." },
+  "Present perfect": { formula: "have/has + past participle", example: "I have been to London.", teaching: "Tempo não específico no passado." },
+  "Used to": { formula: "Subject + used to + verb", example: "I used to have long hair.", teaching: "Hábitos que não existem mais." },
+  "First conditional": { formula: "If + present, will + verb", example: "If it rains, I'll stay.", teaching: "Possibilidade real no futuro." },
+  "Passive voice": { formula: "Object + be + past participle", example: "The car was fixed.", teaching: "Foco na ação, não no agente." },
+  "Reported speech": { formula: "He said that he was...", example: "She told me she liked it.", teaching: "Mudança de tempos (backshift)." },
+  "Relative clauses": { formula: "who, which, that", example: "The friend that I like...", teaching: "Detalhes essenciais vs extras." },
+  "Past perfect": { formula: "had + past participle", example: "When I arrived, they had left.", teaching: "O passado do passado." },
+  "3rd conditional": { formula: "If + past perfect, would have + pp", example: "If I had known, I would have helped.", teaching: "Arrependimentos sobre o passado." },
+  "Past modals": { formula: "must/might/could have + pp", example: "He must have forgotten.", teaching: "Dedução sobre eventos passados." },
+};
+
+function showGrammar(topic) {
+  const parts = topic.split(';').map(s => s.trim());
+  let html = '';
+  
+  parts.forEach(part => {
+    const match = Object.keys(grammarDB).find(k => part.toLowerCase().includes(k.toLowerCase()));
+    const data = match ? grammarDB[match] : null;
+    
+    if (data) {
+      html += `
+        <div style="margin-bottom:24px">
+          <div style="background:var(--blue);padding:16px;border-radius:12px;color:#fff;margin-bottom:16px">
+            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;opacity:0.7;margin-bottom:4px">Topic</div>
+            <div style="font-size:18px;font-weight:800">${match}</div>
+          </div>
+          <div style="background:var(--blue-soft);padding:14px;border-radius:10px;border-left:4px solid var(--blue);margin-bottom:10px">
+            <div style="font-size:10px;font-weight:700;color:var(--g400);text-transform:uppercase;margin-bottom:4px">Fórmula</div>
+            <code style="font-size:13px;color:var(--blue);font-weight:600">${data.formula}</code>
+          </div>
+          <div style="background:#d1fae5;padding:14px;border-radius:10px;border-left:4px solid #10b981;margin-bottom:10px">
+            <div style="font-size:10px;font-weight:700;color:var(--g400);text-transform:uppercase;margin-bottom:4px">Exemplo</div>
+            <p style="font-size:13px;color:#065f46;font-style:italic">"${data.example}"</p>
+          </div>
+          <div style="background:var(--mango-soft);padding:14px;border-radius:10px;border-left:4px solid var(--mango)">
+            <div style="font-size:10px;font-weight:700;color:var(--g400);text-transform:uppercase;margin-bottom:4px">Dica Pedagógica</div>
+            <p style="font-size:13px;color:#92400e">${data.teaching}</p>
+          </div>
+        </div>`;
+    } else {
+      html += `<div style="background:var(--g50);padding:20px;border-radius:10px;text-align:center;margin-bottom:16px"><p style="font-size:14px;color:var(--g500)">📘 <strong>${part}</strong></p><p style="font-size:12px;color:var(--g400);margin-top:4px">Consulte o Manual do Professor.</p></div>`;
+    }
+  });
+  
+  document.getElementById('drawerTitle').textContent = 'Grammar Structure';
+  document.getElementById('drawerContent').innerHTML = html;
+  document.getElementById('grammarDrawer').classList.add('open');
+  document.getElementById('drawerOverlay').classList.add('open');
+}
+
+function closeDrawer() {
+  document.getElementById('grammarDrawer').classList.remove('open');
+  document.getElementById('drawerOverlay').classList.remove('open');
+}
+
+// Search
+document.getElementById('searchInput').addEventListener('input', () => render());
+
+// Init
+render();
+</script>
+</body>
+</html>

@@ -163,6 +163,18 @@ body { background: var(--g50); margin: 0; }
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
         <span>Msg → Professor</span>
       </button>
+      <button class="sb-link" data-section="writing">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.996.996 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+        <span>Redações</span>
+      </button>
+      <button class="sb-link" data-section="pronunciation-coord">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-2.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+        <span>Pronúncias</span>
+      </button>
+      <button class="sb-link" data-section="assessments-coord">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>
+        <span>Assessments</span>
+      </button>
       <button class="sb-link" data-section="tool">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>
         <span>Ferramenta</span>
@@ -293,6 +305,34 @@ body { background: var(--g50); margin: 0; }
         <div class="panel">
           <div class="panel-head"><div class="panel-title">📩 Mensagens Enviadas</div></div>
           <div id="msgList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhuma mensagem enviada.</p></div></div>
+        </div>
+      </div>
+
+      
+      <!-- ═══ WRITING SUPERVISION ═══ -->
+      <div class="section" id="sec-writing">
+        <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:20px">✍️ Supervisão de Redações</h2>
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">Todas as Redações</div></div>
+          <div id="wrCoordList"><div class="empty-state"><div class="empty-icon">✍️</div><p>Nenhuma redação no sistema.</p></div></div>
+        </div>
+      </div>
+
+      <!-- ═══ PRONUNCIATION SUPERVISION ═══ -->
+      <div class="section" id="sec-pronunciation-coord">
+        <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:20px">🎙️ Supervisão de Pronúncias</h2>
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">Todas as Pronúncias Enviadas</div></div>
+          <div id="prCoordList"><div class="empty-state"><div class="empty-icon">🎙️</div><p>Nenhuma pronúncia no sistema.</p></div></div>
+        </div>
+      </div>
+
+      <!-- ═══ ASSESSMENTS SUPERVISION ═══ -->
+      <div class="section" id="sec-assessments-coord">
+        <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:20px">📄 Supervisão de Assessments</h2>
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">Todos os Assessments</div></div>
+          <div id="assCoordList"><div class="empty-state"><div class="empty-icon">📄</div><p>Nenhum assessment no sistema.</p></div></div>
         </div>
       </div>
 
@@ -600,7 +640,7 @@ body { background: var(--g50); margin: 0; }
 <script src="supabase.js"></script>
 <script>
 let currentUser = null;
-const sections = {"overview":"Visão Geral","users":"Usuários","nivelamento":"Nivelamentos","homework":"Homeworks","feedbacks":"Feedbacks","announcements":"Avisos","messages":"Msg → Professor","tool":"Ferramenta"};
+const sections = {"overview":"Visão Geral","users":"Usuários","nivelamento":"Nivelamentos","homework":"Homeworks","feedbacks":"Feedbacks","announcements":"Avisos","messages":"Msg → Professor","writing":"Redações","pronunciation-coord":"Pronúncias","assessments-coord":"Assessments","tool":"Ferramenta"};
 
 // ═══ INIT ═══
 document.addEventListener('DOMContentLoaded', async () => {
@@ -865,6 +905,36 @@ async function saveUserEdit() {
 }
 
 
+
+
+// ═══ WRITING SUPERVISION ═══
+async function loadWritingCoord() {
+  const { data: items } = await db.from('writing_activities').select('*, teacher:profiles!writing_activities_teacher_id_fkey(full_name), student:profiles!writing_activities_student_id_fkey(full_name)').order('created_at', {ascending: false});
+  const div = document.getElementById('wrCoordList');
+  if (!items || !items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">✍️</div><p>Nenhuma redação no sistema.</p></div>'; return; }
+  div.innerHTML = items.map(w => {
+    const statusMap = {pending:'<span class="badge badge-pending">Aguardando aluno</span>',submitted:'<span class="badge" style="background:rgba(243,107,46,0.12);color:var(--orange)">Aguardando correção</span>',graded:'<span class="badge badge-done">Corrigida: '+(w.grade||'')+'</span>'};
+    return '<div class="list-item"><div><div class="list-title">✍️ ' + w.title + '</div><div class="list-sub">Prof. ' + (w.teacher?.full_name||'?') + ' → ' + (w.student?.full_name||'?') + ' — ' + formatDateTime(w.created_at) + '</div></div>' + (statusMap[w.status]||'') + '</div>';
+  }).join('');
+}
+
+// ═══ PRONUNCIATION SUPERVISION ═══
+async function loadPronunciationCoord() {
+  const { data: items } = await db.from('pronunciation').select('*, teacher:profiles!pronunciation_teacher_id_fkey(full_name), student:profiles!pronunciation_student_id_fkey(full_name)').order('created_at', {ascending: false});
+  const div = document.getElementById('prCoordList');
+  if (!items || !items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">🎙️</div><p>Nenhuma pronúncia no sistema.</p></div>'; return; }
+  div.innerHTML = items.map(p => '<div class="list-item"><div><div class="list-title">🎙️ ' + p.word + (p.phonetic ? ' <span style="color:var(--g400);font-weight:400;font-style:italic">' + p.phonetic + '</span>' : '') + '</div><div class="list-sub">Prof. ' + (p.teacher?.full_name||'?') + ' → ' + (p.student?.full_name||'?') + ' — ' + formatDateTime(p.created_at) + '</div></div><span class="badge ' + (p.practiced ? 'badge-done' : 'badge-pending') + '">' + (p.practiced ? 'Praticado' : 'Pendente') + '</span></div>').join('');
+}
+
+// ═══ ASSESSMENTS SUPERVISION ═══
+async function loadAssessmentsCoord() {
+  const { data: items } = await db.from('assessments').select('*, teacher:profiles!assessments_teacher_id_fkey(full_name), student:profiles!assessments_student_id_fkey(full_name)').order('created_at', {ascending: false});
+  const div = document.getElementById('assCoordList');
+  if (!items || !items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📄</div><p>Nenhum assessment no sistema.</p></div>'; return; }
+  const MONTHS = ['','Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  div.innerHTML = items.map(a => '<div class="list-item"><div><div class="list-title">📄 ' + a.title + '</div><div class="list-sub">Prof. ' + (a.teacher?.full_name||'?') + ' → ' + (a.student?.full_name||'?') + ' — ' + (MONTHS[a.month]||'') + '/' + a.year + '</div></div><a href="' + a.file_url + '" target="_blank" style="padding:6px 14px;border-radius:8px;background:var(--blue-soft);color:var(--blue);font-size:12px;font-weight:700;text-decoration:none">📥 Ver</a></div>').join('');
+}
+
 // ═══ SIDEBAR NAV HOOKS ═══
 document.addEventListener('DOMContentLoaded', () => {
   const observer = new MutationObserver(() => {
@@ -878,6 +948,9 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'feedbacks': loadFeedbacks(); break;
       case 'announcements': loadAnnouncementList(); break;
       case 'messages': loadMsgList(); break;
+      case 'writing': loadWritingCoord(); break;
+      case 'pronunciation-coord': loadPronunciationCoord(); break;
+      case 'assessments-coord': loadAssessmentsCoord(); break;
     }
   });
   document.querySelectorAll('.section').forEach(s => observer.observe(s, {attributes:true, attributeFilter:['class']}));

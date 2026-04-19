@@ -242,3 +242,57 @@ function showToast(msg, type='success') {
   requestAnimationFrame(()=>{t.style.opacity='1';t.style.transform='translateY(0)'});
   setTimeout(()=>{t.style.opacity='0';t.style.transform='translateY(-10px)';setTimeout(()=>t.remove(),400)},3000);
 }
+
+const MONTHS = ['','Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+
+// ═══ AVATAR UPLOAD ═══
+async function uploadAvatar(userId, file) {
+  const ext = file.name.split('.').pop();
+  const path = `${userId}/avatar.${ext}`;
+  // Remove old avatar
+  await db.storage.from('avatars').remove([path]);
+  // Upload new
+  const { error } = await db.storage.from('avatars').upload(path, file, { upsert: true });
+  if (error) throw error;
+  // Get public URL
+  const { data: urlData } = db.storage.from('avatars').getPublicUrl(path);
+  const url = urlData.publicUrl + '?t=' + Date.now();
+  // Update profile
+  await db.from('profiles').update({ avatar_url: url }).eq('id', userId);
+  return url;
+}
+
+// ═══ ASSESSMENTS ═══
+async function uploadAssessment(teacherId, studentId, month, year, title, file) {
+  const ext = file.name.split('.').pop();
+  const path = `${studentId}/${year}-${String(month).padStart(2,'0')}.${ext}`;
+  // Upload file
+  const { error: upErr } = await db.storage.from('assessments').upload(path, file, { upsert: true });
+  if (upErr) throw upErr;
+  // Get public URL
+  const { data: urlData } = db.storage.from('assessments').getPublicUrl(path);
+  const fileUrl = urlData.publicUrl;
+  // Save metadata
+  const { error: dbErr } = await db.from('assessments').upsert([{
+    teacher_id: teacherId,
+    student_id: studentId,
+    month: month,
+    year: year,
+    title: title,
+    file_path: path,
+    file_url: fileUrl
+  }], { onConflict: 'student_id,month,year' });
+  if (dbErr) throw dbErr;
+  return fileUrl;
+}
+
+async function getAssessmentsByTeacher(teacherId) {
+  const { data } = await db.from('assessments').select('*, student:profiles!assessments_student_id_fkey(full_name)').eq('teacher_id', teacherId).order('year', {ascending:false}).order('month', {ascending:false});
+  return data || [];
+}
+
+async function getAssessmentsForStudent(studentId) {
+  const { data } = await db.from('assessments').select('*, teacher:profiles!assessments_teacher_id_fkey(full_name)').eq('student_id', studentId).order('year', {ascending:false}).order('month', {ascending:false});
+  return data || [];
+}
+

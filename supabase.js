@@ -202,6 +202,34 @@ async function getCourses() {
   return data || [];
 }
 
+
+// Get students enrolled with a specific teacher
+async function getMyStudents(teacherId) {
+  const { data } = await db
+    .from('enrollments')
+    .select('student_id, course:courses(name, cefr_level), student:profiles!enrollments_student_id_fkey(id, full_name, email, level)')
+    .eq('teacher_id', teacherId)
+    .eq('active', true)
+    .order('created_at', { ascending: false });
+  
+  if (!data) return [];
+  
+  // Deduplicate by student_id
+  const seen = new Set();
+  const unique = [];
+  for (const d of data) {
+    if (d.student && !seen.has(d.student.id)) {
+      seen.add(d.student.id);
+      unique.push({
+        ...d.student,
+        course_name: d.course?.name || '',
+        cefr: d.course?.cefr_level || ''
+      });
+    }
+  }
+  return unique;
+}
+
 // ═══ UTILITIES ═══
 function formatDate(d) { return d ? new Date(d).toLocaleDateString('pt-BR') : '-'; }
 function formatDateTime(d) { return d ? new Date(d).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})+' '+new Date(d).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}) : '-'; }

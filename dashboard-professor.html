@@ -146,6 +146,10 @@ body { background: var(--g50); margin: 0; }
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm-1-9c0-.55.45-1 1-1s1 .45 1 1v6c0 .55-.45 1-1 1s-1-.45-1-1V6zm6 6c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-2.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
         <span>Pronúncia</span>
       </button>
+      <button class="sb-link" data-section="assessments">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11zM8 15.01l1.41 1.41L11 14.84V19h2v-4.16l1.59 1.59L16 15.01 12.01 11z"/></svg>
+        <span>Assessments</span>
+      </button>
       <button class="sb-link" data-section="messages">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
         <span>Mensagens</span>
@@ -289,6 +293,48 @@ body { background: var(--g50); margin: 0; }
         </div>
       </div>
 
+      
+      <!-- ═══ ASSESSMENTS ═══ -->
+      <div class="section" id="sec-assessments">
+        <div class="form-card">
+          <h3>📄 Enviar Assessment Mensal</h3>
+          <p class="sub">Envie o relatório mensal (Excel) para um aluno.</p>
+          <div class="f-row">
+            <div class="f-group"><label>Aluno</label><select id="assStudent"><option value="">Carregando...</option></select></div>
+            <div class="f-group"><label>Título</label><input type="text" id="assTitle" placeholder="Ex: Assessment Abril 2026"></div>
+          </div>
+          <div class="f-row">
+            <div class="f-group">
+              <label>Mês</label>
+              <select id="assMonth">
+                <option value="">Selecione</option>
+                <option value="1">Janeiro</option><option value="2">Fevereiro</option><option value="3">Março</option>
+                <option value="4">Abril</option><option value="5">Maio</option><option value="6">Junho</option>
+                <option value="7">Julho</option><option value="8">Agosto</option><option value="9">Setembro</option>
+                <option value="10">Outubro</option><option value="11">Novembro</option><option value="12">Dezembro</option>
+              </select>
+            </div>
+            <div class="f-group">
+              <label>Ano</label>
+              <select id="assYear">
+                <option value="2025">2025</option>
+                <option value="2026" selected>2026</option>
+                <option value="2027">2027</option>
+              </select>
+            </div>
+          </div>
+          <div class="f-group">
+            <label>Arquivo (.xlsx, .xls, .pdf)</label>
+            <input type="file" id="assFile" accept=".xlsx,.xls,.pdf,.csv" style="width:100%;padding:11px 14px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;color:var(--navy);background:#fff;outline:none">
+          </div>
+          <button class="btn-send" onclick="sendAssessment()">📤 Enviar Assessment</button>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">📄 Assessments Enviados</div></div>
+          <div id="assList"><div class="empty-state"><div class="empty-icon">📄</div><p>Nenhum assessment enviado ainda.</p></div></div>
+        </div>
+      </div>
+
       <!-- ═══ MESSAGES ═══ -->
       <div class="section" id="sec-messages">
         <div class="panel">
@@ -306,7 +352,7 @@ body { background: var(--g50); margin: 0; }
 <script src="supabase.js"></script>
 <script>
 let currentUser = null;
-const sections = {"overview":"Visão Geral","students":"Meus Alunos","homework":"Homework","feedback":"Feedbacks","announcements":"Avisos","writing":"Redação","pronunciation":"Pronúncia","messages":"Mensagens"};
+const sections = {"overview":"Visão Geral","students":"Meus Alunos","homework":"Homework","feedback":"Feedbacks","announcements":"Avisos","writing":"Redação","pronunciation":"Pronúncia","assessments":"Assessments","messages":"Mensagens"};
 
 // ═══ INIT ═══
 document.addEventListener('DOMContentLoaded', async () => {
@@ -339,7 +385,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function loadStudents() {
   const students = await getMyStudents(currentUser.id);
   window._myStudents = students; // store for reuse
-  const selects = ['hwStudent','fbStudent','wrStudent','prStudent'];
+  const selects = ['hwStudent','fbStudent','wrStudent','prStudent','assStudent'];
   selects.forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
@@ -601,6 +647,45 @@ async function loadStudentsList() {
   }).join('');
 }
 
+
+// ═══ ASSESSMENTS ═══
+async function sendAssessment() {
+  const studentId = document.getElementById('assStudent').value;
+  const title = document.getElementById('assTitle').value.trim();
+  const month = parseInt(document.getElementById('assMonth').value);
+  const year = parseInt(document.getElementById('assYear').value);
+  const fileInput = document.getElementById('assFile');
+  const file = fileInput.files[0];
+  
+  if (!studentId) { showToast('Selecione um aluno','error'); return; }
+  if (!title) { showToast('Preencha o título','error'); return; }
+  if (!month) { showToast('Selecione o mês','error'); return; }
+  if (!file) { showToast('Selecione o arquivo','error'); return; }
+  if (file.size > 10 * 1024 * 1024) { showToast('Arquivo muito grande. Máximo 10MB.','error'); return; }
+  
+  showToast('Enviando assessment...','info');
+  try {
+    await uploadAssessment(currentUser.id, studentId, month, year, title, file);
+    showToast('Assessment enviado com sucesso!');
+    document.getElementById('assTitle').value = '';
+    document.getElementById('assMonth').value = '';
+    document.getElementById('assFile').value = '';
+    loadAssessmentList();
+  } catch(e) {
+    showToast('Erro: ' + e.message, 'error');
+  }
+}
+
+async function loadAssessmentList() {
+  const items = await getAssessmentsByTeacher(currentUser.id);
+  const div = document.getElementById('assList');
+  if (!items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📄</div><p>Nenhum assessment enviado.</p></div>'; return; }
+  div.innerHTML = items.map(a => {
+    const monthName = MONTHS[a.month] || a.month;
+    return '<div class="list-item"><div><div class="list-title">📄 ' + a.title + '</div><div class="list-sub">' + (a.student?.full_name||'') + ' — ' + monthName + ' ' + a.year + ' — ' + formatDateTime(a.created_at) + '</div></div><a href="' + a.file_url + '" target="_blank" style="padding:6px 14px;border-radius:8px;background:var(--blue-soft);color:var(--blue);font-size:12px;font-weight:700;text-decoration:none">📥 Baixar</a></div>';
+  }).join('');
+}
+
 // ═══ SIDEBAR NAVIGATION HOOKS ═══
 document.addEventListener('DOMContentLoaded', () => {
   // Load content when switching sections
@@ -615,6 +700,7 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'announcements': loadAnnouncementList(); break;
       case 'writing': loadWritingList(); break;
       case 'pronunciation': loadPronunciationList(); break;
+      case 'assessments': loadAssessmentList(); break;
       case 'messages': loadMessages(); break;
     }
   });

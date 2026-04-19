@@ -87,16 +87,23 @@ body { background: var(--g50); margin: 0; }
       <button class="sb-link" data-section="pronunciation"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-2.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg><span>Pronúncia</span></button>
     </nav>
     <div class="sb-bottom">
+      <a href="https://www.cambridgeone.org/" target="_blank" class="sb-link" style="color:rgba(255,255,255,0.5)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+        <span>Cambridge One</span>
+      </a>
       <button class="sb-link" data-section="assessments"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11zM8 15.01l1.41 1.41L11 14.84V19h2v-4.16l1.59 1.59L16 15.01 12.01 11z"/></svg><span>Assessments</span></button>
       <button class="sb-link" data-section="profile" style="color:rgba(255,255,255,0.5)"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>Meu Perfil</span></button>
       <a href="#" class="sb-logout" onclick="signOut();return false;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>Sair</a>
     </div>
   </aside>
+  <div id="sbOverlay" class="sb-overlay" onclick="document.querySelector('.sb').classList.remove('open');this.classList.remove('open')"></div>
 
   <main class="main">
     <div class="topbar">
       <span class="topbar-title" id="topbarTitle">Visão Geral</span>
+      <button class="mobile-menu-btn" onclick="document.querySelector('.sb').classList.toggle('open');document.getElementById('sbOverlay').classList.toggle('open')">☰</button>
       <div class="topbar-user">
+        <span id="notifBadge" style="display:none;min-width:20px;height:20px;border-radius:50%;background:var(--orange);color:#fff;font-size:11px;font-weight:800;text-align:center;line-height:20px;padding:0 6px"></span>
         <span class="topbar-name" id="userName">Aluno</span>
         <div class="topbar-avatar" id="userAvatar">A</div>
       </div>
@@ -142,7 +149,8 @@ body { background: var(--g50); margin: 0; }
 
       <!-- PRONUNCIATION -->
       <div class="section" id="sec-pronunciation">
-        <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:20px">🎙️ Prática de Pronúncia</h2>
+        <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:8px">🎙️ Prática de Pronúncia</h2>
+        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Clique no botão 🔊 para ouvir a pronúncia correta em inglês.</p>
         <div id="prList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhuma prática de pronúncia.</p></div></div>
       </div>
 
@@ -232,6 +240,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.sb-link').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
+      // Close mobile menu
+      document.querySelector('.sb').classList.remove('open');
+      document.getElementById('sbOverlay').classList.remove('open');
       const sec = btn.dataset.section;
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
       document.getElementById('sec-' + sec).classList.add('active');
@@ -240,6 +251,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   await loadOverview();
+  // Load notifications
+  const unread = await getUnreadCount(currentUser.id, 'student');
+  if (unread > 0) { document.getElementById('notifBadge').style.display = ''; document.getElementById('notifBadge').textContent = unread; }
   // Load avatar if exists
   if (currentUser.avatar_url) setAvatarEverywhere(currentUser.avatar_url);
 });

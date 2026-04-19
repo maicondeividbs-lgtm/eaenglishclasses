@@ -87,6 +87,7 @@ body { background: var(--g50); margin: 0; }
       <button class="sb-link" data-section="pronunciation"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-2.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg><span>Pronúncia</span></button>
     </nav>
     <div class="sb-bottom">
+      <button class="sb-link" data-section="profile" style="color:rgba(255,255,255,0.5)"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>Meu Perfil</span></button>
       <a href="#" class="sb-logout" onclick="signOut();return false;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>Sair</a>
     </div>
   </aside>
@@ -144,6 +145,54 @@ body { background: var(--g50); margin: 0; }
         <div id="prList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhuma prática de pronúncia.</p></div></div>
       </div>
 
+
+      <!-- PROFILE -->
+      <div class="section" id="sec-profile">
+        <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:20px">👤 Meu Perfil</h2>
+        
+        <div style="background:#fff;border-radius:16px;border:2px solid var(--ocean);padding:28px;max-width:500px">
+          <!-- Avatar -->
+          <div style="text-align:center;margin-bottom:24px">
+            <div id="profileAvatar" style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--blue-light));display:flex;align-items:center;justify-content:center;color:#fff;font-size:32px;font-weight:800;margin:0 auto 12px">A</div>
+            <p style="font-size:11px;color:var(--g500)">A foto de perfil será exibida no sistema</p>
+          </div>
+          
+          <div class="f-group">
+            <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px">Nome completo</label>
+            <input type="text" id="profName" style="width:100%;padding:11px 14px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;color:var(--navy);outline:none">
+          </div>
+          
+          <div class="f-group">
+            <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px">E-mail</label>
+            <input type="email" id="profEmail" disabled style="width:100%;padding:11px 14px;border:2px solid var(--g200);border-radius:10px;font-size:13px;color:var(--g500);background:var(--g50);opacity:0.7">
+            <p style="font-size:11px;color:var(--g400);margin-top:4px">O e-mail não pode ser alterado</p>
+          </div>
+          
+          <div class="f-group">
+            <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px">Nível atual</label>
+            <input type="text" id="profLevel" disabled style="width:100%;padding:11px 14px;border:2px solid var(--g200);border-radius:10px;font-size:13px;color:var(--g500);background:var(--g50);opacity:0.7">
+            <p style="font-size:11px;color:var(--g400);margin-top:4px">O nível é definido pela coordenação</p>
+          </div>
+          
+          <button onclick="saveProfile()" style="width:100%;padding:13px;border:none;border-radius:10px;background:var(--blue);color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s;margin-top:8px">Salvar Nome</button>
+          
+          <hr style="border:none;border-top:2px dashed var(--g200);margin:24px 0">
+          
+          <h3 style="font-size:16px;font-weight:800;color:var(--navy);margin-bottom:14px">🔒 Alterar Senha</h3>
+          
+          <div class="f-group">
+            <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px">Nova senha</label>
+            <input type="password" id="profNewPass" placeholder="Mínimo 6 caracteres" style="width:100%;padding:11px 14px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;color:var(--navy);outline:none">
+          </div>
+          
+          <div class="f-group">
+            <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px">Confirmar nova senha</label>
+            <input type="password" id="profConfirmPass" placeholder="Repita a nova senha" style="width:100%;padding:11px 14px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;color:var(--navy);outline:none">
+          </div>
+          
+          <button onclick="changePassword()" style="width:100%;padding:13px;border:none;border-radius:10px;background:var(--navy);color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s;margin-top:8px">Alterar Senha</button>
+        </div>
+      </div>
     </div>
   </main>
 </div>
@@ -152,7 +201,7 @@ body { background: var(--g50); margin: 0; }
 <script src="supabase.js"></script>
 <script>
 let currentUser = null;
-const sections = {"overview":"Visão Geral","homework":"Homework","feedback":"Feedbacks","announcements":"Avisos","writing":"Redação","pronunciation":"Pronúncia"};
+const sections = {"overview":"Visão Geral","homework":"Homework","feedback":"Feedbacks","announcements":"Avisos","writing":"Redação","pronunciation":"Pronúncia","profile":"Meu Perfil"};
 
 document.addEventListener('DOMContentLoaded', async () => {
   currentUser = await requireAuth(['student']);
@@ -308,6 +357,47 @@ async function markPron(pronId, btn) {
   }
 }
 
+
+// ═══ PROFILE ═══
+async function loadProfile() {
+  document.getElementById('profName').value = currentUser.full_name || '';
+  document.getElementById('profEmail').value = currentUser.email || '';
+  document.getElementById('profLevel').value = currentUser.level || '';
+  document.getElementById('profileAvatar').textContent = (currentUser.full_name || 'A')[0];
+}
+
+async function saveProfile() {
+  const name = document.getElementById('profName').value.trim();
+  if (!name) { showToast('Nome é obrigatório','error'); return; }
+  try {
+    const { error } = await db.from('profiles').update({
+      full_name: name,
+      updated_at: new Date().toISOString()
+    }).eq('id', currentUser.id);
+    if (error) throw error;
+    currentUser.full_name = name;
+    document.getElementById('userName').textContent = name;
+    document.getElementById('userAvatar').textContent = name[0];
+    document.getElementById('profileAvatar').textContent = name[0];
+    document.getElementById('greeting').textContent = 'Olá, ' + name + '! 🎓';
+    showToast('Nome atualizado!');
+  } catch(e) { showToast('Erro: ' + e.message, 'error'); }
+}
+
+async function changePassword() {
+  const newPass = document.getElementById('profNewPass').value;
+  const confirm = document.getElementById('profConfirmPass').value;
+  if (!newPass || newPass.length < 6) { showToast('A senha deve ter no mínimo 6 caracteres.','error'); return; }
+  if (newPass !== confirm) { showToast('As senhas não coincidem.','error'); return; }
+  try {
+    const { error } = await db.auth.updateUser({ password: newPass });
+    if (error) throw error;
+    document.getElementById('profNewPass').value = '';
+    document.getElementById('profConfirmPass').value = '';
+    showToast('Senha alterada com sucesso!');
+  } catch(e) { showToast('Erro: ' + e.message, 'error'); }
+}
+
 // ═══ SIDEBAR HOOKS ═══
 document.addEventListener('DOMContentLoaded', () => {
   const observer = new MutationObserver(() => {
@@ -316,6 +406,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const id = active.id.replace('sec-','');
     switch(id) {
       case 'homework': loadHomework(); break;
+      case 'profile': loadProfile(); break;
       case 'feedback': loadFeedbacks(); break;
       case 'announcements': loadAnnouncements(); break;
       case 'writing': loadWriting(); break;

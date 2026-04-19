@@ -243,6 +243,81 @@ function showToast(msg, type='success') {
   setTimeout(()=>{t.style.opacity='0';t.style.transform='translateY(-10px)';setTimeout(()=>t.remove(),400)},3000);
 }
 
+// ═══ TESTIMONIALS (Public feedback) ═══
+async function submitTestimonial(name, text, rating) {
+  const { error } = await db.from('testimonials').insert([{author_name:name, content:text, rating:rating, approved:false}]);
+  if (error) throw error;
+}
+
+async function getApprovedTestimonials() {
+  const { data } = await db.from('testimonials').select('*').eq('approved',true).order('created_at',{ascending:false}).limit(12);
+  return data || [];
+}
+
+async function getAllTestimonials() {
+  const { data } = await db.from('testimonials').select('*').order('created_at',{ascending:false});
+  return data || [];
+}
+
+async function approveTestimonial(id) {
+  const { error } = await db.from('testimonials').update({approved:true}).eq('id',id);
+  if (error) throw error;
+}
+
+async function deleteTestimonial(id) {
+  const { error } = await db.from('testimonials').delete().eq('id',id);
+  if (error) throw error;
+}
+
+// ═══ USER MANAGEMENT (Coord) ═══
+async function createNewUser(email, password, fullName, role) {
+  // This requires the service role key - we use the admin endpoint
+  // For frontend, we create via supabase auth and update profile
+  const { data, error } = await db.auth.signUp({
+    email: email,
+    password: password,
+    options: { data: { full_name: fullName, role: role } }
+  });
+  if (error) throw error;
+  // Wait for trigger then update profile
+  await new Promise(r => setTimeout(r, 500));
+  if (data.user) {
+    await db.from('profiles').update({ full_name: fullName, role: role }).eq('id', data.user.id);
+  }
+  return data;
+}
+
+async function deleteUser(userId) {
+  // Delete profile (cascades to enrollments, submissions, etc.)
+  const { error } = await db.from('profiles').delete().eq('id', userId);
+  if (error) throw error;
+}
+
+// ═══ NOTIFICATIONS ═══
+async function getUnreadCount(userId, role) {
+  let count = 0;
+  try {
+    if (role === 'student') {
+      const [tasks, writing, feedbacks] = await Promise.all([
+        db.from('task_submissions').select('id',{count:'exact',head:true}).eq('student_id',userId).eq('status','pending'),
+        db.from('writing_activities').select('id',{count:'exact',head:true}).eq('student_id',userId).eq('status','pending'),
+        db.from('feedbacks').select('id',{count:'exact',head:true}).eq('student_id',userId)
+      ]);
+      count = (tasks.count||0) + (writing.count||0);
+    } else if (role === 'teacher') {
+      const [writing, msgs] = await Promise.all([
+        db.from('writing_activities').select('id',{count:'exact',head:true}).eq('teacher_id',userId).eq('status','submitted'),
+        db.from('coord_messages').select('id',{count:'exact',head:true}).eq('teacher_id',userId).eq('read',false)
+      ]);
+      count = (writing.count||0) + (msgs.count||0);
+    } else if (role === 'coordinator') {
+      const placements = await db.from('placement_tests').select('id',{count:'exact',head:true}).eq('status','pending');
+      count = placements.count||0;
+    }
+  } catch(e) { console.error('Notification count error:', e); }
+  return count;
+}
+
 const MONTHS = ['','Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 
 // ═══ AVATAR UPLOAD ═══

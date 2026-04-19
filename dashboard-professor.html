@@ -551,7 +551,13 @@ async function loadStudentsList() {
   }
   
   div.innerHTML = students.map(s => {
-    return '<div style="padding:16px;border-radius:12px;border:1px solid var(--g100);display:flex;align-items:center;gap:14px;transition:all 0.2s" onmouseover="this.style.borderColor='var(--orange)';this.style.background='var(--cream)'" onmouseout="this.style.borderColor='var(--g100)';this.style.background=''"><div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--orange),var(--mango));display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:800">' + (s.full_name||'?')[0] + '</div><div><div style="font-size:14px;font-weight:700;color:var(--navy)">' + s.full_name + '</div><div style="font-size:12px;font-weight:600;color:var(--orange)">' + (s.course_name||s.level||'') + (s.cefr ? ' • ' + s.cefr : '') + '</div><div style="font-size:11px;color:var(--g500);margin-top:2px">' + s.email + '</div></div></div>';
+    const initial = (s.full_name||'?')[0];
+    const courseTxt = (s.course_name||s.level||'') + (s.cefr ? ' • ' + s.cefr : '');
+    return '<div style="padding:16px;border-radius:12px;border:1px solid var(--g100);display:flex;align-items:center;gap:14px;transition:all 0.2s;cursor:default" onmouseover="this.style.borderColor=this.style.borderColor===\'var(--orange)\'?\'\':\'var(--orange)\';this.style.background=\'var(--cream)\'" onmouseout="this.style.borderColor=\'var(--g100)\';this.style.background=\'\'">' +
+      '<div style="width:42px;height:42px;min-width:42px;border-radius:50%;background:linear-gradient(135deg,var(--orange),var(--mango));display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:800">' + initial + '</div>' +
+      '<div><div style="font-size:14px;font-weight:700;color:var(--navy)">' + s.full_name + '</div>' +
+      '<div style="font-size:12px;font-weight:600;color:var(--orange)">' + courseTxt + '</div>' +
+      '<div style="font-size:11px;color:var(--g500);margin-top:2px">' + s.email + '</div></div></div>';
   }).join('');
 }
 

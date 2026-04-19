@@ -1052,6 +1052,47 @@
   </div>
 </section>
 
+
+<!-- ═══ TESTIMONIALS ═══ -->
+<section class="faq reveal" style="background:var(--white)">
+  <div class="container">
+    <div class="faq-header" style="margin-bottom:32px">
+      <div class="section-label orange">Depoimentos</div>
+      <h2 class="section-title">O que dizem nossos <em>alunos</em></h2>
+      <p class="section-subtitle">Experiências reais de quem já estudou com a EA.</p>
+    </div>
+    
+    <!-- Approved testimonials -->
+    <div id="testimonials-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-bottom:48px">
+      <div style="text-align:center;color:var(--g400);padding:32px;grid-column:1/-1">Carregando depoimentos...</div>
+    </div>
+    
+    <!-- Submit form -->
+    <div style="max-width:560px;margin:0 auto;background:var(--cream);border:2px solid var(--ocean);border-radius:20px;padding:32px;text-align:center">
+      <h3 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:6px">💬 Deixe seu depoimento</h3>
+      <p style="font-size:13px;color:var(--g500);margin-bottom:20px">Compartilhe sua experiência com a EA English Classes.</p>
+      <div id="testimonialSuccess" style="display:none;padding:14px;background:#d1fae5;border:2px solid #10b981;border-radius:12px;color:#065f46;font-weight:600;margin-bottom:16px">✅ Obrigado pelo seu depoimento! Será publicado após aprovação.</div>
+      <div style="margin-bottom:12px">
+        <input type="text" id="tName" placeholder="Seu nome" style="width:100%;padding:12px 16px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:14px;outline:none">
+      </div>
+      <div style="margin-bottom:12px">
+        <textarea id="tContent" rows="3" placeholder="Escreva sobre sua experiência..." style="width:100%;padding:12px 16px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:14px;outline:none;resize:vertical"></textarea>
+      </div>
+      <div style="margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:8px">
+        <span style="font-size:13px;font-weight:600;color:var(--navy)">Avaliação:</span>
+        <div id="starRating" style="display:flex;gap:4px;cursor:pointer;font-size:24px">
+          <span data-star="1" onclick="setRating(1)">⭐</span>
+          <span data-star="2" onclick="setRating(2)">⭐</span>
+          <span data-star="3" onclick="setRating(3)">⭐</span>
+          <span data-star="4" onclick="setRating(4)">⭐</span>
+          <span data-star="5" onclick="setRating(5)">⭐</span>
+        </div>
+      </div>
+      <button onclick="sendTestimonial()" style="width:100%;padding:14px;border:none;border-radius:10px;background:var(--orange);color:#fff;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s">Enviar Depoimento</button>
+    </div>
+  </div>
+</section>
+
 <!-- ═══ CTA FINAL ═══ -->
 <section class="cta-final reveal">
   <div class="container">
@@ -1110,4 +1151,53 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.querySelectorAll('.faq-item').forEach(item=>{item.addEventListener('click',()=>item.classList.toggle('open'));});
 });
 </script>
+
+<!-- Supabase for testimonials -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<script>
+let selectedRating = 5;
+
+function setRating(n) {
+  selectedRating = n;
+  document.querySelectorAll('#starRating span').forEach(s => {
+    const star = parseInt(s.dataset.star);
+    s.style.opacity = star <= n ? '1' : '0.3';
+  });
+}
+
+async function sendTestimonial() {
+  const name = document.getElementById('tName').value.trim();
+  const content = document.getElementById('tContent').value.trim();
+  if (!name || !content) { alert('Preencha seu nome e depoimento.'); return; }
+  try {
+    await submitTestimonial(name, content, selectedRating);
+    document.getElementById('testimonialSuccess').style.display = 'block';
+    document.getElementById('tName').value = '';
+    document.getElementById('tContent').value = '';
+    setRating(5);
+  } catch(e) { alert('Erro ao enviar. Tente novamente.'); }
+}
+
+// Load approved testimonials on page load
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const items = await getApprovedTestimonials();
+    const grid = document.getElementById('testimonials-grid');
+    if (!items.length) {
+      grid.innerHTML = '<div style="text-align:center;color:var(--g400);padding:32px;grid-column:1/-1;font-size:14px">Ainda não temos depoimentos publicados. Seja o primeiro a deixar o seu!</div>';
+      return;
+    }
+    grid.innerHTML = items.map(t => {
+      const stars = Array(t.rating).fill('<span style="color:#f59a1e">★</span>').join('');
+      const emptyStars = Array(5 - t.rating).fill('<span style="color:#ddd">★</span>').join('');
+      return '<div style="background:var(--cream);border-radius:16px;padding:24px;border:1px solid var(--g100)">' +
+        '<div style="font-size:16px;margin-bottom:8px">' + stars + emptyStars + '</div>' +
+        '<p style="font-size:14px;color:var(--g700);line-height:1.6;margin-bottom:12px;font-style:italic">"' + t.content + '"</p>' +
+        '<p style="font-size:13px;font-weight:700;color:var(--navy)">— ' + t.author_name + '</p></div>';
+    }).join('');
+  } catch(e) { console.error('Testimonials:', e); }
+});
+</script>
+
 </body></html>

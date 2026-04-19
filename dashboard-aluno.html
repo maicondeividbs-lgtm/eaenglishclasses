@@ -356,7 +356,8 @@ async function loadPronunciation() {
     const btn = p.practiced
       ? '<span class="badge badge-done">✅ Praticado</span>'
       : '<button class="btn-action btn-done" onclick="markPron(' + p.id + ',this)">Marcar como praticado</button>';
-    return '<div class="list-item"><div><div class="pron-word">' + p.word + '</div>' + (p.phonetic ? '<div class="pron-phonetic">' + p.phonetic + '</div>' : '') + (p.notes ? '<div class="list-sub" style="margin-top:4px">' + p.notes + '</div>' : '') + '</div>' + btn + '</div>';
+    const playBtn = '<button onclick="speakWord(\'' + p.word.replace(/'/g, "\\'") + '\')" style="width:44px;height:44px;min-width:44px;border-radius:50%;border:2px solid var(--blue);background:var(--blue-soft);color:var(--blue);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s" onmouseover="this.style.background=\'var(--blue)\';this.style.color=\'#fff\'" onmouseout="this.style.background=\'var(--blue-soft)\';this.style.color=\'var(--blue)\'">🔊</button>';
+    return '<div class="list-item" style="gap:14px"><div style="display:flex;align-items:center;gap:14px">' + playBtn + '<div><div class="pron-word">' + p.word + '</div>' + (p.phonetic ? '<div class="pron-phonetic">' + p.phonetic + '</div>' : '') + (p.notes ? '<div class="list-sub" style="margin-top:4px">💡 ' + p.notes + '</div>' : '') + '</div></div>' + btn + '</div>';
   }).join('');
 }
 
@@ -375,6 +376,37 @@ async function markPron(pronId, btn) {
 }
 
 
+
+
+// ═══ TEXT-TO-SPEECH ═══
+function speakWord(word) {
+  if (!('speechSynthesis' in window)) {
+    showToast('Seu navegador não suporta áudio de pronúncia.', 'error');
+    return;
+  }
+  // Cancel any ongoing speech
+  window.speechSynthesis.cancel();
+  
+  const utterance = new SpeechSynthesisUtterance(word);
+  utterance.lang = 'en-US';
+  utterance.rate = 0.85; // Slightly slower for clarity
+  utterance.pitch = 1;
+  
+  // Try to find an English voice
+  const voices = window.speechSynthesis.getVoices();
+  const enVoice = voices.find(v => v.lang.startsWith('en-') && v.name.includes('Google')) 
+                || voices.find(v => v.lang.startsWith('en-US'))
+                || voices.find(v => v.lang.startsWith('en'));
+  if (enVoice) utterance.voice = enVoice;
+  
+  window.speechSynthesis.speak(utterance);
+}
+
+// Preload voices (some browsers load async)
+if ('speechSynthesis' in window) {
+  window.speechSynthesis.getVoices();
+  window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+}
 
 // ═══ AVATAR UPLOAD ═══
 async function handleAvatarUpload(file) {

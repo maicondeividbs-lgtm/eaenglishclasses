@@ -214,6 +214,27 @@ body { background: var(--g50); margin: 0; }
           <div class="panel-head"><div class="panel-title">Todos os Usuários</div><span class="badge badge-time" id="userCount">0</span></div>
           <div id="userList" class="user-grid"></div>
         </div>
+
+        <!-- Edit User Modal -->
+        <div id="editModal" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center">
+          <div style="background:#fff;border-radius:20px;padding:32px;max-width:500px;width:90%;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,0.2)">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+              <h3 style="font-size:20px;font-weight:800;color:var(--navy)">✏️ Editar Aluno</h3>
+              <button onclick="closeEditModal()" style="border:none;background:var(--g100);width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:16px">✕</button>
+            </div>
+            <input type="hidden" id="editUserId">
+            <div class="f-group"><label>Nome completo</label><input type="text" id="editName"></div>
+            <div class="f-group"><label>E-mail</label><input type="email" id="editEmail" disabled style="opacity:0.6"></div>
+            <div class="f-group"><label>Perfil</label><select id="editRole"><option value="student">Aluno</option><option value="teacher">Professor</option><option value="coordinator">Coordenador</option></select></div>
+            <div class="f-group"><label>Nível / Livro</label><input type="text" id="editLevel" placeholder="Ex: A2 — Interchange 2"></div>
+            <div class="f-group"><label>Professor responsável</label><select id="editTeacher"><option value="">Selecione</option></select></div>
+            <div class="f-group"><label>Curso</label><select id="editCourse"><option value="">Selecione</option></select></div>
+            <div style="display:flex;gap:10px;margin-top:16px">
+              <button class="btn-send" style="background:var(--mango)" onclick="saveUserEdit()">Salvar Alterações</button>
+            </div>
+          </div>
+        </div>
+        </div>
       </div>
 
       <!-- ═══ NIVELAMENTOS ═══ -->
@@ -658,7 +679,7 @@ async function loadUsers() {
   if (!profiles.length) { div.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">👥</div><p>Nenhum usuário cadastrado.</p></div>'; return; }
   div.innerHTML = profiles.map(p => {
     const roleLabel = {student:'Aluno',teacher:'Professor',coordinator:'Coordenador'}[p.role] || p.role;
-    return '<div class="user-card"><div class="user-card-avatar ' + p.role + '">' + (p.full_name||'?')[0] + '</div><div><div class="user-card-name">' + (p.full_name||'Sem nome') + '</div><div class="user-card-role ' + p.role + '">' + roleLabel + (p.level ? ' • ' + p.level : '') + '</div><div class="user-card-email">' + p.email + '</div></div></div>';
+    return '<div class="user-card" style="cursor:pointer" onclick="openEditModal(\'' + p.id + '\')"><div class="user-card-avatar ' + p.role + '">' + (p.full_name||'?')[0] + '</div><div style="flex:1"><div class="user-card-name">' + (p.full_name||'Sem nome') + '</div><div class="user-card-role ' + p.role + '">' + roleLabel + (p.level ? ' • ' + p.level : '') + '</div><div class="user-card-email">' + p.email + '</div></div><span style="font-size:16px;color:var(--g400)">✏️</span></div>';
   }).join('');
 }
 
@@ -745,6 +766,104 @@ async function loadMsgList() {
   if (!msgs || !msgs.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📩</div><p>Nenhuma mensagem enviada.</p></div>'; return; }
   div.innerHTML = msgs.map(m => '<div class="list-item"><div><div class="list-title">📩 ' + m.title + '</div><div class="list-sub">→ ' + (m.teacher?.full_name||'?') + ' — ' + formatDateTime(m.created_at) + '</div></div><span class="badge ' + (m.read ? 'badge-done' : 'badge-pending') + '">' + (m.read ? 'Lida' : 'Não lida') + '</span></div>').join('');
 }
+
+
+
+// ═══ USER MANAGEMENT ═══
+async function openEditModal(userId) {
+  const profiles = await getAllProfiles();
+  const user = profiles.find(p => p.id === userId);
+  if (!user) { showToast('Usuário não encontrado','error'); return; }
+  
+  document.getElementById('editUserId').value = user.id;
+  document.getElementById('editName').value = user.full_name || '';
+  document.getElementById('editEmail').value = user.email || '';
+  document.getElementById('editRole').value = user.role || 'student';
+  document.getElementById('editLevel').value = user.level || '';
+  
+  // Load teachers dropdown
+  const teachers = await getAllTeachers();
+  const teacherSelect = document.getElementById('editTeacher');
+  teacherSelect.innerHTML = '<option value="">Sem professor</option>';
+  teachers.forEach(t => {
+    teacherSelect.innerHTML += '<option value="' + t.id + '">' + t.full_name + '</option>';
+  });
+  // Also add coordinators who teach
+  const coords = profiles.filter(p => p.role === 'coordinator');
+  coords.forEach(c => {
+    teacherSelect.innerHTML += '<option value="' + c.id + '">' + c.full_name + ' (Coord)</option>';
+  });
+  
+  // Check current enrollment
+  const { data: enrollment } = await db.from('enrollments').select('teacher_id, course_id').eq('student_id', userId).eq('active', true).maybeSingle();
+  if (enrollment) {
+    teacherSelect.value = enrollment.teacher_id || '';
+    // Load course
+    const courses = await getCourses();
+    const courseSelect = document.getElementById('editCourse');
+    courseSelect.innerHTML = '<option value="">Sem curso</option>';
+    courses.forEach(c => {
+      const selected = c.id === enrollment.course_id ? ' selected' : '';
+      courseSelect.innerHTML += '<option value="' + c.id + '"' + selected + '>' + c.name + ' (' + c.cefr_level + ')</option>';
+    });
+  } else {
+    const courses = await getCourses();
+    const courseSelect = document.getElementById('editCourse');
+    courseSelect.innerHTML = '<option value="">Sem curso</option>';
+    courses.forEach(c => {
+      courseSelect.innerHTML += '<option value="' + c.id + '">' + c.name + ' (' + c.cefr_level + ')</option>';
+    });
+  }
+  
+  document.getElementById('editModal').style.display = 'flex';
+}
+
+function closeEditModal() {
+  document.getElementById('editModal').style.display = 'none';
+}
+
+async function saveUserEdit() {
+  const userId = document.getElementById('editUserId').value;
+  const name = document.getElementById('editName').value.trim();
+  const role = document.getElementById('editRole').value;
+  const level = document.getElementById('editLevel').value.trim();
+  const teacherId = document.getElementById('editTeacher').value;
+  const courseId = document.getElementById('editCourse').value;
+
+  if (!name) { showToast('Nome é obrigatório','error'); return; }
+
+  try {
+    // Update profile
+    const { error } = await db.from('profiles').update({
+      full_name: name,
+      role: role,
+      level: level,
+      updated_at: new Date().toISOString()
+    }).eq('id', userId);
+    
+    if (error) throw error;
+
+    // Update enrollment if teacher and course are set
+    if (teacherId && courseId) {
+      // Delete existing enrollments for this student
+      await db.from('enrollments').delete().eq('student_id', userId);
+      // Create new enrollment
+      await db.from('enrollments').insert([{
+        student_id: userId,
+        teacher_id: teacherId,
+        course_id: parseInt(courseId),
+        active: true
+      }]);
+    }
+
+    showToast('Aluno atualizado com sucesso!');
+    closeEditModal();
+    loadUsers();
+  } catch(e) {
+    showToast('Erro: ' + e.message, 'error');
+  }
+}
+
 
 // ═══ SIDEBAR NAV HOOKS ═══
 document.addEventListener('DOMContentLoaded', () => {

@@ -621,7 +621,28 @@ async function loadMessages() {
   const msgs = await getCoordMessagesForTeacher(currentUser.id);
   const div = document.getElementById('msgList');
   if (!msgs.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>Nenhuma mensagem da coordenação.</p></div>'; return; }
-  div.innerHTML = msgs.map(m => '<div class="list-item" style="' + (!m.read ? 'background:var(--mango-soft);border-left:4px solid var(--mango)' : '') + '"><div><div class="list-title">📩 ' + m.title + '</div><div class="list-sub">' + m.content.substring(0,100) + ' — ' + formatDateTime(m.created_at) + '</div></div><span class="badge ' + (m.read ? 'badge-time' : 'badge-pending') + '">' + (m.read ? 'Lida' : 'Nova') + '</span></div>').join('');
+  div.innerHTML = msgs.map(m => {
+    const isNew = !m.read;
+    const style = isNew ? 'background:var(--mango-soft);border-left:4px solid var(--mango)' : '';
+    const readBtn = isNew 
+      ? '<button onclick="markMsgRead(' + m.id + ',this)" style="padding:6px 14px;border-radius:8px;border:none;background:var(--mango);color:#fff;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;transition:all 0.2s">Marcar como lida</button>'
+      : '<span class="badge badge-time">✓ Lida</span>';
+    return '<div class="list-item" style="' + style + '"><div style="flex:1"><div class="list-title">📩 ' + m.title + '</div><div class="list-sub" style="margin-top:6px;line-height:1.6">' + m.content + '</div><div class="list-sub" style="margin-top:6px;font-style:italic">' + (m.author?.full_name||'Coordenação') + ' — ' + formatDateTime(m.created_at) + '</div></div>' + readBtn + '</div>';
+  }).join('');
+}
+
+async function markMsgRead(msgId, btn) {
+  btn.disabled = true;
+  btn.textContent = 'Salvando...';
+  try {
+    await markMessageRead(msgId);
+    showToast('Mensagem marcada como lida');
+    loadMessages();
+  } catch(e) {
+    showToast('Erro: ' + e.message, 'error');
+    btn.disabled = false;
+    btn.textContent = 'Marcar como lida';
+  }
 }
 
 

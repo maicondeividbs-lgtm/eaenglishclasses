@@ -166,12 +166,15 @@ body { background: var(--g50); margin: 0; }
       </a>
     </div>
   </aside>
+  <div id="sbOverlay" class="sb-overlay" onclick="document.querySelector('.sb').classList.remove('open');this.classList.remove('open')"></div>
 
   <!-- MAIN CONTENT -->
   <main class="main">
     <div class="topbar">
       <span class="topbar-title" id="topbarTitle">Visão Geral</span>
+      <button class="mobile-menu-btn" onclick="document.querySelector('.sb').classList.toggle('open');document.getElementById('sbOverlay').classList.toggle('open')">☰</button>
       <div class="topbar-user">
+        <span id="notifBadge" style="display:none;min-width:20px;height:20px;border-radius:50%;background:var(--orange);color:#fff;font-size:11px;font-weight:800;text-align:center;line-height:20px;padding:0 6px"></span>
         <span class="topbar-name" id="userName">Professor</span>
         <div class="topbar-avatar" id="userAvatar">P</div>
       </div>
@@ -368,6 +371,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.sb-link').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
+      // Close mobile menu
+      document.querySelector('.sb').classList.remove('open');
+      document.getElementById('sbOverlay').classList.remove('open');
       const sec = btn.dataset.section;
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
       document.getElementById('sec-' + sec).classList.add('active');
@@ -379,6 +385,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadStudents();
   // Load overview stats
   await loadOverview();
+  const unread = await getUnreadCount(currentUser.id, 'teacher');
+  if (unread > 0) { document.getElementById('notifBadge').style.display = ''; document.getElementById('notifBadge').textContent = unread; }
 });
 
 // ═══ LOAD STUDENTS INTO ALL SELECTS ═══

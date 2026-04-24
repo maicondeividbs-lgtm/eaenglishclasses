@@ -3,6 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAAAAABWESUoAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAACYktHRAD/h4/MvwAAAAd0SU1FB+oEGBUhLL+MU28AAAF3SURBVDjLvVM7LwRRFP7OzF02xmMFJSEa2dAQQRREo6EWfoN/IH6BUiV6hV7hJ+hokIgQsiHezGLNzD2fwu7s7EvH192bc7/HOecK8Tsc/HmBSR4ojADHpZTvpNokhZBERYKBoHO35X5MLKokXxShVBvyEC5maZUxYpMCiMB1HJz5SeemrP269Nrsa9dj7nJE3VoJy7t2iGClDTsMtVaihJlWHDXogzvw0vz8NNV5c4QGKT59bnucw8AntV4KSaeBfvQhdwmtlyK/8Z7Zn0QWwfEQy72sSOFgem0eWGcQayQK7nvcdAqAi0VGcUFyFl/WIusVTu1JmGKdmGbcZ2Y3E2TPr68Gaz2QqiQ14gKwx7AqJkGlWmtpMQwcgGCFhADOD6vBcgvGEE+ruFGUIOdpUxi2RmF7ZN4LvaWtMqU23W4+tGUL5z295iJvgu7VjmqGt4NUXrv87vSVSWnojXpFhvLSVu5q9SwoVABC+XEvIjUMDfAPf/MbvRIRVjKrblQAAAAASUVORK5CYII=">
+<meta name="description" content="EA English Classes — Escola de inglês online com mais de 10 anos em Osasco, SP. Aulas ao vivo pelo Google Meet do nível A1 ao C1.">
+<meta property="og:title" content="EA English Classes">
+<meta property="og:description" content="Escola de inglês online — aulas ao vivo com foco em conversação e gramática. Do zero à fluência.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta name="theme-color" content="#19244e">
 <title>Coordenação — EA English Classes</title>
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.tailwindcss.com"></script>
@@ -228,7 +235,14 @@ body { background: var(--g50); margin: 0; }
 
       <!-- ═══ USERS ═══ -->
       <div class="section" id="sec-users">
-        <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:20px">👥 Gestão de Usuários</h2>
+        <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:16px">👥 Gestão de Usuários</h2>
+        <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
+          <input type="text" id="userSearch" placeholder="Buscar por nome ou e-mail..." oninput="filterUsers()" style="flex:1;min-width:200px;padding:10px 14px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;outline:none">
+          <button onclick="filterUsersByRole('')" class="user-filter active" style="padding:8px 16px;border-radius:8px;border:1px solid var(--g200);background:var(--navy);color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">Todos</button>
+          <button onclick="filterUsersByRole('student')" class="user-filter" style="padding:8px 16px;border-radius:8px;border:1px solid var(--g200);background:#fff;color:var(--g700);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">🎓 Alunos</button>
+          <button onclick="filterUsersByRole('teacher')" class="user-filter" style="padding:8px 16px;border-radius:8px;border:1px solid var(--g200);background:#fff;color:var(--g700);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">👨‍🏫 Professores</button>
+          <button onclick="filterUsersByRole('coordinator')" class="user-filter" style="padding:8px 16px;border-radius:8px;border:1px solid var(--g200);background:#fff;color:var(--g700);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">📊 Coords</button>
+        </div>
         <div class="panel">
           <div class="panel-head"><div class="panel-title">Todos os Usuários</div><div style="display:flex;gap:8px;align-items:center"><span class="badge badge-time" id="userCount">0</span><button onclick="openCreateModal()" style="padding:8px 16px;border:none;border-radius:8px;background:var(--mango);color:#fff;font-size:12px;font-weight:700;cursor:pointer">+ Novo Usuário</button></div></div>
           <div id="userList" class="user-grid"></div>
@@ -753,16 +767,6 @@ async function loadOverview() {
 }
 
 // ═══ USERS ═══
-async function loadUsers() {
-  const profiles = await getAllProfiles();
-  document.getElementById('userCount').textContent = profiles.length + ' usuários';
-  const div = document.getElementById('userList');
-  if (!profiles.length) { div.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">👥</div><p>Nenhum usuário cadastrado.</p></div>'; return; }
-  div.innerHTML = profiles.map(p => {
-    const roleLabel = {student:'Aluno',teacher:'Professor',coordinator:'Coordenador'}[p.role] || p.role;
-    return '<div class="user-card" style="cursor:pointer" onclick="openEditModal(\'' + p.id + '\')"><div class="user-card-avatar ' + p.role + '">' + (p.full_name||'?')[0] + '</div><div style="flex:1"><div class="user-card-name">' + (p.full_name||'Sem nome') + '</div><div class="user-card-role ' + p.role + '">' + roleLabel + (p.level ? ' • ' + p.level : '') + '</div><div class="user-card-email">' + p.email + '</div></div><span style="font-size:16px;color:var(--g400)">✏️</span></div>';
-  }).join('');
-}
 
 // ═══ NIVELAMENTOS ═══
 async function loadNivelamentos() {
@@ -1057,6 +1061,52 @@ async function deleteTest(id) {
     showToast('Depoimento excluído.');
     loadTestimonials();
   } catch(e) { showToast('Erro: ' + e.message, 'error'); }
+}
+
+
+// ═══ USER FILTERS ═══
+let allUsersCache = [];
+let currentRoleFilter = '';
+
+async function loadUsers() {
+  allUsersCache = await getAllProfiles();
+  applyUserFilters();
+}
+
+function filterUsers() { applyUserFilters(); }
+
+function filterUsersByRole(role) {
+  currentRoleFilter = role;
+  document.querySelectorAll('.user-filter').forEach(b => {
+    b.style.background = '#fff';
+    b.style.color = 'var(--g700)';
+  });
+  event.target.style.background = 'var(--navy)';
+  event.target.style.color = '#fff';
+  applyUserFilters();
+}
+
+function applyUserFilters() {
+  const search = (document.getElementById('userSearch')?.value || '').toLowerCase();
+  let filtered = allUsersCache;
+  if (currentRoleFilter) filtered = filtered.filter(p => p.role === currentRoleFilter);
+  if (search) filtered = filtered.filter(p => (p.full_name||'').toLowerCase().includes(search) || (p.email||'').toLowerCase().includes(search));
+  
+  document.getElementById('userCount').textContent = filtered.length + ' de ' + allUsersCache.length;
+  const div = document.getElementById('userList');
+  if (!filtered.length) {
+    div.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">👥</div><p>Nenhum usuário encontrado.</p></div>';
+    return;
+  }
+  div.innerHTML = filtered.map(p => {
+    const roleLabel = {student:'Aluno',teacher:'Professor',coordinator:'Coordenador'}[p.role] || p.role;
+    return '<div class="user-card" style="cursor:pointer" onclick="openEditModal(\'' + p.id + '\')">' +
+      '<div class="user-card-avatar ' + p.role + '">' + (p.full_name||'?')[0] + '</div>' +
+      '<div style="flex:1"><div class="user-card-name">' + (p.full_name||'Sem nome') + '</div>' +
+      '<div class="user-card-role ' + p.role + '">' + roleLabel + (p.level ? ' • ' + p.level : '') + '</div>' +
+      '<div class="user-card-email">' + p.email + '</div></div>' +
+      '<span style="font-size:16px;color:var(--g400)">✏️</span></div>';
+  }).join('');
 }
 
 // ═══ SIDEBAR NAV HOOKS ═══

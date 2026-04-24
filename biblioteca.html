@@ -387,9 +387,9 @@ function renderWorksheets() {
 
 function renderExamples(search) {
   const items = examples[currentLevel] || [];
-  const filtered = search ? items.filter(ex =>
+  const filtered = (search ? items.filter(ex =>
     ex.topic.toLowerCase().includes(search) || ex.html.toLowerCase().includes(search)
-  ) : items;
+  ) : items).sort((a,b) => a.page - b.page);
 
   const div = document.getElementById('view-examples');
   if (!filtered.length) {
@@ -400,7 +400,7 @@ function renderExamples(search) {
   div.innerHTML = '<p style="font-size:14px;color:var(--g500);margin-bottom:20px">Explicações gramaticais em português — clique para expandir.</p><div class="ex-grid">' +
     filtered.map((ex, idx) => {
       const preview = ex.html.replace(/<[^>]*>/g, '').substring(0, 120);
-      return '<div class="ex-card" onclick="showExample(' + idx + ')"><div class="ex-header"><span class="ex-topic">' + ex.topic + '</span><span class="ex-page">' + ex.book + ' pg.' + ex.page + '</span></div><div class="ex-preview">' + preview + '...</div></div>';
+      return '<div class="ex-card" onclick="showExample(' + idx + ')"><div class="ex-header"><span class="ex-page" style="background:var(--navy);color:#fff;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:800">Pg. ' + ex.page + '</span><span class="ex-topic">' + ex.topic + '</span></div><div style="padding:4px 18px 0"><span style="font-size:10px;color:var(--g400);font-weight:600">' + ex.book + '</span></div><div class="ex-preview">' + preview + '...</div></div>';
     }).join('') + '</div>';
 }
 
@@ -415,7 +415,7 @@ function showExample(idx) {
   if (!ex) return;
 
   document.getElementById('exModalTitle').textContent = ex.topic;
-  document.getElementById('exModalMeta').textContent = ex.book + ' — Página ' + ex.page;
+  document.getElementById('exModalMeta').innerHTML = '<span style="background:var(--navy);color:#fff;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:700;margin-right:8px">Página ' + ex.page + '</span> ' + ex.book;
   document.getElementById('exModalContent').innerHTML = ex.html;
   document.getElementById('exModal').classList.add('open');
 }

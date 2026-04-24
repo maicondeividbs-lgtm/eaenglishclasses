@@ -601,3 +601,31 @@ a { text-decoration: none; color: inherit; }
 .sb-overlay.open {
   display: block;
 }
+
+/* ═══ LOADING SKELETONS ═══ */
+@keyframes skeleton-pulse {
+  0% { background-position: -200px 0; }
+  100% { background-position: calc(200px + 100%) 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, var(--g100) 25%, var(--g50) 37%, var(--g100) 63%);
+  background-size: 200px 100%;
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+  border-radius: 8px;
+}
+.skeleton-text { height: 14px; margin-bottom: 8px; width: 80%; }
+.skeleton-title { height: 20px; margin-bottom: 12px; width: 60%; }
+.skeleton-card {
+  padding: 20px;
+  border-radius: 14px;
+  border: 1px solid var(--g100);
+  background: #fff;
+}
+.skeleton-avatar { width: 40px; height: 40px; border-radius: 50%; }
+.skeleton-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--g100);
+}

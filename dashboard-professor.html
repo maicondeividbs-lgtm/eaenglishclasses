@@ -3,6 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAAAAABWESUoAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAACYktHRAD/h4/MvwAAAAd0SU1FB+oEGBUhLL+MU28AAAF3SURBVDjLvVM7LwRRFP7OzF02xmMFJSEa2dAQQRREo6EWfoN/IH6BUiV6hV7hJ+hokIgQsiHezGLNzD2fwu7s7EvH192bc7/HOecK8Tsc/HmBSR4ojADHpZTvpNokhZBERYKBoHO35X5MLKokXxShVBvyEC5maZUxYpMCiMB1HJz5SeemrP269Nrsa9dj7nJE3VoJy7t2iGClDTsMtVaihJlWHDXogzvw0vz8NNV5c4QGKT59bnucw8AntV4KSaeBfvQhdwmtlyK/8Z7Zn0QWwfEQy72sSOFgem0eWGcQayQK7nvcdAqAi0VGcUFyFl/WIusVTu1JmGKdmGbcZ2Y3E2TPr68Gaz2QqiQ14gKwx7AqJkGlWmtpMQwcgGCFhADOD6vBcgvGEE+ruFGUIOdpUxi2RmF7ZN4LvaWtMqU23W4+tGUL5z295iJvgu7VjmqGt4NUXrv87vSVSWnojXpFhvLSVu5q9SwoVABC+XEvIjUMDfAPf/MbvRIRVjKrblQAAAAASUVORK5CYII=">
+<meta name="description" content="EA English Classes — Escola de inglês online com mais de 10 anos em Osasco, SP. Aulas ao vivo pelo Google Meet do nível A1 ao C1.">
+<meta property="og:title" content="EA English Classes">
+<meta property="og:description" content="Escola de inglês online — aulas ao vivo com foco em conversação e gramática. Do zero à fluência.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta name="theme-color" content="#19244e">
 <title>Professor — EA English Classes</title>
 <link rel="stylesheet" href="style.css">
 <style>
@@ -460,8 +467,16 @@ async function sendHomework() {
     document.getElementById('hwDesc').value = '';
     document.getElementById('hwStudent').value = '';
     document.getElementById('hwDue').value = '';
-    loadHomeworkList();
+    await loadHomeworkList();
     loadOverview();
+    // Scroll to list and highlight first item
+    const firstItem = document.querySelector('#hwList .list-item');
+    if (firstItem) {
+      firstItem.scrollIntoView({behavior:'smooth',block:'center'});
+      firstItem.style.background = 'var(--mango-soft)';
+      firstItem.style.borderLeft = '4px solid var(--mango)';
+      setTimeout(() => { firstItem.style.background = ''; firstItem.style.borderLeft = ''; }, 3000);
+    }
   } catch(e) {
     showToast('Erro ao enviar: ' + e.message, 'error');
   }
@@ -493,8 +508,14 @@ async function sendFeedback() {
     document.getElementById('fbTitle').value = '';
     document.getElementById('fbContent').value = '';
     document.getElementById('fbStudent').value = '';
-    loadFeedbackList();
+    await loadFeedbackList();
     loadOverview();
+    const firstFb = document.querySelector('#fbList .list-item');
+    if (firstFb) {
+      firstFb.scrollIntoView({behavior:'smooth',block:'center'});
+      firstFb.style.background = 'var(--mango-soft)';
+      setTimeout(() => { firstFb.style.background = ''; }, 3000);
+    }
   } catch(e) {
     showToast('Erro: ' + e.message, 'error');
   }

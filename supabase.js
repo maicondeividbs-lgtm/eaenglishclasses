@@ -371,3 +371,14 @@ async function getAssessmentsForStudent(studentId) {
   return data || [];
 }
 
+
+
+// ═══ LAST UPDATE INDICATOR ═══
+function showLastUpdate() {
+  const el = document.getElementById('lastUpdate');
+  if (el) {
+    const now = new Date();
+    el.textContent = 'Atualizado às ' + now.toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
+    el.style.display = '';
+  }
+}

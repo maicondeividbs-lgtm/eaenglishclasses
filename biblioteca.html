@@ -5,15 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Biblioteca do Professor — EA English Classes</title>
 <link rel="stylesheet" href="style.css">
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://unpkg.com/lucide@latest"></script>
 <style>
-body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--off-white); margin: 0; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--off-white); margin: 0; min-height: 100vh; }
 
-/* Header */
 .lib-header {
-  background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
-  padding: 40px 32px 32px;
+  background: linear-gradient(135deg, var(--navy) 0%, #1a3070 100%);
+  padding: 32px 32px 24px;
   color: #fff;
   position: relative;
   overflow: hidden;
@@ -21,549 +18,408 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--off-white
 .lib-header::before {
   content: '';
   position: absolute;
-  top: -100px; right: -100px;
-  width: 400px; height: 400px;
+  top: -80px; right: -80px;
+  width: 350px; height: 350px;
   background: radial-gradient(circle, rgba(243,107,46,0.15), transparent 60%);
   border-radius: 50%;
 }
-.lib-header-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  position: relative;
-}
-.lib-title { font-family: 'Fraunces', serif; font-size: 36px; font-weight: 900; margin-bottom: 8px; }
-.lib-subtitle { font-size: 15px; opacity: 0.7; }
-.lib-nav {
-  display: flex;
-  gap: 8px;
-  margin-top: 24px;
-  flex-wrap: wrap;
-}
-.lib-nav-btn {
-  padding: 10px 20px;
-  border-radius: 99px;
-  border: 2px solid rgba(255,255,255,0.2);
-  background: rgba(255,255,255,0.05);
-  color: rgba(255,255,255,0.7);
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-family: inherit;
-}
-.lib-nav-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
-.lib-nav-btn.active { background: var(--orange); border-color: var(--orange); color: #fff; }
-
-/* Tabs */
-.view-tabs {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px 32px;
-  display: flex;
-  gap: 8px;
-  border-bottom: 1px solid var(--g100);
-  background: #fff;
-}
-.view-tab {
-  padding: 10px 18px;
-  border-radius: 10px;
-  border: none;
-  background: var(--g50);
-  color: var(--g500);
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: inherit;
-  transition: all 0.2s;
-}
-.view-tab.active { background: var(--navy); color: #fff; }
-.view-tab:hover:not(.active) { background: var(--g100); }
-
-/* Content */
-.lib-content { max-width: 1200px; margin: 0 auto; padding: 24px 32px; }
-
-/* Curriculum table */
-.curr-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: #fff;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-}
-.curr-table thead th {
-  background: var(--navy);
-  color: #fff;
-  padding: 14px 16px;
-  font-size: 11px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  text-align: left;
-}
-.curr-table tbody tr {
-  border-bottom: 1px solid var(--g100);
-  transition: background 0.2s;
-}
-.curr-table tbody tr:hover { background: var(--cream); }
-.curr-table td { padding: 12px 16px; font-size: 13px; color: var(--g700); vertical-align: top; }
-.curr-table td:first-child { font-weight: 800; color: var(--navy); text-align: center; width: 40px; }
-
-.grammar-tag {
-  display: inline-block;
-  padding: 4px 12px;
-  background: var(--blue-soft);
-  color: var(--blue);
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s;
-  border: 1px solid transparent;
-}
-.grammar-tag:hover { border-color: var(--blue); transform: scale(1.02); }
-
-/* Worksheet grid */
-.ws-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
-}
-.ws-unit-card {
-  background: #fff;
-  border-radius: 16px;
-  border: 1px solid var(--g100);
-  overflow: hidden;
-  transition: all 0.3s;
-}
-.ws-unit-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-  border-color: transparent;
-}
-.ws-unit-header {
-  padding: 16px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid var(--g100);
-}
-.ws-unit-num {
-  font-family: 'Fraunces', serif;
-  font-size: 28px;
-  font-weight: 900;
-  color: var(--navy);
-}
-.ws-unit-count {
-  padding: 4px 12px;
-  border-radius: 99px;
-  background: var(--orange-soft);
-  color: var(--orange);
-  font-size: 11px;
-  font-weight: 700;
-}
-.ws-file {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 20px;
-  border-bottom: 1px solid var(--g50);
-  font-size: 12px;
-  color: var(--g700);
-  transition: background 0.2s;
-  cursor: default;
-}
-.ws-file:last-child { border-bottom: none; }
-.ws-file:hover { background: var(--cream); }
-.ws-file-icon {
-  width: 32px; height: 32px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  min-width: 32px;
-}
-.ws-file-icon.pdf { background: rgba(239,68,68,0.1); }
-.ws-file-icon.mp3 { background: rgba(16,185,129,0.1); }
-.ws-file-name { flex: 1; font-weight: 600; line-height: 1.3; }
-.ws-file-badge {
-  padding: 3px 8px;
-  border-radius: 6px;
-  font-size: 10px;
-  font-weight: 700;
-  white-space: nowrap;
-}
-.ws-file-badge.cambridge { background: rgba(37,60,150,0.1); color: var(--blue); }
-.ws-file-badge.ea { background: rgba(243,107,46,0.1); color: var(--orange); }
-
-/* Grammar Drawer */
-.drawer {
-  position: fixed;
-  top: 0; right: 0;
-  width: 400px;
-  max-width: 90vw;
-  height: 100vh;
-  background: #fff;
-  box-shadow: -8px 0 32px rgba(0,0,0,0.15);
-  z-index: 1000;
-  transform: translateX(100%);
-  transition: transform 0.3s ease;
-  overflow-y: auto;
-  padding: 28px;
-}
-.drawer.open { transform: translateX(0); }
-.drawer-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.4);
-  z-index: 999;
-  display: none;
-}
-.drawer-overlay.open { display: block; }
-
-/* Search */
-.lib-search {
-  position: relative;
-  margin-top: 16px;
-}
-.lib-search input {
-  width: 100%;
-  max-width: 400px;
-  padding: 12px 16px 12px 40px;
-  border-radius: 12px;
-  border: 2px solid rgba(255,255,255,0.15);
-  background: rgba(255,255,255,0.08);
-  color: #fff;
-  font-family: inherit;
-  font-size: 14px;
-  outline: none;
-}
-.lib-search input::placeholder { color: rgba(255,255,255,0.4); }
-.lib-search input:focus { border-color: var(--orange); background: rgba(255,255,255,0.12); }
-.lib-search svg { position: absolute; left: 14px; top: 14px; color: rgba(255,255,255,0.4); }
-
-/* Back button */
+.lib-inner { max-width: 1200px; margin: 0 auto; position: relative; }
+.lib-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
+.lib-title { font-family: 'Fraunces', serif; font-size: 32px; font-weight: 900; }
 .back-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  background: rgba(255,255,255,0.1);
-  border-radius: 8px;
-  color: rgba(255,255,255,0.7);
-  font-size: 13px;
-  font-weight: 600;
-  margin-bottom: 16px;
-  transition: all 0.2s;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; background: rgba(255,255,255,0.1);
+  border-radius: 8px; color: rgba(255,255,255,0.7);
+  font-size: 13px; font-weight: 600; transition: all 0.2s;
 }
 .back-btn:hover { background: rgba(255,255,255,0.2); color: #fff; }
 
+/* Level pills */
+.level-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+.pill {
+  padding: 10px 22px; border-radius: 99px;
+  border: 2px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.6);
+  font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: all 0.2s; font-family: inherit;
+}
+.pill:hover { background: rgba(255,255,255,0.1); color: #fff; }
+.pill.active { background: var(--orange); border-color: var(--orange); color: #fff; }
+
+/* Search */
+.lib-search { position: relative; margin-top: 16px; }
+.lib-search input {
+  width: 100%; max-width: 440px;
+  padding: 12px 16px 12px 40px; border-radius: 12px;
+  border: 2px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+  color: #fff; font-family: inherit; font-size: 14px; outline: none;
+}
+.lib-search input::placeholder { color: rgba(255,255,255,0.35); }
+.lib-search input:focus { border-color: var(--orange); background: rgba(255,255,255,0.1); }
+
+/* View tabs */
+.tabs {
+  max-width: 1200px; margin: 0 auto;
+  padding: 16px 32px; display: flex; gap: 6px;
+  background: #fff; border-bottom: 1px solid var(--g100);
+  overflow-x: auto;
+}
+.tab {
+  padding: 10px 20px; border-radius: 10px;
+  border: none; background: var(--g50);
+  color: var(--g500); font-size: 13px;
+  font-weight: 700; cursor: pointer;
+  font-family: inherit; transition: all 0.2s;
+  white-space: nowrap;
+}
+.tab.active { background: var(--navy); color: #fff; }
+.tab:hover:not(.active) { background: var(--g100); }
+
+/* Content */
+.lib-content { max-width: 1200px; margin: 0 auto; padding: 24px 32px 48px; }
+
+/* Curriculum */
+.curr-table {
+  width: 100%; border-collapse: collapse;
+  background: #fff; border-radius: 16px;
+  overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+.curr-table thead th {
+  background: var(--navy); color: #fff;
+  padding: 14px 14px; font-size: 10px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 1px; text-align: left;
+}
+.curr-table tbody tr { border-bottom: 1px solid var(--g100); transition: background 0.2s; }
+.curr-table tbody tr:hover { background: var(--cream); }
+.curr-table td { padding: 12px 14px; font-size: 13px; color: var(--g700); vertical-align: top; }
+.curr-table td:first-child { font-weight: 800; color: var(--navy); text-align: center; width: 36px; }
+.grammar-chip {
+  display: inline-block; padding: 4px 10px;
+  background: var(--blue-soft); color: var(--blue);
+  border-radius: 8px; font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; border: 1px solid transparent;
+}
+.grammar-chip:hover { border-color: var(--blue); transform: translateY(-1px); }
+
+/* Worksheets grid */
+.ws-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+}
+.ws-card {
+  background: #fff; border-radius: 14px;
+  border: 1px solid var(--g100); overflow: hidden;
+  transition: all 0.3s; text-align: center;
+  padding: 24px 16px;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 10px;
+}
+.ws-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+  border-color: var(--orange);
+}
+.ws-unit { font-family: 'Fraunces', serif; font-size: 36px; font-weight: 900; color: var(--navy); }
+.ws-label { font-size: 12px; color: var(--g500); }
+.ws-dl {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: 8px;
+  background: var(--orange); color: #fff;
+  font-size: 12px; font-weight: 700;
+  text-decoration: none; transition: all 0.2s;
+}
+.ws-dl:hover { background: var(--orange-light); transform: translateY(-1px); }
+
+/* Examples grid */
+.ex-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 16px;
+}
+.ex-card {
+  background: #fff; border-radius: 14px;
+  border: 1px solid var(--g100); overflow: hidden;
+  transition: all 0.3s; cursor: pointer;
+}
+.ex-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  border-color: var(--mango);
+}
+.ex-header {
+  padding: 14px 18px;
+  background: var(--cream);
+  border-bottom: 1px solid var(--g100);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.ex-topic { font-size: 14px; font-weight: 800; color: var(--navy); }
+.ex-page { font-size: 11px; color: var(--g400); font-weight: 600; }
+.ex-preview {
+  padding: 14px 18px;
+  font-size: 12px; color: var(--g600);
+  line-height: 1.6;
+  max-height: 100px; overflow: hidden;
+  position: relative;
+}
+.ex-preview::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 40px;
+  background: linear-gradient(transparent, #fff);
+}
+
+/* Example modal */
+.modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5); z-index: 999;
+  align-items: center; justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+.modal-box {
+  background: #fff; border-radius: 20px;
+  max-width: 600px; width: 92%;
+  max-height: 85vh; overflow-y: auto;
+  padding: 32px; box-shadow: 0 24px 64px rgba(0,0,0,0.2);
+}
+.modal-box h3 { font-size: 22px; font-weight: 900; color: var(--navy); margin-bottom: 6px; }
+.modal-box .modal-meta { font-size: 12px; color: var(--g400); margin-bottom: 20px; }
+.modal-content {
+  font-size: 14px; color: var(--g700); line-height: 1.8;
+}
+.modal-content strong { color: var(--navy); }
+.modal-content em { color: var(--blue); font-style: italic; }
+
 @media(max-width:768px) {
-  .lib-header { padding: 24px 16px 20px; }
-  .lib-title { font-size: 26px; }
+  .lib-header { padding: 20px 16px 16px; }
+  .lib-title { font-size: 24px; }
   .lib-content { padding: 16px; }
-  .view-tabs { padding: 12px 16px; overflow-x: auto; }
-  .ws-grid { grid-template-columns: 1fr; }
+  .tabs { padding: 10px 16px; }
+  .ws-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  .ex-grid { grid-template-columns: 1fr; }
   .curr-table { font-size: 11px; }
-  .drawer { width: 100%; }
+  .curr-table th, .curr-table td { padding: 8px 6px; }
 }
 </style>
 </head>
 <body>
 
-<!-- Grammar Drawer -->
-<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
-<div class="drawer" id="grammarDrawer">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-    <h3 style="font-size:18px;font-weight:800;color:var(--navy)" id="drawerTitle">Grammar Structure</h3>
-    <button onclick="closeDrawer()" style="border:none;background:var(--g100);width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:16px">✕</button>
+<!-- Example Modal -->
+<div class="modal-overlay" id="exModal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 id="exModalTitle">Example</h3>
+      <button onclick="document.getElementById('exModal').classList.remove('open')" style="border:none;background:var(--g100);width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:16px">✕</button>
+    </div>
+    <div class="modal-meta" id="exModalMeta"></div>
+    <div class="modal-content" id="exModalContent"></div>
   </div>
-  <div id="drawerContent"></div>
 </div>
 
 <!-- Header -->
 <header class="lib-header">
-  <div class="lib-header-inner">
-    <a href="dashboard-professor.html" class="back-btn">← Voltar ao Dashboard</a>
-    <div class="lib-title">📚 Biblioteca do Professor</div>
-    <div class="lib-subtitle">Interchange 5th Edition — Currículo completo e materiais de apoio</div>
-    
-    <div class="lib-nav">
-      <button class="lib-nav-btn active" onclick="setLevel('intro')">Intro</button>
-      <button class="lib-nav-btn" onclick="setLevel('lvl1')">Level 1</button>
-      <button class="lib-nav-btn" onclick="setLevel('lvl2')">Level 2</button>
-      <button class="lib-nav-btn" onclick="setLevel('lvl3')">Level 3</button>
+  <div class="lib-inner">
+    <div class="lib-top">
+      <div>
+        <a href="dashboard-professor.html" class="back-btn">← Dashboard</a>
+        <div class="lib-title">📚 Biblioteca do Professor</div>
+        <div style="font-size:13px;opacity:0.5;margin-top:4px">Interchange 5th Edition — Currículo, Worksheets e Exemplos</div>
+      </div>
     </div>
-    
+    <div class="level-pills">
+      <button class="pill active" onclick="setLevel('intro',this)">🟡 Intro</button>
+      <button class="pill" onclick="setLevel('lvl1',this)">🔴 Level 1</button>
+      <button class="pill" onclick="setLevel('lvl2',this)">🔵 Level 2</button>
+      <button class="pill" onclick="setLevel('lvl3',this)">🟢 Level 3</button>
+    </div>
     <div class="lib-search">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-      <input type="text" id="searchInput" placeholder="Buscar gramática, vocabulário ou unidade...">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2" style="position:absolute;left:14px;top:14px"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" id="searchInput" placeholder="Buscar gramática, vocabulário, unidade..." oninput="render()">
     </div>
   </div>
 </header>
 
-<!-- View Tabs -->
-<div class="view-tabs">
-  <button class="view-tab active" onclick="setView('curriculum')">📋 Currículo</button>
-  <button class="view-tab" onclick="setView('worksheets')">📄 Worksheets</button>
+<!-- Tabs -->
+<div class="tabs">
+  <button class="tab active" onclick="setView('curriculum',this)">📋 Currículo</button>
+  <button class="tab" onclick="setView('worksheets',this)">📄 Worksheets</button>
+  <button class="tab" onclick="setView('examples',this)">💡 Exemplos & Explicações</button>
 </div>
 
 <!-- Content -->
 <div class="lib-content">
-  <!-- Curriculum View -->
-  <div id="view-curriculum">
-    <table class="curr-table">
-      <thead>
-        <tr>
-          <th>U.</th>
-          <th>Unidade</th>
-          <th>Vocabulário</th>
-          <th>Gramática</th>
-          <th>Objetivo</th>
-          <th>Writing</th>
-        </tr>
-      </thead>
-      <tbody id="currBody"></tbody>
-    </table>
-  </div>
-  
-  <!-- Worksheets View -->
-  <div id="view-worksheets" style="display:none">
-    <div style="display:flex;gap:12px;align-items:center;margin-bottom:20px;flex-wrap:wrap">
-      <a href="https://drive.google.com/drive/folders/1GhxhuJeBW6hwaRhntloAxu-pU4lIAMCd" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;padding:14px 24px;background:var(--navy);color:#fff;border-radius:12px;font-size:14px;font-weight:700;transition:all 0.2s;box-shadow:0 4px 12px rgba(25,36,78,0.2)" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="#f59a1e"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
-        📂 Abrir Worksheets EA no Google Drive
-      </a>
-      <span style="font-size:12px;color:var(--g400)">Worksheets EA: clique nos itens 🔶 para abrir no Drive | Worksheets Cambridge: disponíveis internamente</span>
-    </div>
-    <div class="ws-grid" id="wsGrid"></div>
-  </div>
+  <div id="view-curriculum"></div>
+  <div id="view-worksheets" style="display:none"></div>
+  <div id="view-examples" style="display:none"></div>
 </div>
 
 <script>
-// ═══ DATA ═══
+const STORAGE = 'https://ktdrgvlyrotqpzlunlqs.supabase.co/storage/v1/object/public/worksheets';
+
 const curriculum = {
   intro: [
-    {u:1,t:"What's your name?",v:"Alphabet; greetings; numbers",g:"Possessive adjectives; be (affirmative)",o:"Introduce yourself",w:"Personal info"},
-    {u:2,t:"Where are my keys?",v:"Classroom objects; locations",g:"Articles; plurals; prepositions",o:"Ask/give locations",w:"Locations"},
-    {u:3,t:"Where are you from?",v:"Countries; personality adjectives",g:"Be (full forms)",o:"Talk about origin",w:"Personal questions"},
-    {u:4,t:"Is this coat yours?",v:"Clothing; weather",g:"Possessives; present continuous",o:"Describe clothing",w:"Clothing questions"},
-    {u:5,t:"What time is it?",v:"Clock time; activities",g:"Time expressions; present continuous Wh-",o:"Tell time",w:"Times"},
-    {u:6,t:"I ride my bike to school",v:"Transportation; routines",g:"Simple present",o:"Talk about routines",w:"Weekly routine"},
-    {u:7,t:"Does it have a view?",v:"Housing; furniture",g:"There is/are",o:"Describe homes",w:"Dream home"},
-    {u:8,t:"Where do you work?",v:"Jobs",g:"Simple present Wh-",o:"Talk about work",w:"About jobs"},
-    {u:9,t:"I always eat breakfast",v:"Food",g:"Count/noncount; frequency",o:"Talk about habits",w:"Eating habits"},
-    {u:10,t:"What sports do you like?",v:"Sports; abilities",g:"Can for ability",o:"Talk about free time",w:"Sports questions"},
-    {u:11,t:"I'm going to have a party",v:"Dates; holidays",g:"Going to",o:"Talk about plans",w:"Plans"},
-    {u:12,t:"How do you feel?",v:"Health",g:"Imperatives; feel + adj",o:"Give advice",w:"Advice"},
-    {u:13,t:"How do I get there?",v:"Stores; directions",g:"Prepositions; imperatives",o:"Give directions",w:"Directions"},
-    {u:14,t:"I had a good time",v:"Vacations",g:"Simple past",o:"Talk about past",w:"Last weekend"},
-    {u:15,t:"Where were you born?",v:"Biography",g:"Past of be",o:"Talk about life events",w:"Biography"},
-    {u:16,t:"Can I take a message?",v:"Invitations; phone calls",g:"Pronouns; verb + to",o:"Make invitations",w:"Messages"}
+    {u:1,t:"What's your name?",v:"Alphabet; greetings; numbers 1-10",g:"Possessive adjectives; be (affirmative)",o:"Introduce yourself; ask names",w:"Personal info form"},
+    {u:2,t:"Where are my keys?",v:"Classroom objects; locations",g:"Articles a/an/the; plurals; prepositions of place",o:"Ask/give locations of objects",w:"Describing locations"},
+    {u:3,t:"Where are you from?",v:"Countries; nationality; personality adjectives; numbers 11-103",g:"Be: full forms, yes/no questions, Wh-questions",o:"Talk about origin, nationality, age",w:"Personal questions"},
+    {u:4,t:"Is this coat yours?",v:"Clothing; colors; weather; seasons",g:"Possessives (my/mine); present continuous; conjunctions",o:"Describe clothing; talk about weather",w:"Clothing descriptions"},
+    {u:5,t:"What time is it?",v:"Clock time; times of day; everyday activities",g:"Time expressions; present continuous Wh-questions",o:"Tell time; describe daily activities",w:"Daily schedule"},
+    {u:6,t:"I ride my bike to school",v:"Transportation; daily routines; days of week",g:"Simple present: statements, yes/no questions",o:"Talk about routines and habits",w:"Weekly routine essay"},
+    {u:7,t:"Does it have a view?",v:"Houses; rooms; furniture",g:"There is/there are; more prepositions",o:"Describe homes and apartments",w:"Dream home"},
+    {u:8,t:"Where do you work?",v:"Jobs; workplaces; daily schedules",g:"Simple present Wh-questions; time expressions",o:"Talk about work and schedules",w:"Job description"},
+    {u:9,t:"I always eat breakfast",v:"Food; meals; snacks",g:"Count/noncount nouns; adverbs of frequency",o:"Talk about food and eating habits",w:"Eating habits paragraph"},
+    {u:10,t:"What sports do you like?",v:"Sports; exercise; abilities; entertainment",g:"Can for ability; object pronouns",o:"Talk about sports and free time",w:"Sports questionnaire"},
+    {u:11,t:"I'm going to have a party",v:"Months; dates; holidays; ordinal numbers",g:"Going to for future plans",o:"Talk about plans and celebrations",w:"Party/event plans"},
+    {u:12,t:"How do you feel?",v:"Parts of body; health problems; medication",g:"Imperatives; feel/look + adjective",o:"Describe health; give advice",w:"Health advice"},
+    {u:13,t:"How do I get there?",v:"Stores; neighborhood; directions",g:"Prepositions of direction; imperatives for directions",o:"Ask for and give directions",w:"Directions to a place"},
+    {u:14,t:"I had a good time",v:"Vacations; free-time activities; past experiences",g:"Simple past: regular and irregular verbs",o:"Talk about past activities",w:"Last weekend narrative"},
+    {u:15,t:"Where were you born?",v:"Biographical information; years; school subjects",g:"Past of be (was/were); Wh-questions in past",o:"Talk about life events and biography",w:"Short biography"},
+    {u:16,t:"Can I take a message?",v:"Telephone language; invitations; going out",g:"Object pronouns; verb + to; would you like to",o:"Make phone calls; extend invitations",w:"Phone message"}
   ],
   lvl1: [
-    {u:1,t:"Where are you from?",v:"Countries; subjects",g:"Be questions; pronouns",o:"Exchange personal info",w:"Personal questions"},
-    {u:2,t:"What do you do?",v:"Jobs; schedules",g:"Simple present",o:"Describe routines",w:"Biography"},
-    {u:3,t:"How much are these?",v:"Shopping; clothing",g:"Demonstratives; comparisons",o:"Talk about prices",w:"About clothes"},
-    {u:4,t:"Do you play the guitar?",v:"Entertainment",g:"Do questions; would",o:"Make invitations",w:"Messages"},
-    {u:5,t:"What an interesting family!",v:"Family",g:"Present continuous; quantifiers",o:"Describe family",w:"Email"},
-    {u:6,t:"How often do you run?",v:"Sports",g:"Adverbs of frequency",o:"Talk about frequency",w:"Weekly activities"},
-    {u:7,t:"We went dancing!",v:"Free time",g:"Simple past",o:"Talk about past",w:"Blog post"},
-    {u:8,t:"How's the neighborhood?",v:"City places",g:"There is/are; quantifiers",o:"Describe neighborhood",w:"Neighborhood"},
-    {u:9,t:"What does she look like?",v:"Appearance",g:"Descriptive questions",o:"Describe people",w:"Description"},
-    {u:10,t:"Have you ever been there?",v:"Experiences",g:"Present perfect",o:"Talk about experiences",w:"Email"},
-    {u:11,t:"It's a really nice city",v:"Cities",g:"Adverbs; can/should",o:"Give suggestions",w:"Hometown"},
-    {u:12,t:"It's important to get rest",v:"Health",g:"Should/could/may",o:"Give advice",w:"Advice blog"},
-    {u:13,t:"What would you like?",v:"Food",g:"So/too/either/neither",o:"Order food",w:"Review"},
-    {u:14,t:"It's the coldest city!",v:"Geography",g:"Comparatives/superlatives",o:"Compare places",w:"Article"},
-    {u:15,t:"What are you doing later?",v:"Invitations",g:"Future forms",o:"Make plans",w:"Messages"},
-    {u:16,t:"How have you changed?",v:"Life changes",g:"Mixed tenses",o:"Describe changes",w:"Class trip plan"}
+    {u:1,t:"Where are you from?",v:"Countries; nationalities; school subjects",g:"Be: questions with what/where/who/how; pronouns",o:"Exchange personal information",w:"Personal profile"},
+    {u:2,t:"What do you do?",v:"Jobs; daily schedules; workplaces",g:"Simple present: Wh-questions; time expressions",o:"Describe daily routines and work",w:"Day in my life"},
+    {u:3,t:"How much are these?",v:"Shopping; clothing; colors; materials; prices",g:"Demonstratives; one/ones; how much/which; comparisons",o:"Talk about prices and preferences",w:"Shopping guide"},
+    {u:4,t:"Do you play the guitar?",v:"Entertainment; music; movies",g:"Do questions; frequency adverbs; would",o:"Talk about entertainment; make invitations",w:"Invitation message"},
+    {u:5,t:"What an interesting family!",v:"Family members; typical families",g:"Present continuous; quantifiers (all, most, some...)",o:"Describe families; discuss family life",w:"Family description email"},
+    {u:6,t:"How often do you run?",v:"Sports; fitness; exercise routines",g:"Adverbs of frequency; how often; time clauses",o:"Discuss fitness habits and frequency",w:"Fitness routine"},
+    {u:7,t:"We went dancing!",v:"Free-time; weekend activities; past events",g:"Simple past: yes/no questions; irregular verbs",o:"Talk about past events and weekends",w:"Blog post about weekend"},
+    {u:8,t:"How's the neighborhood?",v:"City places; neighborhood; community",g:"There is/are; quantifiers; how many/how much",o:"Describe neighborhoods and cities",w:"My neighborhood"},
+    {u:9,t:"What does she look like?",v:"Physical appearance; clothing style",g:"Questions with what...look like; modifiers",o:"Describe people's appearance",w:"Person description"},
+    {u:10,t:"Have you ever been there?",v:"Travel experiences; countries visited",g:"Present perfect: ever/never; already/yet",o:"Talk about experiences",w:"Travel experience email"},
+    {u:11,t:"It's a really nice city",v:"Cities; tourism; attractions",g:"Adverbs of degree; can/should for suggestions",o:"Describe cities; give travel suggestions",w:"City guide"},
+    {u:12,t:"It's important to get rest",v:"Health; remedies; lifestyle",g:"Should/could/may; it's + adjective + to",o:"Give health advice; discuss remedies",w:"Health advice blog"},
+    {u:13,t:"What would you like?",v:"Food; restaurants; dining out",g:"So/too/either/neither; modal would",o:"Order food; agree/disagree about food",w:"Restaurant review"},
+    {u:14,t:"It's the coldest city!",v:"Geography; weather; climate",g:"Comparatives; superlatives; as...as",o:"Compare places and climates",w:"City comparison article"},
+    {u:15,t:"What are you doing later?",v:"Invitations; future plans; celebrations",g:"Future: present continuous, be going to, will",o:"Discuss plans; make invitations",w:"Plans message"},
+    {u:16,t:"How have you changed?",v:"Life changes; turning points; experiences",g:"Mixed tenses review; present perfect vs past",o:"Discuss changes in life",w:"Life changes essay"}
   ],
   lvl2: [
-    {u:1,t:"Good memories",v:"Childhood",g:"Used to; past",o:"Talk about past habits",w:"Childhood paragraph"},
-    {u:2,t:"Life in the city",v:"Transportation",g:"Quantity expressions; indirect questions",o:"Discuss city problems",w:"Community post"},
-    {u:3,t:"Making changes",v:"Lifestyle",g:"Comparisons; wish",o:"Express wishes",w:"Comparison email"},
-    {u:4,t:"Have you ever tried it?",v:"Food",g:"Past vs present perfect",o:"Describe experiences",w:"Recipe"},
-    {u:5,t:"Hit the road!",v:"Travel",g:"Future; modals",o:"Plan vacations",w:"Travel email"},
-    {u:6,t:"Sure! I'll do it.",v:"Requests",g:"Phrasal verbs; will responses",o:"Make/refuse requests",w:"Request"},
-    {u:7,t:"What do you use this for?",v:"Technology",g:"Gerunds/infinitives",o:"Explain purposes",w:"Favor request"},
-    {u:8,t:"Time to celebrate!",v:"Festivals",g:"Time clauses",o:"Describe customs",w:"Cultural entry"},
-    {u:9,t:"Only time will tell",v:"Change",g:"First conditional",o:"Speculate",w:"About change"},
-    {u:10,t:"I like working with people",v:"Careers",g:"Gerunds; because clauses",o:"Describe skills",w:"Cover letter"},
-    {u:11,t:"It's really worth seeing!",v:"Landmarks",g:"Passive voice",o:"Describe monuments",w:"Guide intro"},
-    {u:12,t:"It's a long story",v:"Storytelling",g:"Past continuous; present perfect continuous",o:"Narrate past",w:"Experience"},
-    {u:13,t:"That's entertainment!",v:"Movies",g:"Participles; relative pronouns",o:"Give opinions",w:"Review"},
-    {u:14,t:"Now I get it!",v:"Body language",g:"Modals of deduction",o:"Express deduction",w:"Rules"},
-    {u:15,t:"I wouldn't have done that",v:"Dilemmas",g:"Unreal conditionals",o:"Speculate",w:"Advice blog"},
-    {u:16,t:"Making excuses",v:"Requests",g:"Reported speech",o:"Report speech",w:"Survey report"}
+    {u:1,t:"Good memories",v:"Childhood; past habits; memories",g:"Used to; simple past; past habits",o:"Talk about past habits and memories",w:"Childhood paragraph"},
+    {u:2,t:"Life in the city",v:"Transportation; urban issues; community",g:"Expressions of quantity; indirect questions",o:"Discuss city problems and solutions",w:"Community post"},
+    {u:3,t:"Making changes",v:"Houses; lifestyle changes; wishes",g:"Evaluations and comparisons; wish + past",o:"Express wishes; compare lifestyles",w:"Comparison email"},
+    {u:4,t:"Have you ever tried it?",v:"Food; cooking; restaurants; recipes",g:"Simple past vs present perfect; sequence adverbs",o:"Describe food experiences",w:"Recipe writing"},
+    {u:5,t:"Hit the road!",v:"Travel; vacations; tourism",g:"Future with will, be going to, present continuous; modals",o:"Plan vacations; discuss travel",w:"Travel email"},
+    {u:6,t:"Sure! I'll do it.",v:"Household chores; requests; complaints",g:"Two-word phrasal verbs; will for responses",o:"Make/refuse requests",w:"Request message"},
+    {u:7,t:"What do you use this for?",v:"Technology; gadgets; instructions",g:"Infinitives and gerunds for uses and purposes",o:"Explain purposes and uses",w:"Product description"},
+    {u:8,t:"Time to celebrate!",v:"Holidays; festivals; customs; traditions",g:"Relative clauses; adverbial time clauses",o:"Describe customs and celebrations",w:"Cultural festival entry"},
+    {u:9,t:"Only time will tell",v:"Change; predictions; consequences",g:"First conditional: if + present, will",o:"Make predictions; discuss consequences",w:"Future predictions"},
+    {u:10,t:"I like working with people",v:"Careers; job skills; qualities",g:"Gerunds; short responses; clauses with because",o:"Describe career interests and skills",w:"Cover letter"},
+    {u:11,t:"It's really worth seeing!",v:"Landmarks; monuments; world wonders",g:"Passive voice with by; present continuous passive",o:"Describe landmarks; give opinions",w:"Travel guide paragraph"},
+    {u:12,t:"It's a long story",v:"Storytelling; unexpected events",g:"Past continuous vs simple past; present perfect continuous",o:"Narrate past events",w:"Personal experience narrative"},
+    {u:13,t:"That's entertainment!",v:"Movies; entertainment; reviews",g:"Participles as adjectives; relative pronouns",o:"Give opinions about entertainment",w:"Movie/show review"},
+    {u:14,t:"Now I get it!",v:"Body language; communication; gestures",g:"Modals of deduction: must, might, may, could, can't",o:"Express deduction and certainty",w:"Communication rules"},
+    {u:15,t:"I wouldn't have done that",v:"Dilemmas; hypothetical situations",g:"Unreal conditional: if + past, would",o:"Discuss hypothetical situations",w:"Advice blog post"},
+    {u:16,t:"Making excuses",v:"Excuses; reported speech; messages",g:"Reported speech: statements, requests, questions",o:"Report what people said",w:"Survey report"}
   ],
   lvl3: [
-    {u:1,t:"That's my kind of friend!",v:"Personality",g:"Relative clauses",o:"Agree/disagree",w:"Friend description"},
-    {u:2,t:"Working 9 to 5",v:"Careers",g:"Gerund phrases; comparisons",o:"Compare careers",w:"Career comparison"},
-    {u:3,t:"Lend a hand",v:"Requests",g:"Advanced request forms",o:"Make indirect requests",w:"Request message"},
-    {u:4,t:"What happened?",v:"Media",g:"Past perfect",o:"Narrate story",w:"Personal account"},
-    {u:5,t:"Expanding your horizons",v:"Culture shock",g:"Supposed to; expected to",o:"Describe expectations",w:"Pamphlet"},
-    {u:6,t:"That needs fixing",v:"Complaints",g:"Need + gerund/passive",o:"Describe problems",w:"Review"},
-    {u:7,t:"What can we do?",v:"Environment",g:"Advanced passive",o:"Propose solutions",w:"Community post"},
-    {u:8,t:"Never stop learning",v:"Education",g:"Would rather/prefer",o:"Discuss preferences",w:"About skill"},
-    {u:9,t:"Getting things done",v:"Services",g:"Causative have/get",o:"Give advice",w:"Advice message"},
-    {u:10,t:"A matter of time",v:"History",g:"Future continuous/perfect",o:"Make predictions",w:"Biography"},
-    {u:11,t:"Rites of passage",v:"Milestones",g:"3rd conditional",o:"Express regret",w:"Apology"},
-    {u:12,t:"Keys to success",v:"Success",g:"Infinitive purpose; cause expressions",o:"Give reasons",w:"Commercial"},
-    {u:13,t:"What might have been",v:"Hypotheticals",g:"Past modals",o:"Speculate",w:"Dilemma"},
-    {u:14,t:"Creative careers",v:"Processes",g:"Passive process; non-defining clauses",o:"Describe process",w:"Process text"},
-    {u:15,t:"A law must be passed!",v:"Controversial issues",g:"Passive modals; tag questions",o:"Debate",w:"Persuasive essay"},
-    {u:16,t:"Reaching your goals",v:"Goals",g:"Future perfect; would like to have",o:"Discuss achievements",w:"Personal statement"}
+    {u:1,t:"That's my kind of friend!",v:"Personality traits; friendship; relationships",g:"Relative clauses (defining); it clauses with when",o:"Describe personalities; agree/disagree",w:"Friend description"},
+    {u:2,t:"Working 9 to 5",v:"Careers; work conditions; job satisfaction",g:"Gerund phrases as subject/object; comparisons",o:"Compare careers and work life",w:"Career comparison essay"},
+    {u:3,t:"Lend a hand",v:"Favors; formal/informal requests; messages",g:"Requests with modals, if clauses, gerunds; indirect requests",o:"Make direct and indirect requests",w:"Formal request message"},
+    {u:4,t:"What happened?",v:"News; media; storytelling",g:"Past continuous vs simple past; past perfect",o:"Narrate news stories and events",w:"Personal account"},
+    {u:5,t:"Expanding your horizons",v:"Culture shock; customs; moving abroad",g:"Noun phrases with relative clauses; expected to/supposed to",o:"Describe cultural expectations",w:"Cultural advice pamphlet"},
+    {u:6,t:"That needs fixing",v:"Complaints; services; household problems",g:"Need + gerund/passive infinitive",o:"Describe problems; make complaints",w:"Complaint review"},
+    {u:7,t:"What can we do?",v:"Environment; global challenges; solutions",g:"Advanced passive voice in multiple tenses",o:"Discuss problems; propose solutions",w:"Environmental community post"},
+    {u:8,t:"Never stop learning",v:"Education; learning styles; skills",g:"Would rather; prefer; would prefer",o:"Discuss preferences in learning",w:"Essay about a skill"},
+    {u:9,t:"Getting things done",v:"Services; errands; repairs",g:"Causative have/get + object + past participle",o:"Describe services; give advice",w:"Advice message"},
+    {u:10,t:"A matter of time",v:"History; inventions; timelines",g:"Future continuous; future perfect",o:"Make predictions about the future",w:"Biography of inventor"},
+    {u:11,t:"Rites of passage",v:"Life milestones; regrets; achievements",g:"3rd conditional: if + past perfect, would have",o:"Express regret; discuss past decisions",w:"Letter of apology"},
+    {u:12,t:"Keys to success",v:"Success; motivation; goals",g:"Infinitive clauses of purpose; cause/effect expressions",o:"Explain reasons for success",w:"Success story/commercial"},
+    {u:13,t:"What might have been",v:"Hypothetical past; speculations",g:"Past modals: must/might/could have + past participle",o:"Speculate about past events",w:"Dilemma discussion"},
+    {u:14,t:"Creative careers",v:"Processes; manufacturing; innovation",g:"Passive in describing processes; non-defining relative clauses",o:"Describe how things are made",w:"Process description"},
+    {u:15,t:"A law must be passed!",v:"Controversial issues; laws; opinions",g:"Passive modals; tag questions",o:"Debate issues; express opinions",w:"Persuasive essay"},
+    {u:16,t:"Reaching your goals",v:"Goals; plans; future achievements",g:"Future perfect; would like to have + past participle",o:"Discuss future goals and achievements",w:"Personal statement"}
   ]
 };
 
-const worksheets = {"Intro": {"1": [{"type": "Audio", "filename": "IC5_TSS_L0U01.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_IntroLevel_Unit01_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_IntroLevel_Unit01_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_IntroLevel_Unit01_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 1 Intro.pdf", "ext": "pdf", "source": "ea"}], "2": [{"type": "Audio", "filename": "IC5_TSS_L0U02.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_IntroLevel_Unit02_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_IntroLevel_Unit02_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_IntroLevel_Unit02_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 2 Intro.pdf", "ext": "pdf", "source": "ea"}], "3": [{"type": "Audio", "filename": "IC5_TSS_L0U03.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_IntroLevel_Unit03_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_IntroLevel_Unit03_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_IntroLevel_Unit03_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 3 Intro.pdf", "ext": "pdf", "source": "ea"}], "4": [{"type": "Audio", "filename": "IC5_TSS_L0U04.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_IntroLevel_Unit04_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_IntroLevel_Unit04_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_IntroLevel_Unit04_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 4 Intro.pdf", "ext": "pdf", "source": "ea"}], "5": [{"type": "Audio", "filename": "IC5_TSS_L0U05.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_IntroLevel_Unit05_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_IntroLevel_Unit05_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_IntroLevel_Unit05_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 5 Intro.pdf", "ext": "pdf", "source": "ea"}], "6": [{"type": "Audio", "filename": "IC5_TSS_L0U06.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_IntroLevel_Unit06_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_IntroLevel_Unit06_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_IntroLevel_Unit06_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 6 Intro.pdf", "ext": "pdf", "source": "ea"}], "7": [{"type": "Audio", "filename": "IC5_TSS_L0U07.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_IntroLevel_Unit07_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_IntroLevel_Unit07_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_IntroLevel_Unit07_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 7 Intro.pdf", "ext": "pdf", "source": "ea"}], "8": [{"type": "Audio", "filename": "IC5_TSS_L0U08.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_IntroLevel_Unit08_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_IntroLevel_Unit08_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_IntroLevel_Unit08_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 8 Intro.pdf", "ext": "pdf", "source": "ea"}], "9": [{"type": "Audio", "filename": "IC5_TSS_L0U09.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_IntroLevel_Unit09_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_IntroLevel_Unit09_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_IntroLevel_Unit09_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 9 Intro.pdf", "ext": "pdf", "source": "ea"}], "10": [{"type": "Grammar", "filename": "Interchange5thEd_IntroLevel_Unit10_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_IntroLevel_Unit10_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_IntroLevel_Unit10_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 10 Intro.pdf", "ext": "pdf", "source": "ea"}], "11": [{"type": "Audio", "filename": "IC5_TSS_L0U11.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Audio", "filename": "IC5_TSS_L0U10.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_IntroLevel_Unit11_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_IntroLevel_Unit11_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_IntroLevel_Unit11_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 11 Intro.pdf", "ext": "pdf", "source": "ea"}], "12": [{"type": "Audio", "filename": "IC5_TSS_L0U12.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_IntroLevel_Unit12_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_IntroLevel_Unit12_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_IntroLevel_Unit12_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 12 Intro.pdf", "ext": "pdf", "source": "ea"}], "13": [{"type": "Audio", "filename": "IC5_TSS_L0U13.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_IntroLevel_Unit13_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_IntroLevel_Unit13_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_IntroLevel_Unit13_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 13 Intro.pdf", "ext": "pdf", "source": "ea"}], "14": [{"type": "Audio", "filename": "IC5_TSS_L0U14.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_IntroLevel_Unit14_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_IntroLevel_Unit14_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_IntroLevel_Unit14_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 14 Intro.pdf", "ext": "pdf", "source": "ea"}], "15": [{"type": "Audio", "filename": "IC5_TSS_L0U15.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_IntroLevel_Unit15_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_IntroLevel_Unit15_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_IntroLevel_Unit15_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 15 Intro.pdf", "ext": "pdf", "source": "ea"}], "16": [{"type": "Audio", "filename": "IC5_TSS_L0U16.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_IntroLevel_Unit16_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_IntroLevel_Unit16_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_IntroLevel_Unit16_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 16 Intro.pdf", "ext": "pdf", "source": "ea"}]}, "Level 1": {"1": [{"type": "Audio", "filename": "IC5_TSS_L1U01.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level1_Unit01_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level1_Unit01_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level1_Unit01_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 1 L1.pdf", "ext": "pdf", "source": "ea"}], "2": [{"type": "Audio", "filename": "IC5_TSS_L1U02.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level1_Unit02_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level1_Unit02_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level1_Unit02_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 2 L1.pdf", "ext": "pdf", "source": "ea"}], "3": [{"type": "Audio", "filename": "IC5_TSS_L1U03.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level1_Unit03_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level1_Unit03_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level1_Unit03_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 3 L1.pdf", "ext": "pdf", "source": "ea"}], "4": [{"type": "Audio", "filename": "IC5_TSS_L1U04.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level1_Unit04_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level1_Unit04_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level1_Unit04_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 4 L1.pdf", "ext": "pdf", "source": "ea"}], "5": [{"type": "Audio", "filename": "IC5_TSS_L1U05.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level1_Unit05_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level1_Unit05_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level1_Unit05_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 5 L1.pdf", "ext": "pdf", "source": "ea"}], "6": [{"type": "Audio", "filename": "IC5_TSS_L1U06.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level1_Unit06_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level1_Unit06_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level1_Unit06_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 6 L1.pdf", "ext": "pdf", "source": "ea"}], "7": [{"type": "Audio", "filename": "IC5_TSS_L1U07.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level1_Unit07_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level1_Unit07_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level1_Unit07_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 7 L1.pdf", "ext": "pdf", "source": "ea"}], "8": [{"type": "Audio", "filename": "IC5_TSS_L1U08.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level1_Unit08_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level1_Unit08_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level1_Unit08_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 8 L1.pdf", "ext": "pdf", "source": "ea"}], "9": [{"type": "Audio", "filename": "IC5_TSS_L1U09.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level1_Unit09_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level1_Unit09_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level1_Unit09_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 9 L1.pdf", "ext": "pdf", "source": "ea"}], "10": [{"type": "Audio", "filename": "IC5_TSS_L1U10.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level1_Unit10_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level1_Unit10_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level1_Unit10_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 10 L1.pdf", "ext": "pdf", "source": "ea"}], "11": [{"type": "Audio", "filename": "IC5_TSS_L1U11.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level1_Unit11_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level1_Unit11_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level1_Unit11_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 11 L1.pdf", "ext": "pdf", "source": "ea"}], "12": [{"type": "Audio", "filename": "IC5_TSS_L1U12.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level1_Unit12_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level1_Unit12_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level1_Unit12_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 12 L1.pdf", "ext": "pdf", "source": "ea"}], "13": [{"type": "Audio", "filename": "IC5_TSS_L1U13.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level1_Unit13_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level1_Unit13_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level1_Unit13_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 13 L1.pdf", "ext": "pdf", "source": "ea"}], "14": [{"type": "Audio", "filename": "IC5_TSS_L1U14.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level1_Unit14_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level1_Unit14_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level1_Unit14_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 14 L1.pdf", "ext": "pdf", "source": "ea"}], "15": [{"type": "Audio", "filename": "IC5_TSS_L1U15.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level1_Unit15_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level1_Unit15_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level1_Unit15_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 15 L1.pdf", "ext": "pdf", "source": "ea"}], "16": [{"type": "Grammar", "filename": "Interchange5thEd_Level1_Unit16_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level1_Unit16_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level1_Unit16_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 16 L1.pdf", "ext": "pdf", "source": "ea"}]}, "Level 2": {"1": [{"type": "Audio", "filename": "IC5_TSS_L2U01.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level2_Unit01_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level2_Unit01_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level2_Unit01_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 1 L2.pdf", "ext": "pdf", "source": "ea"}], "2": [{"type": "Audio", "filename": "IC5_TSS_L2U02.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level2_Unit02_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level2_Unit02_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level2_Unit02_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 2 L2.pdf", "ext": "pdf", "source": "ea"}], "3": [{"type": "Audio", "filename": "IC5_TSS_L2U03.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level2_Unit03_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level2_Unit03_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level2_Unit03_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 3 L2.pdf", "ext": "pdf", "source": "ea"}], "4": [{"type": "Audio", "filename": "IC5_TSS_L2U04.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level2_Unit04_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level2_Unit04_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level2_Unit04_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 4 L2.pdf", "ext": "pdf", "source": "ea"}], "5": [{"type": "Audio", "filename": "IC5_TSS_L2U05.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level2_Unit05_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level2_Unit05_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level2_Unit05_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 5 L2.pdf", "ext": "pdf", "source": "ea"}], "6": [{"type": "Audio", "filename": "IC5_TSS_L2U06.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level2_Unit06_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level2_Unit06_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level2_Unit06_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 6 L2.pdf", "ext": "pdf", "source": "ea"}], "7": [{"type": "Audio", "filename": "IC5_TSS_L2U07.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level2_Unit07_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level2_Unit07_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level2_Unit07_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 7 L2.pdf", "ext": "pdf", "source": "ea"}], "8": [{"type": "Audio", "filename": "IC5_TSS_L2U08.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level2_Unit08_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level2_Unit08_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level2_Unit08_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 8 L2.pdf", "ext": "pdf", "source": "ea"}], "9": [{"type": "Audio", "filename": "IC5_TSS_L2U09.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level2_Unit09_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level2_Unit09_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level2_Unit09_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 9 L2.pdf", "ext": "pdf", "source": "ea"}], "10": [{"type": "Audio", "filename": "IC5_TSS_L2U10.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level2_Unit10_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level2_Unit10_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level2_Unit10_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 10 L2.pdf", "ext": "pdf", "source": "ea"}], "11": [{"type": "Audio", "filename": "IC5_TSS_L2U11.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level2_Unit11_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level2_Unit11_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level2_Unit11_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 11 L2.pdf", "ext": "pdf", "source": "ea"}], "12": [{"type": "Audio", "filename": "IC5_TSS_L2U12.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level2_Unit12_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level2_Unit12_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level2_Unit12_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 12 L2.pdf", "ext": "pdf", "source": "ea"}], "13": [{"type": "Audio", "filename": "IC5_TSS_L2U13.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level2_Unit13_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level2_Unit13_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level2_Unit13_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 13 L2.pdf", "ext": "pdf", "source": "ea"}], "14": [{"type": "Audio", "filename": "IC5_TSS_L2U14.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level2_Unit14_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level2_Unit14_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level2_Unit14_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 14 L2.pdf", "ext": "pdf", "source": "ea"}], "15": [{"type": "Audio", "filename": "IC5_TSS_L2U15.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level2_Unit15_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level2_Unit15_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level2_Unit15_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 15 L2.pdf", "ext": "pdf", "source": "ea"}], "16": [{"type": "Audio", "filename": "IC5_TSS_L2U16.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level2_Unit16_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level2_Unit16_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level2_Unit16_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 16 L2.pdf", "ext": "pdf", "source": "ea"}]}, "Level 3": {"1": [{"type": "Audio", "filename": "IC5_TSS_L3U01.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level3_Unit01_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level3_Unit01_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level3_Unit01_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 1.pdf", "ext": "pdf", "source": "ea"}], "2": [{"type": "Audio", "filename": "IC5_TSS_L3U02.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level3_Unit02_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level3_Unit02_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level3_Unit02_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 2.pdf", "ext": "pdf", "source": "ea"}], "3": [{"type": "Audio", "filename": "IC5_TSS_L3U03.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level3_Unit03_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level3_Unit03_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level3_Unit03_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 3.pdf", "ext": "pdf", "source": "ea"}], "4": [{"type": "Audio", "filename": "IC5_TSS_L3U04.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level3_Unit04_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level3_Unit04_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level3_Unit04_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 4.pdf", "ext": "pdf", "source": "ea"}], "5": [{"type": "Audio", "filename": "IC5_TSS_L3U05.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level3_Unit05_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level3_Unit05_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level3_Unit05_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 5.pdf", "ext": "pdf", "source": "ea"}], "6": [{"type": "Audio", "filename": "IC5_TSS_L3U06.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level3_Unit06_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level3_Unit06_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level3_Unit06_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 6.pdf", "ext": "pdf", "source": "ea"}], "7": [{"type": "Audio", "filename": "IC5_TSS_L3U07.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level3_Unit07_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level3_Unit07_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level3_Unit07_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 7.pdf", "ext": "pdf", "source": "ea"}], "8": [{"type": "Audio", "filename": "IC5_TSS_L3U08.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level3_Unit08_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level3_Unit08_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level3_Unit08_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 8.pdf", "ext": "pdf", "source": "ea"}], "9": [{"type": "Audio", "filename": "IC5_TSS_L3U09.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level3_Unit09_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level3_Unit09_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level3_Unit09_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 9.pdf", "ext": "pdf", "source": "ea"}], "10": [{"type": "Audio", "filename": "IC5_TSS_L3U10.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level3_Unit10_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level3_Unit10_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level3_Unit10_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 10.pdf", "ext": "pdf", "source": "ea"}], "11": [{"type": "Audio", "filename": "IC5_TSS_L3U11.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level3_Unit11_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level3_Unit11_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Other", "filename": "interchange4-level3-unit11-vocabulary-worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 11.pdf", "ext": "pdf", "source": "ea"}], "12": [{"type": "Audio", "filename": "IC5_TSS_L3U12.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level3_Unit12_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level3_Unit12_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level3_Unit12_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 12.pdf", "ext": "pdf", "source": "ea"}], "13": [{"type": "Audio", "filename": "IC5_TSS_L3U13.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level3_Unit13_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level3_Unit13_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level3_Unit13_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 13.pdf", "ext": "pdf", "source": "ea"}], "14": [{"type": "Audio", "filename": "IC5_TSS_L3U14.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level3_Unit14_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level3_Unit14_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Other", "filename": "interchange4-level3-unit14-vocabulary-worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 14.pdf", "ext": "pdf", "source": "ea"}], "15": [{"type": "Audio", "filename": "IC5_TSS_L3U15.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level3_Unit15_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level3_Unit15_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Other", "filename": "interchange4-level3-unit15-vocabulary-worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 15.pdf", "ext": "pdf", "source": "ea"}], "16": [{"type": "Audio", "filename": "IC5_TSS_L3U16.mp3", "ext": "mp3", "source": "cambridge"}, {"type": "Grammar", "filename": "Interchange5thEd_Level3_Unit16_Grammar_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Listening", "filename": "Interchange5thEd_Level3_Unit16_Listening_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "Vocabulary", "filename": "Interchange5thEd_Level3_Unit16_Vocabulary_Worksheet.pdf", "ext": "pdf", "source": "cambridge"}, {"type": "EA Worksheet", "filename": "Worksheet Unit 16.pdf", "ext": "pdf", "source": "ea"}]}};
-
-const levelMap = {'intro':'Intro','lvl1':'Level 1','lvl2':'Level 2','lvl3':'Level 3'};
-const colorMap = {'intro':'#f59a1e','lvl1':'#f36b2e','lvl2':'#253c96','lvl3':'#19244e'};
-const labelMap = {'intro':'INTRO','lvl1':'LEVEL 1','lvl2':'LEVEL 2','lvl3':'LEVEL 3'};
+const examples = {'intro':[{page:3,topic:'POSSESSIVE ADJECTIVES',book:'Intro',html:'<p><strong>POSSESSIVE ADJECTIVES</strong></p><p><em>Utilizados para demonstrar posse.</em></p><p>▸ HIS (DELE) - His car is beautiful.<br>▸ HER (DELA) - Her house is yellow.<br>▸ MY (MEU) - My dog is there.<br>▸ YOUR (SEU) - Your school is big.</p><p><br><strong>VERBO \'TO BE\'</strong></p><p><em>Expressa a ideia de \'ser\' ou \'estar\'. No presente, possui três formas: am, is & are.</em></p><p><br>▸ I AM - I am a teacher<br>▸ YOU ARE - You are a nice friend<br>▸ SHE IS - She is a doctor<br>▸ HE IS - He is my father<br>▸ IT IS - It is a nice city<br>▸ WE ARE - We are a family<br>▸ THEY ARE - They are nice people</p>'},{page:17,topic:'to be',book:'Intro',html:'<p>Quanto fazemos uma negação no simple present utilizando o verbo <strong>to be</strong>, adicionamos a palavra <strong>not</strong▸ após os verbos <strong>am, is e are</strong>.</p><p>Sujeito + am, is, are (be) + not + complemento</p><p><em>He is not a teacher - He isn\'t a teacher</em><br><em>You are not sad - You aren\'t sad</em></p><p>IS + NOT = ISN\'T<br>ARE+ NOT = AREN\'T</p>'},{page:20,topic:'WH-QUESTIONS UTILIZANDO BE',book:'Intro',html:'<p><strong>WH-QUESTIONS UTILIZANDO BE</strong></p><p><strong>WH-WORD + IS, ARE+ SUJEITO</strong><br><em>WHO ARE YOU?</em><br><em>WHERE IS YOUR HOUSE?</em><br><em>WHAT IS YOUR FULL NAME?</em></p><p>▸ WHO - QUEM?<br>▸ WHAT - O QUE / QUAL?<br>▸ WHERE - ONDE?<br>▸ HOW - COMO?<br>▸ WHAT + IS/ARE + SUJEITO + LIKE? - COMO É?</p>'},{page:24,topic:'MY HOUSE',book:'Intro',html:'<p>OS POSSESSIVES PRONOUNS PODEM APARECER SOZINHOS, AO CONTRÁRIO DOS POSSESSIVE ADJECTIVES (MY, YOUR, HIS, HER) QUE PRECISAM APARECER ANTES DE UM SUBSTANTIVO.</p><p>(POSSESSIVE ADJECTIVE) =▸ THIS IS <strong>MY HOUSE</strong></p><p>(POSSESSIVE PRONOUNS) =▸ THE HOUSE <strong>IS MINE</strong></p><p>NO ÚLTIMO EXEMPLO, O POSSESSIVE PRONOUN APARECEU SOZINHO, JÁ O POSSESSIVE ADJECTIVE APARECEU JUNTO A PALAVRA "HOUSE"</p><p><strong>THESE SHOES ARE MINE, YOURS, HERS, HIS</strong></p><p></p><p><em>WHOSE + ITEM + IS/ARE + THIS/THESE</em></p><p>- WHOSE SHIRT IS THIS?<br>- IT IS <strong>MINE</strong></p><p></p><p>\'S POSSESSIVE É USADO PARA INDICAR POSSE QUANDO USAMOS O NOME DE UMA PESSOA, AO INVÉS DOS PRONOMES PESSOAIS (HE, SHE, IT, WE, YOU, THEY)</p><p><strong>DONO DO ITEM + \'S + ITEM</strong></p><p><em>MICHAEL\'S CAR</em><br><em>THE DOG\'S TAIL</em></p>'},{page:26,topic:'O PRESENT CONTINUOUS É UM TEMPO VERBAL CARACTERIZADO PELO USO DO -ING NO FINAL DOS VERBOS. ELE É UTILIZADO PARA EXPRESSAR AÇÕES QUE ESTÃO ACONTENCENDO NESTE EXATO MOMENTO.',book:'Intro',html:'<p><strong>O PRESENT CONTINUOUS É UM TEMPO VERBAL CARACTERIZADO PELO USO DO -ING NO FINAL DOS VERBOS. ELE É UTILIZADO PARA EXPRESSAR AÇÕES QUE ESTÃO ACONTENCENDO NESTE EXATO MOMENTO.</strong></p><p><strong>SUJEITO + BE + VERBO + ING</strong><br><em>I AM DRINKING WATER</em></p><p><strong>BE + SUJEITO + VERBO + ING?</strong><br><em>ARE YOU STUDYING ENGLISH?</em></p><p><strong>WH-WORD + BE + SUJEITO + VERBI + ING?</strong><br><em>WHAT ARE YOU DOING TODAY?</em></p>'},{page:37,topic:'SIMPLE PRESENT STATEMENTS',book:'Intro',html:'<p><strong>SIMPLE PRESENT STATEMENTS</strong></p><p><em>Nós usamos o Presente Simples para expressar ações que são corriqueiras e sempre verdadeiras.</em></p><p>▸ I go to school;<br>▸ She plays video game;<br>▸ It rains everyday.</p><p><strong>Para he, she, it adicionamos -s nos verbos</strong></p><p><strong>Para as negativas, utilizamos \'don\'t\' & \'doesn\'t\' para he, she & it</strong></p><p>▸ She doesn\'t eat chocolate;<br>▸ He plays everyday;<br>▸ I don\'t like soccer.</p>'},{page:39,topic:'Simple Present Tense',book:'Intro',html:'<p><strong>Simple Present Tense</strong></p><p><em>Utilizamos o simple present falar de ações que são corriqueiras no presente. Lembre-se, haverá mudança nos verbos para he, she & it. Acrescenta-se -s, -es ou -ies.</em></p><p>▸ I go to the park everyday;<br>▸ She goes to the park everyday;<br>▸ He plays soccer after class;<br>▸ It rains on Mondays.</p><p><em>Em frases negativas, utilizamos os auxiliares don\'t & doesn\'t (para he, she & it) e o verbo principal em sua forma original.</em></p><p>▸ We don\'t like black cars;<br>▸ She doesn\'t study often;<br>▸ He doesn\'t play basketball.</p><p><em>Em frases interrogativas, utilizamos os auxiliares do & does (para he, she & it) e o verbo principal em sua forma original.</em></p><p>▸ Do you like fish?<br>▸ Does she eat bread?<br>▸ Does he play soccer?</p><p>ESTRUTURAS PARA PERGUNTAS COM WH-QUESTIONS:</p><p><strong>Wh-word + do/does + I/You/he/she... + verbo</strong></p><p>▸ Where do you live?<br>▸ Where does she study?<br>▸ What time do you wake up?</p>'},{page:45,topic:'DO/DOES + SUJEITO + VERBO',book:'Intro',html:'<p>SIMPLE PRESENT SHORT ANSWERS</p><p><strong>DO/DOES + SUJEITO + VERBO</strong></p><p><strong>DO</strong▸ I, YOU, WE, THEY</p><p><em>DO YOU LIKE TO EAT PIZZA?</em></p><p><strong>DOES</strong▸ HE, SHE, IT</p><p><em>DOES HE GO TO SCHOOL EVERYDAY?</em></p>'},{page:47,topic:'NEGATIVE',book:'Intro',html:'<p>NÓS UTILIZAMOS "THERE IS" E "THERE ARE" PARA EXPRESSAR O VERBO HAVER EM INGLÊS.</p><p><em>THERE IS A MIRROR IN MY HOUSE</em><br><em>THERE ARE CHAIRS IN MY HOUSE</em></p><p><strong>NEGATIVE</strong></p><p><strong>THERE\'S NO + PALAVRA NO SINGULAR</strong><br><em>THERE\'S NO TABLE IN THE KITCHEN</em></p><p><strong>THERE ISN\'T A + PALAVRA NO SINGULAR</strong><br><em>THERE ISN\'T A TABLE IN THE KITCHEN</em></p><p><strong>THERE ARE NO + PALAVRA NO PLURAL</strong><br><em>THERE ARE NO WINDONS IN MY BEDROOM</em></p><p><strong>THERE AREN\'T ANY + PALAVRA NO PLURAL</strong><br><em>THERE AREN\'T ANY WINDONS IN MY BEDROOM</em></p>'},{page:54,topic:'ADJECTIVE + NOUN',book:'Intro',html:'<p><strong>ADJECTIVE + NOUN</strong></p><p><em>My job is great</em><br><em>I have a great job</em><br><strong>(Ambas as frases tem o mesmo significado)</strong></p><p><strong>A/an + sujeito + \'s + job + is + adjetivo</strong><br>✅ <em>A teacher\'s job is nice</em></p><p><strong>A/an + sujeito + has + a/an + adjective + job</strong><br>✅ <em>A teacher has a nice job</em></p>'},{page:59,topic:'COUNT AND NONCOUNT NOUNS',book:'Intro',html:'<p><strong>COUNT AND NONCOUNT NOUNS</strong></p><p><strong>COUNT NOUNS</strong▸ Estes se referem a tudo aquilo que pode ser contado na língua inglesa. Possuem forma no plural e singular, podem ser acompanhados por artigos.</p><p>👉 <em>We have an apple</em></p><p>👉 <em>There are many apples in the basket</em></p><p><br><strong>NONCOUNT NOUNS</strong▸ São palavras na língua inglesa que não podem ser contadas, ou seja, não podemos usá-las com artigos indefinidos (a, an) ou com números. Não possuem forma no plural, apenas no singular.</p><p><strong>OBS.: Noncount nouns geralmente são líquidos (milk, water, olive oil) ou grãos e itens muito pequenos (rice, salt and sugar)</strong></p><p>👉 <em>There isn\'t any water in the bottle</em></p><p>👉 <em>We have little milk today</em></p><p>OBS.: Use "Any" para perguntas e negações, use "Some" para frases afirmativas e para oferecer algo a alguém.</p>'},{page:61,topic:'Os advérbios de frequência (ever, often, sometimes, hardly ever, never) são posicionados antes do verbo principal da frase.',book:'Intro',html:'<p><strong>Os advérbios de frequência (ever, often, sometimes, hardly ever, never) são posicionados antes do verbo principal da frase.</strong></p><p><strong>Sujeito + adv. frequência + verbo</strong></p><p><em>She often goes to church</em></p><p><em>He never plays soccer with his friends</em></p><p><br><strong>OBS.: Sometimes e usually podem iniciar frases:</strong></p><p><em>He usually studies alone - Usually he studies alone</em></p><p><em>She sometimes plays - Sometimes she plays</em></p>'},{page:67,topic:'CAN FOR ABILITY',book:'Intro',html:'<p><strong>CAN FOR ABILITY</strong></p><p>Can é um verbo modal, ou seja, ele tem a capacidade de adicionar sentidos a mais para a nossa frase. Geralmente, a palavra can significa "conseguir" ou "poder".</p><p><br><strong>Attention</strong▸ Can pode ser usando para criar frases afirmativas, negativas e interrogativas.</p><p><br><em>I can play the piano</em▸ (Afirmativa)</p><p><em>I cannot/can\'t play the piano</em▸ (Negativa)</p><p><em>Can I play the piano?</em▸ (Interrogativa)</p>'},{page:73,topic:'TO BE GOING TO',book:'Intro',html:'<p><strong>TO BE GOING TO</strong></p><p>Nós utilizamos essa estrutura para expressar o futuro em inglês. (OBS.: Lembre-se de trocar o "be" por am, is ou are)</p><p><strong>SUJEITO + BE GOING TO + VERBO/COMPLEMENTO</strong></p><p><em>She is going to buy a car next year!</em></p><p><em>They are going to get married!</em></p><p><br><strong>BE + SUJEITO + GOING TO + VERBO/COMPLEMENTO?</strong></p><p><em>Is she going to read the book?</em></p><p><em>Is it going to rain tomorrow?</em></p>'},{page:88,topic:'Giving directions',book:'Intro',html:'<p><strong>Giving directions</strong></p><p><br><strong>ON</strong▸ é equivalente a "no" ou "na" em português.</p><p><em>The shopping mall is on Paulista Avenue</em></p><p><em>My house is on the street ENGLISH number 000</em></p><p></p><p><strong>ON THE CORNER OF</strong▸ Na esquina de;</p><p><em>The supermarket is on the corner of the next avenue</em></p><p><em>The drugstore is on the corner of his house</em></p><p></p><p><strong>ACROSS FROM</strong▸ Oposto à; na frente dê; do outro lado.</p><p><em>The park is across from the apartment building</em></p><p><em>The boy fell across from his house</em></p><p></p><p><strong>NEXT TO</strong▸ Do lado de;</p><p><em>It is next to the pharmacy</em></p><p><em>His house is next to mine</em></p><p></p><p><strong>BETWEEN</strong▸ Entre; no meio de.</p><p><em>The school is between the supermarket and the bank</em></p><p><em>The shopping mall is between these houses</em></p>'},{page:93,topic:'SIMPLE PAST',book:'Intro',html:'<p><strong>SIMPLE PAST</strong></p><p><em>O SIMPLE PAST É CARACTERIZADO PELO -ED NO FINAL DOS VERBOS REGULARES. CASO UM VERBO SEJA IRREGULAR, A SUA FORMA NO PASSADO NÃO TEM UMA CONSTRUÇÃO LÓGICA, SENDO NECESSÁRIO MEMORIZAR A ESCRITA DO VERBO</em></p><p><strong>VERBOS REGULARES</strong▸ WORK <strong>(WORKED)</strong▸ - PLAY <strong>(PLAYED)</strong▸ - TRY <strong>(TRIED)</strong▸ - DANCE <strong>(DANCED)</strong></p><p><strong>VERBOS IRREGULARES</strong▸ SEE <strong>(SAW)</strong▸ - TAKE <strong>(TOOK)</strong▸ - HAVE <strong>(HAD)</strong▸ - MAKE <strong>(MADE)</strong></p><p><br>QUANDO FORMULAMOS PERGUNTAS NO SIMPLE PAST, UTILIZAMOS O PASSADO DO VERBO DO - <strong>DID</strong▸ E O VERBO NA SUA FORMA <strong>ORIGINAL</strong></p><p><em>WHAT DID YOU SAY TO HIM?</em></p><p><em>WHERE DID YOU GO YESTERDAY?</em></p>'},{page:107,topic:'OBJECT PRONOUNS',book:'Intro',html:'<p><strong>OBJECT PRONOUNS</strong></p><p><em>DIFERENTEMENTE DOS DEMAIS PRONOMES, OS OBJECT PRONOUNS SOFREM A AÇÃO DE ALGUM VERBO (OU SEJA, SÃO O OBJETO DO VERBO). ELES SE POSICIONAM APÓS OS VERBOS</em></p><p><strong>(ME, HIM, HER, IT, THEM, US, YOU)</strong></p><p>❌ I LIKE THEY<br>✔️ I LIKE THEM</p><p>❌ SHE PLAYS WITH I<br>✔️ SHE PLAYS WITH ME</p>'}],'lvl1':[{page:4,topic:'Wh-Words + to be',book:'Red book',html:'<p><strong>Wh-Words + to be</strong></p><p><em>São palavras utilizadas para fazer perguntas mais complexas com o verbo to be</em▸ </p><p><strong>WHERE (ONDE); WHY (POR QUE); WHEN (QUANDO), WHO (QUEM); WHAT (O QUE); HOW (COMO)</strong></p><p><br><strong>Wh word + to be + resto da frase</strong></p><p>When <strong>is</strong▸ your birthday?</p><p>Where <strong>is</strong▸ your school?</p>'},{page:10,topic:'Wh-question + do/does + sujeito + verb',book:'Red book',html:'<p>WHERE (ONDE); WHAT (O QUE OU QUAL); WHEN (QUANDO); WHO (QUEM); HOW (COMO); WHY (POR QUE)</p><p><strong>Wh-question + do/does + sujeito + verb</strong></p><p><em>Why do you drink coffee everyday?</em><br><em>Where do you live?</em></p>'},{page:17,topic:'One/Ones: Usados para substituir termos na frase</strong▸ </p><p><strong>Ex.: THE BLUE JACKET -▸ THE BLUE ONE / THE PRETTY COLORS -▸ THE PRETTY ONES.',book:'Red book',html:'<p><strong>One/Ones: Usados para substituir termos na frase</strong▸ </p><p><strong>Ex.: THE BLUE JACKET -▸ THE BLUE ONE / THE PRETTY COLORS -▸ THE PRETTY ONES.</strong></p><p><em>Which: Usado para perguntar qual item específico. Ex.: WHICH SHIRT? WHICH ONE? / WHICH COLORS? WHICH ONES?</em></p><p><em>This/These: Usados para objetos próximos. THIS (singular) / THESE (plural)</em></p><p><em>That/Those: Usados para objetos distantes. THAT (singular) / THOSE (plural)</em></p>'},{page:20,topic:'PREFERENCES',book:'Red book',html:'<p><strong>PREFERENCES</strong></p><p><strong>I PREFER...</strong></p><p><em>I PREFER THE BLUE SHORT</em></p><p><strong>I LIKE...MORE</strong></p><p><em>I LIKE THE BLUE ONE MORE</em></p><p><strong>I LIKE...BETTER</strong></p><p><em>I LIKE THE BLUE ONE BETTER</em></p><p><strong>COMPARISONS</strong></p><p>Com adjetivos curtos, adicionamos -er no final.</p><p><em>BIG -▸ BIGGER</em><br><em>HAPPY -▸ HAPPIER</em></p><p>Com adjetivos longos, adicionamos "more" como auxiliar.</p><p><em>BEAUTIFUL -▸ MORE BEAUTIFUL</em><br><em>EXPANSIVE -▸ MORE EXPANSIVE</em></p><p><strong>OBS.: Lembre-se de adicionar "than" para fazer comparações</strong></p>'},{page:23,topic:'OBS.: DOES É UTILIZADO PARA HE, SHE E IT',book:'Red book',html:'<p><em>PARA FAZERMOS PERGUNTAS NO SIMPLE PPRESENT, UTILIZAMOS OS VERBOS AUXILIARES DO E DOES NO INÍCIO DA FRASE (<strong>OBS.: DOES É UTILIZADO PARA HE, SHE E IT</strong>)</em></p><p><em>NÓS RESPONDEMOS A PERGUNTA COM O MESMO VERBO AUXILIAR UTILIZADO (DO OU DOES)</em></p><p><strong>DO+DOES + SUJEITO + VERBO?</strong><br><strong>WH-WORD + DO/DOES + SUJEITO + VERBO?</strong></p><p><strong>DOES SHE LIKE THE BOY?</strong><br><strong>NO, SHE DOESN\'T</strong></p><p><strong>DO YOU DRINK WATER EVERYDAY?</strong><br><strong>YES, I DO.</strong></p>'},{page:26,topic:'Page 26',book:'Red book',html:'<p>Para fazer convites em inglês utilizamos duas estruturas principais:</p><p>▸ Would you like to...?<br>▸ Do you want to...?</p><p>Ainda, para respondermos as invitations podemos utilizar as seguintes opções:</p><p>▸ Yes, I would/want.<br>▸ I\'d love to.</p><p>Para recusar uma invitation, geralmente oferecemos uma excuse (desculpa) utilizando want to; need to & have to.</p><p>▸ Do you want to go to the cinema with me? / I\'d like to, but I have to go to the doctor;<br>▸ Would you like to eat pizza tomorrow? / I\'d like to, but I need to study for a test.</p>'},{page:27,topic:'INVITATIONS',book:'Red book',html:'<p><strong>INVITATIONS</strong></p><p><strong>WOULD YOU LIKE TO...?</strong></p><p><em>WOULD YOU LIKE TO GO TO A PARTY WITH ME?</em></p><p>_-Yes, I would / I\'d love to (more polite)</p><p><br><strong>WOULD YOU LIKE TO PLAY SOCCER WITH ME?</strong></p><p><em>-I\'d like to, but I have to do my homework</em></p>'},{page:32,topic:'O PRESENT CONTINUOUS É UM TEMPO VERBAL CARACTERIZADO PELO USO DO -ING NO FINAL DOS VERBOS. ELE É UTILIZADO PARA EXPRESSAR AÇÕES QUE ESTÃO ACONTENCENDO NESTE EXATO MOMENTO.',book:'Red book',html:'<p><strong>O PRESENT CONTINUOUS É UM TEMPO VERBAL CARACTERIZADO PELO USO DO -ING NO FINAL DOS VERBOS. ELE É UTILIZADO PARA EXPRESSAR AÇÕES QUE ESTÃO ACONTENCENDO NESTE EXATO MOMENTO.</strong></p><p><strong>SUJEITO + BE + VERBO + ING</strong><br><em>I AM DRINKING WATER</em></p><p><strong>BE + SUJEITO + VERBO + ING?</strong><br><em>ARE YOU STUDYING ENGLISH?</em></p><p><strong>WH-WORD + BE + SUJEITO + VERBI + ING?</strong><br><em>WHAT ARE YOU DOING TODAY?</em></p>'},{page:34,topic:'Page 34',book:'Red book',html:'<p>When people don\'t know the exact percentage of something, they use words like most or some. See the quantifiers in the Grammar Focus box.</p><p>OBS.: Todos os quantifiers vem antes de palavras no plural (All, nearly all, most, many, a lot of, some, not many, few). Exceto no one, esse vem antes de verbos na terceira pessoa do singular (he, she, it)</p><p><strong>Most students</strong▸ in Brazil do well in school</p><p><strong>No one</strong▸ likes to eat pineapple in my family</p>'},{page:37,topic:'Os advérbios de frequência (ever, often, sometimes, hardly ever, never) são posicionados antes do verbo principal da frase.',book:'Red book',html:'<p><strong>Os advérbios de frequência (ever, often, sometimes, hardly ever, never) são posicionados antes do verbo principal da frase.</strong></p><p><strong>Sujeito + adv. frequência + verbo</strong></p><p><em>She often goes to church</em></p><p><em>He never plays soccer with his friends</em></p><p><br><strong>Quando queremos responder quantas vezes fazemos algo, essa resposta se posicionará no final da frase.</strong></p><p><em>I study every day</em></p><p><em>I take showers twice a day</em></p><p><br><strong>OBS.: Sometimes e usually podem iniciar frases:</strong></p><p><em>He usually studies alone - Usually he studies alone</em></p><p><em>She sometimes plays - Sometimes she plays</em></p><p><br><strong>OBS.: Quando o verbo To Be aparece, o advérbio de frequência será posicionado depois dele!</strong></p><p><em>He is often tired</em></p><p><em>I am never stressed</em></p>'},{page:40,topic:'HOW OFTEN = frequency',book:'Red book',html:'<p>QUESTIONS WITH “HOW”</p><p><strong>HOW OFTEN = frequency</strong><br>How often do you run?<br>I run every day.</p><p><strong>HOW LONG = duration (time)</strong><br>How long do you run?<br>I run for about an hour.</p><p><strong>HOW GOOD = use with to be</strong><br>How good are you at sports?<br>I am pretty good.</p><p><strong>HOW WELL = use with other verbs</strong><br>How well do you sing?<br>I sing pretty well.</p>'},{page:45,topic:'SIMPLE PAST',book:'Red book',html:'<p><strong>SIMPLE PAST</strong></p><p><em>O SIMPLE PAST É CARACTERIZADO PELO -ED NO FINAL DOS VERBOS REGULARES. CASO UM VERBO SEJA IRREGULAR, A SUA FORMA NO PASSADO NÃO TEM UMA CONSTRUÇÃO LÓGICA, SENDO NECESSÁRIO MEMORIZAR A ESCRITA DO VERBO</em></p><p><strong>VERBOS REGULARES</strong▸ WORK <strong>(WORKED)</strong▸ - PLAY <strong>(PLAYED)</strong▸ - TRY <strong>(TRIED)</strong▸ - DANCE <strong>(DANCED)</strong></p><p><strong>VERBOS IRREGULARES</strong▸ SEE <strong>(SAW)</strong▸ - TAKE <strong>(TOOK)</strong▸ - HAVE <strong>(HAD)</strong▸ - MAKE <strong>(MADE)</strong></p><p><br>QUANDO FORMULAMOS PERGUNTAS NO SIMPLE PAST, UTILIZAMOS O PASSADO DO VERBO DO - <strong>DID</strong▸ E O VERBO NA SUA FORMA <strong>ORIGINAL</strong></p><p><strong>WHAT DID YOU SAY TO HIM?</strong></p><p><strong>WHERE DID YOU GO YESTERDAY?</strong></p>'},{page:47,topic:'PAST FORM OF TO BE',book:'Red book',html:'<p><strong>PAST FORM OF TO BE</strong></p><p><strong>I, HE, SHE, IT -▸ WAS</strong></p><p><em>I WAS REALLY TIRED YESTERDAY</em></p><p><em>HE WAS DRIKING TOO MUCH JUICE</em></p><p><strong>YOU, WE, THEY -▸ WERE</strong></p><p><em>WERE YOU TIRED YESTERDAY?</em></p><p><em>WE WERE PLAYING SOCCER!</em></p>'},{page:51,topic:'THERE IS & THERE ARE',book:'Red book',html:'<p><strong>THERE IS & THERE ARE</strong></p><p>These two verbs are used to express the existence of something. Both are equivalent to the verb "Haver" in Portuguese. One is used with singular nouns, the other with plural nouns.</p><p><em>There is a happy man walking on the road.</em></p><p><em>There are some sad birds on the tree</em></p><p><br><strong>You can invert the positions of there is & there are to ask questions!</strong></p><p><em>There are some apples in the basket / Are there any apples in the basket?</em></p><p><br><strong>SOME/ANY</strong></p><p><em>"Some" is used with plural nouns in affirmative sentences. "Any" is used with plural nouns in negative and interrogative sentences.</em></p>'},{page:54,topic:'Page 54',book:'Red book',html:'<p>Count & noncount nouns*</p><p>When dealing with a <strong>count noun</strong▸ (Things that can be counted) use many & few.</p><p>▸ There are few cars in my city;<br>▸ I have too many books in my bookshelf.</p><p>When using a <strong>noncount noun</strong▸ (Things that cannot be counted) use much & little.</p><p>▸ There is little pollution in my neighborhood;<br>▸ There is too much noise here.</p><p><strong>REMEMBER</strong▸ Noncount nouns are always in the singular form, therefore can only be used with There is.</p>'},{page:62,topic:'PRESENT PARTICIPLE & PREPOSITIONS TO DESCRIBE PEOPLE',book:'Red book',html:'<p><strong>PRESENT PARTICIPLE & PREPOSITIONS TO DESCRIBE PEOPLE</strong></p><p>We can use present participles (-ing) to describe what people are wearing or doing.</p><p>▸ Lucas is the man <strong>standing</strong▸ next to Olivia;<br>▸ Carlos is the elderly man <strong>drinking</strong▸ water;<br>▸ Julia is the girl <strong>eating</strong▸ cake.</p><p>Also, it is possible to use prepositions to describe people. (In, with, next to, on)</p><p>▸ Lucas is the man <strong>in</strong▸ jeans;<br>▸ Carlos is the elderly man with black shoes;<br>▸ Julia is the girl next to the window.</p>'},{page:73,topic:'Remember</strong▸ Too means "more than enough" and it is usually used with negative sentences:</p><p>▸ <em>This house is too big</em▸ (It has more space than necessary)</p><p>▸ <em>This dessert is too sweet</em▸ (It has more sugar than necessary)</p><p><strong>Connecting ideas using conjunctions',book:'Red book',html:'<p>We use adverbs before adjectives to intensify them. </p><p>▸ <em>She is tired</em><br>▸ <em>She is extremely/very/really/pretty/fairly/ tired.</em></p><p><strong>Remember</strong▸ Too means "more than enough" and it is usually used with negative sentences:</p><p>▸ <em>This house is too big</em▸ (It has more space than necessary)</p><p>▸ <em>This dessert is too sweet</em▸ (It has more sugar than necessary)</p><p><strong>Connecting ideas using conjunctions</strong></p><p>Conjunctions are words like and, but, however & though. They are used to connect ideas.</p><p><strong>Positive + positive & negative + negative</strong></p><p>We use and (&) to connect two positive or two negative ideas:</p><p>▸ <em>She is happy and excited</em><br>▸ <em>The city has many cars and it also has many people</em></p><p>We use but, however and though to connect contrasting ideas. Remember that though and however are placed at the end of the sentence and are separated by a comma (,).</p><p>▸ <em>The weather was great. The city was terrible, though.</em><br>▸ <em>The food was really spicy. The dessert was delicious, however.</em><br>▸ <em>The city was really noisy, but the weather was good.</em></p>'},{page:93,topic:'SUPERLATIVES',book:'Red book',html:'<p><strong>SUPERLATIVES</strong></p><p><em>Nós usamos os superlativos na língua inglesa quando queremos expressar duas ideias:</em><br>▸ 1. Como determinada palavra é diferente de seu grupo;<br>▸ 2. Quando fazemos uma comparação com 3+ itens.</p><p><em>Para formar o superlativo, adicione o prefixo -est aos adjetivos curtos (1 sílaba) ou adjetivos de 2 sílabas terminados em -y. Para os demais, adicione \'most\' antes do adjetivo.</em></p><p>▸ Brazil is the biggest country in South America;<br>▸ Brazil is the richest country among Argentina & Chile;<br>▸ That store is the most expensive one in the city.</p><p><strong>IRREGULAR ADJECTIVES</strong></p><p>▸ Good - Best<br>▸ Bad - Worst</p>'},{page:103,topic:'INDIRECT MESSAGES',book:'Red book',html:'<p><strong>INDIRECT MESSAGES</strong></p><p><em>Whenever you want to ask someone to communicate anything to a third person, use the structures bellow</em></p><p><strong>TELL</strong▸ Is used when you want someone to pass on an information to a third person.</p><p>▸ Please, tell mr. Smith (that) I\'ll be late to the appointment.<br>▸ Could you please tell mr. Smith (that) I\'ll be late to the appointment?<br>▸ Would you please tell mr. Smith (that) I\'ll be late to the appointment?</p><p><br><strong>ASK</strong▸ Is used when you want someone to request something from  third person.</p><p>▸ Please, ask Julia to bring my shirt.<br>▸ Could you ask Julia to bring my shir?<br>▸ Would you ask Julia to bring my shirt?</p><p>THE PREPOSITION \'TO\' IS MANDATORY WHEN USING \'ASK\'.</p>'}],'lvl2':[{page:3,topic:'SIMPLE PAST',book:'Blue book',html:'<p><strong>SIMPLE PAST</strong></p><p><em>O SIMPLE PAST É CARACTERIZADO PELO -ED NO FINAL DOS VERBOS REGULARES. CASO UM VERBO SEJA IRREGULAR, A SUA FORMA NO PASSADO NÃO TEM UMA CONSTRUÇÃO LÓGICA, SENDO NECESSÁRIO MEMORIZAR A ESCRITA DO VERBO</em></p><p><strong>VERBOS REGULARES</strong▸ WORK <strong>(WORKED)</strong▸ - PLAY <strong>(PLAYED)</strong▸ - TRY <strong>(TRIED)</strong▸ - DANCE <strong>(DANCED)</strong></p><p><strong>VERBOS IRREGULARES</strong▸ SEE <strong>(SAW)</strong▸ - TAKE <strong>(TOOK)</strong▸ - HAVE <strong>(HAD)</strong▸ - MAKE <strong>(MADE)</strong></p><p><br>QUANDO FORMULAMOS PERGUNTAS NO SIMPLE PAST, UTILIZAMOS O PASSADO DO VERBO DO - <strong>DID</strong▸ E O VERBO NA SUA FORMA <strong>ORIGINAL</strong></p><p><em>WHAT DID YOU SAY TO HIM?</em></p><p><em>WHERE DID YOU GO YESTERDAY?</em></p><p><strong>PAST FORM OF TO BE</strong></p><p><strong>I, HE, SHE, IT -▸ WAS</strong></p><p><em>I WAS REALLY TIRED YESTERDAY</em></p><p><em>HE WAS DRIKING TOO MUCH JUICE</em></p><p><strong>YOU, WE, THEY -▸ WERE</strong></p><p><em>WERE YOU TIRED YESTERDAY?</em></p><p><em>WE WERE PLAYING SOCCER!</em></p>'},{page:5,topic:'Used to',book:'Blue book',html:'<p><strong>Used to</strong></p><p>The used to structure refers to actions in the past that were often done, almost like habits. In Portuguese, it would be equivalent to "costumava".</p><p><strong>AFIRMATIVE SENTENCES</strong▸ Sujeito + used to + verb + rest</p><p><em>I used to play soccer when I was younger</em></p><p><em>She used to be very quiet in our school time</em></p><p><br><strong>NEGATIVE SENTENCES</strong▸ Sujeito + didn\'t + use to + verb + rest / Sujeito + never + used to + verb + rest</p><p><em>She didn\'t use to play video games with her brother</em></p><p><em>I never used to be talkative with strangers</em></p><p><br><strong>INTERROGATIVE SENTENCES</strong▸ Did + sujeito + use to + verb + rest</p><p><em>Did you use to eat a lot of past back in Italy?</em></p><p>-Did they use to play together in the past?_</p><p>-</p>'},{page:9,topic:'COUNT NOUNS',book:'Blue book',html:'<p><strong>COUNT NOUNS</strong></p><p>Many, few, fewer</p><p>▸ The are few cars in my city<br>▸ There should be fewer cars in the city<br>▸ There are too many people on the streets.</p><p><br><strong>NONCOUNT NOUNS</strong></p><p>Much, little, less</p><p>▸ There is much pollution here<br>▸ There should be less pollution here<br>▸ There is little noise at my house</p><p><br><strong>ENOUGH COMES BEFORE THE NOUN</strong></p><p>▸ There isn\'t enough air here<br>▸ There aren\'t enough houses on my neighborhood</p>'},{page:11,topic:'INDIRECT QUESTIONS',book:'Blue book',html:'<p><strong>INDIRECT QUESTIONS</strong></p><p>An indirect questions is when we start a sentence using a kind of an introduction.</p><p>▸ Could you tell me; Can you tell me; Do you know...</p><p><strong>Indirect question with to be</strong></p><p><em>The verb to be goes to end of the sentence</em></p><p>▸ Where is the nearest hospital?<br>▸ Do you know where the nearest hospital <strong>is</strong></p><p><br><strong>Indirect question with do</strong></p><p><em>We drop the do/does</em></p><p>▸ Where does she live?<br>▸ Do you know where she lives?</p><p><br><strong>Indirect questions with can</strong></p><p>-We invert the positions of can and the subject*</p><p>▸ Where can I find a restroom?<br>▸ Do you know where I can find a restroom?</p>'},{page:17,topic:'Evaluations & Comparisons',book:'Blue book',html:'<p><strong>Evaluations & Comparisons</strong></p><p><em>Adjective + enough & Too + adjective</em></p><p>▸ My house <strong>isn\'t big enough</strong><br>▸ My house <strong>is too big</strong></p><p><br><em>Enough + noun & Too much/many + noun</em></p><p>▸ My house has enough windows;<br>▸ There are too many cars in my city;<br>▸ There is too much noise in my city;</p><p><br><em>As + adjective + as</em></p><p>▸ My house is <strong>as big as</strong▸ your house_<br>▸ Brazil isn\'t <strong>as rich as</strong▸ the US_</p><p><br><em>As many/much + noun + as</em></p><p>▸ I have <strong>as many cars as</strong▸ you have.<br>▸ She has <strong>as much happiness as</strong▸ you.</p>'},{page:20,topic:'WISHES',book:'Blue book',html:'<p><strong>WISHES</strong></p><p>When using the wish structure in the English language, remember to use the simple past tense.</p><p>▸ To drink more coffee | I wish I drank more coffee<br>▸ To have more friends | I wish I had more friends<br>▸ Can play the guitar | I wish I could play the guitar<br>▸ To be happier | I wish I were happier<br>▸ Will go to Italy | I wish I would go to Italy<br>▸ I am talented | I wish I were talented</p><p>Remember:</p><p>▸ Will - Would<br>▸ Can - Could<br>▸ Be - Were</p>'},{page:31,topic:'SIMPLE FUTURE',book:'Blue book',html:'<p><strong>SIMPLE FUTURE</strong></p><p><strong>WILL + VERB + I GUESS/MAYBE/I THINK/PROBABLY</strong></p><p>Use will to express actions in the future that you are not so certain about or that you\'ve just decided without previous planning.</p><p>👉 <em>MAYBE I WILL GO TO CLASS TOMORROW</em></p><p>👉 <em>PROBABLY SHE\'LL COME TO MY PARTY THIS SUNDAY</em></p><p><br><strong>BE + GOING TO</strong></p><p>Use "be + going to" to express future plans in which you\'ve decided on. You are a hundred percent sure about them.</p><p>👉 <em>SHE IS GOING TO STUDY REALLY HAR FOR HER TEST! I BELIEVE IN HER</em></p><p>👉 <em>THEY ARE GOING TO MOVE! THE SITUATION IN THEIR HOUSE IS UNBEARABLE</em></p>'},{page:33,topic:'Modals are verbs used to express many different ideas, such as obligations, advice and suggestions',book:'Blue book',html:'<p><strong>Modals are verbs used to express many different ideas, such as obligations, advice and suggestions</strong></p><p><strong>SUJEITO + MODAL + VERB</strong></p><p><strong>MODALS FOR NECESSITY (MUST, HAVE TO, NEED TO, DON\'T HAVE TO)</strong></p><p><em>You must take your passport with you</em></p><p><em>You need to remember to book your flight earlier</em></p><p><strong>MODALS FOR SUGGESTIONS (HAD BETTER, OUGHT TO, SHOULD, SHOULDN\'T)</strong></p><p><em>You\'d better take your travel insurance</em></p><p><em>You ought to study more for your test</em></p>'},{page:39,topic:'REQUESTS WITH MODALS AND WOULD YOU MIND',book:'Blue book',html:'<p><strong>REQUESTS WITH MODALS AND WOULD YOU MIND</strong></p><p><strong>CAN, COULD, WOULD + SUBJECT + VERB IN THE ABSE FORM</strong></p><p><em>CAN YOU HELP ME?</em></p><p><em>COULD YOU MOVE YOUR THINGS AWAY, PLEASE?</em></p><p><strong>WOULD YOU MIND + VERB IN THE -ING</strong></p><p><em>WOULD YOU MIND HELPING ME?</em></p><p><em>WOULD YOU MIND MOVING YOUR THINGS AWAY, PLEASE?</em></p>'},{page:45,topic:'Infinitives and gerunds',book:'Blue book',html:'<p><strong>Infinitives and gerunds</strong></p><p><em>When we describe what something is used for, we can use either an infinitive structure (to + verb) or a gerund structure (for + verb + -ing). The meaning is the same in both cases</em></p><p><strong>I go to school to learn</strong▸ (Infinitive structure)</p><p><strong>I go to school for learning</strong▸ (Gerund structure)</p>'},{page:54,topic:'ADVERBIAL CLAUSE OF TIME',book:'Blue book',html:'<p><strong>ADVERBIAL CLAUSE OF TIME</strong></p><p><em>When, after & before</em></p><p><strong>When means at the same time of...</strong></p><p>▸ When we learn we develop.<br>▸ At the same time we learn we develop.</p><p><br><strong>After means at the following moment</strong></p><p>▸ After getting married, our life changes a lot.<br>▸ At the following moment we get married, our life changes a lot.</p><p></p><p><strong>Before means at the previous moment</strong></p><p>▸ Before being alone, be certain you can handle it<br>▸ At the previous moment of being alone, be certain you can handle it</p>'},{page:59,topic:'Past</strong▸ Used to; ago & in the past</p><p>▸ We used to play soccer together;<br>▸ I lived in that house 10 years ago;<br>▸ People spent a lot more time together in the past.</p><p><strong>Present</strong▸ Nowadays; These days & Today.</p><p>▸ Nowadays, everyone is busy to think about relaxing;<br>▸ These days the world has been really noisy;<br>▸ We are going to the gym today.</p><p><strong>Future</strong▸ In the future; Soon & In a few years.</p><p>▸ In the future, there will be flying cars;<br>▸ Soon, everyone will work from home;<br>▸ In a few years, we are going to be living in modern houses.</p><p><strong>MIGHT IS USED TO EXPRESS A POSSIBILITY IN THE FUTURE',book:'Blue book',html:'<p>Besides using the tenses (Simple past, present & future) it is also necessary to use some indicative expressions of time.</p><p><strong>Past</strong▸ Used to; ago & in the past</p><p>▸ We used to play soccer together;<br>▸ I lived in that house 10 years ago;<br>▸ People spent a lot more time together in the past.</p><p><strong>Present</strong▸ Nowadays; These days & Today.</p><p>▸ Nowadays, everyone is busy to think about relaxing;<br>▸ These days the world has been really noisy;<br>▸ We are going to the gym today.</p><p><strong>Future</strong▸ In the future; Soon & In a few years.</p><p>▸ In the future, there will be flying cars;<br>▸ Soon, everyone will work from home;<br>▸ In a few years, we are going to be living in modern houses.</p><p><strong>MIGHT IS USED TO EXPRESS A POSSIBILITY IN THE FUTURE</strong></p><p>▸ It might rain tomorrow;<br>▸ She might come to the party.</p>'},{page:61,topic:'Page 61',book:'Blue book',html:'<p>Possible situations in the present with future results.</p><p>Use <strong>if + simple present</strong▸ to express a possible situation at the present moment:</p><p>▸ If you find a wallet on the street;<br>▸ If you get late to class;<br>▸ If your dog eats a piece of plastic;</p><p>Use <strong>may, might, will & be able to</strong▸ for expressing the result of the action in the future.</p><p>▸ You may give it back to the owner.<br>▸ You might apologize to your teacher.<br>▸ You will need to take it to the vet.</p><p>EX.: </p><p>▸ If you get rich, you will be able to buy a car;<br>▸ If you behave badly, you might have to say sorry.</p>'},{page:65,topic:'Page 65',book:'Blue book',html:'<p>After some verbs & prepositions we have to use gerunds (-ing). For example: </p><p>▸ I <strong>enjoy</strong▸ talking to you;</p><p>▸ I <strong>love</strong▸ helping her;</p><p>▸ I <strong>avoid</strong▸ eating chocolate;</p><p>▸ I am good <strong>at</strong▸ advising people.</p><p><br>Also, in the English language, we have two specific structures to agree with positive and negative sentences:</p><p><em>Agreeing with a positive sentence: SO + AUXILIAR (DO/CAN/BE) + I</em></p><p>▸ I love chocolate; so do I.<br>▸ I am really happy today; so am I.<br>▸ I can speak English pretty well, so can I.</p><p><em>Agreeing with a negative sentence: NEITHER + AUXILIAR (DO/CAN/BE) + I</em></p><p>▸ I don\'t like chocolate; neither do I;<br>▸ I am not sad today; neither am I;<br>▸ I can\'t speak Russian; neither can I.</p>'},{page:73,topic:'THE PASSIVE VOICE WITH THE SIMPLE PAST',book:'Blue book',html:'<p><strong>THE PASSIVE VOICE WITH THE SIMPLE PAST</strong></p><p><em>The passive voice is used when the focus of the sentence is on the process, not on the person who is doing it. If you want to to state the person who is doing the action, use the preposition by.</em></p><p><strong>STRUCTURE</strong▸ OBJECT + WAS/WERE + PAST PARTICIPLE (+ BY + SUBJECT)</p><p>▸ The apple was eaten by the monkey;</p><p>▸ The building was made by the architect;</p><p>▸ The book was written by the famous writer.</p>'},{page:79,topic:'PAST CONTINUOUS',book:'Blue book',html:'<p><strong>PAST CONTINUOUS</strong></p><p>The past continuous is used to express an ongoing action in the past.</p><p><strong>STRUCTURE</strong▸ </p><p>▸ SUBJECT + WAS/WERE + VERB(ING); <br>I was drinking water.</p><p>▸ SUBJECT + WAS/WERE + NOT + VERB(ING).<br>I was not drinking water.</p><p>▸ WAS/WERE + SUBJECT + VERB(ING).<br>Was she drinking water?</p><p>OBS.: The past continuous is usually used in contrast with the simple past, to indicate that an action was interrupted.</p><p>▸ I was drinking water when the glass broke.</p><p>▸ She was playing with her brother when her mother arrived.</p>'},{page:81,topic:'PRESENT PERFECT CONTINUOUS',book:'Blue book',html:'<p><strong>PRESENT PERFECT CONTINUOUS</strong></p><p><em>The present perfect continuous is a verb tense used to express the idea of something starting in the past and continuing into the present</em></p><p>STRUCTURE:</p><p><em>SUBJECT + HAVE/HAS + BEEN + VERB (ING)</em></p><p>▸ I have been studying English for five years now;<br>▸ She has been playing soccer since she was a child.</p><p><br><em>SUBJECT + HAVE/HAS + NOT + BEEN + VERB (ING)</em></p><p>▸ I have not been going to the gym lately;<br>▸ She has not been attending her biology classes this semester.</p><p><br><em>HAVE/HAS + SUBJECT + BEEN + VERB (ING)</em></p><p>▸ Has she been studying English for how long now?<br>▸ Have you been feeling bad lately?</p>'},{page:101,topic:'SECOND CONDITIONAL',book:'Blue book',html:'<p><strong>SECOND CONDITIONAL</strong></p><p><em>The second conditional is used for unreal or hypothetical situations in the present or future. To form the second conditional, we use the simple past tense + would, could, might + base verb.</em></p><p>▸ If I were you, I would go to a different school.<br>▸ If she found a million dollars on the street, she might return it to her husband.<br>▸ If she sang better, she could be a famous singer.</p><p>REMEMBER! We use \'were\' as the past of be for all the pronouns.</p>'},{page:103,topic:'Past Modals: Should have </strong▸ Would have*</p><p><strong>Use \'You should have + past participle\' to give a suggestion in the past:',book:'Blue book',html:'<p><strong>Past Modals: Should have </strong▸ Would have*</p><p><strong>Use \'You should have + past participle\' to give a suggestion in the past:</strong><br>▸ You should have called your sister yesterday;<br>▸ She shouldn\'t have walked to her mother like that.</p><p><strong>Use \'I would have + past participle</strong▸ to give an opinion in the past*<br>▸ I would have called your sister;<br>▸ I wouldn\'t have gone to that university.</p>'},{page:107,topic:'REPORTED SPEECH WITH REQUESTS',book:'Blue book',html:'<p><strong>REPORTED SPEECH WITH REQUESTS</strong></p><p><em>Use the reported speech when you\'re talking about a third person\'s request to you or someone else</em></p><p><strong>SAID TO / TOLD ME TO / ASKED ME TO</strong></p><p>▸ Please, arrive earlier to the test - She said to arrive earlier to the test.<br>▸ Don\'t forget your wallet! - He told me not to forget my wallet.<br>▸ Clean the bathroom after dinner - They asked me to clean the bathroom after dinner.</p><p><strong>TIP</strong▸ Remember, in the negative form \'not\' is placed before \'to\'.</p>'},{page:109,topic:'REPORTED SPEECH',book:'Blue book',html:'<p><strong>REPORTED SPEECH</strong></p><p><em>In the reporte speech structure, we move the sentences one tense to the past</em></p><p>I am happy -▸ He said that he was happy<br>I play soccer -▸ He said that he played soccer<br>I am eating sugar -▸ He said that he was eating sugar<br>I will play soccer -▸ He said that he would play soccer<br>I worked yesterday -▸ He said that he had worked yesterday<br>I was an English teacher -▸ He said that he had been an English teacher<br>I can play the piano - He said that he could play the piano.</p><p><strong>RULES</strong></p><p>AM, IS, ARE - WAS/WERE<br>CAN, WILL - COULD, WOULD<br>WORK, PLAY, DO - WORKED, PLAYED, DID<br>SAW, PLAYED, LIKED - HAD SEEN, HAD PLAYED, HAD LIKED.</p><p>🔹 Present → Past</p><p>am/is/are → was/were</p><p>play → played</p><p>am eating → was eating</p><p>🔹 Past → Past Perfect</p><p>saw → had seen</p><p>worked → had worked</p><p>was → had been</p><p>🔹 Modals</p><p>will → would</p><p>can → could</p><p>may → might</p>'}],'lvl3':[{page:6,topic:'IT CLAUSES WITH WHEN',book:'Green book',html:'<p><strong>IT CLAUSES WITH WHEN</strong></p><p><strong>subject + verb + it + when + subject + verb</strong></p><p>▸ She likes it when her husband helps her<br>▸ They hate it when their boss screams at them</p><p><br><strong>It + verb + object (me, us, her...)  +  when + subject + verb</strong></p><p>▸ It annoys me when she is not polite with her friends<br>▸ It bothers her when Jhon doesn\'t help with the housework.</p>'},{page:6,topic:'IT CLAUSES',book:'Green book',html:'<p><strong>IT CLAUSES</strong></p><p><strong>IT + VERB + ME + WHEN...</strong><br>▸ It makes me happy when my friends help me;<br>▸ It upsets me when she screams at me;<br>▸ It irritates me when the room is messy.</p><p><strong>I + VERB + IT + WHEN...</strong><br>▸ I hate it when people are rude;<br>▸ I find it funny when I see people running;<br>: I can\'t stand when people are unfair.</p>'},{page:9,topic:'The verb is the subject of the sentence',book:'Green book',html:'<p><em>Gerunds are formed by placing -ing at the end of a verb. We use gerunds when:</em></p><p><strong>The verb is the subject of the sentence</strong></p><p>▸ Working as a teacher might be stressing;<br>▸ Being tired everyday is concerning;<br>▸ Having too much to do is tiring.</p><p><strong>After prepositions</strong></p><p>▸ He is good at playing golf;<br>▸ He never plays after having a shower;<br>▸ He never eats before praying.</p><p><strong>After the verbs love, enjoy, avoid, like...</strong></p><p>▸ He enjoyed talking to you;<br>▸ She avoids eating chocolate on weekends;<br>▸ They like being alone.</p>'},{page:11,topic:'Page 11',book:'Green book',html:'<p>COMPARISONS:</p><p>WITH ADJECTIVES (QUALITIES)</p><p>▸ She is as beautiful as him.</p><p>▸ She isn\'t as beautiful as him.</p><p>▸ She is more/less beautiful than him.</p><p>WITH VERBS (ACTIONS)</p><p>▸ She plays more/less than him.</p><p>▸ She plays as much as him.</p><p>▸ She doesn\'t play as much as him.</p><p>WITH NOUNS (THINGS WE HAVE)</p><p>▸ She has a/an better/worse job than him.</p><p>WITH PAST PARTICIPLES (VERBS IN THE PAST)</p><p>▸ His job is as well seen as mine.</p><p>▸ Her job isn\'t as well seen as mine.</p><p>▸ Her job is more/less well seen than mine.</p>'},{page:20,topic:'Indirect requests',book:'Green book',html:'<p><strong>Indirect requests</strong></p><p><em>We use indirect requests when we want someone to pass on a message to a third person</em></p><p>1. Statements (information)</p><p><strong>Can/Could you tell + (the person) + (that) + message</strong></p><p>▸ Can you tell Lucas (that) he forgot his shit;<br>▸ Could you tell Ana (that) she will be late to class.</p><p>2. Imperatives (Requests or orders)</p><p><strong>Can/Could you tell + (the person) + (not) + to + message</strong></p><p>▸ Can you tell Marco to bring me my shirt;<br>▸ Could you ask Maria not to open the windows.</p><p>3. Yes/no questions</p><p><strong>Can/could you ask + (the person) + if/whether + subject + verb</strong></p><p>▸ Can you ask Maria if she can play the guitar?<br>▸ Could you ask Lucas if he will help me?<br>▸ Could you ask Dana if she cooks well?</p><p>4. Wh-questions</p><p><strong>Can/could you ask + (the person) + wh-word + subject + verb</strong></p><p>▸ Can you ask Maria where she studies?<br>▸ Can you ask Paulo how he can play the guitar?<br>▸ Could you ask Pedro where he will move to?</p>'},{page:23,topic:'PAST CONTINUOUS',book:'Green book',html:'<p><strong>PAST CONTINUOUS</strong></p><p>The past continuous is used to express an ongoing action in the past.</p><p><strong>STRUCTURE</strong▸ </p><p>▸ SUBJECT + WAS/WERE + VERB(ING); <br>I was drinking water.</p><p>▸ SUBJECT + WAS/WERE + NOT + VERB(ING).<br>I was not drinking water.</p><p>▸ WAS/WERE + SUBJECT + VERB(ING).<br>Was she drinking water?</p><p>OBS.: The past continuous is usually used in contrast with the simple past, to indicate that an action was interrupted.</p><p>▸ I was drinking water when the glass broke.</p><p>▸ She was playing with her brother when her mother arrived.</p>'},{page:25,topic:'THE PAST PERFECT',book:'Green book',html:'<p><strong>THE PAST PERFECT</strong></p><p>The Past Perfect Tense is used to express that an action happened before another action in the past, which means that it is always used in contras with the Simple Past:</p><p>STRUCTURE: I, YOU, HE...+ HAD/HADN\'T + PAST PARTICIPLE</p><p>▸ Before I started doing my homework, I had had a terrible headache;</p><p>▸ When she opened the car she remembered that she hadn\'t brushed her teeth that morning;</p><p>▸ When he opened the door he remembered that he had worked there before.</p><p>▸ When I opened my book, someone had torn it up.</p>'},{page:39,topic:'DESCRIBING PROBLEMS',book:'Green book',html:'<p><strong>DESCRIBING PROBLEMS</strong></p><p><br><strong>Need + verb (-ing)</strong><br>▸ The house needs cleaning;<br>▸ The bathroom needs washing;<br>▸ The sink needs fixing.</p><p><strong>Need + to be + past participle</strong><br>▸ The book needs to be written;<br>▸ The car needs to be fixed;<br>▸ The house needs to be cleaned.</p><p><strong>Keep + verb (-ing)</strong▸ Refere-se a um problema recorrente.<br>▸ The sink keeps leaking;<br>▸ The car keeps making noise;<br>▸ The glass keeps breaking.</p>'},{page:45,topic:'PASSIVE WITH THE CONTINUOUS AND PERFECT TENSE',book:'Green book',html:'<p><strong>PASSIVE WITH THE CONTINUOUS AND PERFECT TENSE</strong></p><p><em>The passive voice is used to give emphasis to the action, not to who is doing it.</em></p><p><strong>PASSIVE WITH THE CONTINUOUS TENSE</strong▸ Emphasizes an action happening at the moment.</p><p>SUBJECT + IS/ARE + BEING + PAST PARTICIPLE</p><p>▸ Many people are being influenced by the internet.<br>▸ Many rivers are being polluted due to industrial action.<br>▸ My friends are being fooled by the dishonest landlord. </p><p><br><strong>PASSIVE WITH THE perfect TENSE</strong▸ Emphasizes an action that has being recently finished.</p><p>SUBJECT + HAVE/HAS + BEEN + PAST PARTICIPLE</p><p>▸ My has been changed due to that man\'s advice.<br>▸ The planet has been contaminated as a result of human actions.</p>'},{page:47,topic:'INFINITIVES',book:'Green book',html:'<p><strong>INFINITIVES</strong></p><p>_The infinitive is the \'original\' form of the verb. In English, the infinite is created by placing \'to\' before the verb.</p><p>(One way/Another way/The best way) + infinitive + is/are + infinitive</p><p>▸ The best way <strong>to save</strong▸ the world <strong>is to raise people\'s awareness</strong>;<br>▸ Another way <strong>to be</strong▸ a successful businessman <strong>is to take</strong▸ a marketing course;</p>'},{page:51,topic:'WOULD RATHER & WOULD PREFER',book:'Green book',html:'<p><strong>WOULD RATHER & WOULD PREFER</strong></p><p><em>would rather and would prefer mean the same thing. Both are used with choices.</em></p><p><strong>would rather + (not) + base form of verb</strong><br>▸ I would rather be a teacher;<br>▸ I would rather play soccer after class;<br>▸ I would rather see the Star Wars movie.</p><p><strong>would prefer + (not) + to + verb</strong><br>▸ I would prefer to be a teacher;<br>▸ I would prefer to play soccer after class;<br>▸ I would prefer to see the Star Wars Movie.</p><p><br>▸ WOULD + YOU + RATHER + VERB?<br>▸ WOULD + YOU + PREFER + TO + VERB?</p>'},{page:59,topic:'GET OR HAVE SOMETHING DONE',book:'Green book',html:'<p><strong>GET OR HAVE SOMETHING DONE</strong></p><p><strong>When another person is doing something for someone, we use the following structure</strong></p><p><em>have/get + object + past participle (at/by)</em></p><p><em>He is fixing his computer - He is having his computer fixed by an IT worker</em></p><p><em>He cleaned his house -▸ He had his house cleaned by his mother</em></p><p><em>He do the dishes everyday -▸ He has the dishes done everyday by his little brother</em></p>'},{page:65,topic:'Referring to time in the past',book:'Green book',html:'<p><strong>Referring to time in the past</strong></p><p><strong>During & in</strong▸ Used to refer to a specific point in the past:</p><p><em>During 2022, the world was going through a tough period</em><br><em>In 2022, the world was going through a tough period</em></p><p><br><strong>Ago</strong▸ Is used to express how many year have passed:</p><p><em>25 years <strong>ago</strong>, my city was totally different from now</em><br><em>I got married 5 years ago</em></p><p><br><strong>From...to...</strong▸ Used to talk about a period of time:</p><p><em>From 1998 to 1999, rock was in its best moment</em><br><em>I worked for that company <strong>from</strong▸ 2002 <strong>to</strong▸ 2004</em></p><p><br><strong>Since</strong▸ Used to give a starting point in the past:</p><p><em>We have been married since 2010</em><br><em>I\'ve worked as salesperson since my twenties</em></p><p><br><strong>For</strong▸ Is used to talk about a full period of time:</p><p><em>I have live in São Paulo for ten years</em><br><em>I\'ve been studying English for five months</em></p>'},{page:67,topic:'will',book:'Green book',html:'<p>Making predictions using the modal verb <strong>will</strong></p><p>Use <strong>Will + base verb</strong▸ to make a simple prediction about the future:</p><p>▸ In the future, I will work at a different company;<br>▸ In a few years, humans will live for 150 years.</p><p>Use <strong>Will + be + verb (-ing)</strong▸ to make predictions of ongoing actions in the future:</p><p>▸ Soon, we will be working in different countries;<br>▸ In the future, humans will be using flying cars.</p><p>Use <strong>Will + have + past participle</strong▸ for actions that will be finished within a certain period of time.</p><p>▸ By 2100, humans will have acchieved many scientific discoveries.</p><p>▸ In 10 years, we will have finished our cycle at this company.</p>'},{page:73,topic:'TIME CLAUSES',book:'Green book',html:'<p><strong>TIME CLAUSES</strong></p><p><em>Use before, until & by the time with the past perfect tense to express actions that happened before another actions in the past</em></p><p>▸ Until I spoke with her, I had never heard such a beautiful voice.</p><p>▸ By the time I arrived home, my wife had already cooked dinner.</p><p>▸ Before her mother called her, she had already washed the dishes.</p><p><em>Use once, the moment & as soon as to talk about an action that happened at the same time of another action in the past</em></p><p>▸ The moment she looked at my, I fell in love;</p><p>▸ As soon as I arrived home, my dog barked at me;</p><p>▸ Once she started working as a teacher, she felt whole for the first time in her life.</p>'},{page:75,topic:'Modal verbs with the Past Tense',book:'Green book',html:'<p><strong>Modal verbs with the Past Tense</strong></p><p><strong>Use Should/Shouldn\'t + have + past participle to express regret about something or someone</strong></p><p>▸ I should have worked more in my younger years;<br>▸ I should have practiced more sports while I could;<br>▸ I shouldn\'t have spoken to her that way, I was rude.</p><p><strong>Use Would/Wouldn\'t + have + past participle to express a hypothetical outcome to an imaginary situation.</strong></p><p>▸ I should have been a better student, this way I would have got a better job;<br>▸ If she had listened to her husband, she wouldn\'t have had so many problems;<br>▸ If I had worked out more, I would have become a fit guy.</p><p><strong>Use Could/Couldn\'t + have + past participle to express a possible outcomes to certain situations</strong></p><p>▸ She could have won the contest!<br>▸ They could have been friends, they were so alike!</p>'},{page:79,topic:'SENTENCES USING INFINITIVES & FOR TO EXPRESS PURPOSE',book:'Green book',html:'<p><strong>SENTENCES USING INFINITIVES & FOR TO EXPRESS PURPOSE</strong></p><p><em>(In order) + to + verb</em><br>▸ In order to be fluent in English, you should study every day.<br>▸ In order to read a big book, you must start by the smaller ones.</p><p><em>(In order) + for + noun + to + verb</em><br>▸ In order for a company to be big, it must invest in its employees.<br>▸ In order for a person to speak well, they must focus on reading out loud.</p>'},{page:81,topic:'GIVING REASONS',book:'Green book',html:'<p><strong>GIVING REASONS</strong></p><p><strong>1. Because and since.</strong></p><p><em>Both mean the same and are followed by a subject + verb</em></p><p>▸ She is happy because \\\\\\<strong>\\</strong>\\<strong>the ocean is\\</strong>\\<strong>\\\\\\</strong▸ calmer today.<br>▸ You are going to be promoted since \\\\\\<strong>\\</strong>\\<strong>you delivered\\</strong>\\<strong>\\\\\\</strong▸ the reports on time.<br>▸ I will help you \\<strong>\\</strong>since/because\\<strong>\\</strong▸ you read the book.<br>▸ It will be time-consuming \\<strong>\\</strong>because/since\\<strong>\\</strong▸ it is difficult</p><p><strong>2. Because of & due to.</strong></p><p><em>Both have the same meaning, but \'due to\' is commonly used for negative contexts. Both are followed by a noun (object or name)</em></p><p>▸ Due to the \\<strong>\\</strong>bad weather\\<strong>\\</strong>, we cannot go.<br>▸ She is tired because of \\<strong>\\</strong>the training session\\<strong>\\</strong>.<br>▸ Due to \\<strong>\\</strong>the loud noise\\<strong>\\</strong▸ I can\'t hear you.<br>▸ I am sad because of the \\<strong>\\</strong>bad food\\<strong>\\</strong>.</p><p><strong>3. The reason that/why ... is ... </strong></p><p><em>It is used to create a polite sentence</em></p><p>▸ \\\\\\<strong>The reason that/why\\\\\\</strong▸ most people don\'t eat here \\\\\\<strong>is\\\\\\</strong▸ the bad service.<br>▸ The difficult course program \\\\\\<strong>is the reason that/why\\\\\\</strong▸ there aren\'t many students.<br>▸ The reason why/that I don\'t go to parties is the noise.<br>▸ The hot weather is the reason that/why I don\'t go to the beach</p><p>Três frases utilizando Because, since, because of, due to & the reason why/that</p>'},{page:101,topic:'MODAL + BE + PAST PARTICIPLE',book:'Green book',html:'<p><strong>MODAL + BE + PAST PARTICIPLE</strong></p><p> 1.  We use should and ought to when we think <br>something is a good idea.</p><p><em>Teachers should be respected</em><br><em>Funkeiros ought to be prohibited from playing loud music</em><br><em>Students should not be late for class</em></p><p> 2.  We use must and have (got) to when we think <br>something is absolutely necessary. Note: It may <br>even be a law.</p><p><em>The world must be taken care of by us</em><br><em>Schools have to be administered better</em></p>'},{page:103,topic:'TAG QUESTIONS -▸ THEY ARE USED WHEN WE WANT TO HAVE SOMEONE ELSE\'S CONFIRMATION AND OPINION. IT IS EQUIVALENT TO "NÉ" OR "NÃO É?" IN PORTUGUESE',book:'Green book',html:'<p><strong>TAG QUESTIONS -▸ THEY ARE USED WHEN WE WANT TO HAVE SOMEONE ELSE\'S CONFIRMATION AND OPINION. IT IS EQUIVALENT TO "NÉ" OR "NÃO É?" IN PORTUGUESE</strong></p><p><em>NOTE: WHEN USING TAG QUESTIONS, IT IS ESSENTIAL TO INVERT THE SENTENCE. IF THE SENTENCE IS AFFIRMATIVE, THE TAG QUESTION MUST BE NEGATIVE, AND IF THE SENTENCE IS NEGATIVE, THE TAG QUESTION HAS TO BE AFFIRMATIVE</em></p><p><br><strong>SENTENCES WITH TO BE:</strong></p><p>SHE <strong>IS</strong▸ A NICE TEACHER" <strong>ISN\'T SHE?</strong></p><p>YOU <strong>ARE NOT</strong▸ REALLY HAPPY TODAY! <strong>ARE YOU?</strong></p><p></p><p><strong>SENTENCES WITH MODALS:</strong></p><p>THEY SHOULD BE MORE POLITE! SHOULDN\'T THEY?</p><p>YOU <strong>CAN\'T</strong▸ SING! <strong>CAN YOU?</strong></p><p></p><p><strong>WITH THE SIMPLE PRESENT</strong▸ USE THE AUXILIAR "DO, DOES"</p><p>SHE TEACHES ENGLISH, <strong>DOESN\'T SHE?</strong></p><p>YOU DON\'T LIKE PIZZA, <strong>DO YOU</strong></p><p></p><p><strong>WITH THE SIMPLE PAST</strong▸ USE THE AUXILIAR "DID"</p><p>SHE FOUND A NEW JOB! <strong>DIDN\'T SHE</strong></p><p>SHE DIDN\'T PASS THE EXAM! <strong>DID SHE?</strong></p>'},{page:107,topic:'Talking about accomplishments using the simple past & present perfect',book:'Green book',html:'<p><strong>Talking about accomplishments using the simple past & present perfect</strong></p><p><em>To talk about some accomplishments in the past, use the verbs "to manage" & "to be able to"</em></p><p><strong>With a definite time in the past use the simple past</strong></p><p>▸ I managed to finish high school last year;<br>▸ She didn\'t manage to pass her exams last semester;<br>: She was able to buy her firs car this year.</p><p><strong>With an indefinite time use the present perfect</strong></p><p>▸ I have managed to finish high school;<br>▸ She hasn\'t managed to pass her exams;<br>▸ She has been able to buy her first car.</p>'},{page:108,topic:'TAG QUESTIONS -▸ THEY ARE USED WHEN WE WANT TO HAVE SOMEONE ELSE CONFIRMATION AND OPINION. IT IS EQUIVALENT TO "NÉ" OR "NÃO É?" IN PORTUGUESE',book:'Green book',html:'<p><strong>TAG QUESTIONS -▸ THEY ARE USED WHEN WE WANT TO HAVE SOMEONE ELSE CONFIRMATION AND OPINION. IT IS EQUIVALENT TO "NÉ" OR "NÃO É?" IN PORTUGUESE</strong></p><p><em>NOTE: WHEN UTILISING TAG QUESTIONS, IT IS ESSENTIAL TO REVERSE THE SENTENCE. IF THE SENTENCE IS AFFIRMATIVE, THE TAG QUESTION SHOULD BE NEGATIVE, AND IF THE SENTENCE IS NEGATIVE, THE TAG QUESTION SHOULD BE AFFIRMATIVE</em></p><p><br><strong>SENTENCES WITH TO BE:</strong></p><p>SHE <strong>IS</strong▸ A NICE TEACHER" <strong>ISN\'T SHE?</strong></p><p>YOU <strong>ARE NOT</strong▸ REALLY HAPPY TODAY! <strong>ARE YOU?</strong></p><p></p><p><strong>SENTENCES WITH MODALS:</strong></p><p>THEY SHOULD BE MORE POLITE! SHOULDN\'T THEY?</p><p>YOU <strong>CAN\'T</strong▸ SING! <strong>CAN YOU?</strong></p><p></p><p><strong>WITH THE SIMPLE PRESENT</strong▸ USE THE AUXILIAR "DO, DOES"</p><p>SHE TEACHES ENGLISH, <strong>DOESN\'T SHE?</strong></p><p>YOU DON\'T LIKE PIZZA, <strong>DO YOU</strong></p><p></p><p><strong>WITH THE SIMPLE PAST</strong▸ USE THE AUXILIAR "DID"</p><p>SHE FOUND A NEW JOB! <strong>DIDN\'T SHE</strong></p><p>SHE DIDN\'T PASS THE EXAM! <strong>DID SHE?</strong></p>'}],'passages1':[{page:11,topic:'Page 11',book:'Passages 1',html:'<p><strong>SHOULD HAVE</strong▸ DEVERIA TER FEITO</p><p><strong>WAS SUPPOSED TO</strong▸ ERA ESPERADO QUE</p><p><strong>HAD TO</strong▸ TINHA QUE (OBRIGAÇÃO)</p><p><strong>DIDN\'T HAVE TO</strong▸ NÃO TINHA QUE (NÃO HAVIA OBRIGAÇÃO)</p><p><strong>I THOUGHT I NEEDED TO</strong▸ (ACHEI QUE PRECISAVA)</p>'},{page:15,topic:'Modals (or modal auxiliaries) express many different meanings or moods.',book:'Passages 1',html:'<p><strong>Modals (or modal auxiliaries) express many different meanings or moods.</strong></p><p>Modals can express degrees of certainty</p><p>What\'s that noise?</p><p>it must be the phone. (almost 100% sure)</p><p>It might / could be the phone. (less than 50% sure)</p><p><strong>Modals can also express obligation, advice, or opinions</strong></p><p><em>You must be on time for the interview. (obligation)</em></p><p><em>it\'s very cold. You should wear a hat. (advice)</em></p><p><em>Everyone should visit Paris once in their life. (opinion)</em></p><p>OBS.: Modals in the present tense are followed by the base form of the verb</p><p>OBS.: Modals + (not) + have + past participle is used to talk about the past.</p><p><em>You keep sneezing You must have caught a cold.</em></p><p><em>You don\'t look well You could have caught a cold.</em></p><p><em>You have a cold. You should take some medicine.</em></p><p><em>You have a cold, but you shouldn\'t take medicine. You should just drink hot tea.</em></p>'},{page:29,topic:'Time clauses with (right) after, (right) before, and while can be reduced, but only when the subject of the time clause and the main clause is the same.',book:'Passages 1',html:'<p><strong>Time clauses with (right) after, (right) before, and while can be reduced, but only when the subject of the time clause and the main clause is the same.</strong></p><p>OBS.: When reducing a time clause, remember to add -ing to the main verb.</p><p><em>While I eat past, I like to drink coke.</em><br><em>While <strong>eating</strong▸ pasta, I like to drink coke.</em></p>'},{page:33,topic:'CLAUSES STATING CAUSING AND CONDITIONS',book:'Passages 1',html:'<p><strong>CLAUSES STATING CAUSING AND CONDITIONS</strong></p><p><strong>Even if</strong▸ Introduces a conditions that doesn\'t affect the main sentence</p><p><em>She is always happy, even if her day is going terrible</em></p><p><br><strong>Considering that</strong▸ Introduces something that explains the main sentence.</p><p>_He is really tired, considering that he worked a lot-</p><p><em>She is always on time, considering that she comes to work by car</em></p><p><br><strong>As long as</strong▸ Introduces something in which the main sentence depends</p><p><em>As long as I study a lot, I will pass the test (Passing the test depends on studying a lot)</em></p><p><em>She is always on time, as long as she is not stuck at the traffic</em></p><p><br><strong>Unless</strong▸ Introduces an idea that must happen in order to avoid a consequence.</p><p><em>Unless i get a good night of sleep, i won\'t wake up happy</em▸ (To avoid waking up bad, he needs a good night of sleep)_</p><p><em>Unless my mom has cooked me lunch, I will be hungry the entire afternoon (If his mother hasn\'t cooked him lunch, he\'ll be hungry)</em></p><p><br><strong>Just in case</strong▸ Introduces a bad event that must be taken care of.</p><p><em>Just in case I fail the test, I am going to clean the entire house for my mother</em></p><p><em>I\'ll study, just in case tomorrow\'s class is to difficult</em></p>'},{page:37,topic:'INFINITE AND GERUND PHRASES',book:'Passages 1',html:'<p><strong>INFINITE AND GERUND PHRASES</strong></p><p><strong>IT + BE + ADJECTIVE + INFINITIVE PHRASES</strong></p><p>👉 <em>It is unpolite to ask for money from people you are not close to</em></p><p>👉 -It is a good idea to take medications when you are felling sick_</p><p>*ALL THE SENTECES ABOVE CAN BE SHIFTED TO A GERUND PHRASE (-ING), JUST PUT THE VERB IN THE -ING AT THE BEGGINING OF THE SENTENCE.</p><p>👉 <em>Asking for money from people you are not close to is unpolite</em></p><p>👉 <em>Taking medications when you are felling sick is a good idea</em></p>'},{page:41,topic:'Simple present - Simple Past',book:'Passages 1',html:'<p>The statement changes to a tense one step in the past:</p><p><strong>Simple present - Simple Past</strong><br><em>I work everyday - he said (that) he worked everyday</em></p><p><strong>Present Continuous - Past continuous</strong><br><em>I am eating a sandwich - He said (that) he was eating a sandwich</em></p><p><strong>Simple Past - Past Perfect</strong><br><em>I drank a lot of water - He said (that) he had drunken a lot of water</em></p><p><strong>Past Continuous - Past Perfect Continuous</strong><br><em>I was calling him - He said (that) he had been calling him</em></p><p><strong>1 OBS.: IN GENERAL TRUTHS, THERE IS NO CHANGE ON THE VERB TENSE</strong></p><p><em>Water boils at one hundred degrees - He said (that) water boils at one hundred degrees.</em></p><p><strong>2 OBS.: In questions, replace do/does with if.</strong></p><p><em>Does he drink a lot of water? - I asked if he drank a lot of water</em></p>'},{page:45,topic:'USE THE SIMPLE PAST WHEN TALKING OF A DEFINITE TIME IN THE PAST',book:'Passages 1',html:'<p><strong>USE THE SIMPLE PAST WHEN TALKING OF A DEFINITE TIME IN THE PAST</strong></p><p><em>I STARTED WORKING AS A LAWYER LAST YEAR</em><br><em>MY MOM YELLED AT MT TODAY</em></p><p><strong>USE THE PRESENT PERFECT WHEN TALKING ABOUT AN EVENT WITHOUT TIME REFERENCES</strong▸ I, YOU, HE, SHE... + HAVE/HAS + PAST PARTICIPLE</p><p><em>I HAVE STARTED TO WORK AS A LAWYER</em><br><em>MY MOM HAS YELLED AT ME</em></p><p><strong>THE PRESENT PERFECT CONTINUOUS IS USED TO TALK ABOUT TEMPORARY SITUATIONS OR ACTIONS THAT ARE NOT YET COMPLETED</strong▸ I, YOU, HE, SHE... + HAVE/HAS + BEEN + VERB (ING)</p><p><em>MY FRIEND HAS BEEN WORKING AS A TEACHER FOR A LONG TIME</em><br><em>I HAVE BEEN TRYING TO FIX THIS PROBLEM ALL DAY</em></p><p><strong>THE PRESENT PERFECTS IS USED TO TALK ABOUT RECENTLY COMPLETED ACTIONS</strong></p><p><em>I\'VE JUST GOT MY FIRST JOB!</em><br><em>I\'VE ALREADY COOKED DINNER</em></p>'},{page:49,topic:'INDICAM AÇÕES QUE OCORREM DEPOIS DE OUTRAS',book:'Passages 1',html:'<p><strong>INDICAM AÇÕES QUE OCORREM DEPOIS DE OUTRAS</strong></p><p><strong>Afterward, Later, The next day + Simple Past Verb</strong></p><p><em>I was going home. Afterward, I fell into a bush</em></p><p><br><strong>INDICAM AÇÕES QUE OCORREM AO MESMO TEMPO DE OUTRAS</strong></p><p><strong>When, as soon as, the moment I got + Simple Past Verb</strong></p><p><em>When I arrived home, my mom called me</em></p><p></p><p><strong>INDICAM AÇÕES QUE OCORREM ANTES DE OUTRAS</strong></p><p><strong>Up until them, Before that, Until that time + Past Perfect Verb</strong></p><p><em>Before that, I had never eaten a good rice</em></p>'},{page:55,topic:'PASSIVE VOICE',book:'Passages 1',html:'<p><strong>PASSIVE VOICE</strong></p><p><strong>The passive voice is used when the subject of the sentence, the person who does the action, is not relevant</strong></p><p><br><strong>PRESENT CONTINOUS PASSIVE</strong▸ Ongoing actions.</p><p>SUJEITO + TO BE + BEING + PAST PARTICIPLE</p><p><em>Several medications are being made recently</em></p><p><em>He is being hired to help the team</em></p><p><br><strong>PRESENT PERFECT PASSIVE</strong▸ Recently completed actions</p><p>SUJEITO + HAVE BEEN + PAST PARTICIPLE</p><p><em>Many trees have been cut recently</em></p><p><em>Many digital books have been produced in the last year</em></p><p><br><strong>WILL OR BE GOING TO PASSIVE</strong▸ Actions that will begin in the future</p><p>WILL + BE + PAST PARTICIPLE / TO BE + GOING TO BE + PAST PARTICIPLE</p><p><em>They will be taken to prison if they keep making crimes</em></p><p><em>They are going to be taken to prison if they keep making crimes</em></p>'},{page:59,topic:'TAG QUESTIONS -▸ THEY ARE USED WHEN WE WANT TO HAVE SOMEONE ELSE CONFIRMATION AND OPINION. IT IS EQUIVALENT TO "NÉ" OR "NÃO É?" IN PORTUGUESE',book:'Passages 1',html:'<p><strong>TAG QUESTIONS -▸ THEY ARE USED WHEN WE WANT TO HAVE SOMEONE ELSE CONFIRMATION AND OPINION. IT IS EQUIVALENT TO "NÉ" OR "NÃO É?" IN PORTUGUESE</strong></p><p><em>NOTE: WHEN USING TAG QUESTIONS, IT IS ESSENTIAL TO REVERSE THE SENTENCE. IF THE SENTENCE IS AFFIRMATIVE, THE TAG QUESTION SHOULD BE NEGATIVE, AND IF THE SENTENCE IS NEGATIVE, THE TAG QUESTION SHOULD BE AFFIRMATIVE</em></p><p><br><strong>SENTENCES WITH TO BE:</strong></p><p>SHE <strong>IS</strong▸ A NICE TEACHER" <strong>ISN\'T SHE?</strong></p><p>YOU <strong>ARE NOT</strong▸ REALLY HAPPY TODAY! <strong>ARE YOU?</strong></p><p></p><p><strong>SENTENCES WITH MODALS:</strong></p><p>THEY SHOULD BE MORE POLITE! SHOULDN\'T THEY?</p><p>YOU <strong>CAN\'T</strong▸ SING! <strong>CAN YOU?</strong></p><p></p><p><strong>WITH THE SIMPLE PRESENT</strong▸ USE THE AUXILIAR "DO, DOES"</p><p>SHE TEACHES ENGLISH, <strong>DOESN\'T SHE?</strong></p><p>YOU DON\'T LIKE PIZZA, <strong>DO YOU</strong></p><p></p><p><strong>WITH THE SIMPLE PAST</strong▸ USE THE AUXILIAR "DID"</p><p>SHE FOUND A NEW JOB! <strong>DIDN\'T SHE</strong></p><p>SHE DIDN\'T PASS THE EXAM! <strong>DID SHE?</strong></p>'},{page:63,topic:'REDUCED RELATIVE CLAUSES',book:'Passages 1',html:'<p><strong>REDUCED RELATIVE CLAUSES</strong></p><p>Relative clauses often begin with a relative pronoun (Who, that, etc). In most cases, these pronouns can be reduced following certain rules:</p><p><strong>In sentences with relative pronoun + to be, drop both.</strong></p><p><em>A person who is able to face all the troubles in life is a happy one</em></p><p><em>A person able to face all the troubles in life is a happy one</em></p><p></p><p><strong>You can also drop the relative pronoun and change the verb to a gerund one</strong></p><p><em>A man that thinks he is strong, knows nothing about force</em></p><p><em>A man thinking he is strong, knows nothing about force</em></p><p></p><p><strong>Replace the verb have using with</strong></p><p><em>A doctor who has many years of experience is a trustworthy one</em></p><p><em>A doctor with many years of experience is a trustworthy one</em></p>'},{page:71,topic:'CONTRAST AND EXCEPTION',book:'Passages 1',html:'<p><strong>CONTRAST AND EXCEPTION</strong></p><p>Begin a sentence with while, unlike, or in contrast to to indicate a contrast between two clauses. (Use commas to separate them)</p><p>▸ Unlike most Brazilians, I am not a big fan of soccer;</p><p>▸ While most people at my class like math, I prefer literature;</p><p>▸ In contrast to the majority of my family, I don\'t like big parties.</p><p><br>Use except that; except for & except for the fact that to create an exception meaning between two clauses. (Use commas to separate them)</p><p>▸ I study everyday, except for days when I am sick;</p><p>▸ My mothers loves to cook, except for the fact that she needs to be in the mood to do so.</p>'},{page:75,topic:'Referring to past habits & states',book:'Passages 1',html:'<p><strong>Referring to past habits & states</strong></p><p><strong>Used to</strong>+ Is used for past habits and states that are no longer true. It works with both action and stative verbs.</p><p>▸ I used to watch cartoons every Saturday morning.<br>▸ She used to have very long hair.</p><p><strong>Would</strong▸ Is used only for repeated past actions (habits), often to sound nostalgic.</p><p><strong>Important: Would cannot be used with stative verbs (verbs that describe a condition or state, not an action).</strong></p><p>▸ Every holiday, my family would travel to the countryside.<br>▸ He would always bring me flowers on my birthday.</p><p><strong>Stative Verbs List</strong><br>A short list of common stative verbs includes:</p><p>▸ love, hate, like, want, need</p><p>▸ have, own, belong</p><p>▸ seem, look, sound</p><p>▸ believe, know, understand, remember</p><p>▸ be, live, exist</p><p>Example:<br>▸ Incorrect: I would live in that small town.<br>▸ Correct: I used to live in that small town.</p>'},{page:81,topic:'COMPLAINING & RELATIVE PRONOUNS IN ENGLISH',book:'Passages 1',html:'<p><strong>COMPLAINING & RELATIVE PRONOUNS IN ENGLISH</strong></p><p><strong>USING THE PRONOUN \'ME\'</strong></p><p><em>Whenever you use \'me\' as part of a complain in English, remember to use the relative pronoun \'that\'.</em></p><p>▸ Something that irritates me is people who/that are rude to servers.<br>▸ One thing that bugs me is the traffic jam.<br>▸ Two thing that make me fell sad are the economical & social situation of that country.</p><p><em>But, when you use \'I\' the relative pronoun \'that\' is optional.</em></p><p>▸ The restaurant (that) I was in was very dirty.<br>▸ Something (that) I hate is the traffic jam.<br>▸ One thing (that) I can\'t stand is people who/that chew out loud.</p><p>Remember!</p><p>THAT - Can be used for people & thigs.<br>WHO - Used only for people.<br>WHICH - Used only for things.<br>WHEN - Used for events or situations.</p>'},{page:85,topic:'Page 85',book:'Passages 1',html:'<p>🔹 Indirect Questions — perguntas indiretas</p><p>Usamos indirect questions para soar mais educado ou mais formal.<br>Elas não invertem o verbo e o sujeito, como as perguntas diretas.<br>Geralmente começam com frases como:<br>👉 I wonder…, Could you tell me…, Do you know…, Is beyond me…</p><p>🗣 Estrutura</p><p>Direta: auxiliar + sujeito + verbo<br>Indireta: sujeito + verbo (ordem de afirmação)</p><p>❌ Why can you play the guitar?<br>✅ I wonder why <strong>you can</strong▸ play the guitar.<br>✅ Why <strong>you can</strong▸ play the guitar is beyond me.</p><p>❓Com perguntas sem WH- (yes/no questions)</p><p>Se a pergunta começa com do/does/did/will, usamos if ou whether. Se o auxiliar for do/does ou did, remova-os.</p><p>❌ Do you like chocolate?<br>✅ I wonder if/whether you like chocolate.</p><p>❌ Will you help me?<br>✅ Could you tell me whether you will help me?</p>'},{page:88,topic:'Page 88',book:'Passages 1',html:'<p>Relative clauses are sentences used to give more information about a person/noun. (Who, that, where)</p><p>▸ My friend is someone who likes to play videogame;</p><p>▸ I hate people that cannot help one another;</p><p>▸ She lives with people who are really annoying;</p><p>▸ My job has many people who are always absent.</p><p>OBS.: When the relative clause referes to the subject of the sentence, it cannot be omitted.</p><p><br>Noun clauses are used to give more information about a verb or adjective (They are used as object of the verb) and more commonly are started with the relative pronoun \'when\'.</p><p>▸ It bothers me when a friend doesn\'t help me when I need (The relative clause is giving more information about the verb \'bother\').</p><p>▸ The thing I hate is when people offend one another (It is giving more information about the verb \'hate\').</p><p>▸ It is really hard when someone is mean to us; (It is giving more information about the adjective \'hard\').</p><p>▸ She gets really stressed when her parents scream at her. (It is giving more information about the phrase \'gets stressed\');</p>'},{page:89,topic:'PRESENT UNREAL CONDITIONALS',book:'Passages 1',html:'<p><strong>PRESENT UNREAL CONDITIONALS</strong></p><p>_The subjunctive is a verb mood used to talk about hypothetical situations. To use it correctly it is important to replace some structures we normally use:</p><p>▸ Replace the different conjugations of the verb to be for \'were\'<br>▸ Replace \'will\' with \'would\'.</p><p><strong>Unless</strong></p><p><em>It is used to express a condition that would change the speakers decision</em></p><p>▸ I would go to the gym unless it were raining really strongly.<br>▸ She would go out you unless her parents said no.</p><p><br><strong>Only if</strong></p><p><em>It is used when a condition needs to be met in order for certain situation to happen</em></p><p>▸ I would play with you only if you knew how to play soccer;<br>▸ They would eat the pizza only if it had no cheese.</p><p><br><strong>Even if</strong></p><p><em>Represents a very contrary situation that wouldn\'t impact the speakers decision</em></p><p>▸ I wouldn\'t apply to college this semester even if I knew I would certainly be accepted;<br>▸ He wouldn\'t obey his parents even if they gave him the best gift ever.</p>'},{page:93,topic:'WISHES AND REGRETS',book:'Passages 1',html:'<p><strong>WISHES AND REGRETS</strong></p><p>To express something you wish in the present use: wish + simple past / past continuous.</p><p><strong>REMEMBER:</strong▸ Can (Could); Will (Would); To be (Were)</p><p>▸ I wish I had a better car;<br>▸ I wish I were richer;<br>▸ I wish I could afford a better car;</p><p><br>To express a regret about the past, use wish + past perfect (Had + past participle)</p><p>▸ I wish I had studied more;<br>▸ I wish I had been a better son;<br>▸ I wish I had driven slowly.</p><p>To express a regret and give a different outcome, use If + past perfect, could / would + have + past participle.</p><p>▸ If I had studied more, I could have become a doctor now;<br>▸ If she had been more patient, she would have got the job;</p>'},{page:97,topic:'FUTURE PERFECT & FUTURE PERFECT CONTINUOUS',book:'Passages 1',html:'<p><strong>FUTURE PERFECT & FUTURE PERFECT CONTINUOUS</strong></p><p><em>The future perfect is used to express the idea that an action will be completed by a specific time into the future. It is forme by using the following structure: will + have + past participle.</em></p><p>▸ By 2035, the world will have become even more advanced in science.<br>▸ By this time next year, I will have finished college.<br>▸ In one month, she will have got/gotten her promotion.</p><p><em>The future perfect continuous is used to express the duration of an action into a specific point into the future. Will + have + been + verb (ing)</em></p><p>▸ By around 6 pm, he will have been studying for 4 hours.<br>▸ In one hour, I will have been waiting for the doctor for around 5 hours.<br>▸ By 2027, she will have been studying English for five years.</p>'},{page:101,topic:'Mixed Conditionals',book:'Passages 1',html:'<p><strong>Mixed Conditionals</strong></p><p><em>Mixed conditionals are used to talk a hypothetical past situation that could have an impact into the present moment. It is formed by using:</em></p><p><strong>IF + YOU, HE,... + HAD/HADN\'T + PAST PARTICIPLE, + YOU, HE, SHE + WOULD/WOULDN\'T + BASE VERB</strong></p><p>▸ If you had been more engaged with the classes, you would be a millionaire today.<br>▸ If she hadn\'t quit her previous job, she would be in a higher position.<br>▸ If they had taken their passport with them, they wouldn\'t be in trouble now.</p><p>TIP: Don\'t forget the comma (,) to separate both clauses.</p>'}],'special':[{page:0,topic:'AFIRMATIVA: SUJEITO + HAVE/HAS + PAST PARTICIPLE',book:'Special',html:'<p>PRESENT PERFECT - UTILIZADO PARA FALAR DE AÇÕES DO PASSADO QUE AINDA TEM RELEVÂNCIA NO PRESENTE, AÇÕES EM UM TEMPO INDEFINIDO NO PASSADO E/OU AÇÕES QUE FORAM CONCLUÍDAS RECENTEMENTE.</p><p><strong>AFIRMATIVA: SUJEITO + HAVE/HAS + PAST PARTICIPLE</strong></p><p><em>MARIA HAS DRUNK A LOT OF WATER (Sem tempo definido)</em></p><p><em>I HAVE JUST BOUGHT A NEW APARTMENT (Ação recentemente concluída)</em></p><p><strong>NEGATIVA: SUJEITO + HAVE/HAS + NOT + PAST PARTICIPLE</strong></p><p><em>SHE HASN\'T FINISHED HER HOMEWORK YET</em></p><p><strong>INTERROGATIVA: HAVE/HAS + SUJEITO + PAST PARTICIPLE</strong></p><p><em>HAVE YOU EVER EATEN JAPANESE FOOD?</em></p>'}]};
 
 let currentLevel = 'intro';
 let currentView = 'curriculum';
 
-function setLevel(lvl) {
+function setLevel(lvl, btn) {
   currentLevel = lvl;
-  document.querySelectorAll('.lib-nav-btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
   render();
 }
 
-function setView(view) {
+function setView(view, btn) {
   currentView = view;
-  document.querySelectorAll('.view-tab').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
-  document.getElementById('view-curriculum').style.display = view === 'curriculum' ? '' : 'none';
-  document.getElementById('view-worksheets').style.display = view === 'worksheets' ? '' : 'none';
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  ['curriculum','worksheets','examples'].forEach(v => {
+    document.getElementById('view-' + v).style.display = v === view ? '' : 'none';
+  });
   render();
 }
 
 function render() {
-  if (currentView === 'curriculum') renderCurriculum();
-  else renderWorksheets();
+  const search = (document.getElementById('searchInput')?.value || '').toLowerCase();
+  if (currentView === 'curriculum') renderCurriculum(search);
+  else if (currentView === 'worksheets') renderWorksheets();
+  else if (currentView === 'examples') renderExamples(search);
 }
 
-function renderCurriculum() {
-  const units = curriculum[currentLevel];
-  const search = document.getElementById('searchInput').value.toLowerCase();
-  const filtered = search ? units.filter(u => 
+function renderCurriculum(search) {
+  const units = curriculum[currentLevel] || [];
+  const filtered = search ? units.filter(u =>
     u.t.toLowerCase().includes(search) || u.g.toLowerCase().includes(search) || u.v.toLowerCase().includes(search)
   ) : units;
-  
-  document.getElementById('currBody').innerHTML = filtered.map(u => `
-    <tr>
-      <td>${u.u}</td>
-      <td style="font-weight:700;color:var(--navy)">${u.t}</td>
-      <td>${u.v}</td>
-      <td><span class="grammar-tag" onclick="showGrammar('${u.g.replace(/'/g, "\\'")}')">${u.g}</span></td>
-      <td style="color:var(--g500)">${u.o}</td>
-      <td style="color:var(--g400);font-style:italic;font-size:12px">${u.w}</td>
-    </tr>
-  `).join('');
+
+  document.getElementById('view-curriculum').innerHTML = '<table class="curr-table"><thead><tr><th>U.</th><th>Unidade</th><th>Vocabulário</th><th>Gramática</th><th>Objetivo</th><th>Writing</th></tr></thead><tbody>' +
+    filtered.map(u => '<tr><td>' + u.u + '</td><td style="font-weight:700;color:var(--navy)">' + u.t + '</td><td>' + u.v + '</td><td><span class="grammar-chip">' + u.g + '</span></td><td style="color:var(--g500)">' + u.o + '</td><td style="color:var(--g400);font-style:italic;font-size:12px">' + u.w + '</td></tr>'
+    ).join('') + '</tbody></table>';
 }
 
 function renderWorksheets() {
-  const lvlName = levelMap[currentLevel];
-  const data = worksheets[lvlName] || {};
-  const grid = document.getElementById('wsGrid');
-  
-  const unitNums = Object.keys(data).map(Number).sort((a,b) => a-b);
-  
-  if (!unitNums.length) {
-    grid.innerHTML = '<div style="text-align:center;padding:48px;color:var(--g400);grid-column:1/-1"><p style="font-size:48px;margin-bottom:12px;opacity:0.3">📄</p><p>Nenhum worksheet disponível para este nível.</p></div>';
+  const levelKey = {'intro':'intro','lvl1':'level1','lvl2':'level2','lvl3':'level3'}[currentLevel];
+  const div = document.getElementById('view-worksheets');
+  let cards = '';
+  for (let i = 1; i <= 16; i++) {
+    const path = STORAGE + '/' + levelKey + '/unit-' + String(i).padStart(2,'0') + '.pdf';
+    const levelNames = {'intro':'Intro','lvl1':'Level 1','lvl2':'Level 2','lvl3':'Level 3'};
+    cards += '<div class="ws-card"><div class="ws-unit">' + i + '</div><div class="ws-label">Unit ' + i + ' • ' + (levelNames[currentLevel]||'') + '</div><a href="' + path + '" target="_blank" class="ws-dl">📥 Download PDF</a></div>';
+  }
+  div.innerHTML = '<p style="font-size:14px;color:var(--g500);margin-bottom:20px">Worksheets originais da EA English Classes — um PDF por unidade.</p><div class="ws-grid">' + cards + '</div>';
+}
+
+function renderExamples(search) {
+  const items = examples[currentLevel] || [];
+  const filtered = search ? items.filter(ex =>
+    ex.topic.toLowerCase().includes(search) || ex.html.toLowerCase().includes(search)
+  ) : items;
+
+  const div = document.getElementById('view-examples');
+  if (!filtered.length) {
+    div.innerHTML = '<div style="text-align:center;padding:48px;color:var(--g400)"><p style="font-size:48px;margin-bottom:12px;opacity:0.3">💡</p><p>Nenhum exemplo encontrado' + (search ? ' para "' + search + '"' : ' para este nível') + '.</p></div>';
     return;
   }
-  
-  grid.innerHTML = unitNums.map(unit => {
-    const files = data[unit];
-    const icons = {'pdf':'📄','mp3':'🎵'};
-    const typeIcons = {'Grammar':'📐','Vocabulary':'📝','Listening':'👂','Audio':'🎵','EA Worksheet':'🔶','Other':'📎'};
-    
-    const filesHtml = files.map(f => {
-      const icon = typeIcons[f.type] || '📄';
-      const badge = f.source === 'cambridge' ? '<span class="ws-file-badge cambridge">Cambridge</span>' : '<span class="ws-file-badge ea">EA Original</span>';
-      const shortName = f.type || f.filename.substring(0, 30);
-      const driveLink = f.source === 'ea' ? ` onclick="window.open('https://drive.google.com/drive/folders/1GhxhuJeBW6hwaRhntloAxu-pU4lIAMCd','_blank')" style="cursor:pointer"` : '';
-      return `<div class="ws-file"${driveLink}><div class="ws-file-icon ${f.ext}">${icon}</div><div class="ws-file-name">${shortName}${f.source === 'ea' ? ' <span style="font-size:10px;color:var(--orange)">↗</span>' : ''}</div>${badge}</div>`;
-    }).join('');
-    
-    return `<div class="ws-unit-card"><div class="ws-unit-header"><div><span class="ws-unit-num">U${unit}</span></div><span class="ws-unit-count">${files.length} arquivos</span></div>${filesHtml}</div>`;
-  }).join('');
+
+  div.innerHTML = '<p style="font-size:14px;color:var(--g500);margin-bottom:20px">Explicações gramaticais em português — clique para expandir.</p><div class="ex-grid">' +
+    filtered.map((ex, idx) => {
+      const preview = ex.html.replace(/<[^>]*>/g, '').substring(0, 120);
+      return '<div class="ex-card" onclick="showExample(' + idx + ')"><div class="ex-header"><span class="ex-topic">' + ex.topic + '</span><span class="ex-page">' + ex.book + ' pg.' + ex.page + '</span></div><div class="ex-preview">' + preview + '...</div></div>';
+    }).join('') + '</div>';
 }
 
-// ═══ GRAMMAR DRAWER ═══
-const grammarDB = {
-  "Possessive adjectives": { formula: "my, your, his, her, its, our, their + noun", example: "Her name is Sarah.", teaching: "Focar na concordância de gênero (his vs her)." },
-  "be (affirmative)": { formula: "Subject + am/is/are", example: "I am a student.", teaching: "Use contrações desde cedo." },
-  "Articles": { formula: "a + consoante / an + vogal / the + específico", example: "A book, an umbrella.", teaching: "Foque no som, não na letra." },
-  "Simple present": { formula: "Subject + verb (-s/es 3ª pessoa)", example: "She works in a bank.", teaching: "Foco no -s/es no He/She/It." },
-  "There is/are": { formula: "There + is (singular) / are (plural)", example: "There is a sofa.", teaching: "Praticar com some/any." },
-  "Going to": { formula: "be + going to + verb", example: "I am going to travel.", teaching: "Planos já decididos." },
-  "Simple past": { formula: "Regular: +ed | Irregular: list", example: "I visited my family.", teaching: "Dividir irregulares em grupos sonoros." },
-  "Present perfect": { formula: "have/has + past participle", example: "I have been to London.", teaching: "Tempo não específico no passado." },
-  "Used to": { formula: "Subject + used to + verb", example: "I used to have long hair.", teaching: "Hábitos que não existem mais." },
-  "First conditional": { formula: "If + present, will + verb", example: "If it rains, I'll stay.", teaching: "Possibilidade real no futuro." },
-  "Passive voice": { formula: "Object + be + past participle", example: "The car was fixed.", teaching: "Foco na ação, não no agente." },
-  "Reported speech": { formula: "He said that he was...", example: "She told me she liked it.", teaching: "Mudança de tempos (backshift)." },
-  "Relative clauses": { formula: "who, which, that", example: "The friend that I like...", teaching: "Detalhes essenciais vs extras." },
-  "Past perfect": { formula: "had + past participle", example: "When I arrived, they had left.", teaching: "O passado do passado." },
-  "3rd conditional": { formula: "If + past perfect, would have + pp", example: "If I had known, I would have helped.", teaching: "Arrependimentos sobre o passado." },
-  "Past modals": { formula: "must/might/could have + pp", example: "He must have forgotten.", teaching: "Dedução sobre eventos passados." },
-};
+function showExample(idx) {
+  const items = examples[currentLevel] || [];
+  const search = (document.getElementById('searchInput')?.value || '').toLowerCase();
+  const filtered = search ? items.filter(ex =>
+    ex.topic.toLowerCase().includes(search) || ex.html.toLowerCase().includes(search)
+  ) : items;
 
-function showGrammar(topic) {
-  const parts = topic.split(';').map(s => s.trim());
-  let html = '';
-  
-  parts.forEach(part => {
-    const match = Object.keys(grammarDB).find(k => part.toLowerCase().includes(k.toLowerCase()));
-    const data = match ? grammarDB[match] : null;
-    
-    if (data) {
-      html += `
-        <div style="margin-bottom:24px">
-          <div style="background:var(--blue);padding:16px;border-radius:12px;color:#fff;margin-bottom:16px">
-            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;opacity:0.7;margin-bottom:4px">Topic</div>
-            <div style="font-size:18px;font-weight:800">${match}</div>
-          </div>
-          <div style="background:var(--blue-soft);padding:14px;border-radius:10px;border-left:4px solid var(--blue);margin-bottom:10px">
-            <div style="font-size:10px;font-weight:700;color:var(--g400);text-transform:uppercase;margin-bottom:4px">Fórmula</div>
-            <code style="font-size:13px;color:var(--blue);font-weight:600">${data.formula}</code>
-          </div>
-          <div style="background:#d1fae5;padding:14px;border-radius:10px;border-left:4px solid #10b981;margin-bottom:10px">
-            <div style="font-size:10px;font-weight:700;color:var(--g400);text-transform:uppercase;margin-bottom:4px">Exemplo</div>
-            <p style="font-size:13px;color:#065f46;font-style:italic">"${data.example}"</p>
-          </div>
-          <div style="background:var(--mango-soft);padding:14px;border-radius:10px;border-left:4px solid var(--mango)">
-            <div style="font-size:10px;font-weight:700;color:var(--g400);text-transform:uppercase;margin-bottom:4px">Dica Pedagógica</div>
-            <p style="font-size:13px;color:#92400e">${data.teaching}</p>
-          </div>
-        </div>`;
-    } else {
-      html += `<div style="background:var(--g50);padding:20px;border-radius:10px;text-align:center;margin-bottom:16px"><p style="font-size:14px;color:var(--g500)">📘 <strong>${part}</strong></p><p style="font-size:12px;color:var(--g400);margin-top:4px">Consulte o Manual do Professor.</p></div>`;
-    }
-  });
-  
-  document.getElementById('drawerTitle').textContent = 'Grammar Structure';
-  document.getElementById('drawerContent').innerHTML = html;
-  document.getElementById('grammarDrawer').classList.add('open');
-  document.getElementById('drawerOverlay').classList.add('open');
+  const ex = filtered[idx];
+  if (!ex) return;
+
+  document.getElementById('exModalTitle').textContent = ex.topic;
+  document.getElementById('exModalMeta').textContent = ex.book + ' — Página ' + ex.page;
+  document.getElementById('exModalContent').innerHTML = ex.html;
+  document.getElementById('exModal').classList.add('open');
 }
 
-function closeDrawer() {
-  document.getElementById('grammarDrawer').classList.remove('open');
-  document.getElementById('drawerOverlay').classList.remove('open');
-}
-
-// Search
-document.getElementById('searchInput').addEventListener('input', () => render());
-
-// Init
 render();
 </script>
 </body>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Página não encontrada — EA English Classes</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .error-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--navy);
+    color: #fff;
+    text-align: center;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .error-page::before {
+    content: '';
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(243,107,46,0.12), transparent 60%);
+    border-radius: 50%;
+  }
+  .error-num {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(100px, 20vw, 200px);
+    font-weight: 900;
+    color: rgba(255,255,255,0.05);
+    line-height: 1;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .error-content { position: relative; z-index: 1; }
+  .error-content h1 { font-size: 32px; margin-bottom: 12px; }
+  .error-content h1 em { color: var(--mango); font-style: italic; }
+  .error-content p { font-size: 16px; opacity: 0.7; margin-bottom: 32px; max-width: 400px; margin-left: auto; margin-right: auto; }
+</style>
+</head>
+<body>
+<div class="error-page">
+  <div class="error-num">404</div>
+  <div class="error-content">
+    <div style="font-size:64px;margin-bottom:20px">🔍</div>
+    <h1>Ops! Página não <em>encontrada</em></h1>
+    <p>A página que você está procurando não existe ou foi movida.</p>
+    <a href="index.html" class="btn btn-primary btn-lg" style="background:var(--orange)">← Voltar para o início</a>
+  </div>
+</div>
+</body>
+</html>

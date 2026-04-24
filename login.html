@@ -3,6 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAAAAABWESUoAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAACYktHRAD/h4/MvwAAAAd0SU1FB+oEGBUhLL+MU28AAAF3SURBVDjLvVM7LwRRFP7OzF02xmMFJSEa2dAQQRREo6EWfoN/IH6BUiV6hV7hJ+hokIgQsiHezGLNzD2fwu7s7EvH192bc7/HOecK8Tsc/HmBSR4ojADHpZTvpNokhZBERYKBoHO35X5MLKokXxShVBvyEC5maZUxYpMCiMB1HJz5SeemrP269Nrsa9dj7nJE3VoJy7t2iGClDTsMtVaihJlWHDXogzvw0vz8NNV5c4QGKT59bnucw8AntV4KSaeBfvQhdwmtlyK/8Z7Zn0QWwfEQy72sSOFgem0eWGcQayQK7nvcdAqAi0VGcUFyFl/WIusVTu1JmGKdmGbcZ2Y3E2TPr68Gaz2QqiQ14gKwx7AqJkGlWmtpMQwcgGCFhADOD6vBcgvGEE+ruFGUIOdpUxi2RmF7ZN4LvaWtMqU23W4+tGUL5z295iJvgu7VjmqGt4NUXrv87vSVSWnojXpFhvLSVu5q9SwoVABC+XEvIjUMDfAPf/MbvRIRVjKrblQAAAAASUVORK5CYII=">
+<meta name="description" content="EA English Classes — Escola de inglês online com mais de 10 anos em Osasco, SP. Aulas ao vivo pelo Google Meet do nível A1 ao C1.">
+<meta property="og:title" content="EA English Classes">
+<meta property="og:description" content="Escola de inglês online — aulas ao vivo com foco em conversação e gramática. Do zero à fluência.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta name="theme-color" content="#19244e">
 <title>Entrar — EA English Classes</title>
 <link rel="stylesheet" href="style.css">
 </head>
@@ -130,6 +137,43 @@
     text-align: center;
     margin-top: 20px;
   }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .login-box { animation: fadeUp 0.6s cubic-bezier(0.4,0,0.2,1); }
+  .login-card { animation: fadeUp 0.6s cubic-bezier(0.4,0,0.2,1) 0.1s backwards; }
+  .form-group { animation: fadeUp 0.5s cubic-bezier(0.4,0,0.2,1) backwards; }
+  .form-group:nth-child(1) { animation-delay: 0.15s; }
+  .form-group:nth-child(2) { animation-delay: 0.25s; }
+  .login-spinner {
+    display: none;
+    width: 18px; height: 18px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+  }
+  .login-card .form-group input:valid {
+    border-color: #10b981;
+  }
+  .login-card .form-group input:focus {
+    border-color: var(--orange);
+    box-shadow: 0 0 0 4px rgba(243,107,46,0.1);
+  }
+  .login-welcome {
+    text-align: center;
+    padding: 16px;
+    margin-bottom: 20px;
+    background: rgba(245,154,30,0.08);
+    border-radius: 12px;
+    font-size: 13px;
+    color: var(--g700);
+    line-height: 1.6;
+  }
 </style>
 
 <div class="login-wrap">
@@ -141,6 +185,7 @@
     <div class="login-card">
       <h2>Bem-<em>vindo</em> de volta!</h2>
       <p>Acesse sua área restrita para continuar.</p>
+      <div class="login-welcome">🎓 Bem-vindo à plataforma da EA English Classes.<br>Acesse sua área com e-mail e senha.</div>
       <div id="loginError" style="display:none;padding:12px;background:#fee2e2;border:2px solid #ef4444;border-radius:10px;color:#991b1b;font-size:13px;font-weight:600;text-align:center;margin-bottom:16px"></div>
       <form id="loginForm">
       <div class="form-group"><label>E-mail</label><input type="email" id="loginEmail" placeholder="seu@email.com" required></div>
@@ -149,7 +194,7 @@
         <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" style="width:auto"> Lembrar-me</label>
         <a href="#" style="color:var(--orange);font-weight:600">Esqueci a senha</a>
       </div>
-      <button type="submit" id="loginBtn" class="btn btn-primary btn-full btn-lg">Entrar</button></form>
+      <button type="submit" id="loginBtn" class="btn btn-primary btn-full btn-lg" style="display:flex;align-items:center;justify-content:center;gap:10px"><span id="loginText">Entrar</span><div class="login-spinner" id="loginSpinner"></div></button></form>
       
       
     </div>
@@ -192,7 +237,8 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       
       loginBtn.disabled = true;
-      loginBtn.textContent = 'Entrando...';
+      document.getElementById('loginText').textContent = 'Entrando...';
+      document.getElementById('loginSpinner').style.display = 'block';
       loginError.style.display = 'none';
 
       const email = document.getElementById('loginEmail').value.trim();
@@ -241,7 +287,8 @@ document.addEventListener('DOMContentLoaded', () => {
         loginError.style.display = 'block';
       } finally {
         loginBtn.disabled = false;
-        loginBtn.textContent = 'Entrar';
+        document.getElementById('loginText').textContent = 'Entrar';
+        document.getElementById('loginSpinner').style.display = 'none';
       }
     });
   }

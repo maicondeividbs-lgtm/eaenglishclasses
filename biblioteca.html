@@ -3,6 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAAAAABWESUoAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAACYktHRAD/h4/MvwAAAAd0SU1FB+oEGBUhLL+MU28AAAF3SURBVDjLvVM7LwRRFP7OzF02xmMFJSEa2dAQQRREo6EWfoN/IH6BUiV6hV7hJ+hokIgQsiHezGLNzD2fwu7s7EvH192bc7/HOecK8Tsc/HmBSR4ojADHpZTvpNokhZBERYKBoHO35X5MLKokXxShVBvyEC5maZUxYpMCiMB1HJz5SeemrP269Nrsa9dj7nJE3VoJy7t2iGClDTsMtVaihJlWHDXogzvw0vz8NNV5c4QGKT59bnucw8AntV4KSaeBfvQhdwmtlyK/8Z7Zn0QWwfEQy72sSOFgem0eWGcQayQK7nvcdAqAi0VGcUFyFl/WIusVTu1JmGKdmGbcZ2Y3E2TPr68Gaz2QqiQ14gKwx7AqJkGlWmtpMQwcgGCFhADOD6vBcgvGEE+ruFGUIOdpUxi2RmF7ZN4LvaWtMqU23W4+tGUL5z295iJvgu7VjmqGt4NUXrv87vSVSWnojXpFhvLSVu5q9SwoVABC+XEvIjUMDfAPf/MbvRIRVjKrblQAAAAASUVORK5CYII=">
+<meta name="description" content="EA English Classes — Escola de inglês online com mais de 10 anos em Osasco, SP. Aulas ao vivo pelo Google Meet do nível A1 ao C1.">
+<meta property="og:title" content="EA English Classes">
+<meta property="og:description" content="Escola de inglês online — aulas ao vivo com foco em conversação e gramática. Do zero à fluência.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta name="theme-color" content="#19244e">
 <title>Biblioteca do Professor — EA English Classes</title>
 <link rel="stylesheet" href="style.css">
 <style>
@@ -396,7 +403,7 @@ function renderWorksheets() {
   for (let i = 1; i <= 16; i++) {
     const path = STORAGE + '/' + levelKey + '/unit-' + String(i).padStart(2,'0') + '.pdf';
     const levelNames = {'intro':'Intro','lvl1':'Level 1','lvl2':'Level 2','lvl3':'Level 3'};
-    cards += '<div class="ws-card"><div class="ws-unit">' + i + '</div><div class="ws-label">Unit ' + i + ' • ' + (levelNames[currentLevel]||'') + '</div><a href="' + path + '" target="_blank" class="ws-dl">📥 Download PDF</a></div>';
+    cards += '<div class="ws-card"><div class="ws-unit">' + i + '</div><div class="ws-label">Unit ' + i + ' • ' + (levelNames[currentLevel]||'') + '</div><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center"><a href="' + path + '" target="_blank" class="ws-dl">📥 Baixar</a><button onclick="navigator.clipboard.writeText(\'' + path + '\').then(()=>showToast(\'Link copiado!\'));event.stopPropagation()" style="padding:8px 12px;border-radius:8px;background:var(--navy);color:#fff;font-size:12px;font-weight:700;border:none;cursor:pointer;transition:all 0.2s" onmouseover="this.style.background=\'var(--blue)\'" onmouseout="this.style.background=\'var(--navy)\'">🔗 Copiar</button></div></div>';
   }
   div.innerHTML = '<p style="font-size:14px;color:var(--g500);margin-bottom:20px">Worksheets originais da EA English Classes — um PDF por unidade.</p><div class="ws-grid">' + cards + '</div>';
 }
@@ -437,6 +444,17 @@ function showExample(idx) {
 }
 
 render();
+</script>
+
+<script>
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.style.cssText = 'position:fixed;top:20px;right:20px;z-index:9999;padding:14px 24px;border-radius:12px;font-size:14px;font-weight:600;color:#fff;background:#10b981;box-shadow:0 8px 24px rgba(0,0,0,0.2);transition:all 0.4s;opacity:0;transform:translateY(-10px)';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  requestAnimationFrame(()=>{t.style.opacity='1';t.style.transform='translateY(0)'});
+  setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),400)},2000);
+}
 </script>
 </body>
 </html>

@@ -3,6 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAAAAABWESUoAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAACYktHRAD/h4/MvwAAAAd0SU1FB+oEGBUhLL+MU28AAAF3SURBVDjLvVM7LwRRFP7OzF02xmMFJSEa2dAQQRREo6EWfoN/IH6BUiV6hV7hJ+hokIgQsiHezGLNzD2fwu7s7EvH192bc7/HOecK8Tsc/HmBSR4ojADHpZTvpNokhZBERYKBoHO35X5MLKokXxShVBvyEC5maZUxYpMCiMB1HJz5SeemrP269Nrsa9dj7nJE3VoJy7t2iGClDTsMtVaihJlWHDXogzvw0vz8NNV5c4QGKT59bnucw8AntV4KSaeBfvQhdwmtlyK/8Z7Zn0QWwfEQy72sSOFgem0eWGcQayQK7nvcdAqAi0VGcUFyFl/WIusVTu1JmGKdmGbcZ2Y3E2TPr68Gaz2QqiQ14gKwx7AqJkGlWmtpMQwcgGCFhADOD6vBcgvGEE+ruFGUIOdpUxi2RmF7ZN4LvaWtMqU23W4+tGUL5z295iJvgu7VjmqGt4NUXrv87vSVSWnojXpFhvLSVu5q9SwoVABC+XEvIjUMDfAPf/MbvRIRVjKrblQAAAAASUVORK5CYII=">
+<meta name="description" content="EA English Classes — Escola de inglês online com mais de 10 anos em Osasco, SP. Aulas ao vivo pelo Google Meet do nível A1 ao C1.">
+<meta property="og:title" content="EA English Classes">
+<meta property="og:description" content="Escola de inglês online — aulas ao vivo com foco em conversação e gramática. Do zero à fluência.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta name="theme-color" content="#19244e">
 <title>Aluno — EA English Classes</title>
 <link rel="stylesheet" href="style.css">
 <style>
@@ -294,10 +301,13 @@ async function loadHomework() {
   div.innerHTML = tasks.map(t => {
     const task = t.task || {};
     const isDone = t.status !== 'pending';
+    const ago = timeAgo(t.created_at);
+    const isNew = !isDone && ago && (ago === 'agora' || ago.includes('min') || ago.includes('h'));
+    const newBadge = isNew ? '<span style="background:var(--orange);color:#fff;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:700;margin-left:8px">NOVA!</span>' : '';
     const btn = isDone
       ? '<span class="badge badge-done">✅ Concluída</span>'
       : '<button class="btn-action btn-done" onclick="markDone(' + t.id + ',this)">Marcar como feita</button>';
-    return '<div class="list-item"><div><div class="list-title">' + (task.title||'Tarefa') + '</div><div class="list-sub">' + (task.description||'') + '</div><div class="list-sub" style="margin-top:4px">Prazo: ' + formatDate(task.due_date) + ' — ' + formatDateTime(t.created_at) + '</div></div>' + btn + '</div>';
+    return '<div class="list-item" style="' + (isNew ? 'background:var(--mango-soft);border-left:4px solid var(--mango)' : '') + '"><div><div class="list-title">' + (task.title||'Tarefa') + newBadge + '</div><div class="list-sub">' + (task.description||'') + '</div><div class="list-sub" style="margin-top:4px">Prazo: ' + formatDate(task.due_date) + ' — Recebida ' + ago + '</div></div>' + btn + '</div>';
   }).join('');
 }
 
@@ -525,5 +535,17 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.section').forEach(s => observer.observe(s, {attributes:true, attributeFilter:['class']}));
 });
 </script>
+
+<!-- Scroll to top -->
+<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="display:none;position:fixed;bottom:24px;right:24px;z-index:90;width:44px;height:44px;border-radius:50%;border:none;background:var(--blue);color:#fff;font-size:18px;cursor:pointer;box-shadow:0 4px 12px rgba(37,60,150,0.3);transition:all 0.3s">↑</button>
+<script>
+window.addEventListener('scroll', () => {
+  const btn = document.getElementById('scrollTop');
+  if (btn) btn.style.display = window.scrollY > 400 ? 'flex' : 'none';
+  btn.style.alignItems = 'center';
+  btn.style.justifyContent = 'center';
+}, {passive: true});
+</script>
+
 </body>
 </html>

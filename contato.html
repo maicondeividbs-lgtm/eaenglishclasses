@@ -3,6 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAAAAABWESUoAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAACYktHRAD/h4/MvwAAAAd0SU1FB+oEGBUhLL+MU28AAAF3SURBVDjLvVM7LwRRFP7OzF02xmMFJSEa2dAQQRREo6EWfoN/IH6BUiV6hV7hJ+hokIgQsiHezGLNzD2fwu7s7EvH192bc7/HOecK8Tsc/HmBSR4ojADHpZTvpNokhZBERYKBoHO35X5MLKokXxShVBvyEC5maZUxYpMCiMB1HJz5SeemrP269Nrsa9dj7nJE3VoJy7t2iGClDTsMtVaihJlWHDXogzvw0vz8NNV5c4QGKT59bnucw8AntV4KSaeBfvQhdwmtlyK/8Z7Zn0QWwfEQy72sSOFgem0eWGcQayQK7nvcdAqAi0VGcUFyFl/WIusVTu1JmGKdmGbcZ2Y3E2TPr68Gaz2QqiQ14gKwx7AqJkGlWmtpMQwcgGCFhADOD6vBcgvGEE+ruFGUIOdpUxi2RmF7ZN4LvaWtMqU23W4+tGUL5z295iJvgu7VjmqGt4NUXrv87vSVSWnojXpFhvLSVu5q9SwoVABC+XEvIjUMDfAPf/MbvRIRVjKrblQAAAAASUVORK5CYII=">
+<meta name="description" content="EA English Classes — Escola de inglês online com mais de 10 anos em Osasco, SP. Aulas ao vivo pelo Google Meet do nível A1 ao C1.">
+<meta property="og:title" content="EA English Classes">
+<meta property="og:description" content="Escola de inglês online — aulas ao vivo com foco em conversação e gramática. Do zero à fluência.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta name="theme-color" content="#19244e">
 <title>Contato — EA English Classes</title>
 <link rel="stylesheet" href="style.css">
 </head>
@@ -136,6 +143,30 @@
   @media(max-width:1024px) {
     .contato-grid { grid-template-columns: 1fr; }
   }
+
+  /* Form validation visuals */
+  .contato-form-card input:valid:not(:placeholder-shown),
+  .contato-form-card select:valid,
+  .contato-form-card textarea:valid:not(:placeholder-shown) {
+    border-color: #10b981;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='%2310b981'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 40px;
+  }
+  .contato-form-card input:invalid:not(:placeholder-shown) {
+    border-color: #ef4444;
+  }
+  .contato-form-card input[type="tel"] {
+    letter-spacing: 0.5px;
+  }
+  #successMsg {
+    animation: fadeUp 0.5s cubic-bezier(0.4,0,0.2,1);
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 </style>
 
 <nav class="nav" id="nav">
@@ -172,13 +203,13 @@
         <h3>📅 Agendar Nivelamento Grátis</h3>
         <p class="subtitle">Preencha seus dados e nossa coordenação entrará em contato.</p>
         <div id="successMsg" style="display:none;padding:16px;background:#d1fae5;border:2px solid #10b981;border-radius:12px;color:#065f46;font-weight:600;text-align:center;margin-bottom:16px">
-          ✅ Agendamento enviado com sucesso! Nossa coordenação entrará em contato em breve.
+          ✅ Agendamento enviado com sucesso!<br><span style="font-weight:400;font-size:13px">Nossa coordenação entrará em contato em até 24h. Enquanto isso, siga-nos no <a href="https://www.instagram.com/contatoea" target="_blank" style="color:#065f46;font-weight:700">Instagram @contatoea</a>.</span>
         </div>
         <div id="errorMsg" style="display:none;padding:16px;background:#fee2e2;border:2px solid #ef4444;border-radius:12px;color:#991b1b;font-weight:600;text-align:center;margin-bottom:16px"></div>
         <form id="placementForm">
         <div class="form-group"><label>Nome completo</label><input type="text" id="fname" placeholder="Seu nome completo" required></div>
         <div class="form-group"><label>E-mail</label><input type="email" id="femail" placeholder="seu@email.com" required></div>
-        <div class="form-group"><label>WhatsApp</label><input type="tel" id="fphone" placeholder="(11) 99999-9999" required></div>
+        <div class="form-group"><label>WhatsApp</label><input type="tel" id="fphone" placeholder="(11) 99999-9999" required pattern="[0-9()+\-\s]{10,}"></div>
         <div class="form-row">
           <div class="form-group"><label>Data preferida</label><input type="date" id="fdate"></div>
           <div class="form-group"><label>Horário</label><select id="ftime"><option value="">Selecione</option><option>Manhã</option><option>Tarde</option><option>Noite</option></select></div>
@@ -230,6 +261,9 @@
         <div class="footer-social">
           <a href="https://www.instagram.com/contatoea" target="_blank" title="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.3.1 4.8 1.7 4.9 4.9.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.2-1.7 4.8-4.9 4.9-1.3.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-3.3-.1-4.8-1.7-4.9-4.9C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8C2.4 4 4 2.4 7.2 2.3 8.4 2.2 8.8 2.2 12 2.2zM12 0C8.7 0 8.3 0 7.1.1 2.7.3.3 2.7.1 7.1 0 8.3 0 8.7 0 12s0 3.7.1 4.9c.2 4.4 2.6 6.8 7 7 1.2.1 1.6.1 4.9.1s3.7 0 4.9-.1c4.4-.2 6.8-2.6 7-7 .1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9C23.7 2.7 21.3.3 16.9.1 15.7 0 15.3 0 12 0zm0 5.8C8.6 5.8 5.8 8.6 5.8 12s2.8 6.2 6.2 6.2 6.2-2.8 6.2-6.2S15.4 5.8 12 5.8zM12 16c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4zm6.4-11.8c-.8 0-1.4.6-1.4 1.4s.6 1.4 1.4 1.4 1.4-.6 1.4-1.4-.6-1.4-1.4-1.4z"/></svg></a>
           <a href="#" title="WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8.9-.9 1.1-.2.2-.3.2-.6.1-1.8-.9-3-1.6-4.2-3.6-.3-.5.3-.5.9-1.6.1-.2 0-.4 0-.5s-.7-1.6-.9-2.2c-.2-.6-.5-.5-.7-.5H8c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3 1.8.8 2.5.8 3.4.7.5-.1 1.8-.7 2-1.5.3-.8.3-1.4.2-1.5-.1-.1-.3-.2-.5-.3zM20.5 3.5C18.2 1.2 15.2 0 12 0 5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.3-1.6c1.7.9 3.7 1.4 5.7 1.4 6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.3zM12 22c-1.8 0-3.6-.5-5.2-1.4l-.4-.2-3.7.9L3.7 18l-.2-.4C2.5 15.9 2 13.9 2 12c0-5.5 4.5-10 10-10 2.7 0 5.2 1 7.1 2.9 1.9 1.9 2.9 4.4 2.9 7.1 0 5.5-4.5 10-10 10z"/></svg></a>
+          <a href="https://www.youtube.com/@vinilbeer" target="_blank" title="YouTube" aria-label="YouTube">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          </a>
           <a href="mailto:contato@eaenglish.com.br" title="E-mail"><svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></a>
         </div>
       </div>

@@ -277,6 +277,11 @@ body { background: var(--g50); margin: 0; }
             <div class="f-group"><label>E-mail</label><input type="email" id="editEmail" disabled style="opacity:0.6"></div>
             <div class="f-group"><label>Perfil</label><select id="editRole"><option value="student">Aluno</option><option value="teacher">Professor</option><option value="coordinator">Coordenador</option></select></div>
             <div class="f-group"><label>Nível / Livro</label><input type="text" id="editLevel" placeholder="Ex: A2 — Interchange 2"></div>
+            <div class="f-group"><label>🎂 Data de Nascimento</label><input type="date" id="editBirthday"></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <div class="f-group"><label>📋 Início do Contrato</label><input type="date" id="editContractStart"></div>
+              <div class="f-group"><label>📋 Fim do Contrato</label><input type="date" id="editContractEnd"></div>
+            </div>
             <div class="f-group"><label>Professor responsável</label><select id="editTeacher"><option value="">Selecione</option></select></div>
             <div class="f-group"><label>Curso</label><select id="editCourse"><option value="">Selecione</option></select></div>
             <div style="display:flex;gap:10px;margin-top:16px">
@@ -299,7 +304,12 @@ body { background: var(--g50); margin: 0; }
 
       <!-- ═══ HOMEWORKS ═══ -->
       <div class="section" id="sec-homework">
-        <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:20px">📝 Supervisão de Homeworks</h2>
+        <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:16px">📝 Supervisão de Homeworks</h2><div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
+          <span style="font-size:12px;font-weight:700;color:var(--g500)">Filtrar por professor:</span>
+          <select id="hwFilter" onchange="loadHomeworks()" style="padding:8px 14px;border:2px solid var(--g200);border-radius:8px;font-family:inherit;font-size:13px;color:var(--navy);outline:none">
+            <option value="">Todos os professores</option>
+          </select>
+        </div>
         <div class="panel">
           <div class="panel-head"><div class="panel-title">Todos os Homeworks</div></div>
           <div id="hwList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhum homework no sistema.</p></div></div>
@@ -308,7 +318,12 @@ body { background: var(--g50); margin: 0; }
 
       <!-- ═══ FEEDBACKS ═══ -->
       <div class="section" id="sec-feedbacks">
-        <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:20px">💬 Supervisão de Feedbacks</h2>
+        <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:16px">💬 Supervisão de Feedbacks</h2><div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
+          <span style="font-size:12px;font-weight:700;color:var(--g500)">Filtrar por professor:</span>
+          <select id="fbFilter" onchange="loadFeedbacks()" style="padding:8px 14px;border:2px solid var(--g200);border-radius:8px;font-family:inherit;font-size:13px;color:var(--navy);outline:none">
+            <option value="">Todos os professores</option>
+          </select>
+        </div>
         <div class="panel">
           <div class="panel-head"><div class="panel-title">Todos os Feedbacks</div></div>
           <div id="fbList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhum feedback no sistema.</p></div></div>
@@ -350,7 +365,12 @@ body { background: var(--g50); margin: 0; }
       
       <!-- ═══ WRITING SUPERVISION ═══ -->
       <div class="section" id="sec-writing">
-        <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:20px">✍️ Supervisão de Redações</h2>
+        <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:16px">✍️ Supervisão de Redações</h2><div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
+          <span style="font-size:12px;font-weight:700;color:var(--g500)">Filtrar por professor:</span>
+          <select id="wrFilter" onchange="loadWritingCoord()" style="padding:8px 14px;border:2px solid var(--g200);border-radius:8px;font-family:inherit;font-size:13px;color:var(--navy);outline:none">
+            <option value="">Todos os professores</option>
+          </select>
+        </div>
         <div class="panel">
           <div class="panel-head"><div class="panel-title">Todas as Redações</div></div>
           <div id="wrCoordList"><div class="empty-state"><div class="empty-icon">✍️</div><p>Nenhuma redação no sistema.</p></div></div>
@@ -359,7 +379,12 @@ body { background: var(--g50); margin: 0; }
 
       <!-- ═══ PRONUNCIATION SUPERVISION ═══ -->
       <div class="section" id="sec-pronunciation-coord">
-        <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:20px">🎙️ Supervisão de Pronúncias</h2>
+        <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:16px">🎙️ Supervisão de Pronúncias</h2><div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
+          <span style="font-size:12px;font-weight:700;color:var(--g500)">Filtrar por professor:</span>
+          <select id="prFilter" onchange="loadPronunciationCoord()" style="padding:8px 14px;border:2px solid var(--g200);border-radius:8px;font-family:inherit;font-size:13px;color:var(--navy);outline:none">
+            <option value="">Todos os professores</option>
+          </select>
+        </div>
         <div class="panel">
           <div class="panel-head"><div class="panel-title">Todas as Pronúncias Enviadas</div></div>
           <div id="prCoordList"><div class="empty-state"><div class="empty-icon">🎙️</div><p>Nenhuma pronúncia no sistema.</p></div></div>
@@ -368,7 +393,12 @@ body { background: var(--g50); margin: 0; }
 
       <!-- ═══ ASSESSMENTS SUPERVISION ═══ -->
       <div class="section" id="sec-assessments-coord">
-        <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:20px">📄 Supervisão de Assessments</h2>
+        <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:16px">📄 Supervisão de Assessments</h2><div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
+          <span style="font-size:12px;font-weight:700;color:var(--g500)">Filtrar por professor:</span>
+          <select id="assFilter" onchange="loadAssessmentsCoord()" style="padding:8px 14px;border:2px solid var(--g200);border-radius:8px;font-family:inherit;font-size:13px;color:var(--navy);outline:none">
+            <option value="">Todos os professores</option>
+          </select>
+        </div>
         <div class="panel">
           <div class="panel-head"><div class="panel-title">Todos os Assessments</div></div>
           <div id="assCoordList"><div class="empty-state"><div class="empty-icon">📄</div><p>Nenhum assessment no sistema.</p></div></div>
@@ -718,6 +748,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   await loadTeachersDropdown();
   await loadOverview();
+  
+  // Populate teacher filters in all supervision sections
+  const allTeachers = await getAllTeachers();
+  const allCoords = (await getAllProfiles()).filter(p => p.role === 'coordinator');
+  const staffList = [...allTeachers, ...allCoords];
+  const filterIds = ['hwFilter','fbFilter','wrFilter','prFilter','assFilter'];
+  filterIds.forEach(fid => {
+    const el = document.getElementById(fid);
+    if (!el) return;
+    staffList.forEach(t => {
+      el.innerHTML += '<option value="' + t.id + '">' + t.full_name + '</option>';
+    });
+  });
   const unread = await getUnreadCount(currentUser.id, 'coordinator');
   if (unread > 0) { document.getElementById('notifBadge').style.display = ''; document.getElementById('notifBadge').textContent = unread; }
 });
@@ -763,6 +806,28 @@ async function loadOverview() {
     } else {
       div.innerHTML = recent.map(r => '<div class="list-item"><div><div class="list-title">' + r.title + '</div><div class="list-sub">' + r.sub + '</div></div><span class="badge ' + r.cls + '">' + r.badge + '</span></div>').join('');
     }
+  // Check for expiring contracts (30 days)
+    const today = new Date();
+    const in30Days = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
+    const expiringStudents = profiles.filter(p => {
+      if (!p.contract_end || p.role !== 'student') return false;
+      const endDate = new Date(p.contract_end);
+      return endDate >= today && endDate <= in30Days;
+    });
+    
+    if (expiringStudents.length > 0) {
+      const alertHtml = '<div style="background:#fee2e2;border:2px solid #ef4444;border-radius:16px;padding:20px;margin-bottom:24px"><h3 style="font-size:16px;font-weight:800;color:#991b1b;margin-bottom:12px">⚠️ Contratos próximos do vencimento (' + expiringStudents.length + ')</h3>' +
+        expiringStudents.map(s => {
+          const daysLeft = Math.ceil((new Date(s.contract_end) - today) / (1000*60*60*24));
+          return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#fff;border-radius:10px;margin-bottom:6px"><div><strong style="color:#991b1b">' + s.full_name + '</strong><span style="color:#9CA3AF;font-size:12px;margin-left:8px">' + s.email + '</span></div><span style="background:#fecaca;color:#991b1b;padding:4px 12px;border-radius:99px;font-size:11px;font-weight:700">' + daysLeft + ' dias restantes</span></div>';
+        }).join('') + '</div>';
+      
+      // Insert alert at the top of overview
+      const overviewDiv = document.getElementById('sec-overview');
+      const greeting = overviewDiv.querySelector('h2');
+      greeting.insertAdjacentHTML('afterend', '<div style="margin-bottom:8px"></div>' + alertHtml);
+    }
+    
   } catch(e) { console.error('Overview:', e); }
 }
 
@@ -781,8 +846,10 @@ async function loadNivelamentos() {
 
 // ═══ HOMEWORKS SUPERVISION ═══
 async function loadHomeworks() {
-  // Coordinator sees ALL tasks
-  const { data: tasks } = await db.from('tasks').select('*, teacher:profiles!tasks_teacher_id_fkey(full_name), task_submissions(*, student:profiles(full_name))').order('created_at', {ascending: false});
+  const filterTeacher = document.getElementById('hwFilter')?.value || '';
+  let query = db.from('tasks').select('*, teacher:profiles!tasks_teacher_id_fkey(full_name, id), task_submissions(*, student:profiles(full_name))').order('created_at', {ascending: false});
+  if (filterTeacher) query = query.eq('teacher_id', filterTeacher);
+  const { data: tasks } = await query;
   const div = document.getElementById('hwList');
   if (!tasks || !tasks.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📝</div><p>Nenhum homework no sistema.</p></div>'; return; }
   div.innerHTML = tasks.map(t => {
@@ -796,7 +863,10 @@ async function loadHomeworks() {
 
 // ═══ FEEDBACKS SUPERVISION ═══
 async function loadFeedbacks() {
-  const { data: fbs } = await db.from('feedbacks').select('*, teacher:profiles!feedbacks_teacher_id_fkey(full_name), student:profiles!feedbacks_student_id_fkey(full_name)').order('created_at', {ascending: false});
+  const filterTeacher = document.getElementById('fbFilter')?.value || '';
+  let query = db.from('feedbacks').select('*, teacher:profiles!feedbacks_teacher_id_fkey(full_name, id), student:profiles!feedbacks_student_id_fkey(full_name)').order('created_at', {ascending: false});
+  if (filterTeacher) query = query.eq('teacher_id', filterTeacher);
+  const { data: fbs } = await query;
   const div = document.getElementById('fbList');
   if (!fbs || !fbs.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">💬</div><p>Nenhum feedback no sistema.</p></div>'; return; }
   div.innerHTML = fbs.map(f => '<div class="list-item"><div><div class="list-title">💬 ' + f.title + '</div><div class="list-sub">Prof. ' + (f.teacher?.full_name||'?') + ' → ' + (f.student?.full_name||'?') + ' — ' + (f.category||'geral') + ' — ' + formatDateTime(f.created_at) + '</div></div></div>').join('');
@@ -865,6 +935,9 @@ async function openEditModal(userId) {
   document.getElementById('editEmail').value = user.email || '';
   document.getElementById('editRole').value = user.role || 'student';
   document.getElementById('editLevel').value = user.level || '';
+  document.getElementById('editBirthday').value = user.birthday || '';
+  document.getElementById('editContractStart').value = user.contract_start || '';
+  document.getElementById('editContractEnd').value = user.contract_end || '';
   
   // Load teachers dropdown
   const teachers = await getAllTeachers();
@@ -919,10 +992,17 @@ async function saveUserEdit() {
 
   try {
     // Update profile
+    const birthday = document.getElementById('editBirthday').value || null;
+    const contractStart = document.getElementById('editContractStart').value || null;
+    const contractEnd = document.getElementById('editContractEnd').value || null;
+    
     const { error } = await db.from('profiles').update({
       full_name: name,
       role: role,
       level: level,
+      birthday: birthday,
+      contract_start: contractStart,
+      contract_end: contractEnd,
       updated_at: new Date().toISOString()
     }).eq('id', userId);
     
@@ -954,7 +1034,10 @@ async function saveUserEdit() {
 
 // ═══ WRITING SUPERVISION ═══
 async function loadWritingCoord() {
-  const { data: items } = await db.from('writing_activities').select('*, teacher:profiles!writing_activities_teacher_id_fkey(full_name), student:profiles!writing_activities_student_id_fkey(full_name)').order('created_at', {ascending: false});
+  const filterTeacher = document.getElementById('wrFilter')?.value || '';
+  let query = db.from('writing_activities').select('*, teacher:profiles!writing_activities_teacher_id_fkey(full_name, id), student:profiles!writing_activities_student_id_fkey(full_name)').order('created_at', {ascending: false});
+  if (filterTeacher) query = query.eq('teacher_id', filterTeacher);
+  const { data: items } = await query;
   const div = document.getElementById('wrCoordList');
   if (!items || !items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">✍️</div><p>Nenhuma redação no sistema.</p></div>'; return; }
   div.innerHTML = items.map(w => {
@@ -965,7 +1048,10 @@ async function loadWritingCoord() {
 
 // ═══ PRONUNCIATION SUPERVISION ═══
 async function loadPronunciationCoord() {
-  const { data: items } = await db.from('pronunciation').select('*, teacher:profiles!pronunciation_teacher_id_fkey(full_name), student:profiles!pronunciation_student_id_fkey(full_name)').order('created_at', {ascending: false});
+  const filterTeacher = document.getElementById('prFilter')?.value || '';
+  let query = db.from('pronunciation').select('*, teacher:profiles!pronunciation_teacher_id_fkey(full_name, id), student:profiles!pronunciation_student_id_fkey(full_name)').order('created_at', {ascending: false});
+  if (filterTeacher) query = query.eq('teacher_id', filterTeacher);
+  const { data: items } = await query;
   const div = document.getElementById('prCoordList');
   if (!items || !items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">🎙️</div><p>Nenhuma pronúncia no sistema.</p></div>'; return; }
   div.innerHTML = items.map(p => '<div class="list-item"><div><div class="list-title">🎙️ ' + p.word + (p.phonetic ? ' <span style="color:var(--g400);font-weight:400;font-style:italic">' + p.phonetic + '</span>' : '') + '</div><div class="list-sub">Prof. ' + (p.teacher?.full_name||'?') + ' → ' + (p.student?.full_name||'?') + ' — ' + formatDateTime(p.created_at) + '</div></div><span class="badge ' + (p.practiced ? 'badge-done' : 'badge-pending') + '">' + (p.practiced ? 'Praticado' : 'Pendente') + '</span></div>').join('');
@@ -973,7 +1059,10 @@ async function loadPronunciationCoord() {
 
 // ═══ ASSESSMENTS SUPERVISION ═══
 async function loadAssessmentsCoord() {
-  const { data: items } = await db.from('assessments').select('*, teacher:profiles!assessments_teacher_id_fkey(full_name), student:profiles!assessments_student_id_fkey(full_name)').order('created_at', {ascending: false});
+  const filterTeacher = document.getElementById('assFilter')?.value || '';
+  let query = db.from('assessments').select('*, teacher:profiles!assessments_teacher_id_fkey(full_name, id), student:profiles!assessments_student_id_fkey(full_name)').order('created_at', {ascending: false});
+  if (filterTeacher) query = query.eq('teacher_id', filterTeacher);
+  const { data: items } = await query;
   const div = document.getElementById('assCoordList');
   if (!items || !items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📄</div><p>Nenhum assessment no sistema.</p></div>'; return; }
   const MONTHS = ['','Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
@@ -1104,7 +1193,7 @@ function applyUserFilters() {
       '<div class="user-card-avatar ' + p.role + '">' + (p.full_name||'?')[0] + '</div>' +
       '<div style="flex:1"><div class="user-card-name">' + (p.full_name||'Sem nome') + '</div>' +
       '<div class="user-card-role ' + p.role + '">' + roleLabel + (p.level ? ' • ' + p.level : '') + '</div>' +
-      '<div class="user-card-email">' + p.email + '</div></div>' +
+      '<div class="user-card-email">' + p.email + (p.contract_end ? ' • Contrato até ' + formatDate(p.contract_end) : '') + '</div></div>' +
       '<span style="font-size:16px;color:var(--g400)">✏️</span></div>';
   }).join('');
 }

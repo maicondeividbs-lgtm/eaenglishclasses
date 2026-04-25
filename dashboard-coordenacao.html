@@ -221,6 +221,7 @@ body { background: var(--g50); margin: 0; }
       <div class="section active" id="sec-overview">
         <h2 style="font-size:24px;font-weight:800;color:var(--navy);margin-bottom:4px" id="greeting">Olá, Coordenador! 📊</h2>
         <p style="font-size:14px;color:var(--g500);margin-bottom:24px">Visão geral de todas as atividades da escola.</p>
+        <div id="contractAlerts"></div>
         <div class="stat-row">
           <div class="stat-card"><div class="stat-icon">🎓</div><div class="stat-label">Total de Alunos</div><div class="stat-value" id="statStudents">-</div></div>
           <div class="stat-card"><div class="stat-icon">👨‍🏫</div><div class="stat-label">Professores</div><div class="stat-value" id="statTeachers">-</div></div>
@@ -815,18 +816,34 @@ async function loadOverview() {
       return endDate >= today && endDate <= in30Days;
     });
     
+    // Also check expired contracts
+    const expiredStudents = profiles.filter(p => {
+      if (!p.contract_end || p.role !== 'student') return false;
+      const endDate = new Date(p.contract_end);
+      return endDate < today;
+    });
+    
+    const alertDiv = document.getElementById('contractAlerts');
+    let alertHtml = '';
+    
+    if (expiredStudents.length > 0) {
+      alertHtml += '<div style="background:#fef2f2;border:2px solid #dc2626;border-radius:16px;padding:20px;margin-bottom:16px"><h3 style="font-size:16px;font-weight:800;color:#991b1b;margin-bottom:12px">🚨 Contratos VENCIDOS (' + expiredStudents.length + ')</h3>' +
+        expiredStudents.map(s => {
+          const daysExpired = Math.ceil((today - new Date(s.contract_end)) / (1000*60*60*24));
+          return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#fff;border-radius:10px;margin-bottom:6px;flex-wrap:wrap;gap:8px"><div><strong style="color:#991b1b">' + s.full_name + '</strong><span style="color:#9CA3AF;font-size:12px;margin-left:8px">' + s.email + '</span></div><span style="background:#dc2626;color:#fff;padding:4px 12px;border-radius:99px;font-size:11px;font-weight:700">Vencido há ' + daysExpired + ' dia(s)</span></div>';
+        }).join('') + '</div>';
+    }
+    
     if (expiringStudents.length > 0) {
-      const alertHtml = '<div style="background:#fee2e2;border:2px solid #ef4444;border-radius:16px;padding:20px;margin-bottom:24px"><h3 style="font-size:16px;font-weight:800;color:#991b1b;margin-bottom:12px">⚠️ Contratos próximos do vencimento (' + expiringStudents.length + ')</h3>' +
+      alertHtml += '<div style="background:#fff7ed;border:2px solid #f59a1e;border-radius:16px;padding:20px;margin-bottom:16px"><h3 style="font-size:16px;font-weight:800;color:#92400e;margin-bottom:12px">⚠️ Contratos próximos do vencimento (' + expiringStudents.length + ')</h3>' +
         expiringStudents.map(s => {
           const daysLeft = Math.ceil((new Date(s.contract_end) - today) / (1000*60*60*24));
-          return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#fff;border-radius:10px;margin-bottom:6px"><div><strong style="color:#991b1b">' + s.full_name + '</strong><span style="color:#9CA3AF;font-size:12px;margin-left:8px">' + s.email + '</span></div><span style="background:#fecaca;color:#991b1b;padding:4px 12px;border-radius:99px;font-size:11px;font-weight:700">' + daysLeft + ' dias restantes</span></div>';
+          const urgency = daysLeft <= 7 ? 'background:#ef4444;color:#fff' : daysLeft <= 15 ? 'background:#f59a1e;color:#fff' : 'background:#fef3c7;color:#92400e';
+          return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#fff;border-radius:10px;margin-bottom:6px;flex-wrap:wrap;gap:8px"><div><strong style="color:#92400e">' + s.full_name + '</strong><span style="color:#9CA3AF;font-size:12px;margin-left:8px">' + s.email + '</span></div><span style="' + urgency + ';padding:4px 12px;border-radius:99px;font-size:11px;font-weight:700">' + daysLeft + ' dia(s) restantes</span></div>';
         }).join('') + '</div>';
-      
-      // Insert alert at the top of overview
-      const overviewDiv = document.getElementById('sec-overview');
-      const greeting = overviewDiv.querySelector('h2');
-      greeting.insertAdjacentHTML('afterend', '<div style="margin-bottom:8px"></div>' + alertHtml);
     }
+    
+    if (alertDiv) alertDiv.innerHTML = alertHtml;
     
   } catch(e) { console.error('Overview:', e); }
 }
@@ -1006,7 +1023,11 @@ async function saveUserEdit() {
       updated_at: new Date().toISOString()
     }).eq('id', userId);
     
-    if (error) throw error;
+    if (error) {
+      console.error('Profile update error:', error);
+      throw error;
+    }
+    console.log('Profile updated successfully for:', userId);
 
     // Update enrollment if teacher and course are set
     if (teacherId && courseId) {

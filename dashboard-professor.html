@@ -156,6 +156,10 @@ body { background: var(--g50); margin: 0; }
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
         <span>Visão Geral</span>
       </button>
+      <button class="sb-link" data-section="schedule">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
+        <span>Meu Schedule</span>
+      </button>
       <button class="sb-link" data-section="students">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
         <span>Meus Alunos</span>
@@ -236,6 +240,43 @@ body { background: var(--g50); margin: 0; }
       </div>
 
       
+      
+      <!-- ═══ SCHEDULE ═══ -->
+      <div class="section" id="sec-schedule">
+        <h2 style="font-size:22px;font-weight:800;color:var(--navy);margin-bottom:8px">📅 Meu Schedule</h2>
+        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Sua grade horária semanal. Clique em uma aula para registrar cancelamento ou reposição.</p>
+
+        <!-- Month selector for events -->
+        <div style="display:flex;gap:12px;align-items:center;margin-bottom:20px;flex-wrap:wrap">
+          <input type="month" id="schedMonth" style="padding:10px 14px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;color:var(--navy);outline:none">
+          <span style="font-size:12px;color:var(--g400)">Selecione o mês para ver/registrar eventos</span>
+        </div>
+
+        <!-- Weekly grid -->
+        <div class="panel" style="overflow-x:auto;margin-bottom:20px">
+          <table id="schedGrid" style="width:100%;border-collapse:collapse;min-width:700px">
+            <thead>
+              <tr style="background:var(--navy)">
+                <th style="padding:12px 8px;color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;width:70px;text-align:center">Horário</th>
+                <th style="padding:12px 8px;color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;text-align:center">Segunda</th>
+                <th style="padding:12px 8px;color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;text-align:center">Terça</th>
+                <th style="padding:12px 8px;color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;text-align:center">Quarta</th>
+                <th style="padding:12px 8px;color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;text-align:center">Quinta</th>
+                <th style="padding:12px 8px;color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;text-align:center">Sexta</th>
+                <th style="padding:12px 8px;color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;text-align:center">Sábado</th>
+              </tr>
+            </thead>
+            <tbody id="schedBody"></tbody>
+          </table>
+        </div>
+
+        <!-- Events for selected month -->
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">📋 Eventos do Mês</div><span class="badge badge-time" id="schedEventCount">0</span></div>
+          <div id="schedEvents"><div class="empty-state"><div class="empty-icon">📅</div><p>Nenhum evento registrado neste mês.</p></div></div>
+        </div>
+      </div>
+
       <!-- ═══ MEUS ALUNOS ═══ -->
       <div class="section" id="sec-students">
         <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:20px">👥 Meus Alunos</h2>
@@ -393,7 +434,7 @@ body { background: var(--g50); margin: 0; }
 <script src="supabase.js"></script>
 <script>
 let currentUser = null;
-const sections = {"overview":"Visão Geral","students":"Meus Alunos","homework":"Homework","feedback":"Feedbacks","announcements":"Avisos","writing":"Redação","pronunciation":"Pronúncia","assessments":"Assessments","messages":"Mensagens"};
+const sections = {"overview":"Visão Geral","schedule":"Meu Schedule","students":"Meus Alunos","homework":"Homework","feedback":"Feedbacks","announcements":"Avisos","writing":"Redação","pronunciation":"Pronúncia","assessments":"Assessments","messages":"Mensagens"};
 
 // ═══ INIT ═══
 document.addEventListener('DOMContentLoaded', async () => {
@@ -706,6 +747,123 @@ async function markMsgRead(msgId, btn) {
 }
 
 
+
+// ═══ SCHEDULE ═══
+const DAYS = ['Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+const HOURS = ['07:00','07:30','08:00','08:30','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00'];
+
+document.getElementById('schedMonth').value = new Date().toISOString().slice(0,7);
+document.getElementById('schedMonth').addEventListener('change', loadScheduleEvents);
+
+async function loadSchedule() {
+  const slots = await getScheduleSlots(currentUser.id);
+  renderScheduleGrid(slots);
+  loadScheduleEvents();
+}
+
+function renderScheduleGrid(slots) {
+  const tbody = document.getElementById('schedBody');
+  tbody.innerHTML = HOURS.map(hour => {
+    const cells = DAYS.map((day, di) => {
+      const slot = slots.find(s => s.day_of_week === di && s.time_slot && s.time_slot.startsWith(hour));
+      if (slot) {
+        const dur = slot.duration_minutes === 30 ? ' (30min)' : '';
+        return '<td style="padding:6px 4px;border:1px solid var(--g100);text-align:center;vertical-align:middle;cursor:pointer" onclick="showSlotActions(' + slot.id + ',\'' + slot.student_name.replace(/'/g,"\\'") + '\',\'' + day + '\',\'' + hour + '\')">' +
+          '<div style="background:var(--blue-soft);border:1px solid var(--blue);border-radius:8px;padding:6px 4px;font-size:11px;transition:all 0.2s" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform=''">' +
+          '<div style="font-weight:700;color:var(--navy)">' + slot.student_name + '</div>' +
+          '<div style="font-size:10px;color:var(--blue)">' + (slot.student_level || '') + dur + '</div></div></td>';
+      }
+      return '<td style="padding:6px 4px;border:1px solid var(--g100);text-align:center"></td>';
+    }).join('');
+    return '<tr><td style="padding:8px 6px;border:1px solid var(--g100);text-align:center;font-size:12px;font-weight:700;color:var(--navy);background:var(--g50)">' + hour + '</td>' + cells + '</tr>';
+  }).join('');
+}
+
+function showSlotActions(slotId, studentName, day, hour) {
+  const month = document.getElementById('schedMonth').value;
+  if (!month) { showToast('Selecione o mês primeiro','error'); return; }
+  
+  const action = prompt(
+    studentName + ' — ' + day + ' ' + hour + '\n\n' +
+    'Escolha uma ação:\n' +
+    '1 = Cancelamento (aluno cancelou)\n' +
+    '2 = Cancelamento sem 24h\n' +
+    '3 = Reposição marcada\n' +
+    '4 = Feriado\n' +
+    '5 = Falta do professor\n\n' +
+    'Digite o número:'
+  );
+  
+  if (!action) return;
+  
+  const types = {'1':'cancellation','2':'cancellation','3':'replacement','4':'cancellation','5':'cancellation'};
+  const notes = {
+    '1':'Aula cancelada com 24h de antecedência',
+    '2':'Aula cancelada sem 24h de antecedência', 
+    '3':'Reposição de aula',
+    '4':'Feriado',
+    '5':'Falta do professor'
+  };
+  
+  const eventType = types[action];
+  const note = notes[action];
+  if (!eventType) { showToast('Opção inválida','error'); return; }
+  
+  const dateStr = prompt('Data do evento (DD/MM/AAAA):');
+  if (!dateStr) return;
+  
+  // Parse DD/MM/YYYY to YYYY-MM-DD
+  const parts = dateStr.split('/');
+  if (parts.length !== 3) { showToast('Formato inválido. Use DD/MM/AAAA','error'); return; }
+  const isoDate = parts[2] + '-' + parts[1].padStart(2,'0') + '-' + parts[0].padStart(2,'0');
+  
+  registerEvent(slotId, isoDate, eventType, note, studentName);
+}
+
+async function registerEvent(slotId, eventDate, eventType, notes, studentName) {
+  try {
+    await addScheduleEvent(slotId, currentUser.id, eventDate, eventType, notes, currentUser.id, studentName);
+    showToast('Evento registrado!');
+    loadScheduleEvents();
+  } catch(e) { showToast('Erro: ' + e.message, 'error'); }
+}
+
+async function loadScheduleEvents() {
+  const monthInput = document.getElementById('schedMonth').value;
+  if (!monthInput) return;
+  const [year, month] = monthInput.split('-').map(Number);
+  
+  const events = await getScheduleEvents(currentUser.id, month, year);
+  const div = document.getElementById('schedEvents');
+  document.getElementById('schedEventCount').textContent = events.length;
+  
+  if (!events.length) {
+    div.innerHTML = '<div class="empty-state"><div class="empty-icon">📅</div><p>Nenhum evento registrado em ' + MONTHS[month] + '.</p></div>';
+    return;
+  }
+  
+  const typeLabels = {cancellation:'❌ Cancelamento',replacement:'🔄 Reposição',reschedule:'📅 Reagendamento',note:'📝 Observação'};
+  const typeColors = {cancellation:'#fecaca',replacement:'#d1fae5',reschedule:'#dbeafe',note:'#fef3c7'};
+  
+  div.innerHTML = events.map(e => {
+    return '<div class="list-item" style="border-left:4px solid ' + (typeColors[e.event_type]||'var(--g200)') + '">' +
+      '<div style="flex:1"><div class="list-title">' + (typeLabels[e.event_type]||e.event_type) + ' — ' + (e.student_name||'') + '</div>' +
+      '<div class="list-sub">' + formatDate(e.event_date) + ' — ' + (e.notes||'') + '</div>' +
+      '<div class="list-sub" style="font-size:10px;margin-top:2px">Registrado por ' + (e.creator?.full_name||'') + '</div></div>' +
+      '<button onclick="deleteEvent(' + e.id + ')" style="border:none;background:var(--g100);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:12px;color:var(--g500)">✕</button></div>';
+  }).join('');
+}
+
+async function deleteEvent(eventId) {
+  if (!confirm('Remover este evento?')) return;
+  try {
+    await removeScheduleEvent(eventId);
+    showToast('Evento removido');
+    loadScheduleEvents();
+  } catch(e) { showToast('Erro: ' + e.message, 'error'); }
+}
+
+
 // ═══ MY STUDENTS LIST ═══
 async function loadStudentsList() {
   const students = window._myStudents || await getMyStudents(currentUser.id);
@@ -775,6 +933,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!active || !currentUser) return;
     const id = active.id.replace('sec-','');
     switch(id) {
+      case 'schedule': loadSchedule(); break;
       case 'students': loadStudentsList(); break;
       case 'homework': loadHomeworkList(); break;
       case 'feedback': loadFeedbackList(); break;

@@ -185,13 +185,13 @@ body { background: var(--g50); margin: 0; }
 .sb-logout:hover { color: #ef4444 !important; background: rgba(239,68,68,0.1) !important; }
 
 /* Main */
-.main { margin-left: 280px !important; flex: 1; }
+.main { margin-left: 280px !important; flex: 1; overflow-x: hidden; min-width: 0; }
 .topbar { height: 72px; background: rgba(247,248,250,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--g100); display: flex; align-items: center; justify-content: space-between; padding: 0 44px !important; position: sticky; top: 0; z-index: 50; }
 .topbar-title { font-size: 15px; font-weight: 700; color: var(--navy); }
 .topbar-user { display: flex; align-items: center; gap: 12px; }
 .topbar-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--mango), var(--orange)); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; font-weight: 800; }
 .topbar-name { font-size: 13px; font-weight: 600; color: var(--navy); }
-.content { padding: 36px 44px !important; }
+.content { padding: 36px 44px !important; overflow-x: hidden; }
 
 /* Sections */
 .section { display: none; }
@@ -202,7 +202,7 @@ body { background: var(--g50); margin: 0; }
 .panel-head { padding: 20px 28px; border-bottom: 1px solid var(--g100); display: flex; justify-content: space-between; align-items: center; }
 .panel-title { font-family: 'Plus Jakarta Sans',sans-serif; font-size: 15px; font-weight: 800; color: var(--navy); }
 
-.stat-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 28px; }
+.stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 28px; }
 .stat-card { background: #fff; border-radius: 14px; padding: 18px; border: 1px solid var(--g100); position: relative; overflow: hidden; transition: all 0.3s; }
 .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--mango); }
 .stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
@@ -584,7 +584,7 @@ body { background: var(--g50); margin: 0; }
         <div class="panel" style="margin-bottom:20px">
           <div class="panel-head"><div class="panel-title">⚙️ Configuração</div></div>
           <div style="padding:24px 28px">
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">
               <div class="f-group"><label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px">Professor</label><select id="toolProf" class="filter-select" style="width:100%"><option value="">Selecione</option></select></div>
               <div class="f-group"><label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px">Valor por hora (R$)</label><input type="number" id="toolRate" value="50" min="1" step="0.50" style="width:100%;padding:10px 14px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:14px;color:var(--navy);outline:none"></div>
               <div class="f-group"><label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px">Mês / Ano</label><input type="month" id="toolMonth" style="width:100%;padding:10px 14px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:14px;color:var(--navy);outline:none"></div>
@@ -608,11 +608,11 @@ body { background: var(--g50); margin: 0; }
         <button onclick="processAllSheets()" class="btn-send" style="width:100%;padding:16px;margin-bottom:24px;font-size:15px;border-radius:12px;background:var(--navy)">📊 Processar e Calcular</button>
 
         <div id="toolResults" style="display:none">
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px" id="toolSummaryCards"></div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:24px" id="toolSummaryCards"></div>
           <div class="panel" style="margin-bottom:20px">
             <div class="panel-head"><div class="panel-title">📋 Detalhamento por Aluno</div><button onclick="exportToolPDF()" style="padding:8px 18px;border:none;border-radius:8px;background:var(--orange);color:#fff;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">📄 Gerar PDF</button></div>
             <div style="overflow-x:auto">
-              <table style="width:100%;border-collapse:collapse" id="toolTable">
+              <table style="width:100%;border-collapse:collapse;table-layout:auto" id="toolTable">
                 <thead><tr style="background:var(--navy)"><th style="padding:12px 16px;text-align:left;color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px">Aluno</th><th style="padding:12px 16px;text-align:center;color:#fff;font-size:11px;font-weight:700;text-transform:uppercase">Aulas</th><th style="padding:12px 16px;text-align:center;color:#fff;font-size:11px;font-weight:700;text-transform:uppercase">Canc. s/24h</th><th style="padding:12px 16px;text-align:center;color:#fff;font-size:11px;font-weight:700;text-transform:uppercase">Antecipadas</th><th style="padding:12px 16px;text-align:center;color:#fff;font-size:11px;font-weight:700;text-transform:uppercase">Excluídas</th><th style="padding:12px 16px;text-align:center;color:#fff;font-size:11px;font-weight:700;text-transform:uppercase">Total</th><th style="padding:12px 16px;text-align:right;color:#fff;font-size:11px;font-weight:700;text-transform:uppercase">Valor</th></tr></thead>
                 <tbody id="toolTableBody"></tbody>
                 <tfoot id="toolTableFoot"></tfoot>
@@ -629,7 +629,20 @@ body { background: var(--g50); margin: 0; }
         let toolFiles = [];
         let toolProcessedData = [];
         document.getElementById('toolMonth').value = new Date().toISOString().slice(0,7);
-        (async function(){try{const t=await getAllTeachers();const c=(await getAllProfiles()).filter(p=>p.role==='coordinator');const s=document.getElementById('toolProf');[...t,...c].forEach(x=>{s.innerHTML+='<option value="'+x.id+'">'+x.full_name+'</option>';});}catch(e){}})();
+        // Tool professor dropdown is populated in initToolProfessors
+async function initToolProfessors() {
+  try {
+    const t = await getAllTeachers();
+    const c = (await getAllProfiles()).filter(p => p.role === 'coordinator');
+    const s = document.getElementById('toolProf');
+    if (!s) return;
+    [...t, ...c].forEach(x => {
+      s.innerHTML += '<option value="' + x.id + '">' + x.full_name + '</option>';
+    });
+  } catch(e) { console.error('Tool prof load error:', e); }
+}
+// Call when switching to tool section
+
 
         function handleToolDrop(files){const arr=Array.from(files).filter(f=>f.name.match(/\.xlsx?$/i));toolFiles=[...toolFiles,...arr];document.getElementById('toolFileCount').textContent=toolFiles.length+' arquivo(s)';const list=document.getElementById('toolFileList');list.innerHTML=toolFiles.map((f,i)=>'<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--cream);border-radius:10px;margin-bottom:6px"><div style="display:flex;align-items:center;gap:10px"><span style="font-size:20px">📊</span><div><div style="font-size:13px;font-weight:600;color:var(--navy)">'+f.name+'</div><div style="font-size:11px;color:var(--g400)">'+(f.size/1024).toFixed(1)+' KB</div></div></div><button onclick="toolFiles.splice('+i+',1);handleToolDrop([])" style="border:none;background:var(--g200);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:12px">✕</button></div>').join('');}
 
@@ -637,7 +650,63 @@ body { background: var(--g50); margin: 0; }
 
         async function processAllSheets(){if(!toolFiles.length){showToast('Selecione planilhas','error');return;}const rate=parseFloat(document.getElementById('toolRate').value)||50;const profName=document.getElementById('toolProf').selectedOptions[0]?.textContent||'Professor';toolProcessedData=[];for(const f of toolFiles){const d=await readXlsx(f);if(d)toolProcessedData.push(d);}if(!toolProcessedData.length){showToast('Nenhuma planilha válida','error');return;}let tH=0,tN=0,tC=0,tM=0,tE=0;toolProcessedData.forEach(d=>{tH+=d.countableHours;tN+=d.normal;tC+=d.canceledNo24h;tM+=d.movedHere;tE+=d.excluded;});const tS=tH*rate;document.getElementById('toolResults').style.display='';document.getElementById('toolSummaryCards').innerHTML='<div class="stat-card"><div class="stat-icon">📊</div><div class="stat-label">Total de Horas</div><div class="stat-value">'+tH+'</div></div><div class="stat-card"><div class="stat-icon">👥</div><div class="stat-label">Alunos</div><div class="stat-value">'+toolProcessedData.length+'</div></div><div class="stat-card"><div class="stat-icon">💰</div><div class="stat-label">Valor/Hora</div><div class="stat-value" style="font-size:24px">R$ '+rate.toFixed(2)+'</div></div><div class="stat-card"><div class="stat-icon">💵</div><div class="stat-label">Salário Total</div><div class="stat-value" style="color:var(--orange)">R$ '+tS.toFixed(2)+'</div></div>';const tbody=document.getElementById('toolTableBody');tbody.innerHTML=toolProcessedData.map(d=>'<tr style="border-bottom:1px solid var(--g100)"><td style="padding:12px 16px;font-weight:600;color:var(--navy);font-size:13px">'+d.studentName+'<div style="font-size:11px;color:var(--g400);font-weight:400">'+d.level+'</div></td><td style="padding:12px 16px;text-align:center;font-weight:700;color:var(--navy)">'+d.normal+'</td><td style="padding:12px 16px;text-align:center;color:var(--orange);font-weight:600">'+d.canceledNo24h+'</td><td style="padding:12px 16px;text-align:center;color:var(--blue);font-weight:600">'+d.movedHere+'</td><td style="padding:12px 16px;text-align:center;color:var(--g400)">'+d.excluded+'</td><td style="padding:12px 16px;text-align:center;font-size:16px;font-weight:800;color:var(--navy)">'+d.countableHours+'</td><td style="padding:12px 16px;text-align:right;font-weight:700;color:var(--navy)">R$ '+(d.countableHours*rate).toFixed(2)+'</td></tr>').join('');document.getElementById('toolTableFoot').innerHTML='<tr style="background:var(--cream);border-top:2px solid var(--navy)"><td style="padding:14px 16px;font-weight:800;color:var(--navy)">TOTAL</td><td style="padding:14px 16px;text-align:center;font-weight:800;color:var(--navy)">'+tN+'</td><td style="padding:14px 16px;text-align:center;font-weight:700;color:var(--orange)">'+tC+'</td><td style="padding:14px 16px;text-align:center;font-weight:700;color:var(--blue)">'+tM+'</td><td style="padding:14px 16px;text-align:center;color:var(--g400)">'+tE+'</td><td style="padding:14px 16px;text-align:center;font-size:18px;font-weight:900;color:var(--navy)">'+tH+'h</td><td style="padding:14px 16px;text-align:right;font-size:18px;font-weight:900;color:var(--orange)">R$ '+tS.toFixed(2)+'</td></tr>';const statusLabels={NORMAL:'✅ Aula dada',CANCELED_NO_24H:'⚠️ Canc. s/ 24h',MOVED_HERE:'🔄 Antecipação',MOVED_AWAY:'↩️ Movida',CANCELED_24H:'❌ Canc. c/ 24h',HOLIDAY:'🏖️ Feriado',TEACHER_ABSENT:'🚫 Falta prof.'};const statusColors={NORMAL:'#10b981',CANCELED_NO_24H:'var(--orange)',MOVED_HERE:'var(--blue)',MOVED_AWAY:'var(--g400)',CANCELED_24H:'#ef4444',HOLIDAY:'var(--g400)',TEACHER_ABSENT:'#ef4444'};document.getElementById('toolDetailAccordion').innerHTML=toolProcessedData.map(d=>{const rows=d.classes.map(c=>{const ok=['NORMAL','CANCELED_NO_24H','MOVED_HERE'].includes(c.status);return'<tr style="border-bottom:1px solid var(--g100);'+(ok?'':'opacity:0.5')+'"><td style="padding:8px 14px;font-size:12px;font-weight:600;color:var(--navy)">'+c.dateStr+'</td><td style="padding:8px 14px;font-size:12px;color:var(--g700)">'+c.desc.substring(0,55)+'</td><td style="padding:8px 14px"><span style="font-size:11px;font-weight:700;color:'+(statusColors[c.status]||'var(--g500)')+'">'+( statusLabels[c.status]||c.status)+'</span></td><td style="padding:8px 14px;text-align:center;font-weight:700;font-size:12px;color:'+(ok?'var(--navy)':'var(--g300)')+'">'+( ok?'1h':'-')+'</td></tr>';}).join('');return'<div class="panel" style="margin-bottom:12px"><div class="panel-head" style="cursor:pointer" onclick="const n=this.nextElementSibling;n.style.display=n.style.display===\'none\'?\'\':  \'none\'"><div class="panel-title">'+d.studentName+' <span style="font-weight:400;color:var(--g400)">('+d.countableHours+'h)</span></div><span style="color:var(--g400);font-size:18px">▾</span></div><div style="display:none"><table style="width:100%;border-collapse:collapse"><thead><tr style="background:var(--g50)"><th style="padding:8px 14px;text-align:left;font-size:10px;font-weight:700;color:var(--g500);text-transform:uppercase">Data</th><th style="padding:8px 14px;text-align:left;font-size:10px;font-weight:700;color:var(--g500);text-transform:uppercase">Conteúdo</th><th style="padding:8px 14px;text-align:left;font-size:10px;font-weight:700;color:var(--g500);text-transform:uppercase">Status</th><th style="padding:8px 14px;text-align:center;font-size:10px;font-weight:700;color:var(--g500);text-transform:uppercase">Horas</th></tr></thead><tbody>'+rows+'</tbody></table></div></div>';}).join('');document.getElementById('toolResults').scrollIntoView({behavior:'smooth',block:'start'});showToast('✅ '+toolProcessedData.length+' planilha(s) — '+tH+' horas totais');}
 
-        function exportToolPDF(){const{jsPDF}=window.jspdf;const doc=new jsPDF();const profName=document.getElementById('toolProf').selectedOptions[0]?.textContent||'Professor';const rate=parseFloat(document.getElementById('toolRate').value)||50;const mi=document.getElementById('toolMonth').value;const MS=['','Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];const[y,m]=mi?mi.split('-').map(Number):[2026,4];const mn=MS[m]+' '+y;doc.setFontSize(20);doc.setTextColor(25,36,78);doc.text('EA English Classes',105,20,{align:'center'});doc.setFontSize(14);doc.text('Relatório de Aulas — '+mn,105,30,{align:'center'});doc.setFontSize(11);doc.setTextColor(107,114,128);doc.text('Professor: '+profName+'  |  Valor/hora: R$ '+rate.toFixed(2),105,38,{align:'center'});const rows=toolProcessedData.map(d=>[d.studentName,d.normal+'',d.canceledNo24h+'',d.movedHere+'',d.excluded+'',d.countableHours+'h','R$ '+(d.countableHours*rate).toFixed(2)]);const tH=toolProcessedData.reduce((s,d)=>s+d.countableHours,0);rows.push(['TOTAL','','','','',tH+'h','R$ '+(tH*rate).toFixed(2)]);doc.autoTable({startY:45,head:[['Aluno','Aulas','Canc.s/24h','Antecip.','Excluídas','Total','Valor']],body:rows,styles:{fontSize:9,cellPadding:4},headStyles:{fillColor:[25,36,78],textColor:255,fontStyle:'bold'},alternateRowStyles:{fillColor:[250,250,252]}});let py=doc.lastAutoTable.finalY+15;toolProcessedData.forEach(d=>{if(py>250){doc.addPage();py=20;}doc.setFontSize(11);doc.setTextColor(25,36,78);doc.text(d.studentName+' ('+d.level+')',14,py);py+=3;const cr=d.classes.map(c=>{const sl={NORMAL:'Aula dada',CANCELED_NO_24H:'Canc. s/24h',MOVED_HERE:'Antecipação',MOVED_AWAY:'Movida',CANCELED_24H:'Canc. c/24h',HOLIDAY:'Feriado',TEACHER_ABSENT:'Falta prof.'};const ok=['NORMAL','CANCELED_NO_24H','MOVED_HERE'].includes(c.status);return[c.dateStr,c.desc.substring(0,42),sl[c.status]||c.status,ok?'1h':'-'];});doc.autoTable({startY:py,head:[['Data','Conteúdo','Status','Horas']],body:cr,styles:{fontSize:8,cellPadding:3},headStyles:{fillColor:[37,60,150],textColor:255},margin:{left:14}});py=doc.lastAutoTable.finalY+12;});const pc=doc.internal.getNumberOfPages();for(let i=1;i<=pc;i++){doc.setPage(i);doc.setFontSize(8);doc.setTextColor(180);doc.text('EA English Classes — '+new Date().toLocaleDateString('pt-BR')+' — Pág. '+i+'/'+pc,105,290,{align:'center'});}doc.save('Relatorio_'+profName.replace(/\s/g,'_')+'_'+mn.replace(/\s/g,'_')+'.pdf');showToast('PDF gerado!');}
+        function exportToolPDF(){
+  const{jsPDF}=window.jspdf;
+  const doc=new jsPDF();
+  const profName=document.getElementById('toolProf').selectedOptions[0]?.textContent||'Professor';
+  const rate=parseFloat(document.getElementById('toolRate').value)||50;
+  const mi=document.getElementById('toolMonth').value;
+  const MS=['','Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const[y,m]=mi?mi.split('-').map(Number):[2026,4];
+  const mn=MS[m]+' '+y;
+  const tH=toolProcessedData.reduce((s,d)=>s+d.countableHours,0);
+  const tS=tH*rate;
+
+  // Header
+  doc.setFontSize(22);
+  doc.setTextColor(25,36,78);
+  doc.text('EA English Classes',105,22,{align:'center'});
+
+  doc.setFontSize(12);
+  doc.setTextColor(107,114,128);
+  doc.text('Relatório de Aulas — '+mn,105,32,{align:'center'});
+
+  // Info box
+  doc.setFillColor(245,245,252);
+  doc.roundedRect(14,40,182,22,4,4,'F');
+  doc.setFontSize(10);
+  doc.setTextColor(25,36,78);
+  doc.text('Professor: '+profName,20,50);
+  doc.text('Valor/hora: R$ '+rate.toFixed(2),90,50);
+  doc.text('Total: '+tH+'h = R$ '+tS.toFixed(2),150,50);
+
+  // Main table
+  const rows=toolProcessedData.map(d=>[
+    d.studentName,
+    d.level,
+    d.countableHours+'h',
+    'R$ '+(d.countableHours*rate).toFixed(2)
+  ]);
+  rows.push(['TOTAL','',tH+'h','R$ '+tS.toFixed(2)]);
+
+  doc.autoTable({
+    startY:68,
+    head:[['Aluno','Nível','Horas','Valor']],
+    body:rows,
+    styles:{fontSize:10,cellPadding:6,lineColor:[230,230,230]},
+    headStyles:{fillColor:[25,36,78],textColor:255,fontStyle:'bold',fontSize:10},
+    footStyles:{fillColor:[245,245,245],textColor:[25,36,78],fontStyle:'bold'},
+    alternateRowStyles:{fillColor:[252,252,255]},
+    columnStyles:{0:{cellWidth:70},1:{cellWidth:50},2:{halign:'center',cellWidth:30},3:{halign:'right',cellWidth:32}},
+  });
+
+  // Footer
+  doc.setFontSize(8);
+  doc.setTextColor(180);
+  doc.text('EA English Classes — Gerado em '+new Date().toLocaleDateString('pt-BR'),105,285,{align:'center'});
+
+  doc.save('Relatorio_'+profName.replace(/\s/g,'_')+'_'+mn.replace(/\s/g,'_')+'.pdf');
+  showToast('PDF gerado!');}
         </script>
       </div>
 

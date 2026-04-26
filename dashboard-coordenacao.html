@@ -185,13 +185,13 @@ body { background: var(--g50); margin: 0; }
 .sb-logout:hover { color: #ef4444 !important; background: rgba(239,68,68,0.1) !important; }
 
 /* Main */
-.main { margin-left: 280px !important; flex: 1; overflow-x: hidden; min-width: 0; }
-.topbar { height: 72px; background: rgba(247,248,250,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--g100); display: flex; align-items: center; justify-content: space-between; padding: 0 44px !important; position: sticky; top: 0; z-index: 50; }
+.main { margin-left: 280px !important; flex: 1; overflow-x: hidden; min-width: 0; border-left: 1px solid var(--g100); }
+.topbar { height: 72px; background: rgba(247,248,250,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--g100); display: flex; align-items: center; justify-content: space-between; padding: 0 48px !important; position: sticky; top: 0; z-index: 50; }
 .topbar-title { font-size: 15px; font-weight: 700; color: var(--navy); }
 .topbar-user { display: flex; align-items: center; gap: 12px; }
 .topbar-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--mango), var(--orange)); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; font-weight: 800; }
 .topbar-name { font-size: 13px; font-weight: 600; color: var(--navy); }
-.content { padding: 36px 44px !important; overflow-x: hidden; }
+.content { padding: 36px 48px 36px 48px !important; overflow-x: hidden; }
 
 /* Sections */
 .section { display: none; }
@@ -342,10 +342,6 @@ body { background: var(--g50); margin: 0; }
       </button>
     </nav>
     <div class="sb-bottom">
-      <a href="login.html">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-        Trocar Portal
-      </a>
       <a href="#" class="sb-logout" onclick="signOut();return false;">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
         Sair
@@ -629,19 +625,27 @@ body { background: var(--g50); margin: 0; }
         let toolFiles = [];
         let toolProcessedData = [];
         document.getElementById('toolMonth').value = new Date().toISOString().slice(0,7);
-        // Tool professor dropdown is populated in initToolProfessors
+        // Tool professor dropdown
+let toolProfLoaded = false;
 async function initToolProfessors() {
+  if (toolProfLoaded) return;
+  const s = document.getElementById('toolProf');
+  if (!s) return;
   try {
-    const t = await getAllTeachers();
-    const c = (await getAllProfiles()).filter(p => p.role === 'coordinator');
-    const s = document.getElementById('toolProf');
-    if (!s) return;
-    [...t, ...c].forEach(x => {
-      s.innerHTML += '<option value="' + x.id + '">' + x.full_name + '</option>';
-    });
+    // Get ALL profiles and filter by role
+    const { data: profiles } = await db.from('profiles').select('id, full_name, role').in('role', ['teacher', 'coordinator']).order('full_name');
+    if (profiles && profiles.length > 0) {
+      profiles.forEach(p => {
+        const label = p.role === 'coordinator' ? p.full_name + ' (Coord)' : p.full_name;
+        s.innerHTML += '<option value="' + p.id + '">' + label + '</option>';
+      });
+      toolProfLoaded = true;
+      console.log('Tool: loaded ' + profiles.length + ' professors');
+    } else {
+      console.warn('Tool: no professors found');
+    }
   } catch(e) { console.error('Tool prof load error:', e); }
 }
-// Call when switching to tool section
 
 
         function handleToolDrop(files){const arr=Array.from(files).filter(f=>f.name.match(/\.xlsx?$/i));toolFiles=[...toolFiles,...arr];document.getElementById('toolFileCount').textContent=toolFiles.length+' arquivo(s)';const list=document.getElementById('toolFileList');list.innerHTML=toolFiles.map((f,i)=>'<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--cream);border-radius:10px;margin-bottom:6px"><div style="display:flex;align-items:center;gap:10px"><span style="font-size:20px">📊</span><div><div style="font-size:13px;font-weight:600;color:var(--navy)">'+f.name+'</div><div style="font-size:11px;color:var(--g400)">'+(f.size/1024).toFixed(1)+' KB</div></div></div><button onclick="toolFiles.splice('+i+',1);handleToolDrop([])" style="border:none;background:var(--g200);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:12px">✕</button></div>').join('');}

@@ -12,7 +12,6 @@
 <meta name="theme-color" content="#19244e">
 <title>Coordenação — EA English Classes</title>
 <link rel="stylesheet" href="style.css">
-<script src="https://cdn.tailwindcss.com"></script>
 <style>
 body { background: var(--g50); margin: 0; }
 .dash { display: flex; min-height: 100vh; }
@@ -64,7 +63,8 @@ body { background: var(--g50); margin: 0; }
 .stat-icon { transition: transform 0.3s; }
 
 /* Panel improvements */
-.panel { transition: box-shadow 0.3s; }
+.panel { transition: box-shadow 0.3s; border-radius: 16px !important; }
+.panel .panel-head { border-radius: 16px 16px 0 0; }
 .panel:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.04); }
 
 /* List items enter animation */
@@ -186,12 +186,12 @@ body { background: var(--g50); margin: 0; }
 
 /* Main */
 .main { margin-left: 280px !important; flex: 1; overflow-x: hidden; min-width: 0; border-left: 1px solid var(--g100); }
-.topbar { height: 72px; background: rgba(247,248,250,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--g100); display: flex; align-items: center; justify-content: space-between; padding: 0 48px !important; position: sticky; top: 0; z-index: 50; }
+.topbar { height: 72px; background: rgba(247,248,250,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--g100); display: flex; align-items: center; justify-content: space-between; padding: 0 56px !important; position: sticky; top: 0; z-index: 50; }
 .topbar-title { font-size: 15px; font-weight: 700; color: var(--navy); }
 .topbar-user { display: flex; align-items: center; gap: 12px; }
 .topbar-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--mango), var(--orange)); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; font-weight: 800; }
 .topbar-name { font-size: 13px; font-weight: 600; color: var(--navy); }
-.content { padding: 36px 48px 36px 48px !important; overflow-x: hidden; }
+.content { padding: 40px 56px 40px 56px !important; overflow-x: hidden; }
 
 /* Sections */
 .section { display: none; }
@@ -372,7 +372,7 @@ body { background: var(--g50); margin: 0; }
     <div class="content">
       <!-- ═══ OVERVIEW ═══ -->
       <div class="section active" id="sec-overview">
-        <h2 style="font-size:26px;font-weight:800;color:var(--navy);margin-bottom:6px" id="greeting">Olá, Coordenador! 📊</h2>
+        <h2 style="font-size:28px;font-weight:800;color:var(--navy);margin-bottom:6px;letter-spacing:-0.02em" id="greeting">Olá, Coordenador! 📊</h2>
         <p style="font-size:14px;color:var(--g500);margin-bottom:24px">Visão geral de todas as atividades da escola.</p>
         <div id="contractAlerts"></div>
         <div class="stat-row">
@@ -458,9 +458,10 @@ body { background: var(--g50); margin: 0; }
 
       <!-- ═══ HOMEWORKS ═══ -->
       <div class="section" id="sec-homework">
-        <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:16px">📝 Supervisão de Homeworks</h2><div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
-          <span style="font-size:12px;font-weight:700;color:var(--g500)">Filtrar por professor:</span>
-          <select id="hwFilter" onchange="loadHomeworks()" class="filter-select">
+        <h2 style="font-size:22px;font-weight:800;color:var(--navy);margin-bottom:8px">📝 Supervisão de Homeworks</h2>
+        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Acompanhe todas as tarefas enviadas pelos professores.</p><div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;align-items:center;background:#fff;padding:16px 20px;border-radius:14px;border:1px solid var(--g100)">
+          <span style="font-size:13px;font-weight:700;color:var(--navy)">Filtrar por professor:</span>
+          <select id="hwFilter" onchange="loadHomeworks()" class="filter-select" style="flex:1;min-width:200px">
             <option value="">Todos os professores</option>
           </select>
         </div>
@@ -472,9 +473,10 @@ body { background: var(--g50); margin: 0; }
 
       <!-- ═══ FEEDBACKS ═══ -->
       <div class="section" id="sec-feedbacks">
-        <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:16px">💬 Supervisão de Feedbacks</h2><div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
-          <span style="font-size:12px;font-weight:700;color:var(--g500)">Filtrar por professor:</span>
-          <select id="fbFilter" onchange="loadFeedbacks()" class="filter-select">
+        <h2 style="font-size:22px;font-weight:800;color:var(--navy);margin-bottom:8px">💬 Supervisão de Feedbacks</h2>
+        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Todos os feedbacks individuais enviados para os alunos.</p><div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;align-items:center;background:#fff;padding:16px 20px;border-radius:14px;border:1px solid var(--g100)">
+          <span style="font-size:13px;font-weight:700;color:var(--navy)">Filtrar por professor:</span>
+          <select id="fbFilter" onchange="loadFeedbacks()" class="filter-select" style="flex:1;min-width:200px">
             <option value="">Todos os professores</option>
           </select>
         </div>
@@ -519,9 +521,10 @@ body { background: var(--g50); margin: 0; }
       
       <!-- ═══ WRITING SUPERVISION ═══ -->
       <div class="section" id="sec-writing">
-        <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:16px">✍️ Supervisão de Redações</h2><div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
-          <span style="font-size:12px;font-weight:700;color:var(--g500)">Filtrar por professor:</span>
-          <select id="wrFilter" onchange="loadWritingCoord()" class="filter-select">
+        <h2 style="font-size:22px;font-weight:800;color:var(--navy);margin-bottom:8px">✍️ Supervisão de Redações</h2>
+        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Atividades de redação enviadas, aguardando resposta ou já corrigidas.</p><div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;align-items:center;background:#fff;padding:16px 20px;border-radius:14px;border:1px solid var(--g100)">
+          <span style="font-size:13px;font-weight:700;color:var(--navy)">Filtrar por professor:</span>
+          <select id="wrFilter" onchange="loadWritingCoord()" class="filter-select" style="flex:1;min-width:200px">
             <option value="">Todos os professores</option>
           </select>
         </div>
@@ -533,9 +536,10 @@ body { background: var(--g50); margin: 0; }
 
       <!-- ═══ PRONUNCIATION SUPERVISION ═══ -->
       <div class="section" id="sec-pronunciation-coord">
-        <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:16px">🎙️ Supervisão de Pronúncias</h2><div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
-          <span style="font-size:12px;font-weight:700;color:var(--g500)">Filtrar por professor:</span>
-          <select id="prFilter" onchange="loadPronunciationCoord()" class="filter-select">
+        <h2 style="font-size:22px;font-weight:800;color:var(--navy);margin-bottom:8px">🎙️ Supervisão de Pronúncias</h2>
+        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Palavras e frases enviadas para prática de pronúncia.</p><div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;align-items:center;background:#fff;padding:16px 20px;border-radius:14px;border:1px solid var(--g100)">
+          <span style="font-size:13px;font-weight:700;color:var(--navy)">Filtrar por professor:</span>
+          <select id="prFilter" onchange="loadPronunciationCoord()" class="filter-select" style="flex:1;min-width:200px">
             <option value="">Todos os professores</option>
           </select>
         </div>
@@ -547,9 +551,10 @@ body { background: var(--g50); margin: 0; }
 
       <!-- ═══ ASSESSMENTS SUPERVISION ═══ -->
       <div class="section" id="sec-assessments-coord">
-        <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:16px">📄 Supervisão de Assessments</h2><div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
-          <span style="font-size:12px;font-weight:700;color:var(--g500)">Filtrar por professor:</span>
-          <select id="assFilter" onchange="loadAssessmentsCoord()" class="filter-select">
+        <h2 style="font-size:22px;font-weight:800;color:var(--navy);margin-bottom:8px">📄 Supervisão de Assessments</h2>
+        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Relatórios mensais enviados pelos professores.</p><div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;align-items:center;background:#fff;padding:16px 20px;border-radius:14px;border:1px solid var(--g100)">
+          <span style="font-size:13px;font-weight:700;color:var(--navy)">Filtrar por professor:</span>
+          <select id="assFilter" onchange="loadAssessmentsCoord()" class="filter-select" style="flex:1;min-width:200px">
             <option value="">Todos os professores</option>
           </select>
         </div>
@@ -562,7 +567,7 @@ body { background: var(--g50); margin: 0; }
       
       <!-- ═══ TESTIMONIALS MANAGEMENT ═══ -->
       <div class="section" id="sec-testimonials">
-        <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:20px">⭐ Gestão de Depoimentos</h2>
+        <h2 style="font-size:22px;font-weight:800;color:var(--navy);margin-bottom:8px">⭐ Gestão de Depoimentos</h2>
         <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Depoimentos enviados pelos visitantes do site. Aprove para exibir na homepage.</p>
         <div class="panel">
           <div class="panel-head"><div class="panel-title">Todos os Depoimentos</div></div>
@@ -1289,6 +1294,7 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'pronunciation-coord': loadPronunciationCoord(); break;
       case 'assessments-coord': loadAssessmentsCoord(); break;
       case 'testimonials': loadTestimonials(); break;
+      case 'tool': initToolProfessors(); break;
     }
   });
   document.querySelectorAll('.section').forEach(s => observer.observe(s, {attributes:true, attributeFilter:['class']}));

@@ -769,7 +769,7 @@ function renderScheduleGrid(slots) {
       if (slot) {
         const dur = slot.duration_minutes === 30 ? ' (30min)' : '';
         return '<td style="padding:6px 4px;border:1px solid var(--g100);text-align:center;vertical-align:middle;cursor:pointer" onclick="showSlotActions(' + slot.id + ',\'' + slot.student_name.replace(/'/g,"\\'") + '\',\'' + day + '\',\'' + hour + '\')">' +
-          '<div style="background:var(--blue-soft);border:1px solid var(--blue);border-radius:8px;padding:6px 4px;font-size:11px;transition:all 0.2s" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform=''">' +
+          '<div style="background:var(--blue-soft);border:1px solid var(--blue);border-radius:8px;padding:6px 4px;font-size:11px;transition:all 0.2s" onmouseover="this.style.transform=\'scale(1.05)\'" onmouseout="this.style.transform=\'\'">' +
           '<div style="font-weight:700;color:var(--navy)">' + slot.student_name + '</div>' +
           '<div style="font-size:10px;color:var(--blue)">' + (slot.student_level || '') + dur + '</div></div></td>';
       }

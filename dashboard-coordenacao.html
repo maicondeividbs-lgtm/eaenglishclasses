@@ -16,6 +16,33 @@
 body { background: var(--g50); margin: 0; }
 .dash { display: flex; min-height: 100vh; }
 
+
+/* Section title animation */
+.section h2 {
+  font-size: 24px !important;
+  font-weight: 900 !important;
+  color: var(--navy) !important;
+  letter-spacing: -0.02em;
+  position: relative;
+  padding-bottom: 12px;
+  margin-bottom: 6px !important;
+}
+.section h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 48px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--orange), var(--mango));
+  border-radius: 2px;
+  animation: titleBar 0.5s cubic-bezier(0.4,0,0.2,1) 0.2s backwards;
+}
+@keyframes titleBar {
+  from { width: 0; opacity: 0; }
+  to { width: 48px; opacity: 1; }
+}
+
 /* Smooth section transitions */
 .section {
   animation: sectionIn 0.35s cubic-bezier(0.4,0,0.2,1);
@@ -191,7 +218,7 @@ body { background: var(--g50); margin: 0; }
 .topbar-user { display: flex; align-items: center; gap: 12px; }
 .topbar-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--mango), var(--orange)); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; font-weight: 800; }
 .topbar-name { font-size: 13px; font-weight: 600; color: var(--navy); }
-.content { padding: 48px 48px 48px 48px !important; overflow-x: hidden; }
+.content { padding: 24px 48px 48px 48px !important; overflow-x: hidden; }
 
 /* Sections */
 .section { display: none; }

@@ -1288,7 +1288,7 @@ function renderCoordGrid(slots, teacherId) {
           '<div style="font-size:10px;color:var(--blue)">' + (slot.student_level||'') + '</div>' +
           '<div class="del" style="display:none;position:absolute;top:-6px;right:-6px;width:18px;height:18px;background:#ef4444;color:#fff;border-radius:50%;font-size:10px;align-items:center;justify-content:center;cursor:pointer">✕</div></div></td>';
       }
-      return '<td style="padding:4px;border:1px solid var(--g100);text-align:center;cursor:pointer;transition:background 0.2s" onmouseover="this.style.background='var(--cream)'" onmouseout="this.style.background=''" onclick="addSlotCoord(' + di + ',\'' + hour + '\',\'' + teacherId + '\')">' +
+      return '<td style="padding:4px;border:1px solid var(--g100);text-align:center;cursor:pointer;transition:background 0.2s" onmouseover="this.style.background=\'var(--cream)\'" onmouseout="this.style.background=\'\'" onclick="addSlotCoord(' + di + ',\'' + hour + '\',\'' + teacherId + '\')">' +
         '<div style="color:var(--g200);font-size:18px">+</div></td>';
     }).join('');
     return '<tr><td style="padding:8px 6px;border:1px solid var(--g100);text-align:center;font-size:12px;font-weight:700;color:var(--navy);background:var(--g50)">' + hour + '</td>' + cells + '</tr>';

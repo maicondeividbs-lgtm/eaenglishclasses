@@ -318,6 +318,47 @@ async function getUnreadCount(userId, role) {
   return count;
 }
 
+
+// ═══ SCHEDULE ═══
+async function getScheduleSlots(teacherId) {
+  const { data } = await db.from('schedule_slots').select('*').eq('teacher_id', teacherId).order('day_of_week').order('time_slot');
+  return data || [];
+}
+
+async function addScheduleSlot(teacherId, dayOfWeek, timeSlot, studentName, studentLevel, duration) {
+  const { data, error } = await db.from('schedule_slots').upsert([{
+    teacher_id: teacherId, day_of_week: dayOfWeek, time_slot: timeSlot,
+    student_name: studentName, student_level: studentLevel || '', duration_minutes: duration || 60
+  }], { onConflict: 'teacher_id,day_of_week,time_slot' }).select();
+  if (error) throw error;
+  return data;
+}
+
+async function removeScheduleSlot(slotId) {
+  const { error } = await db.from('schedule_slots').delete().eq('id', slotId);
+  if (error) throw error;
+}
+
+async function getScheduleEvents(teacherId, month, year) {
+  const startDate = year + '-' + String(month).padStart(2,'0') + '-01';
+  const endDate = month === 12 ? (year+1) + '-01-01' : year + '-' + String(month+1).padStart(2,'0') + '-01';
+  const { data } = await db.from('schedule_events').select('*, creator:profiles!schedule_events_created_by_fkey(full_name)').eq('teacher_id', teacherId).gte('event_date', startDate).lt('event_date', endDate).order('event_date');
+  return data || [];
+}
+
+async function addScheduleEvent(slotId, teacherId, eventDate, eventType, notes, createdBy, studentName) {
+  const { error } = await db.from('schedule_events').insert([{
+    slot_id: slotId, teacher_id: teacherId, event_date: eventDate,
+    event_type: eventType, notes: notes || '', created_by: createdBy, student_name: studentName || ''
+  }]);
+  if (error) throw error;
+}
+
+async function removeScheduleEvent(eventId) {
+  const { error } = await db.from('schedule_events').delete().eq('id', eventId);
+  if (error) throw error;
+}
+
 const MONTHS = ['','Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 
 // ═══ AVATAR UPLOAD ═══

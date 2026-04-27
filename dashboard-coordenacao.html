@@ -17,6 +17,87 @@ body { background: var(--g50); margin: 0; }
 .dash { display: flex; min-height: 100vh; }
 
 
+
+/* Schedule grid */
+.sched-th {
+  padding: 10px 4px;
+  background: var(--navy);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+.sched-hour {
+  padding: 6px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--navy);
+  background: var(--g50);
+  border: 1px solid var(--g100);
+  width: 60px;
+}
+.sched-cell {
+  border: 1px solid var(--g100);
+  padding: 3px;
+  height: 48px;
+  vertical-align: middle;
+  text-align: center;
+  transition: background 0.2s;
+}
+.sched-empty:hover { background: var(--cream); }
+.sched-hover {
+  background: rgba(243,107,46,0.1) !important;
+  box-shadow: inset 0 0 0 2px var(--orange);
+}
+.sched-slot {
+  border-radius: 8px;
+  padding: 4px 6px;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  cursor: pointer;
+  min-height: 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.sched-slot:hover { transform: scale(1.05); }
+.sched-slot:hover .sched-slot-x { opacity: 1; }
+.sched-slot-name { font-size: 10px; font-weight: 800; line-height: 1.2; }
+.sched-slot-level { font-size: 9px; opacity: 0.7; }
+.sched-slot-x {
+  position: absolute;
+  top: -6px; right: -6px;
+  width: 16px; height: 16px;
+  background: #ef4444;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+@keyframes schedPop {
+  0% { transform: scale(0); opacity: 0; }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.sched-pop { animation: schedPop 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+
+.sched-student {
+  position: relative;
+}
+.sched-student:active {
+  cursor: grabbing;
+  transform: scale(0.95) !important;
+}
+
 /* Section title animation */
 .section h2 {
   font-size: 24px !important;
@@ -481,23 +562,50 @@ body { background: var(--g50); margin: 0; }
       <!-- ═══ SCHEDULES ═══ -->
       <div class="section" id="sec-schedules">
         <h2 style="font-size:22px;font-weight:800;color:var(--navy);margin-bottom:8px">📅 Gestão de Schedules</h2>
-        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Monte e gerencie a grade horária de cada professor.</p>
+        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Arraste alunos para os horários. Clique para remover.</p>
+
+        <!-- Professor selector -->
         <div style="display:flex;gap:12px;align-items:center;margin-bottom:20px;flex-wrap:wrap;background:#fff;padding:16px 20px;border-radius:14px;border:1px solid var(--g100)">
           <span style="font-size:13px;font-weight:700;color:var(--navy)">Professor:</span>
           <select id="schedProfSelect" onchange="loadCoordSchedule()" class="filter-select" style="flex:1;min-width:200px"><option value="">Selecione o professor</option></select>
           <input type="month" id="schedCoordMonth" onchange="loadCoordScheduleEvents()" style="padding:8px 12px;border:2px solid var(--g200);border-radius:8px;font-family:inherit;font-size:13px;outline:none">
         </div>
-        <div class="panel" style="overflow-x:auto;margin-bottom:20px">
-          <div class="panel-head"><div class="panel-title">Grade Semanal</div><span style="font-size:12px;color:var(--g400)">Clique em + para adicionar aula. Clique em uma aula para remover.</span></div>
-          <table style="width:100%;border-collapse:collapse;min-width:700px">
-            <thead><tr style="background:var(--navy)"><th style="padding:12px 8px;color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;width:70px;text-align:center">Horário</th><th style="padding:12px 8px;color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;text-align:center">Seg</th><th style="padding:12px 8px;color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;text-align:center">Ter</th><th style="padding:12px 8px;color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;text-align:center">Qua</th><th style="padding:12px 8px;color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;text-align:center">Qui</th><th style="padding:12px 8px;color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;text-align:center">Sex</th><th style="padding:12px 8px;color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;text-align:center">Sáb</th></tr></thead>
-            <tbody id="coordSchedBody"><tr><td colspan="7" style="padding:40px;text-align:center;color:var(--g400)">Selecione um professor.</td></tr></tbody>
-          </table>
+
+        <div style="display:grid;grid-template-columns:220px 1fr;gap:20px;align-items:start">
+          <!-- Student pool (draggable) -->
+          <div style="background:#fff;border-radius:16px;border:1px solid var(--g100);overflow:hidden;position:sticky;top:80px">
+            <div style="padding:14px 16px;background:var(--navy);color:#fff;font-size:13px;font-weight:700">👥 Alunos do Professor</div>
+            <div id="schedStudentPool" style="padding:8px;max-height:500px;overflow-y:auto">
+              <div style="padding:20px;text-align:center;color:var(--g400);font-size:12px">Selecione um professor</div>
+            </div>
+          </div>
+
+          <!-- Schedule grid -->
+          <div style="background:#fff;border-radius:16px;border:1px solid var(--g100);overflow-x:auto">
+            <table id="coordSchedGrid" style="width:100%;border-collapse:collapse;min-width:640px">
+              <thead>
+                <tr>
+                  <th class="sched-th" style="width:60px">Hora</th>
+                  <th class="sched-th">Seg</th>
+                  <th class="sched-th">Ter</th>
+                  <th class="sched-th">Qua</th>
+                  <th class="sched-th">Qui</th>
+                  <th class="sched-th">Sex</th>
+                  <th class="sched-th">Sáb</th>
+                </tr>
+              </thead>
+              <tbody id="coordSchedBody"><tr><td colspan="7" style="padding:40px;text-align:center;color:var(--g400);font-size:13px">Selecione um professor.</td></tr></tbody>
+            </table>
+          </div>
         </div>
-        <div class="panel"><div class="panel-head"><div class="panel-title">📋 Eventos do Mês</div><span class="badge badge-time" id="coordSchedEventCount">0</span></div><div id="coordSchedEvents"><div class="empty-state"><div class="empty-icon">📅</div><p>Selecione professor e mês.</p></div></div></div>
+
+        <!-- Events -->
+        <div class="panel" style="margin-top:20px">
+          <div class="panel-head"><div class="panel-title">📋 Eventos do Mês</div><span class="badge badge-time" id="coordSchedEventCount">0</span></div>
+          <div id="coordSchedEvents"><div class="empty-state"><div class="empty-icon">📅</div><p>Selecione professor e mês.</p></div></div>
+        </div>
       </div>
 
-      <!-- ═══ NIVELAMENTOS ═══ -->
       <div class="section" id="sec-nivelamento">
         <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:20px">📅 Agendamentos de Nivelamento</h2>
         <div class="panel">
@@ -1270,8 +1378,49 @@ async function handleCoordAvatar(file) {
 
 
 // ═══ COORDINATOR SCHEDULE ═══
-const C_DAYS = ['Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
-const C_HOURS = ['07:00','07:30','08:00','08:30','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00'];
+
+// ═══ COORDINATOR SCHEDULE — DRAG & DROP ═══
+const C_DAYS = ['Seg','Ter','Qua','Qui','Sex','Sáb'];
+const C_HOURS = ['07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00'];
+const PASTEL_COLORS = [
+  {bg:'#dbeafe',border:'#93c5fd',text:'#1e40af'},
+  {bg:'#fce7f3',border:'#f9a8d4',text:'#9d174d'},
+  {bg:'#d1fae5',border:'#6ee7b7',text:'#065f46'},
+  {bg:'#fef3c7',border:'#fcd34d',text:'#92400e'},
+  {bg:'#ede9fe',border:'#c4b5fd',text:'#5b21b6'},
+  {bg:'#fee2e2',border:'#fca5a5',text:'#991b1b'},
+  {bg:'#ccfbf1',border:'#5eead4',text:'#134e4a'},
+  {bg:'#fce4ec',border:'#f48fb1',text:'#880e4f'},
+  {bg:'#e8eaf6',border:'#9fa8da',text:'#283593'},
+  {bg:'#fff3e0',border:'#ffcc80',text:'#e65100'},
+  {bg:'#e0f2f1',border:'#80cbc4',text:'#004d40'},
+  {bg:'#f3e5f5',border:'#ce93d8',text:'#6a1b9a'},
+  {bg:'#e8f5e9',border:'#a5d6a7',text:'#1b5e20'},
+  {bg:'#fafafa',border:'#bdbdbd',text:'#424242'},
+  {bg:'#fff8e1',border:'#ffe082',text:'#f57f17'},
+  {bg:'#e1f5fe',border:'#81d4fa',text:'#01579b'},
+];
+
+let schedStudentColors = {};
+let schedCurrentTeacherId = null;
+
+// Pop sound
+function playPop() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.frequency.setValueAtTime(800, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.05);
+    osc.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.1);
+    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.15);
+  } catch(e) {}
+}
 
 let coordSchedLoaded = false;
 async function initCoordSchedule() {
@@ -1281,7 +1430,7 @@ async function initCoordSchedule() {
   const sel = document.getElementById('schedProfSelect');
   try {
     const { data } = await db.from('profiles').select('id, full_name, role').in('role', ['teacher','coordinator']).order('full_name');
-    if (data) data.forEach(p => { sel.innerHTML += '<option value="' + p.id + '">' + p.full_name + '</option>'; });
+    if (data) data.forEach(p => { sel.innerHTML += '<option value="' + p.id + '">' + p.full_name + (p.role==='coordinator'?' (Coord)':'') + '</option>'; });
     coordSchedLoaded = true;
   } catch(e) {}
 }
@@ -1289,83 +1438,139 @@ async function initCoordSchedule() {
 async function loadCoordSchedule() {
   const teacherId = document.getElementById('schedProfSelect').value;
   if (!teacherId) return;
+  schedCurrentTeacherId = teacherId;
   
+  // Load students of this teacher
+  const students = await getMyStudents(teacherId);
+  renderStudentPool(students);
+  
+  // Load existing slots
   const slots = await getScheduleSlots(teacherId);
-  renderCoordGrid(slots, teacherId);
+  renderCoordGrid(slots);
   loadCoordScheduleEvents();
 }
 
-function renderCoordGrid(slots, teacherId) {
+function getStudentColor(name) {
+  if (!schedStudentColors[name]) {
+    const idx = Object.keys(schedStudentColors).length % PASTEL_COLORS.length;
+    schedStudentColors[name] = PASTEL_COLORS[idx];
+  }
+  return schedStudentColors[name];
+}
+
+function renderStudentPool(students) {
+  const pool = document.getElementById('schedStudentPool');
+  if (!students.length) {
+    pool.innerHTML = '<div style="padding:20px;text-align:center;color:var(--g400);font-size:12px">Nenhum aluno vinculado.</div>';
+    return;
+  }
+  pool.innerHTML = students.map(s => {
+    const c = getStudentColor(s.full_name);
+    return '<div draggable="true" class="sched-student" data-name="' + s.full_name + '" data-level="' + (s.course_name || s.level || '') + '" style="background:' + c.bg + ';border:2px solid ' + c.border + ';color:' + c.text + ';border-radius:10px;padding:8px 12px;margin-bottom:6px;cursor:grab;font-size:12px;font-weight:600;transition:all 0.2s;user-select:none" ondragstart="onDragStart(event)" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform=''" onmouseleave="this.style.transform=''">' + s.full_name + '<div style="font-size:10px;font-weight:400;opacity:0.7;margin-top:2px">' + (s.course_name || s.level || '') + '</div></div>';
+  }).join('');
+}
+
+function renderCoordGrid(slots) {
+  // Assign colors to existing slots
+  slots.forEach(s => getStudentColor(s.student_name));
+  
   const tbody = document.getElementById('coordSchedBody');
   tbody.innerHTML = C_HOURS.map(hour => {
     const cells = C_DAYS.map((day, di) => {
       const slot = slots.find(s => s.day_of_week === di && s.time_slot && s.time_slot.startsWith(hour));
       if (slot) {
-        return '<td style="padding:4px;border:1px solid var(--g100);text-align:center;vertical-align:middle;cursor:pointer" onclick="removeSlotCoord(' + slot.id + ')">' +
-          '<div style="background:var(--blue-soft);border:1px solid var(--blue);border-radius:8px;padding:6px 4px;font-size:11px;position:relative;transition:all 0.2s" onmouseover="this.querySelector(\'.del\').style.display=\'flex\'" onmouseout="this.querySelector(\'.del\').style.display=\'none\'">' +
-          '<div style="font-weight:700;color:var(--navy)">' + slot.student_name + '</div>' +
-          '<div style="font-size:10px;color:var(--blue)">' + (slot.student_level||'') + '</div>' +
-          '<div class="del" style="display:none;position:absolute;top:-6px;right:-6px;width:18px;height:18px;background:#ef4444;color:#fff;border-radius:50%;font-size:10px;align-items:center;justify-content:center;cursor:pointer">✕</div></div></td>';
+        const c = getStudentColor(slot.student_name);
+        return '<td class="sched-cell sched-filled" data-day="' + di + '" data-hour="' + hour + '" onclick="removeSlotCoord(' + slot.id + ',this)">' +
+          '<div class="sched-slot" style="background:' + c.bg + ';border:2px solid ' + c.border + ';color:' + c.text + '">' +
+          '<div class="sched-slot-name">' + slot.student_name + '</div>' +
+          '<div class="sched-slot-level">' + (slot.student_level || '') + '</div>' +
+          '<div class="sched-slot-x">✕</div></div></td>';
       }
-      return '<td style="padding:4px;border:1px solid var(--g100);text-align:center;cursor:pointer;transition:background 0.2s" onmouseover="this.style.background=\'var(--cream)\'" onmouseout="this.style.background=\'\'" onclick="addSlotCoord(' + di + ',\'' + hour + '\',\'' + teacherId + '\')">' +
-        '<div style="color:var(--g200);font-size:18px">+</div></td>';
+      return '<td class="sched-cell sched-empty" data-day="' + di + '" data-hour="' + hour + '" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">&nbsp;</td>';
     }).join('');
-    return '<tr><td style="padding:8px 6px;border:1px solid var(--g100);text-align:center;font-size:12px;font-weight:700;color:var(--navy);background:var(--g50)">' + hour + '</td>' + cells + '</tr>';
+    return '<tr><td class="sched-hour">' + hour + '</td>' + cells + '</tr>';
   }).join('');
 }
 
-async function addSlotCoord(dayOfWeek, timeSlot, teacherId) {
-  const name = prompt('Nome do aluno:');
-  if (!name) return;
-  const level = prompt('Nível (ex: RED BOOK, BLUE BOOK, INTRO):') || '';
-  const dur = prompt('Duração em minutos (60 ou 30):') || '60';
-  
-  try {
-    await addScheduleSlot(teacherId, dayOfWeek, timeSlot + ':00', name.toUpperCase(), level.toUpperCase(), parseInt(dur));
-    showToast('Aula adicionada!');
-    loadCoordSchedule();
-  } catch(e) { showToast('Erro: ' + e.message, 'error'); }
+function onDragStart(e) {
+  e.dataTransfer.setData('text/name', e.target.dataset.name);
+  e.dataTransfer.setData('text/level', e.target.dataset.level);
+  e.target.style.opacity = '0.4';
+  setTimeout(() => { if(e.target) e.target.style.opacity = '1'; }, 500);
 }
 
-async function removeSlotCoord(slotId) {
-  if (!confirm('Remover esta aula da grade fixa?')) return;
+function onDragOver(e) {
+  e.preventDefault();
+  e.currentTarget.classList.add('sched-hover');
+}
+
+function onDragLeave(e) {
+  e.currentTarget.classList.remove('sched-hover');
+}
+
+async function onDrop(e) {
+  e.preventDefault();
+  const cell = e.currentTarget;
+  cell.classList.remove('sched-hover');
+  
+  const name = e.dataTransfer.getData('text/name');
+  const level = e.dataTransfer.getData('text/level');
+  const day = parseInt(cell.dataset.day);
+  const hour = cell.dataset.hour;
+  
+  if (!name || !schedCurrentTeacherId) return;
+  
+  try {
+    await addScheduleSlot(schedCurrentTeacherId, day, hour + ':00', name, level, 60);
+    playPop();
+    
+    // Animate the cell
+    const c = getStudentColor(name);
+    cell.classList.remove('sched-empty');
+    cell.classList.add('sched-filled');
+    cell.innerHTML = '<div class="sched-slot sched-pop" style="background:' + c.bg + ';border:2px solid ' + c.border + ';color:' + c.text + '"><div class="sched-slot-name">' + name + '</div><div class="sched-slot-level">' + level + '</div><div class="sched-slot-x">✕</div></div>';
+    cell.removeAttribute('ondragover');
+    cell.removeAttribute('ondragleave');
+    cell.removeAttribute('ondrop');
+    
+    // Reload to get proper IDs
+    setTimeout(() => loadCoordSchedule(), 600);
+  } catch(e2) { showToast('Erro: ' + e2.message, 'error'); }
+}
+
+async function removeSlotCoord(slotId, cell) {
+  if (!confirm('Remover esta aula da grade?')) return;
   try {
     await removeScheduleSlot(slotId);
-    showToast('Aula removida da grade');
-    loadCoordSchedule();
+    if (cell) {
+      cell.querySelector('.sched-slot').style.transform = 'scale(0)';
+      cell.querySelector('.sched-slot').style.opacity = '0';
+    }
+    showToast('Aula removida');
+    setTimeout(() => loadCoordSchedule(), 300);
   } catch(e) { showToast('Erro: ' + e.message, 'error'); }
 }
 
 async function loadCoordScheduleEvents() {
-  const teacherId = document.getElementById('schedProfSelect').value;
-  const monthInput = document.getElementById('schedCoordMonth').value;
+  const teacherId = document.getElementById('schedProfSelect')?.value;
+  const monthInput = document.getElementById('schedCoordMonth')?.value;
   if (!teacherId || !monthInput) return;
-  
   const [year, month] = monthInput.split('-').map(Number);
   const events = await getScheduleEvents(teacherId, month, year);
   const div = document.getElementById('coordSchedEvents');
   document.getElementById('coordSchedEventCount').textContent = events.length;
-  
   if (!events.length) {
     div.innerHTML = '<div class="empty-state"><div class="empty-icon">📅</div><p>Nenhum evento neste mês.</p></div>';
     return;
   }
-  
   const typeLabels = {cancellation:'❌ Cancelamento',replacement:'🔄 Reposição',reschedule:'📅 Reagendamento',note:'📝 Observação'};
-  div.innerHTML = events.map(e => 
-    '<div class="list-item"><div style="flex:1"><div class="list-title">' + (typeLabels[e.event_type]||'') + ' — ' + (e.student_name||'') + '</div><div class="list-sub">' + formatDate(e.event_date) + ' — ' + (e.notes||'') + ' — por ' + (e.creator?.full_name||'') + '</div></div><button onclick="deleteCoordEvent(' + e.id + ')" style="border:none;background:var(--g100);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:12px">✕</button></div>'
-  ).join('');
+  div.innerHTML = events.map(e => '<div class="list-item"><div style="flex:1"><div class="list-title">' + (typeLabels[e.event_type]||'') + ' — ' + (e.student_name||'') + '</div><div class="list-sub">' + formatDate(e.event_date) + ' — ' + (e.notes||'') + ' — por ' + (e.creator?.full_name||'') + '</div></div><button onclick="deleteCoordEvent(' + e.id + ')" style="border:none;background:var(--g100);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:12px">✕</button></div>').join('');
 }
 
 async function deleteCoordEvent(eventId) {
-  if (!confirm('Remover este evento?')) return;
-  try {
-    await removeScheduleEvent(eventId);
-    showToast('Evento removido');
-    loadCoordScheduleEvents();
-  } catch(e) { showToast('Erro: ' + e.message, 'error'); }
+  if (!confirm('Remover?')) return;
+  try { await removeScheduleEvent(eventId); showToast('Removido'); loadCoordScheduleEvents(); } catch(e) { showToast('Erro','error'); }
 }
-
 
 // ═══ USER FILTERS ═══
 let allUsersCache = [];

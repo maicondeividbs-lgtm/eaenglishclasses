@@ -599,6 +599,36 @@ body { background: var(--g50); margin: 0; }
           </div>
         </div>
 
+        <!-- Duration selector (hidden, shown on drop) -->
+        <div id="schedDurPanel" style="display:none;background:#fff;border-radius:14px;border:2px solid var(--mango);padding:20px;margin-bottom:16px;animation:sectionIn 0.3s">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+            <h4 style="font-size:15px;font-weight:800;color:var(--navy)" id="schedDurTitle">Configurar aula</h4>
+            <button onclick="cancelDrop()" style="border:none;background:var(--g100);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:12px">✕</button>
+          </div>
+          <input type="hidden" id="dropDay"><input type="hidden" id="dropHour"><input type="hidden" id="dropName"><input type="hidden" id="dropLevel">
+          <div style="display:flex;gap:12px;align-items:end;flex-wrap:wrap">
+            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--navy);margin-bottom:4px">Duração</label><select id="dropDuration" class="filter-select"><option value="60">60 min (1h)</option><option value="30">30 min</option></select></div>
+            <button onclick="confirmDrop()" class="btn-send" style="padding:10px 24px;background:var(--mango)">Confirmar</button>
+          </div>
+        </div>
+
+        <!-- Add extra event button -->
+        <div style="margin-bottom:16px">
+          <button onclick="toggleExtraPanel()" style="padding:10px 20px;border:2px dashed var(--g300);border-radius:10px;background:#fff;color:var(--navy);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;width:100%;text-align:center" onmouseover="this.style.borderColor=this.style.color='var(--orange)'" onmouseout="this.style.borderColor='var(--g300)';this.style.color='var(--navy)'">+ Adicionar Evento Extraordinário (Reposição, Reunião, etc.)</button>
+        </div>
+        <div id="schedExtraPanel" style="display:none;background:#fff;border-radius:14px;border:2px solid var(--blue);padding:20px;margin-bottom:16px;animation:sectionIn 0.3s">
+          <h4 style="font-size:15px;font-weight:800;color:var(--navy);margin-bottom:14px">📌 Evento Extraordinário</h4>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--navy);margin-bottom:4px">Tipo</label><select id="extraType" class="filter-select" style="width:100%"><option value="replacement">🔄 Reposição de aula</option><option value="meeting">📋 Reunião pedagógica</option><option value="note">📝 Observação geral</option></select></div>
+            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--navy);margin-bottom:4px">Data</label><input type="date" id="extraDate" style="width:100%;padding:8px 10px;border:2px solid var(--g200);border-radius:8px;font-family:inherit;font-size:13px;outline:none"></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--navy);margin-bottom:4px">Aluno (se aplicável)</label><input type="text" id="extraStudent" placeholder="Nome do aluno" style="width:100%;padding:8px 10px;border:2px solid var(--g200);border-radius:8px;font-family:inherit;font-size:13px;outline:none"></div>
+            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--navy);margin-bottom:4px">Descrição</label><input type="text" id="extraNotes" placeholder="Detalhes do evento" style="width:100%;padding:8px 10px;border:2px solid var(--g200);border-radius:8px;font-family:inherit;font-size:13px;outline:none"></div>
+          </div>
+          <button onclick="submitExtraEvent()" class="btn-send" style="background:var(--blue)">Registrar Evento</button>
+        </div>
+
         <!-- Events -->
         <div class="panel" style="margin-top:20px">
           <div class="panel-head"><div class="panel-title">📋 Eventos do Mês</div><span class="badge badge-time" id="coordSchedEventCount">0</span></div>
@@ -1381,7 +1411,7 @@ async function handleCoordAvatar(file) {
 
 // ═══ COORDINATOR SCHEDULE — DRAG & DROP ═══
 const C_DAYS = ['Seg','Ter','Qua','Qui','Sex','Sáb'];
-const C_HOURS = ['07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00'];
+const C_HOURS = ['07:00','07:30','08:00','08:30','09:00','09:30','10:00','10:30','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','19:30','20:00','20:30','21:00','21:30','22:00'];
 const PASTEL_COLORS = [
   {bg:'#dbeafe',border:'#93c5fd',text:'#1e40af'},
   {bg:'#fce7f3',border:'#f9a8d4',text:'#9d174d'},
@@ -1480,11 +1510,12 @@ function renderCoordGrid(slots) {
       const slot = slots.find(s => s.day_of_week === di && s.time_slot && s.time_slot.startsWith(hour));
       if (slot) {
         const c = getStudentColor(slot.student_name);
-        return '<td class="sched-cell sched-filled" data-day="' + di + '" data-hour="' + hour + '" onclick="removeSlotCoord(' + slot.id + ',this)">' +
-          '<div class="sched-slot" style="background:' + c.bg + ';border:2px solid ' + c.border + ';color:' + c.text + '">' +
-          '<div class="sched-slot-name">' + slot.student_name + '</div>' +
+        const durLabel = slot.duration_minutes === 30 ? ' 30m' : '';
+        return '<td class="sched-cell sched-filled" data-day="' + di + '" data-hour="' + hour + '" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDropReplace(event,' + slot.id + ')">' +
+          '<div draggable="true" class="sched-slot" data-name="' + slot.student_name + '" data-level="' + (slot.student_level||'') + '" data-slotid="' + slot.id + '" ondragstart="onDragStart(event)" style="background:' + c.bg + ';border:2px solid ' + c.border + ';color:' + c.text + ';cursor:grab">' +
+          '<div class="sched-slot-name">' + slot.student_name + durLabel + '</div>' +
           '<div class="sched-slot-level">' + (slot.student_level || '') + '</div>' +
-          '<div class="sched-slot-x">✕</div></div></td>';
+          '<div class="sched-slot-x" onclick="event.stopPropagation();removeSlotCoord(' + slot.id + ')">✕</div></div></td>';
       }
       return '<td class="sched-cell sched-empty" data-day="' + di + '" data-hour="' + hour + '" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">&nbsp;</td>';
     }).join('');
@@ -1493,10 +1524,12 @@ function renderCoordGrid(slots) {
 }
 
 function onDragStart(e) {
-  e.dataTransfer.setData('text/name', e.target.dataset.name);
-  e.dataTransfer.setData('text/level', e.target.dataset.level);
-  e.target.style.opacity = '0.4';
-  setTimeout(() => { if(e.target) e.target.style.opacity = '1'; }, 500);
+  const el = e.target.closest('[draggable]') || e.target;
+  e.dataTransfer.setData('text/name', el.dataset.name || '');
+  e.dataTransfer.setData('text/level', el.dataset.level || '');
+  e.dataTransfer.setData('text/slotid', el.dataset.slotid || '');
+  el.style.opacity = '0.4';
+  setTimeout(() => { if(el) el.style.opacity = '1'; }, 600);
 }
 
 function onDragOver(e) {
@@ -1515,40 +1548,104 @@ async function onDrop(e) {
   
   const name = e.dataTransfer.getData('text/name');
   const level = e.dataTransfer.getData('text/level');
+  const oldSlotId = e.dataTransfer.getData('text/slotid');
   const day = parseInt(cell.dataset.day);
   const hour = cell.dataset.hour;
   
   if (!name || !schedCurrentTeacherId) return;
   
-  try {
-    await addScheduleSlot(schedCurrentTeacherId, day, hour + ':00', name, level, 60);
-    playPop();
-    
-    // Animate the cell
-    const c = getStudentColor(name);
-    cell.classList.remove('sched-empty');
-    cell.classList.add('sched-filled');
-    cell.innerHTML = '<div class="sched-slot sched-pop" style="background:' + c.bg + ';border:2px solid ' + c.border + ';color:' + c.text + '"><div class="sched-slot-name">' + name + '</div><div class="sched-slot-level">' + level + '</div><div class="sched-slot-x">✕</div></div>';
-    cell.removeAttribute('ondragover');
-    cell.removeAttribute('ondragleave');
-    cell.removeAttribute('ondrop');
-    
-    // Reload to get proper IDs
-    setTimeout(() => loadCoordSchedule(), 600);
-  } catch(e2) { showToast('Erro: ' + e2.message, 'error'); }
+  // If moving an existing slot, delete old first then create new
+  if (oldSlotId) {
+    try {
+      await removeScheduleSlot(parseInt(oldSlotId));
+      await addScheduleSlot(schedCurrentTeacherId, day, hour + ':00', name, level, 60);
+      playPop();
+      showToast('Aula movida!');
+      loadCoordSchedule();
+    } catch(e2) { showToast('Erro: ' + e2.message, 'error'); }
+    return;
+  }
+  
+  // New slot — show duration panel
+  document.getElementById('dropDay').value = day;
+  document.getElementById('dropHour').value = hour;
+  document.getElementById('dropName').value = name;
+  document.getElementById('dropLevel').value = level;
+  document.getElementById('schedDurTitle').textContent = name + ' — ' + ['Seg','Ter','Qua','Qui','Sex','Sab'][day] + ' ' + hour;
+  document.getElementById('schedDurPanel').style.display = '';
+  document.getElementById('schedDurPanel').scrollIntoView({behavior:'smooth',block:'center'});
 }
 
-async function removeSlotCoord(slotId, cell) {
+function cancelDrop() {
+  document.getElementById('schedDurPanel').style.display = 'none';
+}
+
+async function confirmDrop() {
+  const day = parseInt(document.getElementById('dropDay').value);
+  const hour = document.getElementById('dropHour').value;
+  const name = document.getElementById('dropName').value;
+  const level = document.getElementById('dropLevel').value;
+  const dur = parseInt(document.getElementById('dropDuration').value);
+  
+  try {
+    await addScheduleSlot(schedCurrentTeacherId, day, hour + ':00', name, level, dur);
+    playPop();
+    document.getElementById('schedDurPanel').style.display = 'none';
+    showToast('Aula adicionada! (' + dur + 'min)');
+    loadCoordSchedule();
+  } catch(e) { showToast('Erro: ' + e.message, 'error'); }
+}
+
+// Extra events
+function toggleExtraPanel() {
+  const p = document.getElementById('schedExtraPanel');
+  p.style.display = p.style.display === 'none' ? '' : 'none';
+}
+
+async function submitExtraEvent() {
+  const type = document.getElementById('extraType').value;
+  const date = document.getElementById('extraDate').value;
+  const student = document.getElementById('extraStudent').value.trim();
+  const notes = document.getElementById('extraNotes').value.trim();
+  
+  if (!date) { showToast('Selecione a data','error'); return; }
+  
+  const typeLabels = {replacement:'Reposição de aula',meeting:'Reunião pedagógica',note:'Observação geral'};
+  const fullNotes = (typeLabels[type] || type) + (notes ? ' — ' + notes : '');
+  const dbType = type === 'meeting' ? 'note' : type;
+  
+  try {
+    await addScheduleEvent(null, schedCurrentTeacherId, date, dbType, fullNotes, currentUser.id, student || 'Geral');
+    showToast('Evento registrado!');
+    document.getElementById('extraDate').value = '';
+    document.getElementById('extraStudent').value = '';
+    document.getElementById('extraNotes').value = '';
+    document.getElementById('schedExtraPanel').style.display = 'none';
+    loadCoordScheduleEvents();
+  } catch(e) { showToast('Erro: ' + e.message, 'error'); }
+}
+
+async function removeSlotCoord(slotId) {
   if (!confirm('Remover esta aula da grade?')) return;
   try {
     await removeScheduleSlot(slotId);
-    if (cell) {
-      cell.querySelector('.sched-slot').style.transform = 'scale(0)';
-      cell.querySelector('.sched-slot').style.opacity = '0';
-    }
     showToast('Aula removida');
-    setTimeout(() => loadCoordSchedule(), 300);
+    loadCoordSchedule();
   } catch(e) { showToast('Erro: ' + e.message, 'error'); }
+}
+
+// Drop on existing slot = swap/replace
+async function onDropReplace(e, existingSlotId) {
+  e.preventDefault();
+  const cell = e.currentTarget;
+  cell.classList.remove('sched-hover');
+  const name = e.dataTransfer.getData('text/name');
+  const oldSlotId = e.dataTransfer.getData('text/slotid');
+  if (!name) return;
+  // If dropping on itself, ignore
+  if (oldSlotId && parseInt(oldSlotId) === existingSlotId) return;
+  // Otherwise treat as regular drop on the cell position
+  onDrop(e);
 }
 
 async function loadCoordScheduleEvents() {

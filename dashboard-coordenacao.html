@@ -578,6 +578,7 @@ body { background: var(--g50); margin: 0; }
             <div id="schedStudentPool" style="padding:8px;max-height:500px;overflow-y:auto">
               <div style="padding:20px;text-align:center;color:var(--g400);font-size:12px">Selecione um professor</div>
             </div>
+            <div id="coordTrashZone" style="padding:16px;text-align:center;border-top:2px dashed var(--g200);color:var(--g400);font-size:12px;font-weight:600;transition:all 0.3s" ondragover="event.preventDefault();this.style.background='#fee2e2';this.style.borderColor='#ef4444';this.style.color='#ef4444';this.textContent='Solte para REMOVER'" ondragleave="this.style.background='';this.style.borderColor='var(--g200)';this.style.color='var(--g400)';this.textContent='🗑️ Arraste aqui para remover'" ondrop="onCoordTrashDrop(event)">🗑️ Arraste aqui para remover</div>
           </div>
 
           <!-- Schedule grid -->
@@ -1623,6 +1624,19 @@ async function submitExtraEvent() {
     document.getElementById('schedExtraPanel').style.display = 'none';
     loadCoordScheduleEvents();
   } catch(e) { showToast('Erro: ' + e.message, 'error'); }
+}
+
+async function onCoordTrashDrop(e) {
+  e.preventDefault();
+  const zone = e.currentTarget;
+  zone.style.background=''; zone.style.borderColor='var(--g200)'; zone.style.color='var(--g400)';
+  zone.textContent = '🗑️ Arraste aqui para remover';
+  const slotId = e.dataTransfer.getData('text/slotid');
+  if (!slotId) return;
+  try {
+    await removeScheduleSlot(parseInt(slotId));
+    playPop(); showToast('Aula removida!'); loadCoordSchedule();
+  } catch(er) { showToast('Erro: '+er.message,'error'); }
 }
 
 async function removeSlotCoord(slotId) {

@@ -1466,7 +1466,7 @@ function renderStudentPool(students) {
   }
   pool.innerHTML = students.map(s => {
     const c = getStudentColor(s.full_name);
-    return '<div draggable="true" class="sched-student" data-name="' + s.full_name + '" data-level="' + (s.course_name || s.level || '') + '" style="background:' + c.bg + ';border:2px solid ' + c.border + ';color:' + c.text + ';border-radius:10px;padding:8px 12px;margin-bottom:6px;cursor:grab;font-size:12px;font-weight:600;transition:all 0.2s;user-select:none" ondragstart="onDragStart(event)" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform=''" onmouseleave="this.style.transform=''">' + s.full_name + '<div style="font-size:10px;font-weight:400;opacity:0.7;margin-top:2px">' + (s.course_name || s.level || '') + '</div></div>';
+    return '<div draggable="true" class="sched-student" data-name="' + s.full_name + '" data-level="' + (s.course_name || s.level || '') + '" style="background:' + c.bg + ';border:2px solid ' + c.border + ';color:' + c.text + ';border-radius:10px;padding:8px 12px;margin-bottom:6px;cursor:grab;font-size:12px;font-weight:600;transition:all 0.2s;user-select:none" ondragstart="onDragStart(event)">' + s.full_name + '<div style="font-size:10px;font-weight:400;opacity:0.7;margin-top:2px">' + (s.course_name || s.level || '') + '</div></div>';
   }).join('');
 }
 

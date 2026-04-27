@@ -244,36 +244,65 @@ body { background: var(--g50); margin: 0; }
       <!-- ═══ SCHEDULE ═══ -->
       <div class="section" id="sec-schedule">
         <h2 style="font-size:22px;font-weight:800;color:var(--navy);margin-bottom:8px">📅 Meu Schedule</h2>
-        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Sua grade horária semanal. Clique em uma aula para registrar cancelamento ou reposição.</p>
+        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Sua grade semanal. Clique em uma aula para registrar eventos.</p>
 
-        <!-- Month selector for events -->
         <div style="display:flex;gap:12px;align-items:center;margin-bottom:20px;flex-wrap:wrap">
           <input type="month" id="schedMonth" style="padding:10px 14px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;color:var(--navy);outline:none">
-          <span style="font-size:12px;color:var(--g400)">Selecione o mês para ver/registrar eventos</span>
+          <span style="font-size:12px;color:var(--g400)">Mês para eventos</span>
         </div>
 
-        <!-- Weekly grid -->
-        <div class="panel" style="overflow-x:auto;margin-bottom:20px">
-          <table id="schedGrid" style="width:100%;border-collapse:collapse;min-width:700px">
+        <div style="background:#fff;border-radius:16px;border:1px solid var(--g100);overflow-x:auto;margin-bottom:20px">
+          <table style="width:100%;border-collapse:collapse;min-width:640px">
             <thead>
-              <tr style="background:var(--navy)">
-                <th style="padding:12px 8px;color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;width:70px;text-align:center">Horário</th>
-                <th style="padding:12px 8px;color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;text-align:center">Segunda</th>
-                <th style="padding:12px 8px;color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;text-align:center">Terça</th>
-                <th style="padding:12px 8px;color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;text-align:center">Quarta</th>
-                <th style="padding:12px 8px;color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;text-align:center">Quinta</th>
-                <th style="padding:12px 8px;color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;text-align:center">Sexta</th>
-                <th style="padding:12px 8px;color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;text-align:center">Sábado</th>
+              <tr>
+                <th class="sched-th" style="width:60px">Hora</th>
+                <th class="sched-th">Seg</th>
+                <th class="sched-th">Ter</th>
+                <th class="sched-th">Qua</th>
+                <th class="sched-th">Qui</th>
+                <th class="sched-th">Sex</th>
+                <th class="sched-th">Sáb</th>
               </tr>
             </thead>
             <tbody id="schedBody"></tbody>
           </table>
         </div>
 
-        <!-- Events for selected month -->
+        <!-- Event action panel (appears when clicking a slot) -->
+        <div id="schedActionPanel" style="display:none;background:#fff;border-radius:16px;border:2px solid var(--orange);padding:24px;margin-bottom:20px;animation:sectionIn 0.3s">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+            <h3 style="font-size:16px;font-weight:800;color:var(--navy)" id="schedActionTitle">Ação</h3>
+            <button onclick="closeActionPanel()" style="border:none;background:var(--g100);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:14px">✕</button>
+          </div>
+          <input type="hidden" id="schedActionSlotId">
+          <input type="hidden" id="schedActionStudentName">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+            <div>
+              <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:4px">Tipo de evento</label>
+              <select id="schedActionType" class="filter-select" style="width:100%">
+                <option value="cancellation">❌ Cancelamento com 24h</option>
+                <option value="cancellation_no24">⚠️ Cancelamento sem 24h</option>
+                <option value="replacement">🔄 Reposição</option>
+                <option value="cancellation_holiday">🏖️ Feriado</option>
+                <option value="cancellation_teacher">🚫 Falta do professor</option>
+              </select>
+            </div>
+            <div>
+              <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:4px">Data</label>
+              <input type="date" id="schedActionDate" style="width:100%;padding:8px 12px;border:2px solid var(--g200);border-radius:8px;font-family:inherit;font-size:13px;outline:none">
+            </div>
+          </div>
+          <div style="margin-bottom:16px">
+            <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:4px">Observação (opcional)</label>
+            <input type="text" id="schedActionNotes" placeholder="Ex: Aluno viajou" style="width:100%;padding:8px 12px;border:2px solid var(--g200);border-radius:8px;font-family:inherit;font-size:13px;outline:none">
+          </div>
+          <button onclick="submitScheduleEvent()" class="btn-send" style="background:var(--orange)">Registrar Evento</button>
+        </div>
+
+        <!-- Events list -->
         <div class="panel">
           <div class="panel-head"><div class="panel-title">📋 Eventos do Mês</div><span class="badge badge-time" id="schedEventCount">0</span></div>
-          <div id="schedEvents"><div class="empty-state"><div class="empty-icon">📅</div><p>Nenhum evento registrado neste mês.</p></div></div>
+          <div id="schedEvents"><div class="empty-state"><div class="empty-icon">📅</div><p>Nenhum evento.</p></div></div>
         </div>
       </div>
 
@@ -749,81 +778,84 @@ async function markMsgRead(msgId, btn) {
 
 
 // ═══ SCHEDULE ═══
-const DAYS = ['Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
-const HOURS = ['07:00','07:30','08:00','08:30','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00'];
+
+// ═══ PROFESSOR SCHEDULE ═══
+const P_DAYS = ['Seg','Ter','Qua','Qui','Sex','Sáb'];
+const P_HOURS = ['07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00'];
+const P_COLORS = [
+  {bg:'#dbeafe',border:'#93c5fd',text:'#1e40af'},{bg:'#fce7f3',border:'#f9a8d4',text:'#9d174d'},
+  {bg:'#d1fae5',border:'#6ee7b7',text:'#065f46'},{bg:'#fef3c7',border:'#fcd34d',text:'#92400e'},
+  {bg:'#ede9fe',border:'#c4b5fd',text:'#5b21b6'},{bg:'#fee2e2',border:'#fca5a5',text:'#991b1b'},
+  {bg:'#ccfbf1',border:'#5eead4',text:'#134e4a'},{bg:'#fce4ec',border:'#f48fb1',text:'#880e4f'},
+  {bg:'#e8eaf6',border:'#9fa8da',text:'#283593'},{bg:'#fff3e0',border:'#ffcc80',text:'#e65100'},
+];
+let pSchedColors = {};
 
 document.getElementById('schedMonth').value = new Date().toISOString().slice(0,7);
 document.getElementById('schedMonth').addEventListener('change', loadScheduleEvents);
 
+function getPColor(name) {
+  if (!pSchedColors[name]) { pSchedColors[name] = P_COLORS[Object.keys(pSchedColors).length % P_COLORS.length]; }
+  return pSchedColors[name];
+}
+
 async function loadSchedule() {
   const slots = await getScheduleSlots(currentUser.id);
-  renderScheduleGrid(slots);
+  slots.forEach(s => getPColor(s.student_name));
+  
+  const tbody = document.getElementById('schedBody');
+  tbody.innerHTML = P_HOURS.map(hour => {
+    const cells = P_DAYS.map((day, di) => {
+      const slot = slots.find(s => s.day_of_week === di && s.time_slot && s.time_slot.startsWith(hour));
+      if (slot) {
+        const c = getPColor(slot.student_name);
+        return '<td class="sched-cell sched-filled" onclick="openActionPanel(' + slot.id + ',\'' + slot.student_name.replace(/'/g,"\\'") + '\',\'' + day + ' ' + hour + '\')">' +
+          '<div class="sched-slot" style="background:' + c.bg + ';border:2px solid ' + c.border + ';color:' + c.text + '">' +
+          '<div class="sched-slot-name">' + slot.student_name + '</div>' +
+          '<div class="sched-slot-level">' + (slot.student_level||'') + '</div></div></td>';
+      }
+      return '<td class="sched-cell sched-empty">&nbsp;</td>';
+    }).join('');
+    return '<tr><td class="sched-hour">' + hour + '</td>' + cells + '</tr>';
+  }).join('');
+  
   loadScheduleEvents();
 }
 
-function renderScheduleGrid(slots) {
-  const tbody = document.getElementById('schedBody');
-  tbody.innerHTML = HOURS.map(hour => {
-    const cells = DAYS.map((day, di) => {
-      const slot = slots.find(s => s.day_of_week === di && s.time_slot && s.time_slot.startsWith(hour));
-      if (slot) {
-        const dur = slot.duration_minutes === 30 ? ' (30min)' : '';
-        return '<td style="padding:6px 4px;border:1px solid var(--g100);text-align:center;vertical-align:middle;cursor:pointer" onclick="showSlotActions(' + slot.id + ',\'' + slot.student_name.replace(/'/g,"\\'") + '\',\'' + day + '\',\'' + hour + '\')">' +
-          '<div style="background:var(--blue-soft);border:1px solid var(--blue);border-radius:8px;padding:6px 4px;font-size:11px;transition:all 0.2s" onmouseover="this.style.transform=\'scale(1.05)\'" onmouseout="this.style.transform=\'\'">' +
-          '<div style="font-weight:700;color:var(--navy)">' + slot.student_name + '</div>' +
-          '<div style="font-size:10px;color:var(--blue)">' + (slot.student_level || '') + dur + '</div></div></td>';
-      }
-      return '<td style="padding:6px 4px;border:1px solid var(--g100);text-align:center"></td>';
-    }).join('');
-    return '<tr><td style="padding:8px 6px;border:1px solid var(--g100);text-align:center;font-size:12px;font-weight:700;color:var(--navy);background:var(--g50)">' + hour + '</td>' + cells + '</tr>';
-  }).join('');
+function openActionPanel(slotId, studentName, slotInfo) {
+  document.getElementById('schedActionSlotId').value = slotId;
+  document.getElementById('schedActionStudentName').value = studentName;
+  document.getElementById('schedActionTitle').textContent = '📝 ' + studentName + ' — ' + slotInfo;
+  document.getElementById('schedActionDate').value = '';
+  document.getElementById('schedActionNotes').value = '';
+  document.getElementById('schedActionPanel').style.display = '';
+  document.getElementById('schedActionPanel').scrollIntoView({behavior:'smooth',block:'center'});
 }
 
-function showSlotActions(slotId, studentName, day, hour) {
-  const month = document.getElementById('schedMonth').value;
-  if (!month) { showToast('Selecione o mês primeiro','error'); return; }
+function closeActionPanel() {
+  document.getElementById('schedActionPanel').style.display = 'none';
+}
+
+async function submitScheduleEvent() {
+  const slotId = parseInt(document.getElementById('schedActionSlotId').value);
+  const studentName = document.getElementById('schedActionStudentName').value;
+  const eventType = document.getElementById('schedActionType').value;
+  const eventDate = document.getElementById('schedActionDate').value;
+  const notes = document.getElementById('schedActionNotes').value.trim();
   
-  const action = prompt(
-    studentName + ' — ' + day + ' ' + hour + '\n\n' +
-    'Escolha uma ação:\n' +
-    '1 = Cancelamento (aluno cancelou)\n' +
-    '2 = Cancelamento sem 24h\n' +
-    '3 = Reposição marcada\n' +
-    '4 = Feriado\n' +
-    '5 = Falta do professor\n\n' +
-    'Digite o número:'
-  );
+  if (!eventDate) { showToast('Selecione a data','error'); return; }
   
-  if (!action) return;
-  
-  const types = {'1':'cancellation','2':'cancellation','3':'replacement','4':'cancellation','5':'cancellation'};
-  const notes = {
-    '1':'Aula cancelada com 24h de antecedência',
-    '2':'Aula cancelada sem 24h de antecedência', 
-    '3':'Reposição de aula',
-    '4':'Feriado',
-    '5':'Falta do professor'
+  const typeNotes = {
+    'cancellation':'Cancelamento com 24h','cancellation_no24':'Cancelamento sem 24h',
+    'replacement':'Reposição','cancellation_holiday':'Feriado','cancellation_teacher':'Falta do professor'
   };
+  const finalNotes = (typeNotes[eventType] || eventType) + (notes ? ' — ' + notes : '');
+  const dbType = eventType.startsWith('cancellation') ? 'cancellation' : 'replacement';
   
-  const eventType = types[action];
-  const note = notes[action];
-  if (!eventType) { showToast('Opção inválida','error'); return; }
-  
-  const dateStr = prompt('Data do evento (DD/MM/AAAA):');
-  if (!dateStr) return;
-  
-  // Parse DD/MM/YYYY to YYYY-MM-DD
-  const parts = dateStr.split('/');
-  if (parts.length !== 3) { showToast('Formato inválido. Use DD/MM/AAAA','error'); return; }
-  const isoDate = parts[2] + '-' + parts[1].padStart(2,'0') + '-' + parts[0].padStart(2,'0');
-  
-  registerEvent(slotId, isoDate, eventType, note, studentName);
-}
-
-async function registerEvent(slotId, eventDate, eventType, notes, studentName) {
   try {
-    await addScheduleEvent(slotId, currentUser.id, eventDate, eventType, notes, currentUser.id, studentName);
+    await addScheduleEvent(slotId, currentUser.id, eventDate, dbType, finalNotes, currentUser.id, studentName);
     showToast('Evento registrado!');
+    closeActionPanel();
     loadScheduleEvents();
   } catch(e) { showToast('Erro: ' + e.message, 'error'); }
 }
@@ -832,37 +864,22 @@ async function loadScheduleEvents() {
   const monthInput = document.getElementById('schedMonth').value;
   if (!monthInput) return;
   const [year, month] = monthInput.split('-').map(Number);
-  
   const events = await getScheduleEvents(currentUser.id, month, year);
   const div = document.getElementById('schedEvents');
   document.getElementById('schedEventCount').textContent = events.length;
   
-  if (!events.length) {
-    div.innerHTML = '<div class="empty-state"><div class="empty-icon">📅</div><p>Nenhum evento registrado em ' + MONTHS[month] + '.</p></div>';
-    return;
-  }
-  
-  const typeLabels = {cancellation:'❌ Cancelamento',replacement:'🔄 Reposição',reschedule:'📅 Reagendamento',note:'📝 Observação'};
-  const typeColors = {cancellation:'#fecaca',replacement:'#d1fae5',reschedule:'#dbeafe',note:'#fef3c7'};
+  if (!events.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📅</div><p>Nenhum evento em ' + MONTHS[month] + '.</p></div>'; return; }
   
   div.innerHTML = events.map(e => {
-    return '<div class="list-item" style="border-left:4px solid ' + (typeColors[e.event_type]||'var(--g200)') + '">' +
-      '<div style="flex:1"><div class="list-title">' + (typeLabels[e.event_type]||e.event_type) + ' — ' + (e.student_name||'') + '</div>' +
-      '<div class="list-sub">' + formatDate(e.event_date) + ' — ' + (e.notes||'') + '</div>' +
-      '<div class="list-sub" style="font-size:10px;margin-top:2px">Registrado por ' + (e.creator?.full_name||'') + '</div></div>' +
-      '<button onclick="deleteEvent(' + e.id + ')" style="border:none;background:var(--g100);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:12px;color:var(--g500)">✕</button></div>';
+    const icon = e.event_type === 'cancellation' ? '❌' : '🔄';
+    return '<div class="list-item"><div style="flex:1"><div class="list-title">' + icon + ' ' + (e.student_name||'') + '</div><div class="list-sub">' + formatDate(e.event_date) + ' — ' + (e.notes||'') + '</div></div><button onclick="delProfEvent(' + e.id + ')" style="border:none;background:var(--g100);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:12px">✕</button></div>';
   }).join('');
 }
 
-async function deleteEvent(eventId) {
-  if (!confirm('Remover este evento?')) return;
-  try {
-    await removeScheduleEvent(eventId);
-    showToast('Evento removido');
-    loadScheduleEvents();
-  } catch(e) { showToast('Erro: ' + e.message, 'error'); }
+async function delProfEvent(id) {
+  if (!confirm('Remover?')) return;
+  try { await removeScheduleEvent(id); showToast('Removido'); loadScheduleEvents(); } catch(e) { showToast('Erro','error'); }
 }
-
 
 // ═══ MY STUDENTS LIST ═══
 async function loadStudentsList() {

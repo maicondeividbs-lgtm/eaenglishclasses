@@ -243,8 +243,8 @@ body { background: var(--g50); margin: 0; }
       
       <!-- ═══ SCHEDULE ═══ -->
       <div class="section" id="sec-schedule">
-        <h2 style="font-size:22px;font-weight:800;color:var(--navy);margin-bottom:8px">📅 Meu Schedule</h2>
-        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Arraste aulas para reorganizar. Arraste para a lixeira para remover.</p>
+        <h2>📅 Meu Schedule</h2>
+        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Arraste alunos para os horários. Arraste aulas para a lixeira para remover. Clique em uma aula para registrar eventos.</p>
 
         <div style="display:flex;gap:12px;align-items:center;margin-bottom:20px;flex-wrap:wrap">
           <input type="month" id="schedMonth" style="padding:10px 14px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;color:var(--navy);outline:none">
@@ -252,76 +252,39 @@ body { background: var(--g50); margin: 0; }
         </div>
 
         <div style="display:grid;grid-template-columns:200px 1fr;gap:20px;align-items:start">
-          <!-- Student pool -->
+          <!-- Pool -->
           <div style="background:#fff;border-radius:16px;border:1px solid var(--g100);overflow:hidden;position:sticky;top:80px">
             <div style="padding:14px 16px;background:var(--navy);color:#fff;font-size:13px;font-weight:700">👥 Meus Alunos</div>
-            <div id="profSchedPool" style="padding:8px;max-height:400px;overflow-y:auto">
-              <div style="padding:20px;text-align:center;color:var(--g400);font-size:12px">Carregando...</div>
+            <div id="profSchedPool" style="padding:8px;max-height:350px;overflow-y:auto"><div style="padding:20px;text-align:center;color:var(--g400);font-size:12px">Carregando...</div></div>
+            <!-- Extra event card -->
+            <div style="padding:8px">
+              <div draggable="true" id="extraEventCard" class="sched-student" data-name="__EXTRA__" data-level="" style="background:#fff3e0;border:2px dashed #e67e22;color:#e65100;border-radius:10px;padding:8px 12px;cursor:grab;font-size:12px;font-weight:700;text-align:center">📌 Evento Extra<div style="font-size:10px;opacity:0.7;margin-top:2px">Reposição / Reunião</div></div>
             </div>
-            <!-- Trash zone -->
-            <div id="profTrashZone" style="padding:16px;text-align:center;border-top:2px dashed var(--g200);color:var(--g400);font-size:12px;font-weight:600;transition:all 0.3s" ondragover="event.preventDefault();this.style.background='#fee2e2';this.style.borderColor='#ef4444';this.style.color='#ef4444';this.textContent='Solte para REMOVER'" ondragleave="this.style.background='';this.style.borderColor='var(--g200)';this.style.color='var(--g400)';this.textContent='🗑️ Arraste aqui para remover'" ondrop="onProfTrashDrop(event)">🗑️ Arraste aqui para remover</div>
+            <!-- Trash -->
+            <div id="profTrashZone" style="padding:16px;text-align:center;border-top:2px dashed var(--g200);color:var(--g400);font-size:12px;font-weight:600;transition:all 0.3s">🗑️ Arraste aqui para remover</div>
           </div>
 
           <!-- Grid -->
           <div style="background:#fff;border-radius:16px;border:1px solid var(--g100);overflow-x:auto">
             <table style="width:100%;border-collapse:collapse;min-width:640px">
-              <thead><tr>
-                <th class="sched-th" style="width:60px">Hora</th>
-                <th class="sched-th">Seg</th><th class="sched-th">Ter</th><th class="sched-th">Qua</th>
-                <th class="sched-th">Qui</th><th class="sched-th">Sex</th><th class="sched-th">Sáb</th>
-              </tr></thead>
+              <thead><tr><th class="sched-th" style="width:60px">Hora</th><th class="sched-th">Seg</th><th class="sched-th">Ter</th><th class="sched-th">Qua</th><th class="sched-th">Qui</th><th class="sched-th">Sex</th><th class="sched-th">Sáb</th></tr></thead>
               <tbody id="profSchedBody"></tbody>
             </table>
           </div>
         </div>
 
-        <!-- Duration panel -->
-        <div id="profDurPanel" style="display:none;background:#fff;border-radius:14px;border:2px solid var(--mango);padding:20px;margin-top:16px;animation:sectionIn 0.3s">
+        <!-- Popup for duration/action (appears on click/drop) -->
+        <div id="schedPopup" style="display:none;position:fixed;z-index:999;background:#fff;border-radius:16px;box-shadow:0 12px 40px rgba(0,0,0,0.2);padding:20px;min-width:280px;border:2px solid var(--mango);animation:sectionIn 0.25s">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-            <h4 style="font-size:15px;font-weight:800;color:var(--navy)" id="profDurTitle">Configurar aula</h4>
-            <button onclick="document.getElementById('profDurPanel').style.display='none'" style="border:none;background:var(--g100);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:12px">✕</button>
+            <h4 id="popupTitle" style="font-size:15px;font-weight:800;color:var(--navy)">Ação</h4>
+            <button onclick="closePopup()" style="border:none;background:var(--g100);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:12px">✕</button>
           </div>
-          <input type="hidden" id="profDropDay"><input type="hidden" id="profDropHour"><input type="hidden" id="profDropName"><input type="hidden" id="profDropLevel">
-          <div style="display:flex;gap:12px;align-items:end;flex-wrap:wrap">
-            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--navy);margin-bottom:4px">Duração</label><select id="profDropDur" class="filter-select"><option value="60">60 min</option><option value="30">30 min</option></select></div>
-            <button onclick="confirmProfDrop()" class="btn-send" style="padding:10px 24px;background:var(--mango)">Confirmar</button>
-          </div>
+          <div id="popupContent"></div>
         </div>
+        <div id="schedPopupOverlay" style="display:none;position:fixed;inset:0;z-index:998;background:rgba(0,0,0,0.3)" onclick="closePopup()"></div>
 
-        <!-- Action panel for events -->
-        <div id="schedActionPanel" style="display:none;background:#fff;border-radius:14px;border:2px solid var(--orange);padding:20px;margin-top:16px;animation:sectionIn 0.3s">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-            <h3 style="font-size:15px;font-weight:800;color:var(--navy)" id="schedActionTitle">Ação</h3>
-            <button onclick="document.getElementById('schedActionPanel').style.display='none'" style="border:none;background:var(--g100);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:12px">✕</button>
-          </div>
-          <input type="hidden" id="schedActionSlotId"><input type="hidden" id="schedActionStudentName">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--navy);margin-bottom:4px">Tipo</label><select id="schedActionType" class="filter-select" style="width:100%"><option value="cancellation">❌ Canc. com 24h</option><option value="cancellation_no24">⚠️ Canc. sem 24h</option><option value="replacement">🔄 Reposição</option><option value="cancellation_holiday">🏖️ Feriado</option><option value="cancellation_teacher">🚫 Falta do professor</option></select></div>
-            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--navy);margin-bottom:4px">Data</label><input type="date" id="schedActionDate" style="width:100%;padding:8px 10px;border:2px solid var(--g200);border-radius:8px;font-family:inherit;font-size:13px;outline:none"></div>
-          </div>
-          <div style="margin-bottom:12px"><label style="display:block;font-size:11px;font-weight:600;color:var(--navy);margin-bottom:4px">Obs.</label><input type="text" id="schedActionNotes" placeholder="Opcional" style="width:100%;padding:8px 10px;border:2px solid var(--g200);border-radius:8px;font-family:inherit;font-size:13px;outline:none"></div>
-          <button onclick="submitScheduleEvent()" class="btn-send" style="background:var(--orange)">Registrar Evento</button>
-        </div>
-
-        <!-- Extra event button -->
-        <div style="margin-top:16px;margin-bottom:16px">
-          <button onclick="document.getElementById('profExtraPanel').style.display=document.getElementById('profExtraPanel').style.display==='none'?'':'none'" style="padding:10px 20px;border:2px dashed var(--g300);border-radius:10px;background:#fff;color:var(--navy);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;width:100%">+ Evento Extraordinário (Reposição, Reunião)</button>
-        </div>
-        <div id="profExtraPanel" style="display:none;background:#fff;border-radius:14px;border:2px solid var(--blue);padding:20px;margin-bottom:16px;animation:sectionIn 0.3s">
-          <h4 style="font-size:15px;font-weight:800;color:var(--navy);margin-bottom:14px">📌 Evento Extraordinário</h4>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--navy);margin-bottom:4px">Tipo</label><select id="profExtraType" class="filter-select" style="width:100%"><option value="replacement">🔄 Reposição</option><option value="meeting">📋 Reunião pedagógica</option><option value="note">📝 Observação</option></select></div>
-            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--navy);margin-bottom:4px">Data</label><input type="date" id="profExtraDate" style="width:100%;padding:8px 10px;border:2px solid var(--g200);border-radius:8px;font-family:inherit;font-size:13px;outline:none"></div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--navy);margin-bottom:4px">Aluno</label><input type="text" id="profExtraStudent" placeholder="Nome" style="width:100%;padding:8px 10px;border:2px solid var(--g200);border-radius:8px;font-family:inherit;font-size:13px;outline:none"></div>
-            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--navy);margin-bottom:4px">Descrição</label><input type="text" id="profExtraNotes" placeholder="Detalhes" style="width:100%;padding:8px 10px;border:2px solid var(--g200);border-radius:8px;font-family:inherit;font-size:13px;outline:none"></div>
-          </div>
-          <button onclick="submitProfExtra()" class="btn-send" style="background:var(--blue)">Registrar</button>
-        </div>
-
-        <!-- Events list -->
-        <div class="panel">
+        <!-- Events -->
+        <div class="panel" style="margin-top:20px">
           <div class="panel-head"><div class="panel-title">📋 Eventos do Mês</div><span class="badge badge-time" id="schedEventCount">0</span></div>
           <div id="schedEvents"><div class="empty-state"><div class="empty-icon">📅</div><p>Nenhum evento.</p></div></div>
         </div>
@@ -803,6 +766,8 @@ async function markMsgRead(msgId, btn) {
 // ═══ PROFESSOR SCHEDULE ═══
 
 // ═══ PROFESSOR SCHEDULE ═══
+
+// ═══ PROFESSOR SCHEDULE (Event Delegation) ═══
 const P_DAYS = ['Seg','Ter','Qua','Qui','Sex','Sab'];
 const P_HOURS = ['07:00','07:30','08:00','08:30','09:00','09:30','10:00','10:30','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','19:30','20:00','20:30','21:00','21:30','22:00'];
 const P_COLORS = [
@@ -813,168 +778,219 @@ const P_COLORS = [
   {bg:'#fff3e0',border:'#ffcc80',text:'#e65100'},{bg:'#f3e5f5',border:'#ce93d8',text:'#6a1b9a'},
 ];
 let pColors = {};
-function getPCol(n) { if(!pColors[n]) pColors[n]=P_COLORS[Object.keys(pColors).length%P_COLORS.length]; return pColors[n]; }
-
-function playPopProf() {
-  try { const c=new(window.AudioContext||window.webkitAudioContext)();const o=c.createOscillator();const g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.setValueAtTime(800,c.currentTime);o.frequency.exponentialRampToValueAtTime(1200,c.currentTime+0.05);g.gain.setValueAtTime(0.3,c.currentTime);g.gain.exponentialRampToValueAtTime(0.01,c.currentTime+0.15);o.start(c.currentTime);o.stop(c.currentTime+0.15); } catch(e){}
-}
+function getPCol(n){if(!pColors[n])pColors[n]=P_COLORS[Object.keys(pColors).length%P_COLORS.length];return pColors[n];}
+function popSound(){try{const c=new(window.AudioContext||window.webkitAudioContext)();const o=c.createOscillator();const g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.setValueAtTime(800,c.currentTime);o.frequency.exponentialRampToValueAtTime(1200,c.currentTime+0.05);g.gain.setValueAtTime(0.3,c.currentTime);g.gain.exponentialRampToValueAtTime(0.01,c.currentTime+0.15);o.start(c.currentTime);o.stop(c.currentTime+0.15);}catch(e){}}
 
 document.getElementById('schedMonth').value = new Date().toISOString().slice(0,7);
 document.getElementById('schedMonth').addEventListener('change', loadProfEvents);
 
-async function loadSchedule() {
-  const students = window._myStudents || await getMyStudents(currentUser.id);
-  renderProfPool(students);
-  const slots = await getScheduleSlots(currentUser.id);
-  slots.forEach(s => getPCol(s.student_name));
-  renderProfGrid(slots);
-  loadProfEvents();
-}
-
-function renderProfPool(students) {
-  const pool = document.getElementById('profSchedPool');
-  if (!students.length) { pool.innerHTML = '<div style="padding:20px;text-align:center;color:var(--g400);font-size:12px">Nenhum aluno.</div>'; return; }
-  pool.innerHTML = students.map(s => {
-    const c = getPCol(s.full_name);
-    return '<div draggable="true" class="sched-student" data-name="' + s.full_name + '" data-level="' + (s.course_name||s.level||'') + '" style="background:'+c.bg+';border:2px solid '+c.border+';color:'+c.text+';border-radius:10px;padding:8px 12px;margin-bottom:6px;cursor:grab;font-size:12px;font-weight:600;transition:all 0.2s;user-select:none" ondragstart="onProfDragStart(event)">' + s.full_name + '<div style="font-size:10px;opacity:0.7;margin-top:2px">'+(s.course_name||s.level||'')+'</div></div>';
-  }).join('');
-}
-
-function renderProfGrid(slots) {
-  document.getElementById('profSchedBody').innerHTML = P_HOURS.map(hour => {
-    const cells = P_DAYS.map((day, di) => {
-      const slot = slots.find(s => s.day_of_week === di && s.time_slot && s.time_slot.startsWith(hour));
-      if (slot) {
-        const c = getPCol(slot.student_name);
-        const dur = slot.duration_minutes === 30 ? ' 30m' : '';
-        return '<td class="sched-cell sched-filled" data-day="'+di+'" data-hour="'+hour+'" ondragover="event.preventDefault();this.classList.add('sched-hover')" ondragleave="this.classList.remove('sched-hover')" ondrop="onProfDrop(event)">' +
-          '<div draggable="true" class="sched-slot" data-name="'+slot.student_name+'" data-level="'+(slot.student_level||'')+'" data-slotid="'+slot.id+'" ondragstart="onProfDragStart(event)" onclick="openActionPanel('+slot.id+',''+slot.student_name.replace(/'/g,"\\'")+'',''+day+' '+hour+'')" style="background:'+c.bg+';border:2px solid '+c.border+';color:'+c.text+';cursor:grab">' +
-          '<div class="sched-slot-name">'+slot.student_name+dur+'</div>' +
-          '<div class="sched-slot-level">'+(slot.student_level||'')+'</div></div></td>';
-      }
-      return '<td class="sched-cell sched-empty" data-day="'+di+'" data-hour="'+hour+'" ondragover="event.preventDefault();this.classList.add('sched-hover')" ondragleave="this.classList.remove('sched-hover')" ondrop="onProfDrop(event)">&nbsp;</td>';
-    }).join('');
-    return '<tr><td class="sched-hour">'+hour+'</td>'+cells+'</tr>';
-  }).join('');
-}
-
-function onProfDragStart(e) {
-  const el = e.target.closest('[draggable]') || e.target;
-  e.dataTransfer.setData('text/name', el.dataset.name || '');
+// ── Event Delegation for drag/drop ──
+document.addEventListener('dragstart', function(e) {
+  const el = e.target.closest('[draggable]');
+  if (!el || !el.dataset.name) return;
+  e.dataTransfer.setData('text/name', el.dataset.name);
   e.dataTransfer.setData('text/level', el.dataset.level || '');
   e.dataTransfer.setData('text/slotid', el.dataset.slotid || '');
   el.style.opacity = '0.4';
-  setTimeout(() => { if(el) el.style.opacity = '1'; }, 600);
-}
+  setTimeout(function(){ el.style.opacity = '1'; }, 600);
+});
 
-async function onProfDrop(e) {
+document.addEventListener('dragover', function(e) {
+  const cell = e.target.closest('.sched-cell');
+  const trash = e.target.closest('#profTrashZone');
+  if (cell || trash) e.preventDefault();
+  if (cell) cell.classList.add('sched-hover');
+  if (trash) { trash.style.background='#fee2e2'; trash.style.borderColor='#ef4444'; trash.style.color='#ef4444'; trash.textContent='Solte para REMOVER'; }
+});
+
+document.addEventListener('dragleave', function(e) {
+  const cell = e.target.closest('.sched-cell');
+  const trash = e.target.closest('#profTrashZone');
+  if (cell) cell.classList.remove('sched-hover');
+  if (trash) { trash.style.background=''; trash.style.borderColor='var(--g200)'; trash.style.color='var(--g400)'; trash.textContent='🗑️ Arraste aqui para remover'; }
+});
+
+document.addEventListener('drop', async function(e) {
+  const cell = e.target.closest('.sched-cell');
+  const trash = e.target.closest('#profTrashZone');
+  
+  if (!cell && !trash) return;
   e.preventDefault();
-  e.currentTarget.classList.remove('sched-hover');
+  
   const name = e.dataTransfer.getData('text/name');
   const level = e.dataTransfer.getData('text/level');
   const oldSlotId = e.dataTransfer.getData('text/slotid');
-  const day = parseInt(e.currentTarget.dataset.day);
-  const hour = e.currentTarget.dataset.hour;
-  if (!name) return;
-
-  if (oldSlotId) {
-    try {
-      await removeScheduleSlot(parseInt(oldSlotId));
-      await addScheduleSlot(currentUser.id, day, hour+':00', name, level, 60);
-      playPopProf(); showToast('Aula movida!'); loadSchedule();
-    } catch(er) { showToast('Erro: '+er.message,'error'); }
+  
+  // Trash drop
+  if (trash) {
+    trash.style.background=''; trash.style.borderColor='var(--g200)'; trash.style.color='var(--g400)'; trash.textContent='🗑️ Arraste aqui para remover';
+    if (oldSlotId) {
+      try { await removeScheduleSlot(parseInt(oldSlotId)); popSound(); showToast('Aula removida!'); loadSchedule(); } catch(er) { showToast('Erro','error'); }
+    }
     return;
   }
+  
+  // Cell drop
+  if (cell) {
+    cell.classList.remove('sched-hover');
+    if (!name) return;
+    const day = parseInt(cell.dataset.day);
+    const hour = cell.dataset.hour;
+    
+    // Extra event
+    if (name === '__EXTRA__') {
+      showPopup('📌 Evento Extraordinário', buildExtraForm(day, hour));
+      return;
+    }
+    
+    // Moving existing slot
+    if (oldSlotId) {
+      try { await removeScheduleSlot(parseInt(oldSlotId)); await addScheduleSlot(currentUser.id, day, hour+':00', name, level, 60); popSound(); showToast('Aula movida!'); loadSchedule(); } catch(er) { showToast('Erro','error'); }
+      return;
+    }
+    
+    // New slot - show duration popup
+    showPopup(name + ' — ' + P_DAYS[day] + ' ' + hour, buildDurationForm(day, hour, name, level));
+  }
+});
 
-  document.getElementById('profDropDay').value = day;
-  document.getElementById('profDropHour').value = hour;
-  document.getElementById('profDropName').value = name;
-  document.getElementById('profDropLevel').value = level;
-  document.getElementById('profDurTitle').textContent = name + ' — ' + P_DAYS[day] + ' ' + hour;
-  document.getElementById('profDurPanel').style.display = '';
-  document.getElementById('profDurPanel').scrollIntoView({behavior:'smooth',block:'center'});
+// ── Click on slot = event action ──
+document.addEventListener('click', function(e) {
+  const slot = e.target.closest('.sched-slot');
+  if (!slot || !slot.dataset.slotid) return;
+  const slotId = slot.dataset.slotid;
+  const name = slot.dataset.name;
+  showPopup(name, buildEventForm(slotId, name));
+});
+
+// ── Popup ──
+function showPopup(title, contentHtml) {
+  document.getElementById('popupTitle').textContent = title;
+  document.getElementById('popupContent').innerHTML = contentHtml;
+  document.getElementById('schedPopup').style.display = '';
+  document.getElementById('schedPopupOverlay').style.display = '';
+}
+function closePopup() {
+  document.getElementById('schedPopup').style.display = 'none';
+  document.getElementById('schedPopupOverlay').style.display = 'none';
 }
 
-async function confirmProfDrop() {
-  const day = parseInt(document.getElementById('profDropDay').value);
-  const hour = document.getElementById('profDropHour').value;
-  const name = document.getElementById('profDropName').value;
-  const level = document.getElementById('profDropLevel').value;
-  const dur = parseInt(document.getElementById('profDropDur').value);
+function buildDurationForm(day, hour, name, level) {
+  return '<p style="font-size:13px;color:var(--g500);margin-bottom:14px">Escolha a duração da aula:</p>' +
+    '<div style="display:flex;gap:10px">' +
+    '<button onclick="addSlotDur('+day+',\''+hour+'\',\''+name.replace(/'/g,"")+'\',\''+level.replace(/'/g,"")+'\',30)" style="flex:1;padding:14px;border:2px solid var(--g200);border-radius:12px;background:#fff;font-family:inherit;font-size:14px;font-weight:700;color:var(--navy);cursor:pointer;transition:all 0.2s" onmouseover="this.style.borderColor=\'var(--mango)\';this.style.background=\'var(--cream)\'" onmouseout="this.style.borderColor=\'var(--g200)\';this.style.background=\'#fff\'">30 min</button>' +
+    '<button onclick="addSlotDur('+day+',\''+hour+'\',\''+name.replace(/'/g,"")+'\',\''+level.replace(/'/g,"")+'\',60)" style="flex:1;padding:14px;border:2px solid var(--navy);border-radius:12px;background:var(--navy);font-family:inherit;font-size:14px;font-weight:700;color:#fff;cursor:pointer;transition:all 0.2s">60 min</button>' +
+    '<button onclick="addSlotDur('+day+',\''+hour+'\',\''+name.replace(/'/g,"")+'\',\''+level.replace(/'/g,"")+'\',90)" style="flex:1;padding:14px;border:2px solid var(--g200);border-radius:12px;background:#fff;font-family:inherit;font-size:14px;font-weight:700;color:var(--navy);cursor:pointer;transition:all 0.2s" onmouseover="this.style.borderColor=\'var(--blue)\';this.style.background=\'var(--blue-soft)\'" onmouseout="this.style.borderColor=\'var(--g200)\';this.style.background=\'#fff\'">90 min</button></div>';
+}
+
+function buildEventForm(slotId, studentName) {
+  return '<div style="margin-bottom:12px"><label style="display:block;font-size:11px;font-weight:600;color:var(--navy);margin-bottom:4px">Tipo</label><select id="popEventType" style="width:100%;padding:8px 12px;border:2px solid var(--g200);border-radius:8px;font-family:inherit;font-size:13px"><option value="cancellation">❌ Canc. com 24h</option><option value="cancellation_no24">⚠️ Canc. sem 24h</option><option value="replacement">🔄 Reposição</option><option value="cancellation_holiday">🏖️ Feriado</option><option value="cancellation_teacher">🚫 Falta do professor</option></select></div>' +
+    '<div style="margin-bottom:12px"><label style="display:block;font-size:11px;font-weight:600;color:var(--navy);margin-bottom:4px">Data</label><input type="date" id="popEventDate" style="width:100%;padding:8px 12px;border:2px solid var(--g200);border-radius:8px;font-family:inherit;font-size:13px"></div>' +
+    '<div style="margin-bottom:14px"><label style="display:block;font-size:11px;font-weight:600;color:var(--navy);margin-bottom:4px">Obs.</label><input type="text" id="popEventNotes" placeholder="Opcional" style="width:100%;padding:8px 12px;border:2px solid var(--g200);border-radius:8px;font-family:inherit;font-size:13px"></div>' +
+    '<button onclick="submitPopEvent('+slotId+',\''+studentName.replace(/'/g,"")+'\')"; style="width:100%;padding:12px;border:none;border-radius:10px;background:var(--orange);color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer">Registrar</button>';
+}
+
+function buildExtraForm(day, hour) {
+  return '<div style="margin-bottom:12px"><label style="display:block;font-size:11px;font-weight:600;color:var(--navy);margin-bottom:4px">Tipo</label><select id="popExtraType" style="width:100%;padding:8px 12px;border:2px solid var(--g200);border-radius:8px;font-family:inherit;font-size:13px"><option value="replacement">🔄 Reposição de aula</option><option value="meeting">📋 Reunião pedagógica</option><option value="note">📝 Observação</option></select></div>' +
+    '<div style="margin-bottom:12px"><label style="display:block;font-size:11px;font-weight:600;color:var(--navy);margin-bottom:4px">Aluno (se aplicável)</label><input type="text" id="popExtraStudent" placeholder="Nome do aluno" style="width:100%;padding:8px 12px;border:2px solid var(--g200);border-radius:8px;font-family:inherit;font-size:13px"></div>' +
+    '<div style="margin-bottom:12px"><label style="display:block;font-size:11px;font-weight:600;color:var(--navy);margin-bottom:4px">Data</label><input type="date" id="popExtraDate" style="width:100%;padding:8px 12px;border:2px solid var(--g200);border-radius:8px;font-family:inherit;font-size:13px"></div>' +
+    '<div style="margin-bottom:14px"><label style="display:block;font-size:11px;font-weight:600;color:var(--navy);margin-bottom:4px">Descrição</label><input type="text" id="popExtraNotes" placeholder="Detalhes" style="width:100%;padding:8px 12px;border:2px solid var(--g200);border-radius:8px;font-family:inherit;font-size:13px"></div>' +
+    '<button onclick="submitPopExtra()" style="width:100%;padding:12px;border:none;border-radius:10px;background:var(--blue);color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer">Registrar Evento</button>';
+}
+
+async function addSlotDur(day, hour, name, level, dur) {
   try {
     await addScheduleSlot(currentUser.id, day, hour+':00', name, level, dur);
-    playPopProf(); document.getElementById('profDurPanel').style.display='none';
-    showToast('Aula adicionada! ('+dur+'min)'); loadSchedule();
-  } catch(er) { showToast('Erro: '+er.message,'error'); }
+    popSound(); closePopup(); showToast('Aula adicionada! ('+dur+'min)'); loadSchedule();
+  } catch(er) { showToast('Erro: '+er.message, 'error'); }
 }
 
-async function onProfTrashDrop(e) {
-  e.preventDefault();
-  const zone = e.currentTarget;
-  zone.style.background=''; zone.style.borderColor='var(--g200)'; zone.style.color='var(--g400)';
-  zone.textContent = '🗑️ Arraste aqui para remover';
-  const slotId = e.dataTransfer.getData('text/slotid');
-  if (!slotId) return;
-  try {
-    await removeScheduleSlot(parseInt(slotId));
-    playPopProf(); showToast('Aula removida!'); loadSchedule();
-  } catch(er) { showToast('Erro: '+er.message,'error'); }
-}
-
-function openActionPanel(slotId, studentName, slotInfo) {
-  document.getElementById('schedActionSlotId').value = slotId;
-  document.getElementById('schedActionStudentName').value = studentName;
-  document.getElementById('schedActionTitle').textContent = studentName + ' — ' + slotInfo;
-  document.getElementById('schedActionDate').value = '';
-  document.getElementById('schedActionNotes').value = '';
-  document.getElementById('schedActionPanel').style.display = '';
-  document.getElementById('schedActionPanel').scrollIntoView({behavior:'smooth',block:'center'});
-}
-
-async function submitScheduleEvent() {
-  const slotId = parseInt(document.getElementById('schedActionSlotId').value);
-  const studentName = document.getElementById('schedActionStudentName').value;
-  const eventType = document.getElementById('schedActionType').value;
-  const eventDate = document.getElementById('schedActionDate').value;
-  const notes = document.getElementById('schedActionNotes').value.trim();
+async function submitPopEvent(slotId, studentName) {
+  const eventType = document.getElementById('popEventType').value;
+  const eventDate = document.getElementById('popEventDate').value;
+  const notes = document.getElementById('popEventNotes').value.trim();
   if (!eventDate) { showToast('Selecione a data','error'); return; }
   const typeNotes = {cancellation:'Cancelamento com 24h',cancellation_no24:'Cancelamento sem 24h',replacement:'Reposição',cancellation_holiday:'Feriado',cancellation_teacher:'Falta do professor'};
   const finalNotes = (typeNotes[eventType]||eventType) + (notes ? ' — '+notes : '');
   const dbType = eventType.startsWith('cancellation') ? 'cancellation' : 'replacement';
   try {
     await addScheduleEvent(slotId, currentUser.id, eventDate, dbType, finalNotes, currentUser.id, studentName);
-    showToast('Evento registrado!');
-    document.getElementById('schedActionPanel').style.display='none';
-    loadProfEvents();
+    popSound(); closePopup(); showToast('Evento registrado!'); loadProfEvents();
   } catch(er) { showToast('Erro: '+er.message,'error'); }
 }
 
-async function submitProfExtra() {
-  const type = document.getElementById('profExtraType').value;
-  const date = document.getElementById('profExtraDate').value;
-  const student = document.getElementById('profExtraStudent').value.trim();
-  const notes = document.getElementById('profExtraNotes').value.trim();
+async function submitPopExtra() {
+  const type = document.getElementById('popExtraType').value;
+  const date = document.getElementById('popExtraDate').value;
+  const student = document.getElementById('popExtraStudent').value.trim();
+  const notes = document.getElementById('popExtraNotes').value.trim();
   if (!date) { showToast('Selecione a data','error'); return; }
   const labels = {replacement:'Reposição',meeting:'Reunião pedagógica',note:'Observação'};
   try {
     await addScheduleEvent(null, currentUser.id, date, type==='meeting'?'note':type, (labels[type]||type)+(notes?' — '+notes:''), currentUser.id, student||'Geral');
-    showToast('Evento registrado!');
-    document.getElementById('profExtraPanel').style.display='none';
-    document.getElementById('profExtraDate').value='';document.getElementById('profExtraStudent').value='';document.getElementById('profExtraNotes').value='';
-    loadProfEvents();
+    popSound(); closePopup(); showToast('Evento registrado!'); loadProfEvents();
   } catch(er) { showToast('Erro: '+er.message,'error'); }
 }
 
+// ── Render ──
+async function loadSchedule() {
+  const students = window._myStudents || await getMyStudents(currentUser.id);
+  renderProfPool(students);
+  const slots = await getScheduleSlots(currentUser.id);
+  slots.forEach(function(s){ getPCol(s.student_name); });
+  renderProfGrid(slots);
+  loadProfEvents();
+}
+
+function renderProfPool(students) {
+  var pool = document.getElementById('profSchedPool');
+  if (!students.length) { pool.innerHTML = '<div style="padding:20px;text-align:center;color:var(--g400);font-size:12px">Nenhum aluno.</div>'; return; }
+  var html = '';
+  students.forEach(function(s) {
+    var c = getPCol(s.full_name);
+    var lvl = s.course_name || s.level || '';
+    html += '<div draggable="true" class="sched-student" data-name="' + s.full_name + '" data-level="' + lvl + '" style="background:'+c.bg+';border:2px solid '+c.border+';color:'+c.text+';border-radius:10px;padding:8px 12px;margin-bottom:6px;cursor:grab;font-size:12px;font-weight:600;transition:all 0.2s;user-select:none">' + s.full_name + '<div style="font-size:10px;opacity:0.7;margin-top:2px">'+lvl+'</div></div>';
+  });
+  pool.innerHTML = html;
+}
+
+function renderProfGrid(slots) {
+  var tbody = document.getElementById('profSchedBody');
+  var rows = '';
+  P_HOURS.forEach(function(hour) {
+    var cells = '';
+    P_DAYS.forEach(function(day, di) {
+      var slot = null;
+      for (var i = 0; i < slots.length; i++) {
+        if (slots[i].day_of_week === di && slots[i].time_slot && slots[i].time_slot.startsWith(hour)) { slot = slots[i]; break; }
+      }
+      if (slot) {
+        var c = getPCol(slot.student_name);
+        var dur = slot.duration_minutes === 30 ? ' 30m' : slot.duration_minutes === 90 ? ' 90m' : '';
+        cells += '<td class="sched-cell sched-filled" data-day="'+di+'" data-hour="'+hour+'">' +
+          '<div draggable="true" class="sched-slot" data-name="'+slot.student_name+'" data-level="'+(slot.student_level||'')+'" data-slotid="'+slot.id+'" style="background:'+c.bg+';border:2px solid '+c.border+';color:'+c.text+';cursor:grab">' +
+          '<div class="sched-slot-name">'+slot.student_name+dur+'</div>' +
+          '<div class="sched-slot-level">'+(slot.student_level||'')+'</div></div></td>';
+      } else {
+        cells += '<td class="sched-cell sched-empty" data-day="'+di+'" data-hour="'+hour+'">&nbsp;</td>';
+      }
+    });
+    rows += '<tr><td class="sched-hour">'+hour+'</td>'+cells+'</tr>';
+  });
+  tbody.innerHTML = rows;
+}
+
 async function loadProfEvents() {
-  const mi = document.getElementById('schedMonth').value;
+  var mi = document.getElementById('schedMonth').value;
   if (!mi) return;
-  const [y,m] = mi.split('-').map(Number);
-  const events = await getScheduleEvents(currentUser.id, m, y);
-  const div = document.getElementById('schedEvents');
+  var parts = mi.split('-');
+  var y = parseInt(parts[0]); var m = parseInt(parts[1]);
+  var events = await getScheduleEvents(currentUser.id, m, y);
+  var div = document.getElementById('schedEvents');
   document.getElementById('schedEventCount').textContent = events.length;
   if (!events.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📅</div><p>Nenhum evento em '+MONTHS[m]+'.</p></div>'; return; }
-  div.innerHTML = events.map(e => {
-    const icon = e.event_type==='cancellation'?'❌':'🔄';
+  div.innerHTML = events.map(function(e) {
+    var icon = e.event_type==='cancellation'?'❌':'🔄';
     return '<div class="list-item"><div style="flex:1"><div class="list-title">'+icon+' '+(e.student_name||'')+'</div><div class="list-sub">'+formatDate(e.event_date)+' — '+(e.notes||'')+'</div></div><button onclick="delProfEv('+e.id+')" style="border:none;background:var(--g100);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:12px">✕</button></div>';
   }).join('');
 }

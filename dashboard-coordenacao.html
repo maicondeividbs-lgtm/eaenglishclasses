@@ -1247,17 +1247,20 @@ async function saveUserEdit() {
     }
     console.log('Profile updated successfully for:', userId);
 
-    // Update enrollment if teacher and course are set
+    // Update enrollment
     if (teacherId && courseId) {
-      // Delete existing enrollments for this student
-      await db.from('enrollments').delete().eq('student_id', userId);
-      // Create new enrollment
-      await db.from('enrollments').insert([{
+      console.log('Updating enrollment for', userId, 'teacher:', teacherId, 'course:', courseId);
+      const { error: delErr } = await db.from('enrollments').delete().eq('student_id', userId);
+      if (delErr) console.error('Delete enrollment error:', delErr);
+      const { error: insErr } = await db.from('enrollments').insert([{
         student_id: userId,
         teacher_id: teacherId,
         course_id: parseInt(courseId),
         active: true
       }]);
+      if (insErr) { console.error('Insert enrollment error:', insErr); showToast('Erro na matrícula: ' + insErr.message, 'error'); return; }
+    } else if (teacherId && !courseId) {
+      showToast('Selecione o curso também', 'error'); return;
     }
 
     showToast('Aluno atualizado com sucesso!');

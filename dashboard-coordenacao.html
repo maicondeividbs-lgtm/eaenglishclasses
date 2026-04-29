@@ -562,82 +562,46 @@ body { background: var(--g50); margin: 0; }
       <!-- ═══ SCHEDULES ═══ -->
       <div class="section" id="sec-schedules">
         <h2 style="font-size:22px;font-weight:800;color:var(--navy);margin-bottom:8px">📅 Gestão de Schedules</h2>
-        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Arraste alunos para os horários. Clique para remover.</p>
+        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Arraste alunos para montar a grade. Arraste aulas para fora da grade para remover. Clique em espaço vazio para eventos.</p>
 
-        <!-- Professor selector -->
         <div style="display:flex;gap:12px;align-items:center;margin-bottom:20px;flex-wrap:wrap;background:#fff;padding:16px 20px;border-radius:14px;border:1px solid var(--g100)">
           <span style="font-size:13px;font-weight:700;color:var(--navy)">Professor:</span>
           <select id="schedProfSelect" onchange="loadCoordSchedule()" class="filter-select" style="flex:1;min-width:200px"><option value="">Selecione o professor</option></select>
+          <span style="font-size:13px;font-weight:700;color:var(--navy);margin-left:8px">Mês:</span>
           <input type="month" id="schedCoordMonth" onchange="loadCoordScheduleEvents()" style="padding:8px 12px;border:2px solid var(--g200);border-radius:8px;font-family:inherit;font-size:13px;outline:none">
         </div>
 
         <div style="display:grid;grid-template-columns:220px 1fr;gap:20px;align-items:start">
-          <!-- Student pool (draggable) -->
           <div style="background:#fff;border-radius:16px;border:1px solid var(--g100);overflow:hidden;position:sticky;top:80px">
             <div style="padding:14px 16px;background:var(--navy);color:#fff;font-size:13px;font-weight:700">👥 Alunos do Professor</div>
-            <div id="schedStudentPool" style="padding:8px;max-height:500px;overflow-y:auto">
-              <div style="padding:20px;text-align:center;color:var(--g400);font-size:12px">Selecione um professor</div>
-            </div>
-            <div id="coordTrashZone" style="padding:16px;text-align:center;border-top:2px dashed var(--g200);color:var(--g400);font-size:12px;font-weight:600;transition:all 0.3s" ondragover="event.preventDefault();this.style.background='#fee2e2';this.style.borderColor='#ef4444';this.style.color='#ef4444';this.textContent='Solte para REMOVER'" ondragleave="this.style.background='';this.style.borderColor='var(--g200)';this.style.color='var(--g400)';this.textContent='🗑️ Arraste aqui para remover'" ondrop="onCoordTrashDrop(event)">🗑️ Arraste aqui para remover</div>
+            <div id="schedStudentPool" style="padding:10px;max-height:500px;overflow-y:auto"><div style="padding:20px;text-align:center;color:var(--g400);font-size:12px">Selecione um professor</div></div>
           </div>
 
-          <!-- Schedule grid -->
-          <div style="background:#fff;border-radius:16px;border:1px solid var(--g100);overflow-x:auto">
-            <table id="coordSchedGrid" style="width:100%;border-collapse:collapse;min-width:640px">
-              <thead>
-                <tr>
-                  <th class="sched-th" style="width:60px">Hora</th>
-                  <th class="sched-th">Seg</th>
-                  <th class="sched-th">Ter</th>
-                  <th class="sched-th">Qua</th>
-                  <th class="sched-th">Qui</th>
-                  <th class="sched-th">Sex</th>
-                  <th class="sched-th">Sáb</th>
-                </tr>
-              </thead>
+          <div id="coordGridWrap" style="background:#fff;border-radius:16px;border:1px solid var(--g100);overflow-x:auto">
+            <table style="width:100%;border-collapse:collapse;min-width:640px">
+              <thead><tr><th class="sched-th" style="width:60px">Hora</th><th class="sched-th">Seg</th><th class="sched-th">Ter</th><th class="sched-th">Qua</th><th class="sched-th">Qui</th><th class="sched-th">Sex</th><th class="sched-th">Sáb</th></tr></thead>
               <tbody id="coordSchedBody"><tr><td colspan="7" style="padding:40px;text-align:center;color:var(--g400);font-size:13px">Selecione um professor.</td></tr></tbody>
             </table>
           </div>
         </div>
 
-        <!-- Duration selector (hidden, shown on drop) -->
-        <div id="schedDurPanel" style="display:none;background:#fff;border-radius:14px;border:2px solid var(--mango);padding:20px;margin-bottom:16px;animation:sectionIn 0.3s">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-            <h4 style="font-size:15px;font-weight:800;color:var(--navy)" id="schedDurTitle">Configurar aula</h4>
-            <button onclick="cancelDrop()" style="border:none;background:var(--g100);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:12px">✕</button>
+        <!-- Centered popup -->
+        <div id="cSchedPopup" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:999;background:#fff;border-radius:20px;box-shadow:0 24px 64px rgba(0,0,0,0.25);padding:28px;width:380px;max-width:90vw;border-top:4px solid var(--mango)">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+            <h4 id="cPopTitle" style="font-size:16px;font-weight:800;color:var(--navy)">Ação</h4>
+            <button onclick="closeCPop()" style="border:none;background:var(--g100);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:14px">✕</button>
           </div>
-          <input type="hidden" id="dropDay"><input type="hidden" id="dropHour"><input type="hidden" id="dropName"><input type="hidden" id="dropLevel">
-          <div style="display:flex;gap:12px;align-items:end;flex-wrap:wrap">
-            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--navy);margin-bottom:4px">Duração</label><select id="dropDuration" class="filter-select"><option value="60">60 min (1h)</option><option value="30">30 min</option></select></div>
-            <button onclick="confirmDrop()" class="btn-send" style="padding:10px 24px;background:var(--mango)">Confirmar</button>
-          </div>
+          <div id="cPopContent"></div>
         </div>
+        <div id="cSchedOverlay" style="display:none;position:fixed;inset:0;z-index:998;background:rgba(0,0,0,0.4);backdrop-filter:blur(3px)" onclick="closeCPop()"></div>
 
-        <!-- Add extra event button -->
-        <div style="margin-bottom:16px">
-          <button onclick="toggleExtraPanel()" style="padding:10px 20px;border:2px dashed var(--g300);border-radius:10px;background:#fff;color:var(--navy);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;width:100%;text-align:center" onmouseover="this.style.borderColor=this.style.color='var(--orange)'" onmouseout="this.style.borderColor='var(--g300)';this.style.color='var(--navy)'">+ Adicionar Evento Extraordinário (Reposição, Reunião, etc.)</button>
-        </div>
-        <div id="schedExtraPanel" style="display:none;background:#fff;border-radius:14px;border:2px solid var(--blue);padding:20px;margin-bottom:16px;animation:sectionIn 0.3s">
-          <h4 style="font-size:15px;font-weight:800;color:var(--navy);margin-bottom:14px">📌 Evento Extraordinário</h4>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--navy);margin-bottom:4px">Tipo</label><select id="extraType" class="filter-select" style="width:100%"><option value="replacement">🔄 Reposição de aula</option><option value="meeting">📋 Reunião pedagógica</option><option value="note">📝 Observação geral</option></select></div>
-            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--navy);margin-bottom:4px">Data</label><input type="date" id="extraDate" style="width:100%;padding:8px 10px;border:2px solid var(--g200);border-radius:8px;font-family:inherit;font-size:13px;outline:none"></div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--navy);margin-bottom:4px">Aluno (se aplicável)</label><input type="text" id="extraStudent" placeholder="Nome do aluno" style="width:100%;padding:8px 10px;border:2px solid var(--g200);border-radius:8px;font-family:inherit;font-size:13px;outline:none"></div>
-            <div><label style="display:block;font-size:11px;font-weight:600;color:var(--navy);margin-bottom:4px">Descrição</label><input type="text" id="extraNotes" placeholder="Detalhes do evento" style="width:100%;padding:8px 10px;border:2px solid var(--g200);border-radius:8px;font-family:inherit;font-size:13px;outline:none"></div>
-          </div>
-          <button onclick="submitExtraEvent()" class="btn-send" style="background:var(--blue)">Registrar Evento</button>
-        </div>
-
-        <!-- Events -->
         <div class="panel" style="margin-top:20px">
           <div class="panel-head"><div class="panel-title">📋 Eventos do Mês</div><span class="badge badge-time" id="coordSchedEventCount">0</span></div>
           <div id="coordSchedEvents"><div class="empty-state"><div class="empty-icon">📅</div><p>Selecione professor e mês.</p></div></div>
         </div>
       </div>
 
-      <div class="section" id="sec-nivelamento">
+            <div class="section" id="sec-nivelamento">
         <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:20px">📅 Agendamentos de Nivelamento</h2>
         <div class="panel">
           <div class="panel-head"><div class="panel-title">Solicitações Recebidas</div></div>
@@ -1414,277 +1378,160 @@ async function handleCoordAvatar(file) {
 // ═══ COORDINATOR SCHEDULE ═══
 
 // ═══ COORDINATOR SCHEDULE — DRAG & DROP ═══
-const C_DAYS = ['Seg','Ter','Qua','Qui','Sex','Sáb'];
-const C_HOURS = ['07:00','07:30','08:00','08:30','09:00','09:30','10:00','10:30','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','19:30','20:00','20:30','21:00','21:30','22:00'];
-const PASTEL_COLORS = [
-  {bg:'#dbeafe',border:'#93c5fd',text:'#1e40af'},
-  {bg:'#fce7f3',border:'#f9a8d4',text:'#9d174d'},
-  {bg:'#d1fae5',border:'#6ee7b7',text:'#065f46'},
-  {bg:'#fef3c7',border:'#fcd34d',text:'#92400e'},
-  {bg:'#ede9fe',border:'#c4b5fd',text:'#5b21b6'},
-  {bg:'#fee2e2',border:'#fca5a5',text:'#991b1b'},
-  {bg:'#ccfbf1',border:'#5eead4',text:'#134e4a'},
-  {bg:'#fce4ec',border:'#f48fb1',text:'#880e4f'},
-  {bg:'#e8eaf6',border:'#9fa8da',text:'#283593'},
-  {bg:'#fff3e0',border:'#ffcc80',text:'#e65100'},
-  {bg:'#e0f2f1',border:'#80cbc4',text:'#004d40'},
-  {bg:'#f3e5f5',border:'#ce93d8',text:'#6a1b9a'},
-  {bg:'#e8f5e9',border:'#a5d6a7',text:'#1b5e20'},
-  {bg:'#fafafa',border:'#bdbdbd',text:'#424242'},
-  {bg:'#fff8e1',border:'#ffe082',text:'#f57f17'},
-  {bg:'#e1f5fe',border:'#81d4fa',text:'#01579b'},
-];
 
-let schedStudentColors = {};
-let schedCurrentTeacherId = null;
+// ═══ COORDINATOR SCHEDULE (Event Delegation) ═══
+var C_DAYS=['Seg','Ter','Qua','Qui','Sex','Sab'];
+var C_HOURS=['07:00','07:30','08:00','08:30','09:00','09:30','10:00','10:30','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','19:30','20:00','20:30','21:00','21:30','22:00'];
+var C_COLORS=[{bg:'#dbeafe',b:'#93c5fd',t:'#1e40af'},{bg:'#fce7f3',b:'#f9a8d4',t:'#9d174d'},{bg:'#d1fae5',b:'#6ee7b7',t:'#065f46'},{bg:'#fef3c7',b:'#fcd34d',t:'#92400e'},{bg:'#ede9fe',b:'#c4b5fd',t:'#5b21b6'},{bg:'#fee2e2',b:'#fca5a5',t:'#991b1b'},{bg:'#ccfbf1',b:'#5eead4',t:'#134e4a'},{bg:'#e8eaf6',b:'#9fa8da',t:'#283593'},{bg:'#fff3e0',b:'#ffcc80',t:'#e65100'},{bg:'#f3e5f5',b:'#ce93d8',t:'#6a1b9a'},{bg:'#e8f5e9',b:'#a5d6a7',t:'#1b5e20'},{bg:'#fafafa',b:'#bdbdbd',t:'#424242'},{bg:'#fff8e1',b:'#ffe082',t:'#f57f17'},{bg:'#e1f5fe',b:'#81d4fa',t:'#01579b'},{bg:'#fbe9e7',b:'#ffab91',t:'#bf360c'},{bg:'#f1f8e9',b:'#aed581',t:'#33691e'}];
+var cCols={};var cTeacherId=null;
+function cGc(n){if(!cCols[n])cCols[n]=C_COLORS[Object.keys(cCols).length%C_COLORS.length];return cCols[n];}
+function cPop(){try{var c=new(window.AudioContext||window.webkitAudioContext)();var o=c.createOscillator();var g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.setValueAtTime(800,c.currentTime);o.frequency.exponentialRampToValueAtTime(1200,c.currentTime+0.05);g.gain.setValueAtTime(0.25,c.currentTime);g.gain.exponentialRampToValueAtTime(0.01,c.currentTime+0.12);o.start();o.stop(c.currentTime+0.12);}catch(e){}}
 
-// Pop sound
-function playPop() {
-  try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.frequency.setValueAtTime(800, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.05);
-    osc.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.1);
-    gain.gain.setValueAtTime(0.3, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + 0.15);
-  } catch(e) {}
+var _cDrag={};
+
+// Event delegation for coord schedule
+var coordGridWrap=null;
+function initCoordDragDrop(){
+  if(coordGridWrap)return;
+  coordGridWrap=document.getElementById('coordGridWrap');
+  if(!coordGridWrap)return;
+
+  document.addEventListener('dragstart',function(e){
+    if(!e.target.closest('#sec-schedules'))return;
+    var el=e.target.closest('[draggable]');
+    if(!el||!el.dataset.name)return;
+    _cDrag={name:el.dataset.name,level:el.dataset.level||'',slotid:el.dataset.slotid||''};
+    el.style.opacity='0.4';
+    setTimeout(function(){el.style.opacity='1';},500);
+  });
+
+  coordGridWrap.addEventListener('dragover',function(e){
+    var cell=e.target.closest('.sched-cell');
+    if(cell){e.preventDefault();cell.classList.add('sched-hover');}
+  });
+
+  coordGridWrap.addEventListener('dragleave',function(e){
+    var cell=e.target.closest('.sched-cell');
+    if(cell)cell.classList.remove('sched-hover');
+  });
+
+  coordGridWrap.addEventListener('drop',async function(e){
+    var cell=e.target.closest('.sched-cell');
+    if(!cell)return;
+    e.preventDefault();cell.classList.remove('sched-hover');
+    var name=_cDrag.name,level=_cDrag.level,oldId=_cDrag.slotid;
+    var day=parseInt(cell.dataset.day),hour=cell.dataset.hour;
+    _cDrag={};if(!name||!cTeacherId)return;
+    if(oldId){try{await removeScheduleSlot(parseInt(oldId));await addScheduleSlot(cTeacherId,day,hour+':00',name,level,60);cPop();showToast('Aula movida!');loadCoordSchedule();}catch(er){showToast('Erro','error');}return;}
+    try{await addScheduleSlot(cTeacherId,day,hour+':00',name,level,60);cPop();showToast('Aula adicionada!');loadCoordSchedule();}catch(er){showToast('Erro','error');}
+  });
+
+  // Drop OUTSIDE grid = delete
+  document.addEventListener('drop',function(e){
+    if(e.target.closest('#coordGridWrap'))return;
+    if(!e.target.closest('#sec-schedules'))return;
+    if(_cDrag.slotid){
+      e.preventDefault();
+      removeScheduleSlot(parseInt(_cDrag.slotid)).then(function(){cPop();showToast('Aula removida!');loadCoordSchedule();}).catch(function(){showToast('Erro','error');});
+    }
+    _cDrag={};
+  });
+
+  // Click slot = popup, click empty = extra event
+  coordGridWrap.addEventListener('click',function(e){
+    var slot=e.target.closest('.sched-slot');
+    if(slot&&slot.dataset.slotid){showCPop(slot.dataset.name,buildCSlotPopup(slot.dataset.slotid,slot.dataset.name,slot.dataset.dur||'60'));return;}
+    var cell=e.target.closest('.sched-cell.sched-empty');
+    if(cell){showCPop('📌 '+C_DAYS[parseInt(cell.dataset.day)]+' '+cell.dataset.hour,buildCExtraPopup());return;}
+  });
 }
 
-let coordSchedLoaded = false;
-async function initCoordSchedule() {
-  const monthEl = document.getElementById('schedCoordMonth');
-  if (monthEl && !monthEl.value) monthEl.value = new Date().toISOString().slice(0,7);
-  if (coordSchedLoaded) return;
-  const sel = document.getElementById('schedProfSelect');
-  try {
-    const { data } = await db.from('profiles').select('id, full_name, role').in('role', ['teacher','coordinator']).order('full_name');
-    if (data) data.forEach(p => { sel.innerHTML += '<option value="' + p.id + '">' + p.full_name + (p.role==='coordinator'?' (Coord)':'') + '</option>'; });
-    coordSchedLoaded = true;
-  } catch(e) {}
+function showCPop(t,h){document.getElementById('cPopTitle').textContent=t;document.getElementById('cPopContent').innerHTML=h;document.getElementById('cSchedPopup').style.display='';document.getElementById('cSchedOverlay').style.display='';}
+function closeCPop(){document.getElementById('cSchedPopup').style.display='none';document.getElementById('cSchedOverlay').style.display='none';}
+
+function buildCSlotPopup(slotId,name,dur){
+  var d30=dur==='30',d60=dur==='60',d90=dur==='90';
+  return '<p style="font-size:12px;color:var(--g400);margin-bottom:14px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700">Duração</p>'+
+  '<div style="display:flex;gap:8px;margin-bottom:20px">'+
+  '<button onclick="cChgDur('+slotId+',30)" style="flex:1;padding:12px;border:2px solid '+(d30?'var(--mango)':'var(--g200)')+';border-radius:10px;background:'+(d30?'var(--cream)':'#fff')+';font-family:inherit;font-size:14px;font-weight:700;color:var(--navy);cursor:pointer">30m</button>'+
+  '<button onclick="cChgDur('+slotId+',60)" style="flex:1;padding:12px;border:2px solid '+(d60?'var(--navy)':'var(--g200)')+';border-radius:10px;background:'+(d60?'var(--navy)':'#fff')+';font-family:inherit;font-size:14px;font-weight:700;color:'+(d60?'#fff':'var(--navy)')+';cursor:pointer">60m</button>'+
+  '<button onclick="cChgDur('+slotId+',90)" style="flex:1;padding:12px;border:2px solid '+(d90?'var(--blue)':'var(--g200)')+';border-radius:10px;background:'+(d90?'var(--blue-soft)':'#fff')+';font-family:inherit;font-size:14px;font-weight:700;color:var(--navy);cursor:pointer">90m</button></div>'+
+  '<hr style="border:none;border-top:1px solid var(--g100);margin:0 0 18px">'+
+  '<p style="font-size:12px;color:var(--g400);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700">Registrar Evento</p>'+
+  '<select id="cEvtType" style="width:100%;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:10px"><option value="cancellation">❌ Cancelamento com 24h</option><option value="cancellation_no24">⚠️ Cancelamento sem 24h</option><option value="replacement">🔄 Reposição</option><option value="cancellation_holiday">🏖️ Feriado</option><option value="cancellation_teacher">🚫 Falta do professor</option></select>'+
+  '<input type="date" id="cEvtDate" style="width:100%;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:10px">'+
+  '<input type="text" id="cEvtNotes" placeholder="Observação (opcional)" style="width:100%;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:14px">'+
+  '<button onclick="cSubmitEvt('+slotId+',\''+name.replace(/'/g,'')+'\')" style="width:100%;padding:12px;border:none;border-radius:10px;background:var(--orange);color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer">Registrar</button>';
 }
 
-async function loadCoordSchedule() {
-  const teacherId = document.getElementById('schedProfSelect').value;
-  if (!teacherId) return;
-  schedCurrentTeacherId = teacherId;
-  
-  // Load students of this teacher
-  const students = await getMyStudents(teacherId);
-  renderStudentPool(students);
-  
-  // Load existing slots
-  const slots = await getScheduleSlots(teacherId);
-  renderCoordGrid(slots);
+function buildCExtraPopup(){
+  return '<select id="cXType" style="width:100%;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:10px"><option value="replacement">🔄 Reposição de aula</option><option value="meeting">📋 Reunião pedagógica</option><option value="note">📝 Observação</option></select>'+
+  '<input type="text" id="cXStudent" placeholder="Aluno (se aplicável)" style="width:100%;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:10px">'+
+  '<input type="date" id="cXDate" style="width:100%;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:10px">'+
+  '<input type="text" id="cXNotes" placeholder="Descrição" style="width:100%;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:14px">'+
+  '<button onclick="cSubmitXtra()" style="width:100%;padding:12px;border:none;border-radius:10px;background:var(--blue);color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer">Registrar Evento</button>';
+}
+
+async function cChgDur(id,dur){try{await db.from('schedule_slots').update({duration_minutes:dur}).eq('id',id);cPop();closeCPop();showToast('Duração: '+dur+'min');loadCoordSchedule();}catch(e){showToast('Erro','error');}}
+
+async function cSubmitEvt(slotId,name){
+  var type=document.getElementById('cEvtType').value,date=document.getElementById('cEvtDate').value,notes=document.getElementById('cEvtNotes').value.trim();
+  if(!date){showToast('Selecione a data','error');return;}
+  var labels={cancellation:'Cancelamento com 24h',cancellation_no24:'Cancelamento sem 24h',replacement:'Reposição',cancellation_holiday:'Feriado',cancellation_teacher:'Falta do professor'};
+  try{await addScheduleEvent(slotId,cTeacherId,date,type.startsWith('cancellation')?'cancellation':'replacement',(labels[type]||type)+(notes?' — '+notes:''),currentUser.id,name);cPop();closeCPop();showToast('Evento registrado!');loadCoordScheduleEvents();}catch(e){showToast('Erro','error');}
+}
+
+async function cSubmitXtra(){
+  var type=document.getElementById('cXType').value,date=document.getElementById('cXDate').value,student=document.getElementById('cXStudent').value.trim(),notes=document.getElementById('cXNotes').value.trim();
+  if(!date){showToast('Selecione a data','error');return;}
+  var labels={replacement:'Reposição',meeting:'Reunião pedagógica',note:'Observação'};
+  try{await addScheduleEvent(null,cTeacherId,date,type==='meeting'?'note':type,(labels[type]||type)+(notes?' — '+notes:''),currentUser.id,student||'Geral');cPop();closeCPop();showToast('Evento registrado!');loadCoordScheduleEvents();}catch(e){showToast('Erro','error');}
+}
+
+var coordSchedLoaded=false;
+async function initCoordSchedule(){
+  var m=document.getElementById('schedCoordMonth');
+  if(m&&!m.value)m.value=new Date().toISOString().slice(0,7);
+  initCoordDragDrop();
+  if(coordSchedLoaded)return;
+  var sel=document.getElementById('schedProfSelect');
+  try{var r=await db.from('profiles').select('id,full_name,role').in('role',['teacher','coordinator']).order('full_name');if(r.data)r.data.forEach(function(p){sel.innerHTML+='<option value="'+p.id+'">'+p.full_name+(p.role==='coordinator'?' (Coord)':'')+'</option>';});coordSchedLoaded=true;}catch(e){}
+}
+
+async function loadCoordSchedule(){
+  cTeacherId=document.getElementById('schedProfSelect').value;
+  if(!cTeacherId)return;
+  cCols={};
+  var students=await getMyStudents(cTeacherId);
+  var pool=document.getElementById('schedStudentPool');
+  if(!students.length){pool.innerHTML='<div style="padding:20px;text-align:center;color:var(--g400);font-size:12px">Nenhum aluno vinculado.</div>';}
+  else{var h='';for(var i=0;i<students.length;i++){var s=students[i],c=cGc(s.full_name),lv=s.course_name||s.level||'';h+='<div draggable="true" class="sched-student" data-name="'+s.full_name+'" data-level="'+lv+'" style="background:'+c.bg+';border:2px solid '+c.b+';color:'+c.t+';border-radius:10px;padding:10px 14px;margin-bottom:8px;cursor:grab;font-size:12px;font-weight:700;transition:all 0.2s;user-select:none">'+s.full_name+'<div style="font-size:10px;font-weight:400;opacity:0.7;margin-top:2px">'+lv+'</div></div>';}pool.innerHTML=h;}
+  var slots=await getScheduleSlots(cTeacherId);
+  for(var i=0;i<slots.length;i++)cGc(slots[i].student_name);
+  var tbody=document.getElementById('coordSchedBody');var rows='';
+  for(var hi=0;hi<C_HOURS.length;hi++){var hour=C_HOURS[hi],cells='';
+    for(var di=0;di<C_DAYS.length;di++){var slot=null;
+      for(var si=0;si<slots.length;si++){if(slots[si].day_of_week===di&&slots[si].time_slot&&slots[si].time_slot.startsWith(hour)){slot=slots[si];break;}}
+      if(slot){var c=cGc(slot.student_name),dur=slot.duration_minutes||60,durTxt=dur!==60?' '+dur+'m':'';
+        cells+='<td class="sched-cell sched-filled" data-day="'+di+'" data-hour="'+hour+'"><div draggable="true" class="sched-slot" data-name="'+slot.student_name+'" data-level="'+(slot.student_level||'')+'" data-slotid="'+slot.id+'" data-dur="'+dur+'" style="background:'+c.bg+';border:2px solid '+c.b+';color:'+c.t+';cursor:grab"><div class="sched-slot-name">'+slot.student_name+durTxt+'</div><div class="sched-slot-level">'+(slot.student_level||'')+'</div></div></td>';
+      }else{cells+='<td class="sched-cell sched-empty" data-day="'+di+'" data-hour="'+hour+'">&nbsp;</td>';}
+    }rows+='<tr><td class="sched-hour">'+hour+'</td>'+cells+'</tr>';}
+  tbody.innerHTML=rows;
   loadCoordScheduleEvents();
 }
 
-function getStudentColor(name) {
-  if (!schedStudentColors[name]) {
-    const idx = Object.keys(schedStudentColors).length % PASTEL_COLORS.length;
-    schedStudentColors[name] = PASTEL_COLORS[idx];
-  }
-  return schedStudentColors[name];
+async function loadCoordScheduleEvents(){
+  var t=document.getElementById('schedProfSelect')?.value,mi=document.getElementById('schedCoordMonth')?.value;
+  if(!t||!mi)return;var p=mi.split('-'),y=parseInt(p[0]),m=parseInt(p[1]);
+  var events=await getScheduleEvents(t,m,y);
+  var div=document.getElementById('coordSchedEvents');
+  document.getElementById('coordSchedEventCount').textContent=events.length;
+  if(!events.length){div.innerHTML='<div class="empty-state"><div class="empty-icon">📅</div><p>Nenhum evento neste mês.</p></div>';return;}
+  var h='';for(var i=0;i<events.length;i++){var e=events[i],icon=e.event_type==='cancellation'?'❌':'🔄';
+    h+='<div class="list-item"><div style="flex:1"><div class="list-title">'+icon+' '+(e.student_name||'')+'</div><div class="list-sub">'+formatDate(e.event_date)+' — '+(e.notes||'')+' — '+(e.creator?.full_name||'')+'</div></div><button onclick="cDelEvt('+e.id+')" style="border:none;background:var(--g100);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:12px">✕</button></div>';}
+  div.innerHTML=h;
 }
-
-function renderStudentPool(students) {
-  const pool = document.getElementById('schedStudentPool');
-  if (!students.length) {
-    pool.innerHTML = '<div style="padding:20px;text-align:center;color:var(--g400);font-size:12px">Nenhum aluno vinculado.</div>';
-    return;
-  }
-  pool.innerHTML = students.map(s => {
-    const c = getStudentColor(s.full_name);
-    return '<div draggable="true" class="sched-student" data-name="' + s.full_name + '" data-level="' + (s.course_name || s.level || '') + '" style="background:' + c.bg + ';border:2px solid ' + c.border + ';color:' + c.text + ';border-radius:10px;padding:8px 12px;margin-bottom:6px;cursor:grab;font-size:12px;font-weight:600;transition:all 0.2s;user-select:none" ondragstart="onDragStart(event)">' + s.full_name + '<div style="font-size:10px;font-weight:400;opacity:0.7;margin-top:2px">' + (s.course_name || s.level || '') + '</div></div>';
-  }).join('');
-}
-
-function renderCoordGrid(slots) {
-  // Assign colors to existing slots
-  slots.forEach(s => getStudentColor(s.student_name));
-  
-  const tbody = document.getElementById('coordSchedBody');
-  tbody.innerHTML = C_HOURS.map(hour => {
-    const cells = C_DAYS.map((day, di) => {
-      const slot = slots.find(s => s.day_of_week === di && s.time_slot && s.time_slot.startsWith(hour));
-      if (slot) {
-        const c = getStudentColor(slot.student_name);
-        const durLabel = slot.duration_minutes === 30 ? ' 30m' : '';
-        return '<td class="sched-cell sched-filled" data-day="' + di + '" data-hour="' + hour + '" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDropReplace(event,' + slot.id + ')">' +
-          '<div draggable="true" class="sched-slot" data-name="' + slot.student_name + '" data-level="' + (slot.student_level||'') + '" data-slotid="' + slot.id + '" ondragstart="onDragStart(event)" style="background:' + c.bg + ';border:2px solid ' + c.border + ';color:' + c.text + ';cursor:grab">' +
-          '<div class="sched-slot-name">' + slot.student_name + durLabel + '</div>' +
-          '<div class="sched-slot-level">' + (slot.student_level || '') + '</div>' +
-          '<div class="sched-slot-x" onclick="event.stopPropagation();removeSlotCoord(' + slot.id + ')">✕</div></div></td>';
-      }
-      return '<td class="sched-cell sched-empty" data-day="' + di + '" data-hour="' + hour + '" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">&nbsp;</td>';
-    }).join('');
-    return '<tr><td class="sched-hour">' + hour + '</td>' + cells + '</tr>';
-  }).join('');
-}
-
-function onDragStart(e) {
-  const el = e.target.closest('[draggable]') || e.target;
-  e.dataTransfer.setData('text/name', el.dataset.name || '');
-  e.dataTransfer.setData('text/level', el.dataset.level || '');
-  e.dataTransfer.setData('text/slotid', el.dataset.slotid || '');
-  el.style.opacity = '0.4';
-  setTimeout(() => { if(el) el.style.opacity = '1'; }, 600);
-}
-
-function onDragOver(e) {
-  e.preventDefault();
-  e.currentTarget.classList.add('sched-hover');
-}
-
-function onDragLeave(e) {
-  e.currentTarget.classList.remove('sched-hover');
-}
-
-async function onDrop(e) {
-  e.preventDefault();
-  const cell = e.currentTarget;
-  cell.classList.remove('sched-hover');
-  
-  const name = e.dataTransfer.getData('text/name');
-  const level = e.dataTransfer.getData('text/level');
-  const oldSlotId = e.dataTransfer.getData('text/slotid');
-  const day = parseInt(cell.dataset.day);
-  const hour = cell.dataset.hour;
-  
-  if (!name || !schedCurrentTeacherId) return;
-  
-  // If moving an existing slot, delete old first then create new
-  if (oldSlotId) {
-    try {
-      await removeScheduleSlot(parseInt(oldSlotId));
-      await addScheduleSlot(schedCurrentTeacherId, day, hour + ':00', name, level, 60);
-      playPop();
-      showToast('Aula movida!');
-      loadCoordSchedule();
-    } catch(e2) { showToast('Erro: ' + e2.message, 'error'); }
-    return;
-  }
-  
-  // New slot — show duration panel
-  document.getElementById('dropDay').value = day;
-  document.getElementById('dropHour').value = hour;
-  document.getElementById('dropName').value = name;
-  document.getElementById('dropLevel').value = level;
-  document.getElementById('schedDurTitle').textContent = name + ' — ' + ['Seg','Ter','Qua','Qui','Sex','Sab'][day] + ' ' + hour;
-  document.getElementById('schedDurPanel').style.display = '';
-  document.getElementById('schedDurPanel').scrollIntoView({behavior:'smooth',block:'center'});
-}
-
-function cancelDrop() {
-  document.getElementById('schedDurPanel').style.display = 'none';
-}
-
-async function confirmDrop() {
-  const day = parseInt(document.getElementById('dropDay').value);
-  const hour = document.getElementById('dropHour').value;
-  const name = document.getElementById('dropName').value;
-  const level = document.getElementById('dropLevel').value;
-  const dur = parseInt(document.getElementById('dropDuration').value);
-  
-  try {
-    await addScheduleSlot(schedCurrentTeacherId, day, hour + ':00', name, level, dur);
-    playPop();
-    document.getElementById('schedDurPanel').style.display = 'none';
-    showToast('Aula adicionada! (' + dur + 'min)');
-    loadCoordSchedule();
-  } catch(e) { showToast('Erro: ' + e.message, 'error'); }
-}
-
-// Extra events
-function toggleExtraPanel() {
-  const p = document.getElementById('schedExtraPanel');
-  p.style.display = p.style.display === 'none' ? '' : 'none';
-}
-
-async function submitExtraEvent() {
-  const type = document.getElementById('extraType').value;
-  const date = document.getElementById('extraDate').value;
-  const student = document.getElementById('extraStudent').value.trim();
-  const notes = document.getElementById('extraNotes').value.trim();
-  
-  if (!date) { showToast('Selecione a data','error'); return; }
-  
-  const typeLabels = {replacement:'Reposição de aula',meeting:'Reunião pedagógica',note:'Observação geral'};
-  const fullNotes = (typeLabels[type] || type) + (notes ? ' — ' + notes : '');
-  const dbType = type === 'meeting' ? 'note' : type;
-  
-  try {
-    await addScheduleEvent(null, schedCurrentTeacherId, date, dbType, fullNotes, currentUser.id, student || 'Geral');
-    showToast('Evento registrado!');
-    document.getElementById('extraDate').value = '';
-    document.getElementById('extraStudent').value = '';
-    document.getElementById('extraNotes').value = '';
-    document.getElementById('schedExtraPanel').style.display = 'none';
-    loadCoordScheduleEvents();
-  } catch(e) { showToast('Erro: ' + e.message, 'error'); }
-}
-
-async function onCoordTrashDrop(e) {
-  e.preventDefault();
-  const zone = e.currentTarget;
-  zone.style.background=''; zone.style.borderColor='var(--g200)'; zone.style.color='var(--g400)';
-  zone.textContent = '🗑️ Arraste aqui para remover';
-  const slotId = e.dataTransfer.getData('text/slotid');
-  if (!slotId) return;
-  try {
-    await removeScheduleSlot(parseInt(slotId));
-    playPop(); showToast('Aula removida!'); loadCoordSchedule();
-  } catch(er) { showToast('Erro: '+er.message,'error'); }
-}
-
-async function removeSlotCoord(slotId) {
-  if (!confirm('Remover esta aula da grade?')) return;
-  try {
-    await removeScheduleSlot(slotId);
-    showToast('Aula removida');
-    loadCoordSchedule();
-  } catch(e) { showToast('Erro: ' + e.message, 'error'); }
-}
-
-// Drop on existing slot = swap/replace
-async function onDropReplace(e, existingSlotId) {
-  e.preventDefault();
-  const cell = e.currentTarget;
-  cell.classList.remove('sched-hover');
-  const name = e.dataTransfer.getData('text/name');
-  const oldSlotId = e.dataTransfer.getData('text/slotid');
-  if (!name) return;
-  // If dropping on itself, ignore
-  if (oldSlotId && parseInt(oldSlotId) === existingSlotId) return;
-  // Otherwise treat as regular drop on the cell position
-  onDrop(e);
-}
-
-async function loadCoordScheduleEvents() {
-  const teacherId = document.getElementById('schedProfSelect')?.value;
-  const monthInput = document.getElementById('schedCoordMonth')?.value;
-  if (!teacherId || !monthInput) return;
-  const [year, month] = monthInput.split('-').map(Number);
-  const events = await getScheduleEvents(teacherId, month, year);
-  const div = document.getElementById('coordSchedEvents');
-  document.getElementById('coordSchedEventCount').textContent = events.length;
-  if (!events.length) {
-    div.innerHTML = '<div class="empty-state"><div class="empty-icon">📅</div><p>Nenhum evento neste mês.</p></div>';
-    return;
-  }
-  const typeLabels = {cancellation:'❌ Cancelamento',replacement:'🔄 Reposição',reschedule:'📅 Reagendamento',note:'📝 Observação'};
-  div.innerHTML = events.map(e => '<div class="list-item"><div style="flex:1"><div class="list-title">' + (typeLabels[e.event_type]||'') + ' — ' + (e.student_name||'') + '</div><div class="list-sub">' + formatDate(e.event_date) + ' — ' + (e.notes||'') + ' — por ' + (e.creator?.full_name||'') + '</div></div><button onclick="deleteCoordEvent(' + e.id + ')" style="border:none;background:var(--g100);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:12px">✕</button></div>').join('');
-}
-
-async function deleteCoordEvent(eventId) {
-  if (!confirm('Remover?')) return;
-  try { await removeScheduleEvent(eventId); showToast('Removido'); loadCoordScheduleEvents(); } catch(e) { showToast('Erro','error'); }
-}
+async function cDelEvt(id){if(!confirm('Remover?'))return;try{await removeScheduleEvent(id);showToast('Removido');loadCoordScheduleEvents();}catch(e){showToast('Erro','error');}}
 
 // ═══ USER FILTERS ═══
 let allUsersCache = [];

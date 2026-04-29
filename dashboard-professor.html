@@ -835,6 +835,8 @@ async function markMsgRead(msgId, btn) {
 // ═══ PROFESSOR SCHEDULE (Event Delegation) ═══
 
 // ═══ PROFESSOR SCHEDULE (Event Delegation — zero inline handlers) ═══
+
+// ═══ PROFESSOR SCHEDULE ═══
 var P_DAYS=['Seg','Ter','Qua','Qui','Sex','Sab'];
 var P_HOURS=['07:00','07:30','08:00','08:30','09:00','09:30','10:00','10:30','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','19:30','20:00','20:30','21:00','21:30','22:00'];
 var P_COLORS=[{bg:'#dbeafe',b:'#93c5fd',t:'#1e40af'},{bg:'#fce7f3',b:'#f9a8d4',t:'#9d174d'},{bg:'#d1fae5',b:'#6ee7b7',t:'#065f46'},{bg:'#fef3c7',b:'#fcd34d',t:'#92400e'},{bg:'#ede9fe',b:'#c4b5fd',t:'#5b21b6'},{bg:'#fee2e2',b:'#fca5a5',t:'#991b1b'},{bg:'#ccfbf1',b:'#5eead4',t:'#134e4a'},{bg:'#e8eaf6',b:'#9fa8da',t:'#283593'},{bg:'#fff3e0',b:'#ffcc80',t:'#e65100'},{bg:'#f3e5f5',b:'#ce93d8',t:'#6a1b9a'}];
@@ -843,7 +845,7 @@ function gc(n){if(!pCols[n])pCols[n]=P_COLORS[Object.keys(pCols).length%P_COLORS
 function popSnd(){try{var c=new(window.AudioContext||window.webkitAudioContext)();var o=c.createOscillator();var g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.setValueAtTime(800,c.currentTime);o.frequency.exponentialRampToValueAtTime(1200,c.currentTime+0.05);g.gain.setValueAtTime(0.25,c.currentTime);g.gain.exponentialRampToValueAtTime(0.01,c.currentTime+0.12);o.start();o.stop(c.currentTime+0.12);}catch(e){}}
 
 document.getElementById('schedMonth').value=new Date().toISOString().slice(0,7);
-document.getElementById('schedMonth').addEventListener('change',loadProfEvents);
+document.getElementById('schedMonth').addEventListener('change',function(){loadSchedule();});
 
 var _drag={};
 
@@ -868,44 +870,33 @@ document.addEventListener('dragleave',function(e){
 document.addEventListener('drop',async function(e){
   var cell=e.target.closest('.sched-cell');
   if(!cell){_drag={};return;}
-  e.preventDefault();
-  cell.classList.remove('sched-hover');
+  e.preventDefault();cell.classList.remove('sched-hover');
   var name=_drag.name,level=_drag.level,oldId=_drag.slotid;
   var day=parseInt(cell.dataset.day),hour=cell.dataset.hour;
-  _drag={};
-  if(!name)return;
-  // Move existing
+  _drag={};if(!name)return;
   if(oldId){
     try{await removeScheduleSlot(parseInt(oldId));await addScheduleSlot(currentUser.id,day,hour+':00',name,level,60);popSnd();showToast('Aula movida!');loadSchedule();}catch(er){showToast('Erro','error');}
     return;
   }
-  // New slot — instant 60min
   try{await addScheduleSlot(currentUser.id,day,hour+':00',name,level,60);popSnd();showToast('Aula adicionada!');loadSchedule();}catch(er){showToast('Erro','error');}
 });
 
-// Click slot = popup to change duration / register event
-// Click empty cell = popup for extra event
-document.addEventListener('click',async function(e){
+document.addEventListener('click',function(e){
   var del=e.target.closest('.sched-slot-x');
-  if(del&&del.dataset.delid){e.stopPropagation();if(!confirm('Remover esta aula?'))return;try{await removeScheduleSlot(parseInt(del.dataset.delid));popSnd();showToast('Aula removida!');loadSchedule();}catch(er){showToast('Erro','error');}return;}
+  if(del&&del.dataset.delid){e.stopPropagation();if(!confirm('Remover esta aula?'))return;removeScheduleSlot(parseInt(del.dataset.delid)).then(function(){popSnd();showToast('Removida!');loadSchedule();}).catch(function(){showToast('Erro','error');});return;}
   var slot=e.target.closest('.sched-slot');
-  if(slot&&slot.dataset.slotid){
-    var id=slot.dataset.slotid,nm=slot.dataset.name,dur=slot.dataset.dur||'60';
-    showPopup(nm,buildSlotPopup(id,nm,dur));
-    return;
-  }
+  if(slot&&slot.dataset.slotid){showPopup(slot.dataset.name,buildSlotPopup(slot.dataset.slotid,slot.dataset.name,slot.dataset.dur||'60'));return;}
+  var evtCard=e.target.closest('.sched-evt');
+  if(evtCard)return;
   var cell=e.target.closest('.sched-cell.sched-empty');
-  if(cell){
-    var day=parseInt(cell.dataset.day),hour=cell.dataset.hour;
-    showPopup('📌 '+P_DAYS[day]+' '+hour,buildExtraPopup());
-  }
+  if(cell){var day=parseInt(cell.dataset.day),hour=cell.dataset.hour;showPopup('📌 Evento — '+P_DAYS[day]+' '+hour,buildExtraPopup(day,hour));return;}
 });
 
 function showPopup(t,h){document.getElementById('popupTitle').textContent=t;document.getElementById('popupContent').innerHTML=h;document.getElementById('schedPopup').style.display='';document.getElementById('schedOverlay').style.display='';}
 function closePopup(){document.getElementById('schedPopup').style.display='none';document.getElementById('schedOverlay').style.display='none';}
 
 function buildSlotPopup(slotId,name,dur){
-  var d30=dur==='30',d60=dur==='60'||dur==='',d90=dur==='90';
+  var d30=dur==='30',d60=dur==='60',d90=dur==='90';
   return '<p style="font-size:12px;color:var(--g400);margin-bottom:14px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700">Duração</p>'+
   '<div style="display:flex;gap:8px;margin-bottom:20px">'+
   '<button onclick="chgDur('+slotId+',30)" style="flex:1;padding:12px;border:2px solid '+(d30?'var(--mango)':'var(--g200)')+';border-radius:10px;background:'+(d30?'var(--cream)':'#fff')+';font-family:inherit;font-size:14px;font-weight:700;color:var(--navy);cursor:pointer">30m</button>'+
@@ -913,17 +904,18 @@ function buildSlotPopup(slotId,name,dur){
   '<button onclick="chgDur('+slotId+',90)" style="flex:1;padding:12px;border:2px solid '+(d90?'var(--blue)':'var(--g200)')+';border-radius:10px;background:'+(d90?'var(--blue-soft)':'#fff')+';font-family:inherit;font-size:14px;font-weight:700;color:var(--navy);cursor:pointer">90m</button></div>'+
   '<hr style="border:none;border-top:1px solid var(--g100);margin:0 0 18px">'+
   '<p style="font-size:12px;color:var(--g400);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700">Registrar Evento</p>'+
-  '<select id="pEvtType" style="width:100%;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:10px"><option value="cancellation">❌ Cancelamento com 24h</option><option value="cancellation_no24">⚠️ Cancelamento sem 24h</option><option value="replacement">🔄 Reposição</option><option value="cancellation_holiday">🏖️ Feriado</option><option value="cancellation_teacher">🚫 Falta do professor</option></select>'+
+  '<select id="pEvtType" style="width:100%;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:10px"><option value="cancellation">❌ Canc. com 24h</option><option value="cancellation_no24">⚠️ Canc. sem 24h</option><option value="replacement">🔄 Reposição</option><option value="cancellation_holiday">🏖️ Feriado</option><option value="cancellation_teacher">🚫 Falta do professor</option></select>'+
   '<input type="date" id="pEvtDate" style="width:100%;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:10px">'+
   '<input type="text" id="pEvtNotes" placeholder="Observação (opcional)" style="width:100%;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:14px">'+
   '<button onclick="submitEvt('+slotId+',\''+name.replace(/'/g,'')+'\')" style="width:100%;padding:12px;border:none;border-radius:10px;background:var(--orange);color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer">Registrar</button>';
 }
 
-function buildExtraPopup(){
+function buildExtraPopup(day,hour){
   return '<select id="pXType" style="width:100%;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:10px"><option value="replacement">🔄 Reposição de aula</option><option value="meeting">📋 Reunião pedagógica</option><option value="note">📝 Observação</option></select>'+
   '<input type="text" id="pXStudent" placeholder="Aluno (se aplicável)" style="width:100%;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:10px">'+
   '<input type="date" id="pXDate" style="width:100%;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:10px">'+
   '<input type="text" id="pXNotes" placeholder="Descrição" style="width:100%;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:14px">'+
+  '<input type="hidden" id="pXDay" value="'+day+'"><input type="hidden" id="pXHour" value="'+hour+'">'+
   '<button onclick="submitXtra()" style="width:100%;padding:12px;border:none;border-radius:10px;background:var(--blue);color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer">Registrar Evento</button>';
 }
 
@@ -934,33 +926,100 @@ async function submitEvt(slotId,name){
   if(!date){showToast('Selecione a data','error');return;}
   var labels={cancellation:'Cancelamento com 24h',cancellation_no24:'Cancelamento sem 24h',replacement:'Reposição',cancellation_holiday:'Feriado',cancellation_teacher:'Falta do professor'};
   var dbType=type.startsWith('cancellation')?'cancellation':'replacement';
-  try{await addScheduleEvent(slotId,currentUser.id,date,dbType,(labels[type]||type)+(notes?' — '+notes:''),currentUser.id,name);popSnd();closePopup();showToast('Evento registrado!');loadProfEvents();}catch(e){showToast('Erro','error');}
+  try{await addScheduleEvent(slotId,currentUser.id,date,dbType,(labels[type]||type)+(notes?' — '+notes:''),currentUser.id,name);popSnd();closePopup();showToast('Evento registrado!');loadSchedule();}catch(e){showToast('Erro: '+e.message,'error');}
 }
 
 async function submitXtra(){
-  var type=document.getElementById('pXType').value,date=document.getElementById('pXDate').value,student=document.getElementById('pXStudent').value.trim(),notes=document.getElementById('pXNotes').value.trim();
+  var type=document.getElementById('pXType').value,date=document.getElementById('pXDate').value;
+  var student=document.getElementById('pXStudent').value.trim(),notes=document.getElementById('pXNotes').value.trim();
+  var day=document.getElementById('pXDay').value,hour=document.getElementById('pXHour').value;
   if(!date){showToast('Selecione a data','error');return;}
   var labels={replacement:'Reposição',meeting:'Reunião pedagógica',note:'Observação'};
-  try{await addScheduleEvent(null,currentUser.id,date,type==='meeting'?'note':type,(labels[type]||type)+(notes?' — '+notes:''),currentUser.id,student||'Geral');popSnd();closePopup();showToast('Evento registrado!');loadProfEvents();}catch(e){showToast('Erro','error');}
+  var dbType=type==='meeting'?'note':type;
+  try{
+    await addScheduleEvent(null,currentUser.id,date,dbType,(labels[type]||type)+(notes?' — '+notes:''),currentUser.id,student||'Geral',parseInt(day),hour+':00');
+    popSnd();closePopup();showToast('Evento registrado!');loadSchedule();
+  }catch(e){showToast('Erro: '+e.message,'error');}
 }
 
+// ── Render with ROWSPAN + EVENTS ON GRID ──
 async function loadSchedule(){
   var students=window._myStudents||await getMyStudents(currentUser.id);
   var pool=document.getElementById('profSchedPool');
   if(!students.length){pool.innerHTML='<div style="padding:20px;text-align:center;color:var(--g400);font-size:12px">Nenhum aluno vinculado.</div>';}
   else{var h='';for(var i=0;i<students.length;i++){var s=students[i],c=gc(s.full_name),lv=s.course_name||s.level||'';h+='<div draggable="true" class="sched-student" data-name="'+s.full_name+'" data-level="'+lv+'" style="background:'+c.bg+';border:2px solid '+c.b+';color:'+c.t+';border-radius:10px;padding:10px 14px;margin-bottom:8px;cursor:grab;font-size:12px;font-weight:700;transition:all 0.2s;user-select:none">'+s.full_name+'<div style="font-size:10px;font-weight:400;opacity:0.7;margin-top:2px">'+lv+'</div></div>';}pool.innerHTML=h;}
+
   var slots=await getScheduleSlots(currentUser.id);
   for(var i=0;i<slots.length;i++)gc(slots[i].student_name);
+
+  // Load events for current month to overlay on grid
+  var mi=document.getElementById('schedMonth').value;
+  var evts=[];
+  if(mi){var p=mi.split('-');evts=await getScheduleEvents(currentUser.id,parseInt(p[1]),parseInt(p[0]));}
+
+  // Build occupied map for rowspan
+  var occupied={};
+  for(var si=0;si<slots.length;si++){
+    var s=slots[si],hi=findHourIdx(s.time_slot);
+    if(hi<0)continue;
+    var span=Math.max(1,Math.round((s.duration_minutes||60)/30));
+    for(var r=1;r<span;r++){
+      if(hi+r<P_HOURS.length) occupied[(hi+r)+'-'+s.day_of_week]=true;
+    }
+  }
+
+  // Map events by day_of_week (using replacement_day field)
+  var evtsByDay={};
+  for(var ei=0;ei<evts.length;ei++){
+    var ev=evts[ei];
+    var evDay=ev.replacement_day!==null?parseInt(ev.replacement_day):-1;
+    var evTime=ev.replacement_time||'';
+    if(evDay>=0&&evTime){
+      var key=evTime.substring(0,5)+'-'+evDay;
+      if(!evtsByDay[key])evtsByDay[key]=[];
+      evtsByDay[key].push(ev);
+    }
+  }
+
   var tbody=document.getElementById('profSchedBody');var rows='';
-  for(var hi=0;hi<P_HOURS.length;hi++){var hour=P_HOURS[hi],cells='';
-    for(var di=0;di<P_DAYS.length;di++){var slot=null;
+  for(var hi=0;hi<P_HOURS.length;hi++){
+    var hour=P_HOURS[hi],cells='';
+    for(var di=0;di<P_DAYS.length;di++){
+      if(occupied[hi+'-'+di])continue;
+      var slot=null;
       for(var si=0;si<slots.length;si++){if(slots[si].day_of_week===di&&slots[si].time_slot&&slots[si].time_slot.startsWith(hour)){slot=slots[si];break;}}
-      if(slot){var c=gc(slot.student_name),dur=slot.duration_minutes||60,durTxt=dur!==60?' '+dur+'m':'';
-        cells+='<td class="sched-cell sched-filled" data-day="'+di+'" data-hour="'+hour+'"><div draggable="true" class="sched-slot" data-name="'+slot.student_name+'" data-level="'+(slot.student_level||'')+'" data-slotid="'+slot.id+'" data-dur="'+dur+'" style="background:'+c.bg+';border:2px solid '+c.b+';color:'+c.t+';cursor:grab"><div class="sched-slot-name">'+slot.student_name+durTxt+'</div><div class="sched-slot-level">'+(slot.student_level||'')+'</div><div class="sched-slot-x" data-delid="'+slot.id+'">✕</div></div></td>';
-      }else{cells+='<td class="sched-cell sched-empty" data-day="'+di+'" data-hour="'+hour+'">&nbsp;</td>';}
-    }rows+='<tr><td class="sched-hour">'+hour+'</td>'+cells+'</tr>';}
+
+      // Check for events at this cell
+      var cellEvts=evtsByDay[hour+'-'+di]||[];
+
+      if(slot){
+        var c=gc(slot.student_name),dur=slot.duration_minutes||60;
+        var span=Math.max(1,Math.round(dur/30));
+        var durTxt=dur===30?' 30m':dur===90?' 90m':'';
+        var h2=span>1?' rowspan="'+span+'"':'';
+        var cellH=span*48;
+        cells+='<td class="sched-cell sched-filled" data-day="'+di+'" data-hour="'+hour+'"'+h2+' style="height:'+cellH+'px"><div draggable="true" class="sched-slot" data-name="'+slot.student_name+'" data-level="'+(slot.student_level||'')+'" data-slotid="'+slot.id+'" data-dur="'+dur+'" style="background:'+c.bg+';border:2px solid '+c.b+';color:'+c.t+';cursor:grab;height:100%"><div class="sched-slot-name">'+slot.student_name+durTxt+'</div><div class="sched-slot-level">'+(slot.student_level||'')+'</div><div class="sched-slot-x" data-delid="'+slot.id+'">✕</div></div></td>';
+      } else if(cellEvts.length>0){
+        // Show event on grid
+        var ev=cellEvts[0];
+        var evIcon=ev.event_type==='cancellation'?'❌':'🔄';
+        var evLabel=ev.event_type==='cancellation'?'Cancelamento':ev.event_type==='replacement'?'Reposição':'Evento';
+        cells+='<td class="sched-cell" data-day="'+di+'" data-hour="'+hour+'" style="padding:2px"><div class="sched-evt" style="background:#fff3e0;border:2px dashed #e67e22;border-radius:8px;padding:4px 6px;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:9px;color:#e65100;font-weight:700;text-align:center">'+evIcon+'<div>'+( ev.student_name||'Geral')+'</div><div style="font-weight:400;font-size:8px;opacity:0.7">'+formatDate(ev.event_date)+'</div></div></td>';
+      } else {
+        cells+='<td class="sched-cell sched-empty" data-day="'+di+'" data-hour="'+hour+'">&nbsp;</td>';
+      }
+    }
+    rows+='<tr><td class="sched-hour">'+hour+'</td>'+cells+'</tr>';
+  }
   tbody.innerHTML=rows;
   loadProfEvents();
+}
+
+function findHourIdx(timeStr){
+  if(!timeStr)return -1;
+  var t=timeStr.substring(0,5);
+  for(var i=0;i<P_HOURS.length;i++){if(P_HOURS[i]===t)return i;}
+  return -1;
 }
 
 async function loadProfEvents(){
@@ -970,11 +1029,21 @@ async function loadProfEvents(){
   var div=document.getElementById('schedEvents');
   document.getElementById('schedEventCount').textContent=events.length;
   if(!events.length){div.innerHTML='<div class="empty-state"><div class="empty-icon">📅</div><p>Nenhum evento em '+MONTHS[m]+'.</p></div>';return;}
-  var h='';for(var i=0;i<events.length;i++){var e=events[i],icon=e.event_type==='cancellation'?'❌':'🔄';
-    h+='<div class="list-item"><div style="flex:1"><div class="list-title">'+icon+' '+(e.student_name||'')+'</div><div class="list-sub">'+formatDate(e.event_date)+' — '+(e.notes||'')+' — '+(e.creator?.full_name||'')+'</div></div><button onclick="delEv('+e.id+')" style="border:none;background:var(--g100);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:12px">✕</button></div>';}
+  var h='';for(var i=0;i<events.length;i++){
+    var e=events[i];
+    var isCancellation=e.event_type==='cancellation';
+    var bgColor=isCancellation?'#fef2f2':'#eff6ff';
+    var borderColor=isCancellation?'#fca5a5':'#93c5fd';
+    var icon=isCancellation?'❌':'🔄';
+    var textColor=isCancellation?'#991b1b':'#1e40af';
+    h+='<div style="display:flex;align-items:center;gap:14px;padding:14px 18px;background:'+bgColor+';border:1px solid '+borderColor+';border-radius:12px;margin-bottom:8px">'+
+      '<div style="font-size:20px">'+icon+'</div>'+
+      '<div style="flex:1"><div style="font-weight:700;color:'+textColor+';font-size:13px">'+(e.student_name||'Geral')+'</div><div style="font-size:12px;color:var(--g500)">'+formatDate(e.event_date)+' — '+(e.notes||'')+'</div></div>'+
+      '<button onclick="delEv('+e.id+')" style="border:none;background:rgba(0,0,0,0.05);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:12px">✕</button></div>';
+  }
   div.innerHTML=h;
 }
-async function delEv(id){if(!confirm('Remover?'))return;try{await removeScheduleEvent(id);showToast('Removido');loadProfEvents();}catch(e){showToast('Erro','error');}}
+async function delEv(id){if(!confirm('Remover?'))return;try{await removeScheduleEvent(id);showToast('Removido');loadSchedule();}catch(e){showToast('Erro','error');}}
 
 // ═══ MY STUDENTS LIST ═══
 async function loadStudentsList() {

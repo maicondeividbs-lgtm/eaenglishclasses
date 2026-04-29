@@ -1437,7 +1437,7 @@ function initCoordDragDrop(){
     var slot=e.target.closest('.sched-slot');
     if(slot&&slot.dataset.slotid){showCPop(slot.dataset.name,buildCSlotPopup(slot.dataset.slotid,slot.dataset.name,slot.dataset.dur||'60'));return;}
     var cell=e.target.closest('.sched-cell.sched-empty');
-    if(cell){showCPop('📌 '+C_DAYS[parseInt(cell.dataset.day)]+' '+cell.dataset.hour,buildCExtraPopup());return;}
+    if(cell){var cd=parseInt(cell.dataset.day),ch=cell.dataset.hour;showCPop('📌 '+C_DAYS[cd]+' '+ch,buildCExtraPopup(cd,ch));return;}
   });
 }
 
@@ -1459,8 +1459,10 @@ function buildCSlotPopup(slotId,name,dur){
   '<button onclick="cSubmitEvt('+slotId+',\''+name.replace(/'/g,'')+'\')" style="width:100%;padding:12px;border:none;border-radius:10px;background:var(--orange);color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer">Registrar</button>';
 }
 
-function buildCExtraPopup(){
-  return '<select id="cXType" style="width:100%;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:10px"><option value="replacement">🔄 Reposição de aula</option><option value="meeting">📋 Reunião pedagógica</option><option value="note">📝 Observação</option></select>'+
+function buildCExtraPopup(day,hour){
+  return '<input type="hidden" id="cXDay" value="'+(day||'')+'">' +
+  '<input type="hidden" id="cXHour" value="'+(hour||'')+'">' +
+  '<select id="cXType" style="width:100%;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:10px"><option value="replacement">🔄 Reposição de aula</option><option value="meeting">📋 Reunião pedagógica</option><option value="note">📝 Observação</option></select>'+
   '<input type="text" id="cXStudent" placeholder="Aluno (se aplicável)" style="width:100%;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:10px">'+
   '<input type="date" id="cXDate" style="width:100%;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:10px">'+
   '<input type="text" id="cXNotes" placeholder="Descrição" style="width:100%;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:14px">'+
@@ -1478,10 +1480,13 @@ async function cSubmitEvt(slotId,name){
 
 async function cSubmitXtra(){
   var type=document.getElementById('cXType').value,date=document.getElementById('cXDate').value,student=document.getElementById('cXStudent').value.trim(),notes=document.getElementById('cXNotes').value.trim();
+  var day=document.getElementById('cXDay').value,hour=document.getElementById('cXHour').value;
   if(!date){showToast('Selecione a data','error');return;}
   var labels={replacement:'Reposição',meeting:'Reunião pedagógica',note:'Observação'};
-  try{await addScheduleEvent(null,cTeacherId,date,type==='meeting'?'note':type,(labels[type]||type)+(notes?' — '+notes:''),currentUser.id,student||'Geral');cPop();closeCPop();showToast('Evento registrado!');loadCoordScheduleEvents();}catch(e){showToast('Erro','error');}
+  try{await addScheduleEvent(null,cTeacherId,date,type==='meeting'?'note':type,(labels[type]||type)+(notes?' — '+notes:''),currentUser.id,student||'Geral',day?parseInt(day):undefined,hour?hour+':00':undefined);cPop();closeCPop();showToast('Evento registrado!');loadCoordSchedule();}catch(e){showToast('Erro','error');}
 }
+
+function cFindHourIdx(t){if(!t)return -1;var h=t.substring(0,5);for(var i=0;i<C_HOURS.length;i++){if(C_HOURS[i]===h)return i;}return -1;}
 
 var coordSchedLoaded=false;
 async function initCoordSchedule(){
@@ -1503,13 +1508,54 @@ async function loadCoordSchedule(){
   else{var h='';for(var i=0;i<students.length;i++){var s=students[i],c=cGc(s.full_name),lv=s.course_name||s.level||'';h+='<div draggable="true" class="sched-student" data-name="'+s.full_name+'" data-level="'+lv+'" style="background:'+c.bg+';border:2px solid '+c.b+';color:'+c.t+';border-radius:10px;padding:10px 14px;margin-bottom:8px;cursor:grab;font-size:12px;font-weight:700;transition:all 0.2s;user-select:none">'+s.full_name+'<div style="font-size:10px;font-weight:400;opacity:0.7;margin-top:2px">'+lv+'</div></div>';}pool.innerHTML=h;}
   var slots=await getScheduleSlots(cTeacherId);
   for(var i=0;i<slots.length;i++)cGc(slots[i].student_name);
+
+  // Load events for grid overlay
+  var mi=document.getElementById('schedCoordMonth').value;
+  var evts=[];
+  if(mi){var p=mi.split('-');evts=await getScheduleEvents(cTeacherId,parseInt(p[1]),parseInt(p[0]));}
+
+  // Build occupied map for rowspan
+  var occupied={};
+  for(var si=0;si<slots.length;si++){
+    var s=slots[si],hIdx=cFindHourIdx(s.time_slot);
+    if(hIdx<0)continue;
+    var span=Math.max(1,Math.round((s.duration_minutes||60)/30));
+    for(var r=1;r<span;r++){if(hIdx+r<C_HOURS.length)occupied[(hIdx+r)+'-'+s.day_of_week]=true;}
+  }
+
+  // Map events to grid cells
+  var evtMap={};
+  for(var ei=0;ei<evts.length;ei++){
+    var ev=evts[ei];
+    if(ev.replacement_day!==null&&ev.replacement_time){
+      var key=ev.replacement_time.substring(0,5)+'-'+ev.replacement_day;
+      if(!evtMap[key])evtMap[key]=[];
+      evtMap[key].push(ev);
+    }
+  }
+
   var tbody=document.getElementById('coordSchedBody');var rows='';
   for(var hi=0;hi<C_HOURS.length;hi++){var hour=C_HOURS[hi],cells='';
-    for(var di=0;di<C_DAYS.length;di++){var slot=null;
+    for(var di=0;di<C_DAYS.length;di++){
+      if(occupied[hi+'-'+di])continue;
+      var slot=null;
       for(var si=0;si<slots.length;si++){if(slots[si].day_of_week===di&&slots[si].time_slot&&slots[si].time_slot.startsWith(hour)){slot=slots[si];break;}}
-      if(slot){var c=cGc(slot.student_name),dur=slot.duration_minutes||60,durTxt=dur!==60?' '+dur+'m':'';
-        cells+='<td class="sched-cell sched-filled" data-day="'+di+'" data-hour="'+hour+'"><div draggable="true" class="sched-slot" data-name="'+slot.student_name+'" data-level="'+(slot.student_level||'')+'" data-slotid="'+slot.id+'" data-dur="'+dur+'" style="background:'+c.bg+';border:2px solid '+c.b+';color:'+c.t+';cursor:grab"><div class="sched-slot-name">'+slot.student_name+durTxt+'</div><div class="sched-slot-level">'+(slot.student_level||'')+'</div><div class="sched-slot-x" data-delid="'+slot.id+'">✕</div></div></td>';
-      }else{cells+='<td class="sched-cell sched-empty" data-day="'+di+'" data-hour="'+hour+'">&nbsp;</td>';}
+      var cellEvts=evtMap[hour+'-'+di]||[];
+
+      if(slot){
+        var c=cGc(slot.student_name),dur=slot.duration_minutes||60;
+        var span=Math.max(1,Math.round(dur/30));
+        var durTxt=dur===30?' 30m':dur===90?' 90m':'';
+        var rs=span>1?' rowspan="'+span+'"':'';
+        var ch=span*48;
+        cells+='<td class="sched-cell sched-filled" data-day="'+di+'" data-hour="'+hour+'"'+rs+' style="height:'+ch+'px"><div draggable="true" class="sched-slot" data-name="'+slot.student_name+'" data-level="'+(slot.student_level||'')+'" data-slotid="'+slot.id+'" data-dur="'+dur+'" style="background:'+c.bg+';border:2px solid '+c.b+';color:'+c.t+';cursor:grab;height:100%"><div class="sched-slot-name">'+slot.student_name+durTxt+'</div><div class="sched-slot-level">'+(slot.student_level||'')+'</div><div class="sched-slot-x" data-delid="'+slot.id+'">✕</div></div></td>';
+      }else if(cellEvts.length>0){
+        var ev=cellEvts[0];
+        var evIcon=ev.event_type==='cancellation'?'❌':'🔄';
+        cells+='<td class="sched-cell" data-day="'+di+'" data-hour="'+hour+'" style="padding:2px"><div class="sched-evt" style="background:#fff3e0;border:2px dashed #e67e22;border-radius:8px;padding:4px 6px;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:9px;color:#e65100;font-weight:700;text-align:center">'+evIcon+'<div>'+(ev.student_name||'Geral')+'</div><div style="font-weight:400;font-size:8px;opacity:0.7">'+formatDate(ev.event_date)+'</div></div></td>';
+      }else{
+        cells+='<td class="sched-cell sched-empty" data-day="'+di+'" data-hour="'+hour+'">&nbsp;</td>';
+      }
     }rows+='<tr><td class="sched-hour">'+hour+'</td>'+cells+'</tr>';}
   tbody.innerHTML=rows;
   loadCoordScheduleEvents();
@@ -1522,8 +1568,13 @@ async function loadCoordScheduleEvents(){
   var div=document.getElementById('coordSchedEvents');
   document.getElementById('coordSchedEventCount').textContent=events.length;
   if(!events.length){div.innerHTML='<div class="empty-state"><div class="empty-icon">📅</div><p>Nenhum evento neste mês.</p></div>';return;}
-  var h='';for(var i=0;i<events.length;i++){var e=events[i],icon=e.event_type==='cancellation'?'❌':'🔄';
-    h+='<div class="list-item"><div style="flex:1"><div class="list-title">'+icon+' '+(e.student_name||'')+'</div><div class="list-sub">'+formatDate(e.event_date)+' — '+(e.notes||'')+' — '+(e.creator?.full_name||'')+'</div></div><button onclick="cDelEvt('+e.id+')" style="border:none;background:var(--g100);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:12px">✕</button></div>';}
+  var h='';for(var i=0;i<events.length;i++){
+    var e=events[i];
+    var isCancellation=e.event_type==='cancellation';
+    var bgColor=isCancellation?'#fef2f2':'#eff6ff';
+    var borderColor=isCancellation?'#fca5a5':'#93c5fd';
+    var icon=isCancellation?'❌':'🔄';
+    h+='<div style="display:flex;align-items:center;gap:14px;padding:14px 18px;background:'+bgColor+';border:1px solid '+borderColor+';border-radius:12px;margin-bottom:8px"><div style="font-size:20px">'+icon+'</div><div style="flex:1"><div style="font-weight:700;font-size:13px;color:var(--navy)">'+(e.student_name||'Geral')+'</div><div style="font-size:12px;color:var(--g500)">'+formatDate(e.event_date)+' — '+(e.notes||'')+'</div><div style="font-size:10px;color:var(--g400);margin-top:2px">Registrado por '+(e.creator?.full_name||'')+'</div></div><button onclick="cDelEvt('+e.id+')" style="border:none;background:rgba(0,0,0,0.05);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:12px">✕</button></div>';}
   div.innerHTML=h;
 }
 async function cDelEvt(id){if(!confirm('Remover?'))return;try{await removeScheduleEvent(id);showToast('Removido');loadCoordScheduleEvents();}catch(e){showToast('Erro','error');}}

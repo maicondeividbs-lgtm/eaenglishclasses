@@ -67,27 +67,29 @@ body { background: var(--g50); margin: 0; }
 .sched-slot:hover { transform: scale(1.05); }
 .sched-slot:hover .sched-slot-x { opacity: 1; }
 .sched-slot-name { font-size: 10px; font-weight: 800; line-height: 1.2; }
-.sched-slot-level { font-size: 9px; opacity: 0.7; }
+.sched-slot-level { font-size: 10px; opacity: 0.7; }
 .sched-slot-x {
   position: absolute;
   top: -6px; right: -6px;
-  width: 16px; height: 16px;
+  width: 18px; height: 18px;
   background: #ef4444;
   color: #fff;
   border-radius: 50%;
-  font-size: 9px;
+  font-size: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
   transition: opacity 0.2s;
-  pointer-events: none;
+  cursor: pointer;
+  z-index: 2;
 }
 @keyframes schedPop {
   0% { transform: scale(0); opacity: 0; }
   50% { transform: scale(1.15); }
   100% { transform: scale(1); opacity: 1; }
 }
+.sched-slot-x:hover { background: #dc2626; transform: scale(1.2); }
 .sched-pop { animation: schedPop 0.4s cubic-bezier(0.34,1.56,0.64,1); }
 
 .sched-student {
@@ -562,7 +564,7 @@ body { background: var(--g50); margin: 0; }
       <!-- ═══ SCHEDULES ═══ -->
       <div class="section" id="sec-schedules">
         <h2 style="font-size:22px;font-weight:800;color:var(--navy);margin-bottom:8px">📅 Gestão de Schedules</h2>
-        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Arraste alunos para montar a grade. Arraste aulas para fora da grade para remover. Clique em espaço vazio para eventos.</p>
+        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Arraste alunos para montar a grade. Clique em uma aula para ajustar ou registrar eventos. Clique em espaço vazio para eventos extraordinários.</p>
 
         <div style="display:flex;gap:12px;align-items:center;margin-bottom:20px;flex-wrap:wrap;background:#fff;padding:16px 20px;border-radius:14px;border:1px solid var(--g100)">
           <span style="font-size:13px;font-weight:700;color:var(--navy)">Professor:</span>
@@ -1426,19 +1428,12 @@ function initCoordDragDrop(){
     try{await addScheduleSlot(cTeacherId,day,hour+':00',name,level,60);cPop();showToast('Aula adicionada!');loadCoordSchedule();}catch(er){showToast('Erro','error');}
   });
 
-  // Drop OUTSIDE grid = delete
-  document.addEventListener('drop',function(e){
-    if(e.target.closest('#coordGridWrap'))return;
-    if(!e.target.closest('#sec-schedules'))return;
-    if(_cDrag.slotid){
-      e.preventDefault();
-      removeScheduleSlot(parseInt(_cDrag.slotid)).then(function(){cPop();showToast('Aula removida!');loadCoordSchedule();}).catch(function(){showToast('Erro','error');});
-    }
-    _cDrag={};
-  });
+
 
   // Click slot = popup, click empty = extra event
-  coordGridWrap.addEventListener('click',function(e){
+  coordGridWrap.addEventListener('click',async function(e){
+    var del=e.target.closest('.sched-slot-x');
+    if(del&&del.dataset.delid){e.stopPropagation();if(!confirm('Remover esta aula?'))return;try{await removeScheduleSlot(parseInt(del.dataset.delid));cPop();showToast('Aula removida!');loadCoordSchedule();}catch(er){showToast('Erro','error');}return;}
     var slot=e.target.closest('.sched-slot');
     if(slot&&slot.dataset.slotid){showCPop(slot.dataset.name,buildCSlotPopup(slot.dataset.slotid,slot.dataset.name,slot.dataset.dur||'60'));return;}
     var cell=e.target.closest('.sched-cell.sched-empty');
@@ -1513,7 +1508,7 @@ async function loadCoordSchedule(){
     for(var di=0;di<C_DAYS.length;di++){var slot=null;
       for(var si=0;si<slots.length;si++){if(slots[si].day_of_week===di&&slots[si].time_slot&&slots[si].time_slot.startsWith(hour)){slot=slots[si];break;}}
       if(slot){var c=cGc(slot.student_name),dur=slot.duration_minutes||60,durTxt=dur!==60?' '+dur+'m':'';
-        cells+='<td class="sched-cell sched-filled" data-day="'+di+'" data-hour="'+hour+'"><div draggable="true" class="sched-slot" data-name="'+slot.student_name+'" data-level="'+(slot.student_level||'')+'" data-slotid="'+slot.id+'" data-dur="'+dur+'" style="background:'+c.bg+';border:2px solid '+c.b+';color:'+c.t+';cursor:grab"><div class="sched-slot-name">'+slot.student_name+durTxt+'</div><div class="sched-slot-level">'+(slot.student_level||'')+'</div></div></td>';
+        cells+='<td class="sched-cell sched-filled" data-day="'+di+'" data-hour="'+hour+'"><div draggable="true" class="sched-slot" data-name="'+slot.student_name+'" data-level="'+(slot.student_level||'')+'" data-slotid="'+slot.id+'" data-dur="'+dur+'" style="background:'+c.bg+';border:2px solid '+c.b+';color:'+c.t+';cursor:grab"><div class="sched-slot-name">'+slot.student_name+durTxt+'</div><div class="sched-slot-level">'+(slot.student_level||'')+'</div><div class="sched-slot-x" data-delid="'+slot.id+'">✕</div></div></td>';
       }else{cells+='<td class="sched-cell sched-empty" data-day="'+di+'" data-hour="'+hour+'">&nbsp;</td>';}
     }rows+='<tr><td class="sched-hour">'+hour+'</td>'+cells+'</tr>';}
   tbody.innerHTML=rows;

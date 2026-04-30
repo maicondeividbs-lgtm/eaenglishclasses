@@ -937,6 +937,7 @@ async function submitXtra(){
   var labels={replacement:'Reposição',meeting:'Reunião pedagógica',note:'Observação'};
   var dbType=type==='meeting'?'note':type;
   try{
+    console.log('Creating event: day='+day+' hour='+hour+' date='+date+' type='+dbType);
     await addScheduleEvent(null,currentUser.id,date,dbType,(labels[type]||type)+(notes?' — '+notes:''),currentUser.id,student||'Geral',parseInt(day),hour+':00');
     popSnd();closePopup();showToast('Evento registrado!');loadSchedule();
   }catch(e){showToast('Erro: '+e.message,'error');}
@@ -955,7 +956,7 @@ async function loadSchedule(){
   // Load events for current month to overlay on grid
   var mi=document.getElementById('schedMonth').value;
   var evts=[];
-  if(mi){var p=mi.split('-');evts=await getScheduleEvents(currentUser.id,parseInt(p[1]),parseInt(p[0]));}
+  if(mi){var p=mi.split('-');evts=await getScheduleEvents(currentUser.id,parseInt(p[1]),parseInt(p[0]));console.log('Schedule events loaded:',evts.length,'events. With grid data:',evts.filter(function(e){return e.replacement_day!==null}).length);}
 
   // Build occupied map for rowspan
   var occupied={};

@@ -100,6 +100,50 @@ body { background: var(--g50); margin: 0; }
   transform: scale(0.95) !important;
 }
 
+
+/* Supervision tabs */
+.sup-tab {
+  padding: 10px 18px;
+  border: none;
+  background: transparent;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--g500);
+  cursor: pointer;
+  transition: all 0.25s;
+  white-space: nowrap;
+}
+.sup-tab:hover { background: var(--g50); color: var(--navy); }
+.sup-tab.active { background: var(--navy); color: #fff; }
+.sup-pane { animation: sectionIn 0.3s; }
+
+
+/* Supervision tab slide */
+.sup-tab {
+  padding: 10px 18px !important;
+  border: none !important;
+  border-radius: 10px !important;
+  background: transparent !important;
+  font-family: inherit !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: var(--g500) !important;
+  cursor: pointer !important;
+  transition: all 0.25s !important;
+  white-space: nowrap !important;
+}
+.sup-tab:hover { background: var(--g50) !important; color: var(--navy) !important; }
+.sup-tab.active { background: var(--navy) !important; color: #fff !important; box-shadow: 0 2px 8px rgba(25,36,78,0.2) !important; }
+.sup-pane {
+  animation: supSlideIn 0.35s cubic-bezier(0.4,0,0.2,1);
+}
+@keyframes supSlideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
 /* Section title animation */
 .section h2 {
   font-size: 24px !important;
@@ -418,11 +462,15 @@ body { background: var(--g50); margin: 0; }
         <span>Nivelamentos</span>
         <span id="nivCount" class="sb-count zero">0</span>
       </button>
-      <button class="sb-link" data-section="homework">
+      <button class="sb-link" data-section="supervision">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+        <span>Supervisão</span>
+      </button>
+      <button class="sb-link" data-section="supervision" style="display:none">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
         <span>Homeworks</span>
       </button>
-      <button class="sb-link" data-section="feedbacks">
+      <!-- merged into supervision --><button class="sb-link" data-section="supervision" style="display:none">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
         <span>Feedbacks</span>
       </button>
@@ -434,11 +482,11 @@ body { background: var(--g50); margin: 0; }
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
         <span>Msg → Professor</span>
       </button>
-      <button class="sb-link" data-section="writing">
+      <!-- merged into supervision --><button class="sb-link" data-section="supervision" style="display:none">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.996.996 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
         <span>Redações</span>
       </button>
-      <button class="sb-link" data-section="pronunciation-coord">
+      <!-- merged into supervision --><button class="sb-link" data-section="supervision" style="display:none">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-2.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
         <span>Pronúncias</span>
       </button>
@@ -612,100 +660,84 @@ body { background: var(--g50); margin: 0; }
       </div>
 
       <!-- ═══ HOMEWORKS ═══ -->
-      <div class="section" id="sec-homework">
-        <h2 style="font-size:22px;font-weight:800;color:var(--navy);margin-bottom:8px">📝 Supervisão de Homeworks</h2>
-        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Acompanhe todas as tarefas enviadas pelos professores.</p><div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;align-items:center;background:#fff;padding:16px 20px;border-radius:14px;border:1px solid var(--g100)">
+            <div class="section" id="sec-supervision">
+        <h2>👁️ Supervisão Acadêmica</h2>
+        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Acompanhe todas as atividades acadêmicas dos professores.</p>
+
+        <!-- Tab bar -->
+        <div style="display:flex;gap:4px;background:#fff;padding:6px;border-radius:14px;border:1px solid var(--g100);margin-bottom:20px;overflow-x:auto">
+          <button class="sup-tab active" data-sup="hw" onclick="switchSup('hw',this)">📝 Homeworks</button>
+          <button class="sup-tab" data-sup="fb" onclick="switchSup('fb',this)">💬 Feedbacks</button>
+          <button class="sup-tab" data-sup="wr" onclick="switchSup('wr',this)">✍️ Redações</button>
+          <button class="sup-tab" data-sup="pr" onclick="switchSup('pr',this)">🎙️ Pronúncias</button>
+          <button class="sup-tab" data-sup="av" onclick="switchSup('av',this)">📢 Avisos</button>
+        </div>
+
+        <!-- Shared filter -->
+        <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;align-items:center;background:#fff;padding:16px 20px;border-radius:14px;border:1px solid var(--g100)" id="supFilterBar">
           <span style="font-size:13px;font-weight:700;color:var(--navy)">Filtrar por professor:</span>
-          <select id="hwFilter" onchange="loadHomeworks()" class="filter-select" style="flex:1;min-width:200px">
+          <select id="supFilter" onchange="loadCurrentSup()" class="filter-select" style="flex:1;min-width:200px">
             <option value="">Todos os professores</option>
           </select>
         </div>
-        <div class="panel">
-          <div class="panel-head"><div class="panel-title">Todos os Homeworks</div></div>
-          <div id="hwList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhum homework no sistema.</p></div></div>
+
+        <!-- Homeworks pane -->
+        <div class="sup-pane active" id="sup-hw">
+          <div class="panel">
+            <div class="panel-head"><div class="panel-title">Todos os Homeworks</div></div>
+            <div id="hwList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhum homework.</p></div></div>
+          </div>
+        </div>
+
+        <!-- Feedbacks pane -->
+        <div class="sup-pane" id="sup-fb" style="display:none">
+          <div class="panel">
+            <div class="panel-head"><div class="panel-title">Todos os Feedbacks</div></div>
+            <div id="fbList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhum feedback.</p></div></div>
+          </div>
+        </div>
+
+        <!-- Writing pane -->
+        <div class="sup-pane" id="sup-wr" style="display:none">
+          <div class="panel">
+            <div class="panel-head"><div class="panel-title">Todas as Redações</div></div>
+            <div id="wrCoordList"><div class="empty-state"><div class="empty-icon">✍️</div><p>Nenhuma redação.</p></div></div>
+          </div>
+        </div>
+
+        <!-- Pronunciation pane -->
+        <div class="sup-pane" id="sup-pr" style="display:none">
+          <div class="panel">
+            <div class="panel-head"><div class="panel-title">Todas as Pronúncias</div></div>
+            <div id="prCoordList"><div class="empty-state"><div class="empty-icon">🎙️</div><p>Nenhuma pronúncia.</p></div></div>
+          </div>
+        </div>
+
+        <!-- Avisos pane -->
+        <div class="sup-pane" id="sup-av" style="display:none">
+          <div class="form-card" style="margin-bottom:16px">
+            <h3 style="font-size:16px;font-weight:800;color:var(--navy);margin-bottom:4px">📢 Publicar Aviso</h3>
+            <p style="font-size:13px;color:var(--g500);margin-bottom:16px">Envie comunicados para alunos, professores ou todos.</p>
+            <div class="f-group"><label>Título</label><input type="text" id="annTitle" placeholder="Ex: Recesso de fim de ano"></div>
+            <div class="f-group"><label>Conteúdo</label><textarea id="annContent" rows="3" placeholder="Escreva o aviso..."></textarea></div>
+            <div class="f-group"><label>Destinatários</label><select id="annTarget"><option value="">Todos</option><option value="student">Apenas alunos</option><option value="teacher">Apenas professores</option></select></div>
+            <button class="btn-send" onclick="sendAnn()">Publicar Aviso</button>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><div class="panel-title">Avisos Publicados</div></div>
+            <div id="annList"><div class="empty-state"><div class="empty-icon">📢</div><p>Nenhum aviso.</p></div></div>
+          </div>
         </div>
       </div>
 
-      <!-- ═══ FEEDBACKS ═══ -->
-      <div class="section" id="sec-feedbacks">
-        <h2 style="font-size:22px;font-weight:800;color:var(--navy);margin-bottom:8px">💬 Supervisão de Feedbacks</h2>
-        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Todos os feedbacks individuais enviados para os alunos.</p><div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;align-items:center;background:#fff;padding:16px 20px;border-radius:14px;border:1px solid var(--g100)">
-          <span style="font-size:13px;font-weight:700;color:var(--navy)">Filtrar por professor:</span>
-          <select id="fbFilter" onchange="loadFeedbacks()" class="filter-select" style="flex:1;min-width:200px">
-            <option value="">Todos os professores</option>
-          </select>
-        </div>
-        <div class="panel">
-          <div class="panel-head"><div class="panel-title">Todos os Feedbacks</div></div>
-          <div id="fbList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhum feedback no sistema.</p></div></div>
-        </div>
-      </div>
+      <!-- Keep old hidden sections for compatibility -->
+      <div class="section" id="sec-homework" style="display:none"></div>
+      <div class="section" id="sec-feedbacks" style="display:none"></div>
+      <div class="section" id="sec-announcements" style="display:none"></div>
+      <div class="section" id="sec-writing" style="display:none"></div>
+      <div class="section" id="sec-pronunciation-coord" style="display:none"></div>
 
-      <!-- ═══ ANNOUNCEMENTS ═══ -->
-      <div class="section" id="sec-announcements">
-        <div class="form-card">
-          <h3>📢 Publicar Aviso Institucional</h3>
-          <p class="sub">Envie um comunicado para alunos e/ou professores.</p>
-          <div class="f-group"><label>Título</label><input type="text" id="annTitle" placeholder="Ex: Recesso de fim de ano"></div>
-          <div class="f-group"><label>Conteúdo</label><textarea id="annContent" rows="4" placeholder="Escreva o aviso..."></textarea></div>
-          <div class="f-group"><label>Destinatários</label><select id="annTarget"><option value="">Todos (alunos e professores)</option><option value="student">Apenas alunos</option><option value="teacher">Apenas professores</option></select></div>
-          <button class="btn-send" onclick="sendAnn()">Publicar Aviso</button>
-        </div>
-        <div class="panel">
-          <div class="panel-head"><div class="panel-title">📢 Avisos Publicados</div></div>
-          <div id="annList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhum aviso publicado.</p></div></div>
-        </div>
-      </div>
-
-      <!-- ═══ MESSAGES TO TEACHER ═══ -->
-      <div class="section" id="sec-messages">
-        <div class="form-card">
-          <h3>📩 Enviar Mensagem para Professor</h3>
-          <p class="sub">Comunique-se diretamente com a equipe docente.</p>
-          <div class="f-group"><label>Professor</label><select id="msgTeacher"><option value="">Carregando...</option></select></div>
-          <div class="f-group"><label>Assunto</label><input type="text" id="msgTitle" placeholder="Ex: Reunião pedagógica"></div>
-          <div class="f-group"><label>Mensagem</label><textarea id="msgContent" rows="4" placeholder="Escreva a mensagem..."></textarea></div>
-          <button class="btn-send" onclick="sendMsg()">Enviar Mensagem</button>
-        </div>
-        <div class="panel">
-          <div class="panel-head"><div class="panel-title">📩 Mensagens Enviadas</div></div>
-          <div id="msgList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhuma mensagem enviada.</p></div></div>
-        </div>
-      </div>
-
-      
-      <!-- ═══ WRITING SUPERVISION ═══ -->
-      <div class="section" id="sec-writing">
-        <h2 style="font-size:22px;font-weight:800;color:var(--navy);margin-bottom:8px">✍️ Supervisão de Redações</h2>
-        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Atividades de redação enviadas, aguardando resposta ou já corrigidas.</p><div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;align-items:center;background:#fff;padding:16px 20px;border-radius:14px;border:1px solid var(--g100)">
-          <span style="font-size:13px;font-weight:700;color:var(--navy)">Filtrar por professor:</span>
-          <select id="wrFilter" onchange="loadWritingCoord()" class="filter-select" style="flex:1;min-width:200px">
-            <option value="">Todos os professores</option>
-          </select>
-        </div>
-        <div class="panel">
-          <div class="panel-head"><div class="panel-title">Todas as Redações</div></div>
-          <div id="wrCoordList"><div class="empty-state"><div class="empty-icon">✍️</div><p>Nenhuma redação no sistema.</p></div></div>
-        </div>
-      </div>
-
-      <!-- ═══ PRONUNCIATION SUPERVISION ═══ -->
-      <div class="section" id="sec-pronunciation-coord">
-        <h2 style="font-size:22px;font-weight:800;color:var(--navy);margin-bottom:8px">🎙️ Supervisão de Pronúncias</h2>
-        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Palavras e frases enviadas para prática de pronúncia.</p><div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;align-items:center;background:#fff;padding:16px 20px;border-radius:14px;border:1px solid var(--g100)">
-          <span style="font-size:13px;font-weight:700;color:var(--navy)">Filtrar por professor:</span>
-          <select id="prFilter" onchange="loadPronunciationCoord()" class="filter-select" style="flex:1;min-width:200px">
-            <option value="">Todos os professores</option>
-          </select>
-        </div>
-        <div class="panel">
-          <div class="panel-head"><div class="panel-title">Todas as Pronúncias Enviadas</div></div>
-          <div id="prCoordList"><div class="empty-state"><div class="empty-icon">🎙️</div><p>Nenhuma pronúncia no sistema.</p></div></div>
-        </div>
-      </div>
-
-      <!-- ═══ ASSESSMENTS SUPERVISION ═══ -->
-      <div class="section" id="sec-assessments-coord">
+<div class="section" id="sec-assessments-coord">
         <h2 style="font-size:22px;font-weight:800;color:var(--navy);margin-bottom:8px">📄 Supervisão de Assessments</h2>
         <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Relatórios mensais enviados pelos professores.</p><div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;align-items:center;background:#fff;padding:16px 20px;border-radius:14px;border:1px solid var(--g100)">
           <span style="font-size:13px;font-weight:700;color:var(--navy)">Filtrar por professor:</span>
@@ -883,7 +915,7 @@ async function initToolProfessors() {
 <script src="supabase.js"></script>
 <script>
 let currentUser = null;
-const sections = {"overview":"Visão Geral","users":"Usuários","schedules":"Schedules","nivelamento":"Nivelamentos","homework":"Homeworks","feedbacks":"Feedbacks","announcements":"Avisos","messages":"Msg → Professor","writing":"Redações","pronunciation-coord":"Pronúncias","assessments-coord":"Assessments","testimonials":"Depoimentos","tool":"Ferramenta"};
+const sections = {"overview":"Visão Geral","users":"Usuários","schedules":"Schedules","nivelamento":"Nivelamentos","supervision":"Supervisão","homework":"Homeworks","feedbacks":"Feedbacks","announcements":"Avisos","messages":"Msg → Professor","writing":"Redações","pronunciation-coord":"Pronúncias","assessments-coord":"Assessments","testimonials":"Depoimentos","tool":"Ferramenta"};
 
 // ═══ INIT ═══
 document.addEventListener('DOMContentLoaded', async () => {
@@ -1579,6 +1611,50 @@ async function loadCoordScheduleEvents(){
 }
 async function cDelEvt(id){if(!confirm('Remover?'))return;try{await removeScheduleEvent(id);showToast('Removido');loadCoordScheduleEvents();}catch(e){showToast('Erro','error');}}
 
+
+// ═══ SUPERVISION TABS ═══
+var currentSup = 'hw';
+
+function switchSup(tab, btn) {
+  currentSup = tab;
+  document.querySelectorAll('.sup-tab').forEach(function(t){ t.classList.remove('active'); });
+  btn.classList.add('active');
+  document.querySelectorAll('.sup-pane').forEach(function(p){ p.style.display = 'none'; });
+  var pane = document.getElementById('sup-' + tab);
+  if (pane) { pane.style.display = ''; pane.style.animation = 'none'; pane.offsetHeight; pane.style.animation = 'sectionIn 0.3s'; }
+  // Hide filter for avisos
+  document.getElementById('supFilterBar').style.display = tab === 'av' ? 'none' : '';
+  loadCurrentSup();
+}
+
+function loadCurrentSup() {
+  var filter = document.getElementById('supFilter').value;
+  // Sync to individual filters
+  var hwF = document.getElementById('hwFilter'); if(hwF) hwF.value = filter;
+  var fbF = document.getElementById('fbFilter'); if(fbF) fbF.value = filter;
+  var wrF = document.getElementById('wrFilter'); if(wrF) wrF.value = filter;
+  var prF = document.getElementById('prFilter'); if(prF) prF.value = filter;
+  
+  switch(currentSup) {
+    case 'hw': loadHomeworks(); break;
+    case 'fb': loadFeedbacks(); break;
+    case 'wr': loadWritingCoord(); break;
+    case 'pr': loadPronunciationCoord(); break;
+    case 'av': loadAnnouncementList(); break;
+  }
+}
+
+// Populate supFilter on init
+async function initSupFilter() {
+  var sel = document.getElementById('supFilter');
+  if (sel.options.length > 1) return;
+  try {
+    var r = await db.from('profiles').select('id,full_name').eq('role','teacher').order('full_name');
+    if (r.data) r.data.forEach(function(t) { sel.innerHTML += '<option value="' + t.id + '">' + t.full_name + '</option>'; });
+  } catch(e) {}
+}
+
+
 // ═══ USER FILTERS ═══
 let allUsersCache = [];
 let currentRoleFilter = '';
@@ -1646,6 +1722,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const id = active.id.replace('sec-','');
     switch(id) {
       case 'schedules': initCoordSchedule(); break;
+      case 'supervision': initSupFilter(); loadCurrentSup(); break;
       case 'users': loadUsers(); break;
       case 'nivelamento': loadNivelamentos(); break;
       case 'homework': loadHomeworks(); break;

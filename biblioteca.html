@@ -4,281 +4,1093 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAAAAABWESUoAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAACYktHRAD/h4/MvwAAAAd0SU1FB+oEGBUhLL+MU28AAAF3SURBVDjLvVM7LwRRFP7OzF02xmMFJSEa2dAQQRREo6EWfoN/IH6BUiV6hV7hJ+hokIgQsiHezGLNzD2fwu7s7EvH192bc7/HOecK8Tsc/HmBSR4ojADHpZTvpNokhZBERYKBoHO35X5MLKokXxShVBvyEC5maZUxYpMCiMB1HJz5SeemrP269Nrsa9dj7nJE3VoJy7t2iGClDTsMtVaihJlWHDXogzvw0vz8NNV5c4QGKT59bnucw8AntV4KSaeBfvQhdwmtlyK/8Z7Zn0QWwfEQy72sSOFgem0eWGcQayQK7nvcdAqAi0VGcUFyFl/WIusVTu1JmGKdmGbcZ2Y3E2TPr68Gaz2QqiQ14gKwx7AqJkGlWmtpMQwcgGCFhADOD6vBcgvGEE+ruFGUIOdpUxi2RmF7ZN4LvaWtMqU23W4+tGUL5z295iJvgu7VjmqGt4NUXrv87vSVSWnojXpFhvLSVu5q9SwoVABC+XEvIjUMDfAPf/MbvRIRVjKrblQAAAAASUVORK5CYII=">
-<meta name="description" content="EA English Classes — Escola de inglês online com mais de 10 anos em Osasco, SP. Aulas ao vivo pelo Google Meet do nível A1 ao C1.">
-<meta property="og:title" content="EA English Classes">
-<meta property="og:description" content="Escola de inglês online — aulas ao vivo com foco em conversação e gramática. Do zero à fluência.">
-<meta property="og:type" content="website">
-<meta property="og:locale" content="pt_BR">
+<meta name="description" content="EA English Classes — Biblioteca Pedagógica. Currículo, worksheets e gramática do nível A1 ao C1.">
 <meta name="theme-color" content="#19244e">
-<title>Biblioteca do Professor — EA English Classes</title>
+<title>Biblioteca Pedagógica — EA English Classes</title>
 <link rel="stylesheet" href="style.css">
 <style>
-body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--off-white); margin: 0; min-height: 100vh; }
+/* ═══════════════════════════════════════════════════
+   BIBLIOTECA — Inspirada no design de cursos.html
+   ═══════════════════════════════════════════════════ */
 
-.lib-header {
-  background: linear-gradient(135deg, var(--navy) 0%, #1a3070 100%);
-  padding: 32px 32px 24px;
+body { background: var(--off-white); }
+
+/* Internal nav (back to dashboard) */
+.nav-internal {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(253,251,247,0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(25,36,78,0.05);
+  transition: all 0.3s ease;
+}
+.nav-internal.scrolled {
+  background: rgba(253,251,247,0.96);
+  box-shadow: 0 2px 20px rgba(25,36,78,0.06);
+}
+.nav-internal-inner {
+  max-width: 1200px; margin: 0 auto; padding: 0 24px;
+  height: 72px; display: flex; align-items: center;
+  justify-content: space-between; gap: 16px;
+}
+.nav-back {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 18px; border-radius: var(--r-full);
+  background: var(--g50); color: var(--g700);
+  font-size: 13px; font-weight: 700;
+  transition: all 0.2s;
+}
+.nav-back:hover { background: var(--ocean); color: var(--navy); transform: translateX(-3px); }
+.nav-internal-search {
+  flex: 1; max-width: 360px; position: relative;
+}
+.nav-internal-search input {
+  width: 100%; padding: 10px 14px 10px 38px;
+  border: 1px solid var(--g100); border-radius: var(--r-full);
+  background: #fff; font-family: inherit; font-size: 13px;
+  outline: none; transition: all 0.2s;
+}
+.nav-internal-search input:focus {
+  border-color: var(--orange);
+  box-shadow: 0 0 0 4px rgba(243,107,46,0.1);
+}
+.nav-internal-search svg {
+  position: absolute; left: 12px; top: 50%;
+  transform: translateY(-50%); pointer-events: none;
+}
+
+/* ═══ HERO ═══ */
+.lib-hero {
+  padding: 130px 0 70px;
+  background: var(--navy);
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+.lib-hero::before {
+  content: '';
+  position: absolute;
+  top: -200px; right: -200px;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(243,107,46,0.15), transparent 60%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.lib-hero::after {
+  content: '';
+  position: absolute;
+  bottom: -100px; left: -100px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(245,154,30,0.1), transparent 60%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.lib-hero-label {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 16px;
+  background: rgba(243,107,46,0.15);
+  color: #f59a1e;
+  border-radius: var(--r-full);
+  font-size: 11px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 1.5px;
+  margin-bottom: 18px;
+  position: relative;
+}
+.lib-hero h1 {
+  font-size: clamp(2.3rem, 5vw, 3.6rem);
+  color: #fff;
+  margin-bottom: 14px;
+  position: relative;
+  letter-spacing: -0.03em;
+}
+.lib-hero h1 em { color: var(--mango); font-style: italic; font-weight: 900; }
+.lib-hero p {
+  font-size: 17px;
+  opacity: 0.75;
+  max-width: 620px;
+  margin: 0 auto 36px;
+  position: relative;
+  line-height: 1.6;
+}
+
+/* ═══ JOURNEY (interactive book path) ═══ */
+.journey {
+  display: flex; align-items: center;
+  justify-content: center; gap: 0;
+  max-width: 820px; margin: 0 auto;
+  position: relative;
+  flex-wrap: wrap; row-gap: 22px;
+}
+.journey-step {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 8px;
+  z-index: 1; cursor: pointer;
+  transition: transform 0.3s;
+  text-decoration: none;
+  min-width: 70px;
+}
+.journey-step:hover { transform: scale(1.08) translateY(-3px); }
+.journey-dot {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  display: flex; align-items: center;
+  justify-content: center;
+  font-size: 13px; font-weight: 900;
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  border: 3px solid rgba(255,255,255,0.25);
+  transition: all 0.3s;
+  font-family: 'Fraunces', serif;
+}
+.journey-step:hover .journey-dot {
+  border-color: #fff;
+  transform: scale(1.1);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+}
+.journey-label {
+  font-size: 11px; font-weight: 700;
+  opacity: 0.75; white-space: nowrap;
+  letter-spacing: 0.3px;
+}
+.journey-line {
+  flex: 1; height: 3px;
+  background: rgba(255,255,255,0.15);
+  min-width: 24px;
+  position: relative;
+}
+
+/* ═══ STATS BAR ═══ */
+.lib-stats {
+  background: linear-gradient(135deg, var(--orange), var(--mango));
+  padding: 28px 0;
+  margin-top: -1px;
+}
+.lib-stats-grid {
+  max-width: 1100px; margin: 0 auto;
+  padding: 0 24px;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 24px; text-align: center;
+  color: #fff;
+}
+.lib-stat-num {
+  font-family: 'Fraunces', serif;
+  font-size: 36px; font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.lib-stat-lbl {
+  font-size: 12px; font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  opacity: 0.92;
+  margin-top: 6px;
+}
+
+/* ═══ SERIES DIVIDER ═══ */
+.series-divider {
+  text-align: center;
+  padding: 60px 0 24px;
+  position: relative;
+}
+.series-divider::before {
+  content: '';
+  position: absolute;
+  left: 50%; top: 30px;
+  transform: translateX(-50%);
+  width: 64px; height: 4px;
+  border-radius: 2px;
+  background: var(--orange);
+}
+.series-divider h3 {
+  font-size: 30px;
+  color: var(--navy);
+  margin-bottom: 6px;
+  margin-top: 12px;
+}
+.series-divider h3 em {
+  color: var(--orange);
+  font-style: italic; font-weight: 900;
+}
+.series-divider p {
+  font-size: 14px;
+  color: var(--g500);
+  max-width: 540px;
+  margin: 0 auto;
+}
+
+/* ═══ BOOK SECTION ═══ */
+.book-content { padding: 28px 0; }
+
+.book-section {
+  padding: 36px 0;
+  scroll-margin-top: 90px;
+}
+.book-row {
+  display: flex; gap: 48px;
+  align-items: flex-start;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.book-row.reverse { flex-direction: row-reverse; }
+
+/* Book cover (CSS-rendered, Cambridge-style) */
+.book-cover-wrap {
+  width: 320px; min-width: 320px;
+  position: sticky; top: 92px;
+}
+.book-cover {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 14px;
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    0 24px 48px rgba(0,0,0,0.18),
+    0 6px 14px rgba(0,0,0,0.08);
+  transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
+  cursor: default;
+  display: flex; flex-direction: column;
+  padding: 22px 20px;
+  color: #fff;
+}
+.book-cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 80% 20%, rgba(255,255,255,0.4), transparent 60%),
+    radial-gradient(circle at 20% 80%, rgba(0,0,0,0.15), transparent 50%);
+  pointer-events: none;
+}
+.book-cover::after {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 14px;
+  background: rgba(0,0,0,0.18);
+  box-shadow: inset -1px 0 0 rgba(255,255,255,0.06);
+}
+.book-section:hover .book-cover {
+  transform: scale(1.03) rotate(-1.5deg);
+}
+.bc-brand {
+  background: rgba(0,0,0,0.85);
+  color: #fff;
+  font-weight: 900;
+  font-size: 13px;
+  letter-spacing: 2px;
+  padding: 5px 9px;
+  align-self: flex-start;
+  position: relative; z-index: 1;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  border-radius: 2px;
+}
+.bc-edition {
+  font-size: 13px; font-weight: 800;
+  margin-top: 16px;
+  text-transform: uppercase;
+  letter-spacing: 1.6px;
+  position: relative; z-index: 1;
+}
+.bc-title {
+  font-size: 38px; font-weight: 900;
+  letter-spacing: -0.04em;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  margin-top: 4px;
+  position: relative; z-index: 1;
+  line-height: 1;
+}
+.bc-num {
+  font-size: 88px; font-weight: 900;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  margin-top: auto;
+  position: relative; z-index: 1;
+  line-height: 1;
+  align-self: flex-start;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.bc-num.small { font-size: 56px; }
+.bc-footer {
+  position: absolute;
+  bottom: 16px; right: 18px;
+  font-size: 9px; font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+  opacity: 0.85;
+  z-index: 1;
+  text-align: right;
+  line-height: 1.4;
+}
+
+/* Book info */
+.book-info { flex: 1; min-width: 0; }
+.book-series-tag {
+  display: inline-block;
+  padding: 5px 14px;
+  border-radius: 8px;
+  font-size: 11px; font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+.book-name {
+  font-size: 36px;
+  color: var(--navy);
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+.book-level {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 14px; border-radius: 99px;
+  background: var(--g50);
+  color: var(--g700);
+  font-size: 12px; font-weight: 800;
+  letter-spacing: 0.3px;
+  margin-bottom: 14px;
+}
+.book-level-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+}
+.book-desc {
+  font-size: 15px;
+  color: var(--g500);
+  line-height: 1.7;
+  margin-bottom: 22px;
+  max-width: 580px;
+}
+
+/* Quick stats per book */
+.book-quick {
+  display: flex; gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+.book-quick-item {
+  background: #fff;
+  border: 1px solid var(--g100);
+  border-radius: 12px;
+  padding: 12px 18px;
+  display: flex; align-items: center;
+  gap: 12px;
+  flex: 1 1 auto;
+  min-width: 130px;
+  transition: all 0.2s;
+}
+.book-quick-item:hover {
+  transform: translateY(-2px);
+  border-color: var(--orange);
+  box-shadow: var(--shadow-sm);
+}
+.book-quick-icon {
+  width: 38px; height: 38px;
+  min-width: 38px;
+  border-radius: 10px;
+  display: flex; align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+.book-quick-num {
+  font-family: 'Fraunces', serif;
+  font-size: 22px; font-weight: 900;
+  color: var(--navy); line-height: 1;
+}
+.book-quick-lbl {
+  font-size: 11px; font-weight: 700;
+  color: var(--g500);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-top: 2px;
+}
+
+/* Accordions per book */
+.acc-group { display: flex; flex-direction: column; gap: 10px; }
+.acc-item {
+  background: #fff;
+  border: 1px solid var(--g100);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.25s;
+}
+.acc-item.open {
+  border-color: transparent;
+  box-shadow: 0 12px 32px rgba(25,36,78,0.08);
+}
+.acc-trigger {
+  width: 100%;
+  padding: 18px 22px;
+  display: flex; align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  transition: background 0.2s;
+}
+.acc-trigger:hover { background: var(--cream); }
+.acc-item.open .acc-trigger { background: var(--cream); }
+.acc-trigger-left {
+  display: flex; align-items: center;
+  gap: 14px; flex: 1; min-width: 0;
+}
+.acc-icon-wrap {
+  width: 42px; height: 42px;
+  border-radius: 12px;
+  display: flex; align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.acc-text { flex: 1; min-width: 0; }
+.acc-title {
+  font-size: 15px; font-weight: 800;
+  color: var(--navy);
+  display: block;
+  letter-spacing: -0.01em;
+}
+.acc-sub {
+  font-size: 12px; color: var(--g500);
+  margin-top: 2px;
+  display: block;
+}
+.acc-arrow {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--g50);
+  display: flex; align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  flex-shrink: 0;
+}
+.acc-item.open .acc-arrow {
+  background: var(--navy);
+  color: #fff;
+  transform: rotate(180deg);
+}
+.acc-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+.acc-item.open .acc-body { max-height: 12000px; }
+.acc-body-inner {
+  padding: 4px 22px 24px;
+  border-top: 1px solid var(--g100);
+}
+.acc-item.open .acc-body-inner { padding-top: 22px; }
+
+/* Curriculum content */
+.curr-grid {
+  display: grid; gap: 10px;
+}
+.curr-row {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 14px;
+  background: var(--off-white);
+  border: 1px solid var(--g100);
+  border-radius: 12px;
+  padding: 14px;
+  transition: all 0.2s;
+}
+.curr-row:hover {
+  border-color: var(--orange);
+  background: #fff;
+  transform: translateX(3px);
+}
+.curr-num {
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  background: var(--navy);
+  color: #fff;
+  display: flex; align-items: center;
+  justify-content: center;
+  font-family: 'Fraunces', serif;
+  font-size: 18px; font-weight: 900;
+}
+.curr-content { min-width: 0; }
+.curr-title {
+  font-size: 15px; font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+.curr-meta {
+  display: grid; gap: 6px;
+  font-size: 12px; color: var(--g700);
+  line-height: 1.45;
+}
+.curr-meta-row { display: flex; gap: 8px; align-items: flex-start; }
+.curr-meta-key {
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 10px;
+  color: var(--g400);
+  flex-shrink: 0;
+  min-width: 84px;
+  padding-top: 1px;
+}
+.curr-meta-val { flex: 1; }
+.curr-meta-val .chip {
+  display: inline-block;
+  padding: 3px 9px;
+  background: var(--blue-soft);
+  color: var(--blue);
+  border-radius: 6px;
+  font-size: 11px; font-weight: 700;
+  margin-right: 4px; margin-bottom: 3px;
+}
+
+/* Worksheets cards */
+.ws-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 14px;
+}
+.ws-card {
+  background: linear-gradient(180deg, #fff 0%, var(--off-white) 100%);
+  border: 1px solid var(--g100);
+  border-radius: 14px;
+  padding: 18px 14px 14px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+  display: flex; flex-direction: column;
+  gap: 10px; align-items: center;
+}
+.ws-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: var(--book-color, var(--orange));
+  transform: scaleX(0.4);
+  transition: transform 0.3s;
+  transform-origin: left;
+}
+.ws-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 32px rgba(25,36,78,0.1);
+  border-color: transparent;
+}
+.ws-card:hover::before { transform: scaleX(1); }
+.ws-card-icon {
+  width: 50px; height: 60px;
+  background: var(--book-color, var(--orange));
+  border-radius: 6px;
+  position: relative;
+  display: flex; align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-family: 'Fraunces', serif;
+  font-size: 22px; font-weight: 900;
+  box-shadow:
+    0 6px 14px rgba(0,0,0,0.12),
+    inset -3px 0 0 rgba(0,0,0,0.12);
+}
+.ws-card-icon::before {
+  content: '';
+  position: absolute;
+  top: -3px; right: -3px;
+  width: 14px; height: 14px;
+  background: var(--off-white);
+  border-bottom-left-radius: 4px;
+  box-shadow: -1px 1px 2px rgba(0,0,0,0.06);
+}
+.ws-label {
+  font-size: 12px;
+  color: var(--g500);
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+.ws-actions {
+  display: flex; gap: 6px;
+  width: 100%;
+}
+.ws-dl, .ws-copy {
+  flex: 1;
+  padding: 8px 6px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 800;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  display: flex; align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+.ws-dl {
+  background: var(--book-color, var(--orange));
+  color: #fff;
+}
+.ws-dl:hover { filter: brightness(0.92); transform: translateY(-1px); }
+.ws-copy {
+  background: var(--g50);
+  color: var(--g700);
+}
+.ws-copy:hover { background: var(--g100); transform: translateY(-1px); }
+
+/* Grammar cards */
+.gr-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+.gr-card {
+  background: #fff;
+  border: 1px solid var(--g100);
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex; flex-direction: column;
+  position: relative;
+}
+.gr-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--book-color, var(--orange));
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+  border-radius: inherit;
+}
+.gr-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 32px rgba(25,36,78,0.1);
+  border-color: transparent;
+}
+.gr-page-pill {
+  position: absolute;
+  top: 14px; right: 14px;
+  background: var(--book-color, var(--orange));
+  color: #fff;
+  font-size: 10px; font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 99px;
+  letter-spacing: 0.5px;
+  z-index: 2;
+}
+.gr-head {
+  padding: 18px 18px 12px;
+  padding-right: 70px;
+}
+.gr-eyebrow {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--book-color, var(--orange));
+  margin-bottom: 6px;
+}
+.gr-topic {
+  font-size: 15px; font-weight: 800;
+  color: var(--navy);
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  /* clamp 3 lines */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.gr-preview {
+  padding: 0 18px 14px;
+  font-size: 12px;
+  color: var(--g500);
+  line-height: 1.55;
+  flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.gr-foot {
+  padding: 12px 18px;
+  border-top: 1px solid var(--g100);
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--book-color, var(--orange));
+  display: flex; align-items: center;
+  justify-content: space-between;
+}
+.gr-foot-arrow {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--g50);
+  display: flex; align-items: center;
+  justify-content: center;
+  transition: all 0.25s;
+}
+.gr-card:hover .gr-foot-arrow {
+  background: var(--book-color, var(--orange));
+  color: #fff;
+  transform: translateX(3px);
+}
+
+/* Empty state */
+.empty {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--g400);
+}
+.empty-icon {
+  font-size: 56px;
+  margin-bottom: 12px;
+  opacity: 0.4;
+}
+.empty p { font-size: 14px; line-height: 1.6; }
+
+/* Coming soon (Evolve) */
+.coming-soon {
+  background: linear-gradient(135deg, var(--cream), var(--ocean-light));
+  border: 2px dashed var(--g200);
+  border-radius: 18px;
+  padding: 32px;
+  text-align: center;
+}
+.coming-soon h4 {
+  font-size: 20px; color: var(--navy);
+  margin-bottom: 8px;
+}
+.coming-soon p {
+  font-size: 14px; color: var(--g500);
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+/* Modal — elegant grammar */
+.modal-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(25,36,78,0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: overlayIn 0.2s ease;
+}
+.modal-overlay.open { display: flex; }
+@keyframes overlayIn { from { opacity: 0 } to { opacity: 1 } }
+.modal-box {
+  background: #fff;
+  border-radius: 24px;
+  max-width: 640px;
+  width: 100%;
+  max-height: 88vh;
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.25);
+  animation: modalIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  display: flex; flex-direction: column;
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(24px) scale(0.96) }
+  to { opacity: 1; transform: translateY(0) scale(1) }
+}
+.modal-head {
+  padding: 28px 28px 20px;
+  background: var(--modal-color, var(--navy));
   color: #fff;
   position: relative;
   overflow: hidden;
 }
-.lib-header::before {
+.modal-head::before {
   content: '';
   position: absolute;
-  top: -80px; right: -80px;
-  width: 350px; height: 350px;
-  background: radial-gradient(circle, rgba(243,107,46,0.15), transparent 60%);
+  top: -100px; right: -100px;
+  width: 250px; height: 250px;
+  background: radial-gradient(circle, rgba(255,255,255,0.18), transparent 60%);
   border-radius: 50%;
+  pointer-events: none;
 }
-.lib-inner { max-width: 1200px; margin: 0 auto; position: relative; }
-.lib-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
-.lib-title { font-family: 'Fraunces', serif; font-size: 32px; font-weight: 900; }
-.back-btn {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 8px 16px; background: rgba(255,255,255,0.1);
-  border-radius: 8px; color: rgba(255,255,255,0.7);
-  font-size: 13px; font-weight: 600; transition: all 0.2s;
-}
-.back-btn:hover { background: rgba(255,255,255,0.2); color: #fff; }
-
-/* Level pills */
-.level-pills { display: flex; gap: 8px; flex-wrap: wrap; }
-.pill {
-  padding: 10px 22px; border-radius: 99px;
-  border: 2px solid rgba(255,255,255,0.15);
-  background: rgba(255,255,255,0.05);
-  color: rgba(255,255,255,0.6);
-  font-size: 13px; font-weight: 700;
-  cursor: pointer; transition: all 0.2s; font-family: inherit;
-}
-.pill:hover { background: rgba(255,255,255,0.1); color: #fff; }
-.pill.active { background: var(--orange); border-color: var(--orange); color: #fff; }
-
-/* Search */
-.lib-search { position: relative; margin-top: 16px; }
-.lib-search input {
-  width: 100%; max-width: 440px;
-  padding: 12px 16px 12px 40px; border-radius: 12px;
-  border: 2px solid rgba(255,255,255,0.12);
-  background: rgba(255,255,255,0.06);
-  color: #fff; font-family: inherit; font-size: 14px; outline: none;
-}
-.lib-search input::placeholder { color: rgba(255,255,255,0.35); }
-.lib-search input:focus { border-color: var(--orange); background: rgba(255,255,255,0.1); }
-
-/* View tabs */
-.tabs {
-  max-width: 1200px; margin: 0 auto;
-  padding: 16px 32px; display: flex; gap: 6px;
-  background: #fff; border-bottom: 1px solid var(--g100);
-  overflow-x: auto;
-}
-.tab {
-  padding: 10px 20px; border-radius: 10px;
-  border: none; background: var(--g50);
-  color: var(--g500); font-size: 13px;
-  font-weight: 700; cursor: pointer;
-  font-family: inherit; transition: all 0.2s;
-  white-space: nowrap;
-}
-.tab.active { background: var(--navy); color: #fff; }
-.tab:hover:not(.active) { background: var(--g100); }
-
-/* Content */
-.lib-content { max-width: 1200px; margin: 0 auto; padding: 24px 32px 48px; }
-
-/* Curriculum */
-.curr-table {
-  width: 100%; border-collapse: collapse;
-  background: #fff; border-radius: 16px;
-  overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-}
-.curr-table thead th {
-  background: var(--navy); color: #fff;
-  padding: 14px 14px; font-size: 10px; font-weight: 800;
-  text-transform: uppercase; letter-spacing: 1px; text-align: left;
-}
-.curr-table tbody tr { border-bottom: 1px solid var(--g100); transition: background 0.2s; }
-.curr-table tbody tr:hover { background: var(--cream); }
-.curr-table td { padding: 12px 14px; font-size: 13px; color: var(--g700); vertical-align: top; }
-.curr-table td:first-child { font-weight: 800; color: var(--navy); text-align: center; width: 36px; }
-.grammar-chip {
-  display: inline-block; padding: 4px 10px;
-  background: var(--blue-soft); color: var(--blue);
-  border-radius: 8px; font-size: 12px; font-weight: 600;
-  cursor: pointer; transition: all 0.2s; border: 1px solid transparent;
-}
-.grammar-chip:hover { border-color: var(--blue); transform: translateY(-1px); }
-
-/* Worksheets grid */
-.ws-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 14px;
-}
-.ws-card {
-  background: #fff; border-radius: 14px;
-  border: 1px solid var(--g100); overflow: hidden;
-  transition: all 0.3s; text-align: center;
-  padding: 24px 16px;
-  display: flex; flex-direction: column;
-  align-items: center; gap: 10px;
-}
-.ws-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
-  border-color: var(--orange);
-}
-.ws-unit { font-family: 'Fraunces', serif; font-size: 36px; font-weight: 900; color: var(--navy); }
-.ws-label { font-size: 12px; color: var(--g500); }
-.ws-dl {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 8px 16px; border-radius: 8px;
-  background: var(--orange); color: #fff;
-  font-size: 12px; font-weight: 700;
-  text-decoration: none; transition: all 0.2s;
-}
-.ws-dl:hover { background: var(--orange-light); transform: translateY(-1px); }
-
-/* Examples grid */
-.ex-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 16px;
-}
-.ex-card {
-  background: #fff; border-radius: 14px;
-  border: 1px solid var(--g100); overflow: hidden;
-  transition: all 0.3s; cursor: pointer;
-  display: flex; flex-direction: column;
-}
-.ex-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-  border-color: var(--mango);
-}
-.ex-header {
-  padding: 16px 18px;
-  background: var(--navy);
-  color: #fff;
-  display: flex; align-items: center; gap: 12px;
-}
-.ex-page-num {
-  width: 42px; height: 42px; min-width: 42px;
-  border-radius: 10px;
-  background: rgba(255,255,255,0.15);
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Fraunces', serif;
-  font-size: 16px; font-weight: 900; color: #fff;
-}
-.ex-header-text { flex: 1; }
-.ex-topic { font-size: 14px; font-weight: 700; color: #fff; line-height: 1.3; }
-.ex-book-label { font-size: 10px; color: rgba(255,255,255,0.5); margin-top: 3px; }
-.ex-preview {
-  padding: 14px 18px; flex: 1;
-  font-size: 12px; color: var(--g600);
-  line-height: 1.6;
-  max-height: 90px; overflow: hidden;
+.modal-eyebrow {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  opacity: 0.75;
+  margin-bottom: 6px;
   position: relative;
 }
-.ex-preview::after {
-  content: '';
-  position: absolute; bottom: 0; left: 0; right: 0;
-  height: 40px;
-  background: linear-gradient(transparent, #fff);
+.modal-title {
+  font-size: 22px; color: #fff;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  font-family: 'Fraunces', serif;
+  margin-bottom: 12px;
+  padding-right: 50px;
+  position: relative;
 }
-.ex-footer {
-  padding: 10px 18px;
-  border-top: 1px solid var(--g100);
-  font-size: 11px; color: var(--orange);
-  font-weight: 700; text-align: center;
+.modal-meta {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.18);
+  padding: 5px 12px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  position: relative;
 }
-
-/* Example modal */
-.modal-overlay {
-  display: none; position: fixed; inset: 0;
-  background: rgba(0,0,0,0.5); z-index: 999;
-  align-items: center; justify-content: center;
+.modal-close {
+  position: absolute;
+  top: 24px; right: 24px;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.18);
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 700;
+  display: flex; align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  z-index: 5;
 }
-.modal-overlay.open { display: flex; }
-.modal-box {
-  background: #fff; border-radius: 20px;
-  max-width: 600px; width: 92%;
-  max-height: 85vh; overflow-y: auto;
-  padding: 32px; box-shadow: 0 24px 64px rgba(0,0,0,0.2);
+.modal-close:hover {
+  background: rgba(255,255,255,0.32);
+  transform: rotate(90deg);
 }
-.modal-box h3 { font-size: 22px; font-weight: 900; color: var(--navy); margin-bottom: 6px; }
-.modal-box .modal-meta { font-size: 12px; color: var(--g400); margin-bottom: 20px; }
 .modal-content {
-  font-size: 14px; color: var(--g700); line-height: 1.8;
+  padding: 28px 28px 32px;
+  overflow-y: auto;
+  flex: 1;
+  font-size: 14px;
+  color: var(--g700);
+  line-height: 1.85;
 }
-.modal-content strong { color: var(--navy); }
-.modal-content em { color: var(--blue); font-style: italic; }
+.modal-content p {
+  margin-bottom: 12px;
+}
+.modal-content p:last-child { margin-bottom: 0; }
+.modal-content strong {
+  color: var(--navy);
+  font-weight: 800;
+}
+.modal-content em {
+  background: var(--cream);
+  color: var(--navy);
+  padding: 2px 7px;
+  border-radius: 5px;
+  font-style: italic;
+  font-weight: 600;
+  display: inline-block;
+  margin: 2px 0;
+}
+.modal-content br { display: block; content: ''; margin-top: 4px; }
 
-@media(max-width:768px) {
-  .lib-header { padding: 20px 16px 16px; }
-  .lib-title { font-size: 24px; }
-  .lib-content { padding: 16px; }
-  .tabs { padding: 10px 16px; }
-  .ws-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
-  .ex-grid { grid-template-columns: 1fr; }
-  .curr-table { font-size: 11px; }
-  .curr-table th, .curr-table td { padding: 8px 6px; }
+/* Toast */
+.toast {
+  position: fixed;
+  top: 90px; right: 20px;
+  z-index: 10000;
+  padding: 14px 22px;
+  border-radius: 14px;
+  background: #10b981;
+  color: #fff;
+  font-size: 13px; font-weight: 700;
+  box-shadow: 0 12px 32px rgba(16,185,129,0.35);
+  transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  opacity: 0;
+  transform: translateY(-12px);
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+
+/* Final CTA */
+.lib-cta {
+  padding: 70px 0 80px;
+  background: linear-gradient(135deg, var(--orange), var(--mango));
+  color: #fff;
+  text-align: center;
+  margin-top: 60px;
+}
+.lib-cta h2 {
+  font-size: 2.2rem;
+  color: #fff;
+  margin-bottom: 10px;
+}
+.lib-cta p {
+  font-size: 16px;
+  opacity: 0.95;
+  margin-bottom: 24px;
+  max-width: 540px;
+  margin-left: auto; margin-right: auto;
+}
+.lib-cta .btn {
+  background: var(--navy);
+  color: #fff;
+  padding: 14px 30px;
+  font-size: 14px;
+}
+.lib-cta .btn:hover { background: #fff; color: var(--navy); }
+
+/* Reveal */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s, transform 0.6s; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* Responsive */
+@media(max-width: 1024px) {
+  .book-row { flex-direction: column !important; gap: 28px; }
+  .book-cover-wrap { width: 240px; min-width: 240px; position: relative; top: 0; }
+  .lib-stats-grid { grid-template-columns: repeat(2, 1fr); gap: 18px; }
+}
+@media(max-width: 768px) {
+  .lib-hero { padding: 110px 0 50px; }
+  .nav-internal-search { max-width: 200px; }
+  .journey { gap: 4px 0; max-width: 100%; }
+  .journey-line { min-width: 14px; }
+  .journey-dot { width: 44px; height: 44px; font-size: 11px; }
+  .journey-step { min-width: 56px; }
+  .book-cover-wrap { width: 200px; min-width: 200px; }
+  .bc-num { font-size: 64px; }
+  .bc-title { font-size: 30px; }
+  .book-name { font-size: 28px; }
+  .ws-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+  .gr-grid { grid-template-columns: 1fr; }
+  .curr-meta-key { min-width: 70px; }
+  .modal-box { border-radius: 18px; }
+  .modal-head { padding: 22px 20px 18px; }
+  .modal-content { padding: 22px 20px 26px; }
+  .modal-title { font-size: 18px; padding-right: 40px; }
+}
+@media(max-width: 480px) {
+  .book-cover-wrap { width: 100%; }
+  .book-quick-item { min-width: calc(50% - 7px); flex: 0 0 calc(50% - 7px); }
+  .acc-trigger { padding: 14px 16px; }
+  .acc-body-inner { padding: 4px 14px 18px; }
+  .lib-stats-grid { grid-template-columns: 1fr 1fr; }
+  .lib-stat-num { font-size: 28px; }
 }
 </style>
 </head>
 <body>
 
-<!-- Example Modal -->
-<div class="modal-overlay" id="exModal" onclick="if(event.target===this)this.classList.remove('open')">
-  <div class="modal-box">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-      <h3 id="exModalTitle">Example</h3>
-      <button onclick="document.getElementById('exModal').classList.remove('open')" style="border:none;background:var(--g100);width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:16px">✕</button>
+<!-- ═══ INTERNAL NAV ═══ -->
+<nav class="nav-internal" id="nav">
+  <div class="nav-internal-inner">
+    <a href="dashboard-professor.html" class="nav-back">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Voltar ao Dashboard
+    </a>
+    <div class="nav-internal-search">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--g400)" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" id="searchInput" placeholder="Buscar gramática, vocabulário, unidade..." oninput="onSearch()">
     </div>
-    <div class="modal-meta" id="exModalMeta"></div>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="lib-hero">
+  <div class="container" style="position:relative">
+    <div class="lib-hero-label">
+      <span style="width:6px;height:6px;border-radius:50%;background:#f59a1e"></span>
+      Biblioteca Pedagógica
+    </div>
+    <h1>Todo o caminho do <em>A1 ao C1</em></h1>
+    <p>Currículo completo, worksheets originais EA e explicações gramaticais — organizadas livro a livro, da série Interchange até Evolve.</p>
+
+    <div class="journey">
+      <a href="#book-intro" class="journey-step">
+        <div class="journey-dot" style="background:#f59a1e">A1</div>
+        <span class="journey-label">Intro</span>
+      </a>
+      <div class="journey-line"></div>
+      <a href="#book-lvl1" class="journey-step">
+        <div class="journey-dot" style="background:#dc2626">A2</div>
+        <span class="journey-label">Level 1</span>
+      </a>
+      <div class="journey-line"></div>
+      <a href="#book-lvl2" class="journey-step">
+        <div class="journey-dot" style="background:#2563eb">B1</div>
+        <span class="journey-label">Level 2</span>
+      </a>
+      <div class="journey-line"></div>
+      <a href="#book-lvl3" class="journey-step">
+        <div class="journey-dot" style="background:#059669">B2</div>
+        <span class="journey-label">Level 3</span>
+      </a>
+      <div class="journey-line"></div>
+      <a href="#book-passages" class="journey-step">
+        <div class="journey-dot" style="background:#7c3aed">B2+</div>
+        <span class="journey-label">Passages</span>
+      </a>
+      <div class="journey-line"></div>
+      <a href="#book-evolve" class="journey-step">
+        <div class="journey-dot" style="background:#ea580c">C1</div>
+        <span class="journey-label">Evolve</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ STATS BAR ═══ -->
+<section class="lib-stats">
+  <div class="lib-stats-grid">
+    <div>
+      <div class="lib-stat-num" id="stat-units">—</div>
+      <div class="lib-stat-lbl">Unidades de currículo</div>
+    </div>
+    <div>
+      <div class="lib-stat-num" id="stat-ws">—</div>
+      <div class="lib-stat-lbl">Worksheets originais</div>
+    </div>
+    <div>
+      <div class="lib-stat-num" id="stat-gr">—</div>
+      <div class="lib-stat-lbl">Tópicos gramaticais</div>
+    </div>
+    <div>
+      <div class="lib-stat-num">6</div>
+      <div class="lib-stat-lbl">Livros · A1 → C1</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ BOOK SECTIONS (rendered by JS) ═══ -->
+<div class="book-content" id="bookSections"></div>
+
+<!-- ═══ FINAL CTA ═══ -->
+<section class="lib-cta reveal">
+  <div class="container">
+    <h2>Tudo num só lugar</h2>
+    <p>Esta biblioteca cresce com a escola. Sugestões de novas worksheets ou tópicos de gramática? Fale com a coordenação.</p>
+    <a href="dashboard-professor.html" class="btn">Voltar ao Dashboard →</a>
+  </div>
+</section>
+
+<!-- ═══ ELEGANT GRAMMAR MODAL ═══ -->
+<div class="modal-overlay" id="exModal" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <div class="modal-head" id="exModalHead">
+      <button class="modal-close" onclick="closeModal()" aria-label="Fechar">✕</button>
+      <div class="modal-eyebrow" id="exModalEyebrow">Gramática</div>
+      <div class="modal-title" id="exModalTitle">—</div>
+      <span class="modal-meta" id="exModalMeta">—</span>
+    </div>
     <div class="modal-content" id="exModalContent"></div>
   </div>
 </div>
 
-<!-- Header -->
-<header class="lib-header">
-  <div class="lib-inner">
-    <div class="lib-top">
-      <div>
-        <a href="dashboard-professor.html" class="back-btn">← Dashboard</a>
-        <div class="lib-title">📚 Biblioteca do Professor</div>
-        <div style="font-size:13px;opacity:0.5;margin-top:4px">Interchange 5th Edition — Currículo, Worksheets e Exemplos</div>
-      </div>
-    </div>
-    <div class="level-pills">
-      <button class="pill active" onclick="setLevel('intro',this)">🟡 Intro</button>
-      <button class="pill" onclick="setLevel('lvl1',this)">🔴 Level 1</button>
-      <button class="pill" onclick="setLevel('lvl2',this)">🔵 Level 2</button>
-      <button class="pill" onclick="setLevel('lvl3',this)">🟢 Level 3</button>
-    </div>
-    <div class="lib-search">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2" style="position:absolute;left:14px;top:14px"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-      <input type="text" id="searchInput" placeholder="Buscar gramática, vocabulário, unidade..." oninput="render()">
-    </div>
-  </div>
-</header>
-
-<!-- Tabs -->
-<div class="tabs">
-  <button class="tab active" onclick="setView('curriculum',this)">📋 Currículo</button>
-  <button class="tab" onclick="setView('worksheets',this)">📄 Worksheets</button>
-  <button class="tab" onclick="setView('examples',this)">💡 Exemplos & Explicações</button>
-</div>
-
-<!-- Content -->
-<div class="lib-content">
-  <div id="view-curriculum"></div>
-  <div id="view-worksheets" style="display:none"></div>
-  <div id="view-examples" style="display:none"></div>
-</div>
+<!-- Toast container -->
+<div class="toast" id="toast">Link copiado!</div>
 
 <script>
+/* ═══════════════════════════════════════════════════
+   DATA — CURRÍCULO + GRAMÁTICA (preservado da v1)
+   ═══════════════════════════════════════════════════ */
 const STORAGE = 'https://ktdrgvlyrotqpzlunlqs.supabase.co/storage/v1/object/public/worksheets';
 
 const curriculum = {
@@ -357,104 +1169,564 @@ const curriculum = {
 };
 
 const examples = {'intro':[{page:3,topic:'POSSESSIVE ADJECTIVES',book:'Intro',html:'<p><strong>POSSESSIVE ADJECTIVES</strong></p><p><em>Utilizados para demonstrar posse.</em></p><p>▸ HIS (DELE) - His car is beautiful.<br>▸ HER (DELA) - Her house is yellow.<br>▸ MY (MEU) - My dog is there.<br>▸ YOUR (SEU) - Your school is big.</p><p><br><strong>VERBO \'TO BE\'</strong></p><p><em>Expressa a ideia de \'ser\' ou \'estar\'. No presente, possui três formas: am, is & are.</em></p><p><br>▸ I AM - I am a teacher<br>▸ YOU ARE - You are a nice friend<br>▸ SHE IS - She is a doctor<br>▸ HE IS - He is my father<br>▸ IT IS - It is a nice city<br>▸ WE ARE - We are a family<br>▸ THEY ARE - They are nice people</p>'},{page:17,topic:'to be',book:'Intro',html:'<p>Quanto fazemos uma negação no simple present utilizando o verbo <strong>to be</strong>, adicionamos a palavra <strong>not</strong▸ após os verbos <strong>am, is e are</strong>.</p><p>Sujeito + am, is, are (be) + not + complemento</p><p><em>He is not a teacher - He isn\'t a teacher</em><br><em>You are not sad - You aren\'t sad</em></p><p>IS + NOT = ISN\'T<br>ARE+ NOT = AREN\'T</p>'},{page:20,topic:'WH-QUESTIONS UTILIZANDO BE',book:'Intro',html:'<p><strong>WH-QUESTIONS UTILIZANDO BE</strong></p><p><strong>WH-WORD + IS, ARE+ SUJEITO</strong><br><em>WHO ARE YOU?</em><br><em>WHERE IS YOUR HOUSE?</em><br><em>WHAT IS YOUR FULL NAME?</em></p><p>▸ WHO - QUEM?<br>▸ WHAT - O QUE / QUAL?<br>▸ WHERE - ONDE?<br>▸ HOW - COMO?<br>▸ WHAT + IS/ARE + SUJEITO + LIKE? - COMO É?</p>'},{page:24,topic:'MY HOUSE',book:'Intro',html:'<p>OS POSSESSIVES PRONOUNS PODEM APARECER SOZINHOS, AO CONTRÁRIO DOS POSSESSIVE ADJECTIVES (MY, YOUR, HIS, HER) QUE PRECISAM APARECER ANTES DE UM SUBSTANTIVO.</p><p>(POSSESSIVE ADJECTIVE) =▸ THIS IS <strong>MY HOUSE</strong></p><p>(POSSESSIVE PRONOUNS) =▸ THE HOUSE <strong>IS MINE</strong></p><p>NO ÚLTIMO EXEMPLO, O POSSESSIVE PRONOUN APARECEU SOZINHO, JÁ O POSSESSIVE ADJECTIVE APARECEU JUNTO A PALAVRA "HOUSE"</p><p><strong>THESE SHOES ARE MINE, YOURS, HERS, HIS</strong></p><p></p><p><em>WHOSE + ITEM + IS/ARE + THIS/THESE</em></p><p>- WHOSE SHIRT IS THIS?<br>- IT IS <strong>MINE</strong></p><p></p><p>\'S POSSESSIVE É USADO PARA INDICAR POSSE QUANDO USAMOS O NOME DE UMA PESSOA, AO INVÉS DOS PRONOMES PESSOAIS (HE, SHE, IT, WE, YOU, THEY)</p><p><strong>DONO DO ITEM + \'S + ITEM</strong></p><p><em>MICHAEL\'S CAR</em><br><em>THE DOG\'S TAIL</em></p>'},{page:26,topic:'O PRESENT CONTINUOUS É UM TEMPO VERBAL CARACTERIZADO PELO USO DO -ING NO FINAL DOS VERBOS. ELE É UTILIZADO PARA EXPRESSAR AÇÕES QUE ESTÃO ACONTENCENDO NESTE EXATO MOMENTO.',book:'Intro',html:'<p><strong>O PRESENT CONTINUOUS É UM TEMPO VERBAL CARACTERIZADO PELO USO DO -ING NO FINAL DOS VERBOS. ELE É UTILIZADO PARA EXPRESSAR AÇÕES QUE ESTÃO ACONTENCENDO NESTE EXATO MOMENTO.</strong></p><p><strong>SUJEITO + BE + VERBO + ING</strong><br><em>I AM DRINKING WATER</em></p><p><strong>BE + SUJEITO + VERBO + ING?</strong><br><em>ARE YOU STUDYING ENGLISH?</em></p><p><strong>WH-WORD + BE + SUJEITO + VERBI + ING?</strong><br><em>WHAT ARE YOU DOING TODAY?</em></p>'},{page:37,topic:'SIMPLE PRESENT STATEMENTS',book:'Intro',html:'<p><strong>SIMPLE PRESENT STATEMENTS</strong></p><p><em>Nós usamos o Presente Simples para expressar ações que são corriqueiras e sempre verdadeiras.</em></p><p>▸ I go to school;<br>▸ She plays video game;<br>▸ It rains everyday.</p><p><strong>Para he, she, it adicionamos -s nos verbos</strong></p><p><strong>Para as negativas, utilizamos \'don\'t\' & \'doesn\'t\' para he, she & it</strong></p><p>▸ She doesn\'t eat chocolate;<br>▸ He plays everyday;<br>▸ I don\'t like soccer.</p>'},{page:39,topic:'Simple Present Tense',book:'Intro',html:'<p><strong>Simple Present Tense</strong></p><p><em>Utilizamos o simple present falar de ações que são corriqueiras no presente. Lembre-se, haverá mudança nos verbos para he, she & it. Acrescenta-se -s, -es ou -ies.</em></p><p>▸ I go to the park everyday;<br>▸ She goes to the park everyday;<br>▸ He plays soccer after class;<br>▸ It rains on Mondays.</p><p><em>Em frases negativas, utilizamos os auxiliares don\'t & doesn\'t (para he, she & it) e o verbo principal em sua forma original.</em></p><p>▸ We don\'t like black cars;<br>▸ She doesn\'t study often;<br>▸ He doesn\'t play basketball.</p><p><em>Em frases interrogativas, utilizamos os auxiliares do & does (para he, she & it) e o verbo principal em sua forma original.</em></p><p>▸ Do you like fish?<br>▸ Does she eat bread?<br>▸ Does he play soccer?</p><p>ESTRUTURAS PARA PERGUNTAS COM WH-QUESTIONS:</p><p><strong>Wh-word + do/does + I/You/he/she... + verbo</strong></p><p>▸ Where do you live?<br>▸ Where does she study?<br>▸ What time do you wake up?</p>'},{page:45,topic:'DO/DOES + SUJEITO + VERBO',book:'Intro',html:'<p>SIMPLE PRESENT SHORT ANSWERS</p><p><strong>DO/DOES + SUJEITO + VERBO</strong></p><p><strong>DO</strong▸ I, YOU, WE, THEY</p><p><em>DO YOU LIKE TO EAT PIZZA?</em></p><p><strong>DOES</strong▸ HE, SHE, IT</p><p><em>DOES HE GO TO SCHOOL EVERYDAY?</em></p>'},{page:47,topic:'NEGATIVE',book:'Intro',html:'<p>NÓS UTILIZAMOS "THERE IS" E "THERE ARE" PARA EXPRESSAR O VERBO HAVER EM INGLÊS.</p><p><em>THERE IS A MIRROR IN MY HOUSE</em><br><em>THERE ARE CHAIRS IN MY HOUSE</em></p><p><strong>NEGATIVE</strong></p><p><strong>THERE\'S NO + PALAVRA NO SINGULAR</strong><br><em>THERE\'S NO TABLE IN THE KITCHEN</em></p><p><strong>THERE ISN\'T A + PALAVRA NO SINGULAR</strong><br><em>THERE ISN\'T A TABLE IN THE KITCHEN</em></p><p><strong>THERE ARE NO + PALAVRA NO PLURAL</strong><br><em>THERE ARE NO WINDONS IN MY BEDROOM</em></p><p><strong>THERE AREN\'T ANY + PALAVRA NO PLURAL</strong><br><em>THERE AREN\'T ANY WINDONS IN MY BEDROOM</em></p>'},{page:54,topic:'ADJECTIVE + NOUN',book:'Intro',html:'<p><strong>ADJECTIVE + NOUN</strong></p><p><em>My job is great</em><br><em>I have a great job</em><br><strong>(Ambas as frases tem o mesmo significado)</strong></p><p><strong>A/an + sujeito + \'s + job + is + adjetivo</strong><br>✅ <em>A teacher\'s job is nice</em></p><p><strong>A/an + sujeito + has + a/an + adjective + job</strong><br>✅ <em>A teacher has a nice job</em></p>'},{page:59,topic:'COUNT AND NONCOUNT NOUNS',book:'Intro',html:'<p><strong>COUNT AND NONCOUNT NOUNS</strong></p><p><strong>COUNT NOUNS</strong▸ Estes se referem a tudo aquilo que pode ser contado na língua inglesa. Possuem forma no plural e singular, podem ser acompanhados por artigos.</p><p>👉 <em>We have an apple</em></p><p>👉 <em>There are many apples in the basket</em></p><p><br><strong>NONCOUNT NOUNS</strong▸ São palavras na língua inglesa que não podem ser contadas, ou seja, não podemos usá-las com artigos indefinidos (a, an) ou com números. Não possuem forma no plural, apenas no singular.</p><p><strong>OBS.: Noncount nouns geralmente são líquidos (milk, water, olive oil) ou grãos e itens muito pequenos (rice, salt and sugar)</strong></p><p>👉 <em>There isn\'t any water in the bottle</em></p><p>👉 <em>We have little milk today</em></p><p>OBS.: Use "Any" para perguntas e negações, use "Some" para frases afirmativas e para oferecer algo a alguém.</p>'},{page:61,topic:'Os advérbios de frequência (ever, often, sometimes, hardly ever, never) são posicionados antes do verbo principal da frase.',book:'Intro',html:'<p><strong>Os advérbios de frequência (ever, often, sometimes, hardly ever, never) são posicionados antes do verbo principal da frase.</strong></p><p><strong>Sujeito + adv. frequência + verbo</strong></p><p><em>She often goes to church</em></p><p><em>He never plays soccer with his friends</em></p><p><br><strong>OBS.: Sometimes e usually podem iniciar frases:</strong></p><p><em>He usually studies alone - Usually he studies alone</em></p><p><em>She sometimes plays - Sometimes she plays</em></p>'},{page:67,topic:'CAN FOR ABILITY',book:'Intro',html:'<p><strong>CAN FOR ABILITY</strong></p><p>Can é um verbo modal, ou seja, ele tem a capacidade de adicionar sentidos a mais para a nossa frase. Geralmente, a palavra can significa "conseguir" ou "poder".</p><p><br><strong>Attention</strong▸ Can pode ser usando para criar frases afirmativas, negativas e interrogativas.</p><p><br><em>I can play the piano</em▸ (Afirmativa)</p><p><em>I cannot/can\'t play the piano</em▸ (Negativa)</p><p><em>Can I play the piano?</em▸ (Interrogativa)</p>'},{page:73,topic:'TO BE GOING TO',book:'Intro',html:'<p><strong>TO BE GOING TO</strong></p><p>Nós utilizamos essa estrutura para expressar o futuro em inglês. (OBS.: Lembre-se de trocar o "be" por am, is ou are)</p><p><strong>SUJEITO + BE GOING TO + VERBO/COMPLEMENTO</strong></p><p><em>She is going to buy a car next year!</em></p><p><em>They are going to get married!</em></p><p><br><strong>BE + SUJEITO + GOING TO + VERBO/COMPLEMENTO?</strong></p><p><em>Is she going to read the book?</em></p><p><em>Is it going to rain tomorrow?</em></p>'},{page:88,topic:'Giving directions',book:'Intro',html:'<p><strong>Giving directions</strong></p><p><br><strong>ON</strong▸ é equivalente a "no" ou "na" em português.</p><p><em>The shopping mall is on Paulista Avenue</em></p><p><em>My house is on the street ENGLISH number 000</em></p><p></p><p><strong>ON THE CORNER OF</strong▸ Na esquina de;</p><p><em>The supermarket is on the corner of the next avenue</em></p><p><em>The drugstore is on the corner of his house</em></p><p></p><p><strong>ACROSS FROM</strong▸ Oposto à; na frente dê; do outro lado.</p><p><em>The park is across from the apartment building</em></p><p><em>The boy fell across from his house</em></p><p></p><p><strong>NEXT TO</strong▸ Do lado de;</p><p><em>It is next to the pharmacy</em></p><p><em>His house is next to mine</em></p><p></p><p><strong>BETWEEN</strong▸ Entre; no meio de.</p><p><em>The school is between the supermarket and the bank</em></p><p><em>The shopping mall is between these houses</em></p>'},{page:93,topic:'SIMPLE PAST',book:'Intro',html:'<p><strong>SIMPLE PAST</strong></p><p><em>O SIMPLE PAST É CARACTERIZADO PELO -ED NO FINAL DOS VERBOS REGULARES. CASO UM VERBO SEJA IRREGULAR, A SUA FORMA NO PASSADO NÃO TEM UMA CONSTRUÇÃO LÓGICA, SENDO NECESSÁRIO MEMORIZAR A ESCRITA DO VERBO</em></p><p><strong>VERBOS REGULARES</strong▸ WORK <strong>(WORKED)</strong▸ - PLAY <strong>(PLAYED)</strong▸ - TRY <strong>(TRIED)</strong▸ - DANCE <strong>(DANCED)</strong></p><p><strong>VERBOS IRREGULARES</strong▸ SEE <strong>(SAW)</strong▸ - TAKE <strong>(TOOK)</strong▸ - HAVE <strong>(HAD)</strong▸ - MAKE <strong>(MADE)</strong></p><p><br>QUANDO FORMULAMOS PERGUNTAS NO SIMPLE PAST, UTILIZAMOS O PASSADO DO VERBO DO - <strong>DID</strong▸ E O VERBO NA SUA FORMA <strong>ORIGINAL</strong></p><p><em>WHAT DID YOU SAY TO HIM?</em></p><p><em>WHERE DID YOU GO YESTERDAY?</em></p>'},{page:107,topic:'OBJECT PRONOUNS',book:'Intro',html:'<p><strong>OBJECT PRONOUNS</strong></p><p><em>DIFERENTEMENTE DOS DEMAIS PRONOMES, OS OBJECT PRONOUNS SOFREM A AÇÃO DE ALGUM VERBO (OU SEJA, SÃO O OBJETO DO VERBO). ELES SE POSICIONAM APÓS OS VERBOS</em></p><p><strong>(ME, HIM, HER, IT, THEM, US, YOU)</strong></p><p>❌ I LIKE THEY<br>✔️ I LIKE THEM</p><p>❌ SHE PLAYS WITH I<br>✔️ SHE PLAYS WITH ME</p>'}],'lvl1':[{page:4,topic:'Wh-Words + to be',book:'Red book',html:'<p><strong>Wh-Words + to be</strong></p><p><em>São palavras utilizadas para fazer perguntas mais complexas com o verbo to be</em▸ </p><p><strong>WHERE (ONDE); WHY (POR QUE); WHEN (QUANDO), WHO (QUEM); WHAT (O QUE); HOW (COMO)</strong></p><p><br><strong>Wh word + to be + resto da frase</strong></p><p>When <strong>is</strong▸ your birthday?</p><p>Where <strong>is</strong▸ your school?</p>'},{page:10,topic:'Wh-question + do/does + sujeito + verb',book:'Red book',html:'<p>WHERE (ONDE); WHAT (O QUE OU QUAL); WHEN (QUANDO); WHO (QUEM); HOW (COMO); WHY (POR QUE)</p><p><strong>Wh-question + do/does + sujeito + verb</strong></p><p><em>Why do you drink coffee everyday?</em><br><em>Where do you live?</em></p>'},{page:17,topic:'One/Ones: Usados para substituir termos na frase</strong▸ </p><p><strong>Ex.: THE BLUE JACKET -▸ THE BLUE ONE / THE PRETTY COLORS -▸ THE PRETTY ONES.',book:'Red book',html:'<p><strong>One/Ones: Usados para substituir termos na frase</strong▸ </p><p><strong>Ex.: THE BLUE JACKET -▸ THE BLUE ONE / THE PRETTY COLORS -▸ THE PRETTY ONES.</strong></p><p><em>Which: Usado para perguntar qual item específico. Ex.: WHICH SHIRT? WHICH ONE? / WHICH COLORS? WHICH ONES?</em></p><p><em>This/These: Usados para objetos próximos. THIS (singular) / THESE (plural)</em></p><p><em>That/Those: Usados para objetos distantes. THAT (singular) / THOSE (plural)</em></p>'},{page:20,topic:'PREFERENCES',book:'Red book',html:'<p><strong>PREFERENCES</strong></p><p><strong>I PREFER...</strong></p><p><em>I PREFER THE BLUE SHORT</em></p><p><strong>I LIKE...MORE</strong></p><p><em>I LIKE THE BLUE ONE MORE</em></p><p><strong>I LIKE...BETTER</strong></p><p><em>I LIKE THE BLUE ONE BETTER</em></p><p><strong>COMPARISONS</strong></p><p>Com adjetivos curtos, adicionamos -er no final.</p><p><em>BIG -▸ BIGGER</em><br><em>HAPPY -▸ HAPPIER</em></p><p>Com adjetivos longos, adicionamos "more" como auxiliar.</p><p><em>BEAUTIFUL -▸ MORE BEAUTIFUL</em><br><em>EXPANSIVE -▸ MORE EXPANSIVE</em></p><p><strong>OBS.: Lembre-se de adicionar "than" para fazer comparações</strong></p>'},{page:23,topic:'OBS.: DOES É UTILIZADO PARA HE, SHE E IT',book:'Red book',html:'<p><em>PARA FAZERMOS PERGUNTAS NO SIMPLE PPRESENT, UTILIZAMOS OS VERBOS AUXILIARES DO E DOES NO INÍCIO DA FRASE (<strong>OBS.: DOES É UTILIZADO PARA HE, SHE E IT</strong>)</em></p><p><em>NÓS RESPONDEMOS A PERGUNTA COM O MESMO VERBO AUXILIAR UTILIZADO (DO OU DOES)</em></p><p><strong>DO+DOES + SUJEITO + VERBO?</strong><br><strong>WH-WORD + DO/DOES + SUJEITO + VERBO?</strong></p><p><strong>DOES SHE LIKE THE BOY?</strong><br><strong>NO, SHE DOESN\'T</strong></p><p><strong>DO YOU DRINK WATER EVERYDAY?</strong><br><strong>YES, I DO.</strong></p>'},{page:26,topic:'Page 26',book:'Red book',html:'<p>Para fazer convites em inglês utilizamos duas estruturas principais:</p><p>▸ Would you like to...?<br>▸ Do you want to...?</p><p>Ainda, para respondermos as invitations podemos utilizar as seguintes opções:</p><p>▸ Yes, I would/want.<br>▸ I\'d love to.</p><p>Para recusar uma invitation, geralmente oferecemos uma excuse (desculpa) utilizando want to; need to & have to.</p><p>▸ Do you want to go to the cinema with me? / I\'d like to, but I have to go to the doctor;<br>▸ Would you like to eat pizza tomorrow? / I\'d like to, but I need to study for a test.</p>'},{page:27,topic:'INVITATIONS',book:'Red book',html:'<p><strong>INVITATIONS</strong></p><p><strong>WOULD YOU LIKE TO...?</strong></p><p><em>WOULD YOU LIKE TO GO TO A PARTY WITH ME?</em></p><p>_-Yes, I would / I\'d love to (more polite)</p><p><br><strong>WOULD YOU LIKE TO PLAY SOCCER WITH ME?</strong></p><p><em>-I\'d like to, but I have to do my homework</em></p>'},{page:32,topic:'O PRESENT CONTINUOUS É UM TEMPO VERBAL CARACTERIZADO PELO USO DO -ING NO FINAL DOS VERBOS. ELE É UTILIZADO PARA EXPRESSAR AÇÕES QUE ESTÃO ACONTENCENDO NESTE EXATO MOMENTO.',book:'Red book',html:'<p><strong>O PRESENT CONTINUOUS É UM TEMPO VERBAL CARACTERIZADO PELO USO DO -ING NO FINAL DOS VERBOS. ELE É UTILIZADO PARA EXPRESSAR AÇÕES QUE ESTÃO ACONTENCENDO NESTE EXATO MOMENTO.</strong></p><p><strong>SUJEITO + BE + VERBO + ING</strong><br><em>I AM DRINKING WATER</em></p><p><strong>BE + SUJEITO + VERBO + ING?</strong><br><em>ARE YOU STUDYING ENGLISH?</em></p><p><strong>WH-WORD + BE + SUJEITO + VERBI + ING?</strong><br><em>WHAT ARE YOU DOING TODAY?</em></p>'},{page:34,topic:'Page 34',book:'Red book',html:'<p>When people don\'t know the exact percentage of something, they use words like most or some. See the quantifiers in the Grammar Focus box.</p><p>OBS.: Todos os quantifiers vem antes de palavras no plural (All, nearly all, most, many, a lot of, some, not many, few). Exceto no one, esse vem antes de verbos na terceira pessoa do singular (he, she, it)</p><p><strong>Most students</strong▸ in Brazil do well in school</p><p><strong>No one</strong▸ likes to eat pineapple in my family</p>'},{page:37,topic:'Os advérbios de frequência (ever, often, sometimes, hardly ever, never) são posicionados antes do verbo principal da frase.',book:'Red book',html:'<p><strong>Os advérbios de frequência (ever, often, sometimes, hardly ever, never) são posicionados antes do verbo principal da frase.</strong></p><p><strong>Sujeito + adv. frequência + verbo</strong></p><p><em>She often goes to church</em></p><p><em>He never plays soccer with his friends</em></p><p><br><strong>Quando queremos responder quantas vezes fazemos algo, essa resposta se posicionará no final da frase.</strong></p><p><em>I study every day</em></p><p><em>I take showers twice a day</em></p><p><br><strong>OBS.: Sometimes e usually podem iniciar frases:</strong></p><p><em>He usually studies alone - Usually he studies alone</em></p><p><em>She sometimes plays - Sometimes she plays</em></p><p><br><strong>OBS.: Quando o verbo To Be aparece, o advérbio de frequência será posicionado depois dele!</strong></p><p><em>He is often tired</em></p><p><em>I am never stressed</em></p>'},{page:40,topic:'HOW OFTEN = frequency',book:'Red book',html:'<p>QUESTIONS WITH “HOW”</p><p><strong>HOW OFTEN = frequency</strong><br>How often do you run?<br>I run every day.</p><p><strong>HOW LONG = duration (time)</strong><br>How long do you run?<br>I run for about an hour.</p><p><strong>HOW GOOD = use with to be</strong><br>How good are you at sports?<br>I am pretty good.</p><p><strong>HOW WELL = use with other verbs</strong><br>How well do you sing?<br>I sing pretty well.</p>'},{page:45,topic:'SIMPLE PAST',book:'Red book',html:'<p><strong>SIMPLE PAST</strong></p><p><em>O SIMPLE PAST É CARACTERIZADO PELO -ED NO FINAL DOS VERBOS REGULARES. CASO UM VERBO SEJA IRREGULAR, A SUA FORMA NO PASSADO NÃO TEM UMA CONSTRUÇÃO LÓGICA, SENDO NECESSÁRIO MEMORIZAR A ESCRITA DO VERBO</em></p><p><strong>VERBOS REGULARES</strong▸ WORK <strong>(WORKED)</strong▸ - PLAY <strong>(PLAYED)</strong▸ - TRY <strong>(TRIED)</strong▸ - DANCE <strong>(DANCED)</strong></p><p><strong>VERBOS IRREGULARES</strong▸ SEE <strong>(SAW)</strong▸ - TAKE <strong>(TOOK)</strong▸ - HAVE <strong>(HAD)</strong▸ - MAKE <strong>(MADE)</strong></p><p><br>QUANDO FORMULAMOS PERGUNTAS NO SIMPLE PAST, UTILIZAMOS O PASSADO DO VERBO DO - <strong>DID</strong▸ E O VERBO NA SUA FORMA <strong>ORIGINAL</strong></p><p><strong>WHAT DID YOU SAY TO HIM?</strong></p><p><strong>WHERE DID YOU GO YESTERDAY?</strong></p>'},{page:47,topic:'PAST FORM OF TO BE',book:'Red book',html:'<p><strong>PAST FORM OF TO BE</strong></p><p><strong>I, HE, SHE, IT -▸ WAS</strong></p><p><em>I WAS REALLY TIRED YESTERDAY</em></p><p><em>HE WAS DRIKING TOO MUCH JUICE</em></p><p><strong>YOU, WE, THEY -▸ WERE</strong></p><p><em>WERE YOU TIRED YESTERDAY?</em></p><p><em>WE WERE PLAYING SOCCER!</em></p>'},{page:51,topic:'THERE IS & THERE ARE',book:'Red book',html:'<p><strong>THERE IS & THERE ARE</strong></p><p>These two verbs are used to express the existence of something. Both are equivalent to the verb "Haver" in Portuguese. One is used with singular nouns, the other with plural nouns.</p><p><em>There is a happy man walking on the road.</em></p><p><em>There are some sad birds on the tree</em></p><p><br><strong>You can invert the positions of there is & there are to ask questions!</strong></p><p><em>There are some apples in the basket / Are there any apples in the basket?</em></p><p><br><strong>SOME/ANY</strong></p><p><em>"Some" is used with plural nouns in affirmative sentences. "Any" is used with plural nouns in negative and interrogative sentences.</em></p>'},{page:54,topic:'Page 54',book:'Red book',html:'<p>Count & noncount nouns*</p><p>When dealing with a <strong>count noun</strong▸ (Things that can be counted) use many & few.</p><p>▸ There are few cars in my city;<br>▸ I have too many books in my bookshelf.</p><p>When using a <strong>noncount noun</strong▸ (Things that cannot be counted) use much & little.</p><p>▸ There is little pollution in my neighborhood;<br>▸ There is too much noise here.</p><p><strong>REMEMBER</strong▸ Noncount nouns are always in the singular form, therefore can only be used with There is.</p>'},{page:62,topic:'PRESENT PARTICIPLE & PREPOSITIONS TO DESCRIBE PEOPLE',book:'Red book',html:'<p><strong>PRESENT PARTICIPLE & PREPOSITIONS TO DESCRIBE PEOPLE</strong></p><p>We can use present participles (-ing) to describe what people are wearing or doing.</p><p>▸ Lucas is the man <strong>standing</strong▸ next to Olivia;<br>▸ Carlos is the elderly man <strong>drinking</strong▸ water;<br>▸ Julia is the girl <strong>eating</strong▸ cake.</p><p>Also, it is possible to use prepositions to describe people. (In, with, next to, on)</p><p>▸ Lucas is the man <strong>in</strong▸ jeans;<br>▸ Carlos is the elderly man with black shoes;<br>▸ Julia is the girl next to the window.</p>'},{page:73,topic:'Remember</strong▸ Too means "more than enough" and it is usually used with negative sentences:</p><p>▸ <em>This house is too big</em▸ (It has more space than necessary)</p><p>▸ <em>This dessert is too sweet</em▸ (It has more sugar than necessary)</p><p><strong>Connecting ideas using conjunctions',book:'Red book',html:'<p>We use adverbs before adjectives to intensify them. </p><p>▸ <em>She is tired</em><br>▸ <em>She is extremely/very/really/pretty/fairly/ tired.</em></p><p><strong>Remember</strong▸ Too means "more than enough" and it is usually used with negative sentences:</p><p>▸ <em>This house is too big</em▸ (It has more space than necessary)</p><p>▸ <em>This dessert is too sweet</em▸ (It has more sugar than necessary)</p><p><strong>Connecting ideas using conjunctions</strong></p><p>Conjunctions are words like and, but, however & though. They are used to connect ideas.</p><p><strong>Positive + positive & negative + negative</strong></p><p>We use and (&) to connect two positive or two negative ideas:</p><p>▸ <em>She is happy and excited</em><br>▸ <em>The city has many cars and it also has many people</em></p><p>We use but, however and though to connect contrasting ideas. Remember that though and however are placed at the end of the sentence and are separated by a comma (,).</p><p>▸ <em>The weather was great. The city was terrible, though.</em><br>▸ <em>The food was really spicy. The dessert was delicious, however.</em><br>▸ <em>The city was really noisy, but the weather was good.</em></p>'},{page:93,topic:'SUPERLATIVES',book:'Red book',html:'<p><strong>SUPERLATIVES</strong></p><p><em>Nós usamos os superlativos na língua inglesa quando queremos expressar duas ideias:</em><br>▸ 1. Como determinada palavra é diferente de seu grupo;<br>▸ 2. Quando fazemos uma comparação com 3+ itens.</p><p><em>Para formar o superlativo, adicione o prefixo -est aos adjetivos curtos (1 sílaba) ou adjetivos de 2 sílabas terminados em -y. Para os demais, adicione \'most\' antes do adjetivo.</em></p><p>▸ Brazil is the biggest country in South America;<br>▸ Brazil is the richest country among Argentina & Chile;<br>▸ That store is the most expensive one in the city.</p><p><strong>IRREGULAR ADJECTIVES</strong></p><p>▸ Good - Best<br>▸ Bad - Worst</p>'},{page:103,topic:'INDIRECT MESSAGES',book:'Red book',html:'<p><strong>INDIRECT MESSAGES</strong></p><p><em>Whenever you want to ask someone to communicate anything to a third person, use the structures bellow</em></p><p><strong>TELL</strong▸ Is used when you want someone to pass on an information to a third person.</p><p>▸ Please, tell mr. Smith (that) I\'ll be late to the appointment.<br>▸ Could you please tell mr. Smith (that) I\'ll be late to the appointment?<br>▸ Would you please tell mr. Smith (that) I\'ll be late to the appointment?</p><p><br><strong>ASK</strong▸ Is used when you want someone to request something from  third person.</p><p>▸ Please, ask Julia to bring my shirt.<br>▸ Could you ask Julia to bring my shir?<br>▸ Would you ask Julia to bring my shirt?</p><p>THE PREPOSITION \'TO\' IS MANDATORY WHEN USING \'ASK\'.</p>'}],'lvl2':[{page:3,topic:'SIMPLE PAST',book:'Blue book',html:'<p><strong>SIMPLE PAST</strong></p><p><em>O SIMPLE PAST É CARACTERIZADO PELO -ED NO FINAL DOS VERBOS REGULARES. CASO UM VERBO SEJA IRREGULAR, A SUA FORMA NO PASSADO NÃO TEM UMA CONSTRUÇÃO LÓGICA, SENDO NECESSÁRIO MEMORIZAR A ESCRITA DO VERBO</em></p><p><strong>VERBOS REGULARES</strong▸ WORK <strong>(WORKED)</strong▸ - PLAY <strong>(PLAYED)</strong▸ - TRY <strong>(TRIED)</strong▸ - DANCE <strong>(DANCED)</strong></p><p><strong>VERBOS IRREGULARES</strong▸ SEE <strong>(SAW)</strong▸ - TAKE <strong>(TOOK)</strong▸ - HAVE <strong>(HAD)</strong▸ - MAKE <strong>(MADE)</strong></p><p><br>QUANDO FORMULAMOS PERGUNTAS NO SIMPLE PAST, UTILIZAMOS O PASSADO DO VERBO DO - <strong>DID</strong▸ E O VERBO NA SUA FORMA <strong>ORIGINAL</strong></p><p><em>WHAT DID YOU SAY TO HIM?</em></p><p><em>WHERE DID YOU GO YESTERDAY?</em></p><p><strong>PAST FORM OF TO BE</strong></p><p><strong>I, HE, SHE, IT -▸ WAS</strong></p><p><em>I WAS REALLY TIRED YESTERDAY</em></p><p><em>HE WAS DRIKING TOO MUCH JUICE</em></p><p><strong>YOU, WE, THEY -▸ WERE</strong></p><p><em>WERE YOU TIRED YESTERDAY?</em></p><p><em>WE WERE PLAYING SOCCER!</em></p>'},{page:5,topic:'Used to',book:'Blue book',html:'<p><strong>Used to</strong></p><p>The used to structure refers to actions in the past that were often done, almost like habits. In Portuguese, it would be equivalent to "costumava".</p><p><strong>AFIRMATIVE SENTENCES</strong▸ Sujeito + used to + verb + rest</p><p><em>I used to play soccer when I was younger</em></p><p><em>She used to be very quiet in our school time</em></p><p><br><strong>NEGATIVE SENTENCES</strong▸ Sujeito + didn\'t + use to + verb + rest / Sujeito + never + used to + verb + rest</p><p><em>She didn\'t use to play video games with her brother</em></p><p><em>I never used to be talkative with strangers</em></p><p><br><strong>INTERROGATIVE SENTENCES</strong▸ Did + sujeito + use to + verb + rest</p><p><em>Did you use to eat a lot of past back in Italy?</em></p><p>-Did they use to play together in the past?_</p><p>-</p>'},{page:9,topic:'COUNT NOUNS',book:'Blue book',html:'<p><strong>COUNT NOUNS</strong></p><p>Many, few, fewer</p><p>▸ The are few cars in my city<br>▸ There should be fewer cars in the city<br>▸ There are too many people on the streets.</p><p><br><strong>NONCOUNT NOUNS</strong></p><p>Much, little, less</p><p>▸ There is much pollution here<br>▸ There should be less pollution here<br>▸ There is little noise at my house</p><p><br><strong>ENOUGH COMES BEFORE THE NOUN</strong></p><p>▸ There isn\'t enough air here<br>▸ There aren\'t enough houses on my neighborhood</p>'},{page:11,topic:'INDIRECT QUESTIONS',book:'Blue book',html:'<p><strong>INDIRECT QUESTIONS</strong></p><p>An indirect questions is when we start a sentence using a kind of an introduction.</p><p>▸ Could you tell me; Can you tell me; Do you know...</p><p><strong>Indirect question with to be</strong></p><p><em>The verb to be goes to end of the sentence</em></p><p>▸ Where is the nearest hospital?<br>▸ Do you know where the nearest hospital <strong>is</strong></p><p><br><strong>Indirect question with do</strong></p><p><em>We drop the do/does</em></p><p>▸ Where does she live?<br>▸ Do you know where she lives?</p><p><br><strong>Indirect questions with can</strong></p><p>-We invert the positions of can and the subject*</p><p>▸ Where can I find a restroom?<br>▸ Do you know where I can find a restroom?</p>'},{page:17,topic:'Evaluations & Comparisons',book:'Blue book',html:'<p><strong>Evaluations & Comparisons</strong></p><p><em>Adjective + enough & Too + adjective</em></p><p>▸ My house <strong>isn\'t big enough</strong><br>▸ My house <strong>is too big</strong></p><p><br><em>Enough + noun & Too much/many + noun</em></p><p>▸ My house has enough windows;<br>▸ There are too many cars in my city;<br>▸ There is too much noise in my city;</p><p><br><em>As + adjective + as</em></p><p>▸ My house is <strong>as big as</strong▸ your house_<br>▸ Brazil isn\'t <strong>as rich as</strong▸ the US_</p><p><br><em>As many/much + noun + as</em></p><p>▸ I have <strong>as many cars as</strong▸ you have.<br>▸ She has <strong>as much happiness as</strong▸ you.</p>'},{page:20,topic:'WISHES',book:'Blue book',html:'<p><strong>WISHES</strong></p><p>When using the wish structure in the English language, remember to use the simple past tense.</p><p>▸ To drink more coffee | I wish I drank more coffee<br>▸ To have more friends | I wish I had more friends<br>▸ Can play the guitar | I wish I could play the guitar<br>▸ To be happier | I wish I were happier<br>▸ Will go to Italy | I wish I would go to Italy<br>▸ I am talented | I wish I were talented</p><p>Remember:</p><p>▸ Will - Would<br>▸ Can - Could<br>▸ Be - Were</p>'},{page:31,topic:'SIMPLE FUTURE',book:'Blue book',html:'<p><strong>SIMPLE FUTURE</strong></p><p><strong>WILL + VERB + I GUESS/MAYBE/I THINK/PROBABLY</strong></p><p>Use will to express actions in the future that you are not so certain about or that you\'ve just decided without previous planning.</p><p>👉 <em>MAYBE I WILL GO TO CLASS TOMORROW</em></p><p>👉 <em>PROBABLY SHE\'LL COME TO MY PARTY THIS SUNDAY</em></p><p><br><strong>BE + GOING TO</strong></p><p>Use "be + going to" to express future plans in which you\'ve decided on. You are a hundred percent sure about them.</p><p>👉 <em>SHE IS GOING TO STUDY REALLY HAR FOR HER TEST! I BELIEVE IN HER</em></p><p>👉 <em>THEY ARE GOING TO MOVE! THE SITUATION IN THEIR HOUSE IS UNBEARABLE</em></p>'},{page:33,topic:'Modals are verbs used to express many different ideas, such as obligations, advice and suggestions',book:'Blue book',html:'<p><strong>Modals are verbs used to express many different ideas, such as obligations, advice and suggestions</strong></p><p><strong>SUJEITO + MODAL + VERB</strong></p><p><strong>MODALS FOR NECESSITY (MUST, HAVE TO, NEED TO, DON\'T HAVE TO)</strong></p><p><em>You must take your passport with you</em></p><p><em>You need to remember to book your flight earlier</em></p><p><strong>MODALS FOR SUGGESTIONS (HAD BETTER, OUGHT TO, SHOULD, SHOULDN\'T)</strong></p><p><em>You\'d better take your travel insurance</em></p><p><em>You ought to study more for your test</em></p>'},{page:39,topic:'REQUESTS WITH MODALS AND WOULD YOU MIND',book:'Blue book',html:'<p><strong>REQUESTS WITH MODALS AND WOULD YOU MIND</strong></p><p><strong>CAN, COULD, WOULD + SUBJECT + VERB IN THE ABSE FORM</strong></p><p><em>CAN YOU HELP ME?</em></p><p><em>COULD YOU MOVE YOUR THINGS AWAY, PLEASE?</em></p><p><strong>WOULD YOU MIND + VERB IN THE -ING</strong></p><p><em>WOULD YOU MIND HELPING ME?</em></p><p><em>WOULD YOU MIND MOVING YOUR THINGS AWAY, PLEASE?</em></p>'},{page:45,topic:'Infinitives and gerunds',book:'Blue book',html:'<p><strong>Infinitives and gerunds</strong></p><p><em>When we describe what something is used for, we can use either an infinitive structure (to + verb) or a gerund structure (for + verb + -ing). The meaning is the same in both cases</em></p><p><strong>I go to school to learn</strong▸ (Infinitive structure)</p><p><strong>I go to school for learning</strong▸ (Gerund structure)</p>'},{page:54,topic:'ADVERBIAL CLAUSE OF TIME',book:'Blue book',html:'<p><strong>ADVERBIAL CLAUSE OF TIME</strong></p><p><em>When, after & before</em></p><p><strong>When means at the same time of...</strong></p><p>▸ When we learn we develop.<br>▸ At the same time we learn we develop.</p><p><br><strong>After means at the following moment</strong></p><p>▸ After getting married, our life changes a lot.<br>▸ At the following moment we get married, our life changes a lot.</p><p></p><p><strong>Before means at the previous moment</strong></p><p>▸ Before being alone, be certain you can handle it<br>▸ At the previous moment of being alone, be certain you can handle it</p>'},{page:59,topic:'Past</strong▸ Used to; ago & in the past</p><p>▸ We used to play soccer together;<br>▸ I lived in that house 10 years ago;<br>▸ People spent a lot more time together in the past.</p><p><strong>Present</strong▸ Nowadays; These days & Today.</p><p>▸ Nowadays, everyone is busy to think about relaxing;<br>▸ These days the world has been really noisy;<br>▸ We are going to the gym today.</p><p><strong>Future</strong▸ In the future; Soon & In a few years.</p><p>▸ In the future, there will be flying cars;<br>▸ Soon, everyone will work from home;<br>▸ In a few years, we are going to be living in modern houses.</p><p><strong>MIGHT IS USED TO EXPRESS A POSSIBILITY IN THE FUTURE',book:'Blue book',html:'<p>Besides using the tenses (Simple past, present & future) it is also necessary to use some indicative expressions of time.</p><p><strong>Past</strong▸ Used to; ago & in the past</p><p>▸ We used to play soccer together;<br>▸ I lived in that house 10 years ago;<br>▸ People spent a lot more time together in the past.</p><p><strong>Present</strong▸ Nowadays; These days & Today.</p><p>▸ Nowadays, everyone is busy to think about relaxing;<br>▸ These days the world has been really noisy;<br>▸ We are going to the gym today.</p><p><strong>Future</strong▸ In the future; Soon & In a few years.</p><p>▸ In the future, there will be flying cars;<br>▸ Soon, everyone will work from home;<br>▸ In a few years, we are going to be living in modern houses.</p><p><strong>MIGHT IS USED TO EXPRESS A POSSIBILITY IN THE FUTURE</strong></p><p>▸ It might rain tomorrow;<br>▸ She might come to the party.</p>'},{page:61,topic:'Page 61',book:'Blue book',html:'<p>Possible situations in the present with future results.</p><p>Use <strong>if + simple present</strong▸ to express a possible situation at the present moment:</p><p>▸ If you find a wallet on the street;<br>▸ If you get late to class;<br>▸ If your dog eats a piece of plastic;</p><p>Use <strong>may, might, will & be able to</strong▸ for expressing the result of the action in the future.</p><p>▸ You may give it back to the owner.<br>▸ You might apologize to your teacher.<br>▸ You will need to take it to the vet.</p><p>EX.: </p><p>▸ If you get rich, you will be able to buy a car;<br>▸ If you behave badly, you might have to say sorry.</p>'},{page:65,topic:'Page 65',book:'Blue book',html:'<p>After some verbs & prepositions we have to use gerunds (-ing). For example: </p><p>▸ I <strong>enjoy</strong▸ talking to you;</p><p>▸ I <strong>love</strong▸ helping her;</p><p>▸ I <strong>avoid</strong▸ eating chocolate;</p><p>▸ I am good <strong>at</strong▸ advising people.</p><p><br>Also, in the English language, we have two specific structures to agree with positive and negative sentences:</p><p><em>Agreeing with a positive sentence: SO + AUXILIAR (DO/CAN/BE) + I</em></p><p>▸ I love chocolate; so do I.<br>▸ I am really happy today; so am I.<br>▸ I can speak English pretty well, so can I.</p><p><em>Agreeing with a negative sentence: NEITHER + AUXILIAR (DO/CAN/BE) + I</em></p><p>▸ I don\'t like chocolate; neither do I;<br>▸ I am not sad today; neither am I;<br>▸ I can\'t speak Russian; neither can I.</p>'},{page:73,topic:'THE PASSIVE VOICE WITH THE SIMPLE PAST',book:'Blue book',html:'<p><strong>THE PASSIVE VOICE WITH THE SIMPLE PAST</strong></p><p><em>The passive voice is used when the focus of the sentence is on the process, not on the person who is doing it. If you want to to state the person who is doing the action, use the preposition by.</em></p><p><strong>STRUCTURE</strong▸ OBJECT + WAS/WERE + PAST PARTICIPLE (+ BY + SUBJECT)</p><p>▸ The apple was eaten by the monkey;</p><p>▸ The building was made by the architect;</p><p>▸ The book was written by the famous writer.</p>'},{page:79,topic:'PAST CONTINUOUS',book:'Blue book',html:'<p><strong>PAST CONTINUOUS</strong></p><p>The past continuous is used to express an ongoing action in the past.</p><p><strong>STRUCTURE</strong▸ </p><p>▸ SUBJECT + WAS/WERE + VERB(ING); <br>I was drinking water.</p><p>▸ SUBJECT + WAS/WERE + NOT + VERB(ING).<br>I was not drinking water.</p><p>▸ WAS/WERE + SUBJECT + VERB(ING).<br>Was she drinking water?</p><p>OBS.: The past continuous is usually used in contrast with the simple past, to indicate that an action was interrupted.</p><p>▸ I was drinking water when the glass broke.</p><p>▸ She was playing with her brother when her mother arrived.</p>'},{page:81,topic:'PRESENT PERFECT CONTINUOUS',book:'Blue book',html:'<p><strong>PRESENT PERFECT CONTINUOUS</strong></p><p><em>The present perfect continuous is a verb tense used to express the idea of something starting in the past and continuing into the present</em></p><p>STRUCTURE:</p><p><em>SUBJECT + HAVE/HAS + BEEN + VERB (ING)</em></p><p>▸ I have been studying English for five years now;<br>▸ She has been playing soccer since she was a child.</p><p><br><em>SUBJECT + HAVE/HAS + NOT + BEEN + VERB (ING)</em></p><p>▸ I have not been going to the gym lately;<br>▸ She has not been attending her biology classes this semester.</p><p><br><em>HAVE/HAS + SUBJECT + BEEN + VERB (ING)</em></p><p>▸ Has she been studying English for how long now?<br>▸ Have you been feeling bad lately?</p>'},{page:101,topic:'SECOND CONDITIONAL',book:'Blue book',html:'<p><strong>SECOND CONDITIONAL</strong></p><p><em>The second conditional is used for unreal or hypothetical situations in the present or future. To form the second conditional, we use the simple past tense + would, could, might + base verb.</em></p><p>▸ If I were you, I would go to a different school.<br>▸ If she found a million dollars on the street, she might return it to her husband.<br>▸ If she sang better, she could be a famous singer.</p><p>REMEMBER! We use \'were\' as the past of be for all the pronouns.</p>'},{page:103,topic:'Past Modals: Should have </strong▸ Would have*</p><p><strong>Use \'You should have + past participle\' to give a suggestion in the past:',book:'Blue book',html:'<p><strong>Past Modals: Should have </strong▸ Would have*</p><p><strong>Use \'You should have + past participle\' to give a suggestion in the past:</strong><br>▸ You should have called your sister yesterday;<br>▸ She shouldn\'t have walked to her mother like that.</p><p><strong>Use \'I would have + past participle</strong▸ to give an opinion in the past*<br>▸ I would have called your sister;<br>▸ I wouldn\'t have gone to that university.</p>'},{page:107,topic:'REPORTED SPEECH WITH REQUESTS',book:'Blue book',html:'<p><strong>REPORTED SPEECH WITH REQUESTS</strong></p><p><em>Use the reported speech when you\'re talking about a third person\'s request to you or someone else</em></p><p><strong>SAID TO / TOLD ME TO / ASKED ME TO</strong></p><p>▸ Please, arrive earlier to the test - She said to arrive earlier to the test.<br>▸ Don\'t forget your wallet! - He told me not to forget my wallet.<br>▸ Clean the bathroom after dinner - They asked me to clean the bathroom after dinner.</p><p><strong>TIP</strong▸ Remember, in the negative form \'not\' is placed before \'to\'.</p>'},{page:109,topic:'REPORTED SPEECH',book:'Blue book',html:'<p><strong>REPORTED SPEECH</strong></p><p><em>In the reporte speech structure, we move the sentences one tense to the past</em></p><p>I am happy -▸ He said that he was happy<br>I play soccer -▸ He said that he played soccer<br>I am eating sugar -▸ He said that he was eating sugar<br>I will play soccer -▸ He said that he would play soccer<br>I worked yesterday -▸ He said that he had worked yesterday<br>I was an English teacher -▸ He said that he had been an English teacher<br>I can play the piano - He said that he could play the piano.</p><p><strong>RULES</strong></p><p>AM, IS, ARE - WAS/WERE<br>CAN, WILL - COULD, WOULD<br>WORK, PLAY, DO - WORKED, PLAYED, DID<br>SAW, PLAYED, LIKED - HAD SEEN, HAD PLAYED, HAD LIKED.</p><p>🔹 Present → Past</p><p>am/is/are → was/were</p><p>play → played</p><p>am eating → was eating</p><p>🔹 Past → Past Perfect</p><p>saw → had seen</p><p>worked → had worked</p><p>was → had been</p><p>🔹 Modals</p><p>will → would</p><p>can → could</p><p>may → might</p>'}],'lvl3':[{page:6,topic:'IT CLAUSES WITH WHEN',book:'Green book',html:'<p><strong>IT CLAUSES WITH WHEN</strong></p><p><strong>subject + verb + it + when + subject + verb</strong></p><p>▸ She likes it when her husband helps her<br>▸ They hate it when their boss screams at them</p><p><br><strong>It + verb + object (me, us, her...)  +  when + subject + verb</strong></p><p>▸ It annoys me when she is not polite with her friends<br>▸ It bothers her when Jhon doesn\'t help with the housework.</p>'},{page:6,topic:'IT CLAUSES',book:'Green book',html:'<p><strong>IT CLAUSES</strong></p><p><strong>IT + VERB + ME + WHEN...</strong><br>▸ It makes me happy when my friends help me;<br>▸ It upsets me when she screams at me;<br>▸ It irritates me when the room is messy.</p><p><strong>I + VERB + IT + WHEN...</strong><br>▸ I hate it when people are rude;<br>▸ I find it funny when I see people running;<br>: I can\'t stand when people are unfair.</p>'},{page:9,topic:'The verb is the subject of the sentence',book:'Green book',html:'<p><em>Gerunds are formed by placing -ing at the end of a verb. We use gerunds when:</em></p><p><strong>The verb is the subject of the sentence</strong></p><p>▸ Working as a teacher might be stressing;<br>▸ Being tired everyday is concerning;<br>▸ Having too much to do is tiring.</p><p><strong>After prepositions</strong></p><p>▸ He is good at playing golf;<br>▸ He never plays after having a shower;<br>▸ He never eats before praying.</p><p><strong>After the verbs love, enjoy, avoid, like...</strong></p><p>▸ He enjoyed talking to you;<br>▸ She avoids eating chocolate on weekends;<br>▸ They like being alone.</p>'},{page:11,topic:'Page 11',book:'Green book',html:'<p>COMPARISONS:</p><p>WITH ADJECTIVES (QUALITIES)</p><p>▸ She is as beautiful as him.</p><p>▸ She isn\'t as beautiful as him.</p><p>▸ She is more/less beautiful than him.</p><p>WITH VERBS (ACTIONS)</p><p>▸ She plays more/less than him.</p><p>▸ She plays as much as him.</p><p>▸ She doesn\'t play as much as him.</p><p>WITH NOUNS (THINGS WE HAVE)</p><p>▸ She has a/an better/worse job than him.</p><p>WITH PAST PARTICIPLES (VERBS IN THE PAST)</p><p>▸ His job is as well seen as mine.</p><p>▸ Her job isn\'t as well seen as mine.</p><p>▸ Her job is more/less well seen than mine.</p>'},{page:20,topic:'Indirect requests',book:'Green book',html:'<p><strong>Indirect requests</strong></p><p><em>We use indirect requests when we want someone to pass on a message to a third person</em></p><p>1. Statements (information)</p><p><strong>Can/Could you tell + (the person) + (that) + message</strong></p><p>▸ Can you tell Lucas (that) he forgot his shit;<br>▸ Could you tell Ana (that) she will be late to class.</p><p>2. Imperatives (Requests or orders)</p><p><strong>Can/Could you tell + (the person) + (not) + to + message</strong></p><p>▸ Can you tell Marco to bring me my shirt;<br>▸ Could you ask Maria not to open the windows.</p><p>3. Yes/no questions</p><p><strong>Can/could you ask + (the person) + if/whether + subject + verb</strong></p><p>▸ Can you ask Maria if she can play the guitar?<br>▸ Could you ask Lucas if he will help me?<br>▸ Could you ask Dana if she cooks well?</p><p>4. Wh-questions</p><p><strong>Can/could you ask + (the person) + wh-word + subject + verb</strong></p><p>▸ Can you ask Maria where she studies?<br>▸ Can you ask Paulo how he can play the guitar?<br>▸ Could you ask Pedro where he will move to?</p>'},{page:23,topic:'PAST CONTINUOUS',book:'Green book',html:'<p><strong>PAST CONTINUOUS</strong></p><p>The past continuous is used to express an ongoing action in the past.</p><p><strong>STRUCTURE</strong▸ </p><p>▸ SUBJECT + WAS/WERE + VERB(ING); <br>I was drinking water.</p><p>▸ SUBJECT + WAS/WERE + NOT + VERB(ING).<br>I was not drinking water.</p><p>▸ WAS/WERE + SUBJECT + VERB(ING).<br>Was she drinking water?</p><p>OBS.: The past continuous is usually used in contrast with the simple past, to indicate that an action was interrupted.</p><p>▸ I was drinking water when the glass broke.</p><p>▸ She was playing with her brother when her mother arrived.</p>'},{page:25,topic:'THE PAST PERFECT',book:'Green book',html:'<p><strong>THE PAST PERFECT</strong></p><p>The Past Perfect Tense is used to express that an action happened before another action in the past, which means that it is always used in contras with the Simple Past:</p><p>STRUCTURE: I, YOU, HE...+ HAD/HADN\'T + PAST PARTICIPLE</p><p>▸ Before I started doing my homework, I had had a terrible headache;</p><p>▸ When she opened the car she remembered that she hadn\'t brushed her teeth that morning;</p><p>▸ When he opened the door he remembered that he had worked there before.</p><p>▸ When I opened my book, someone had torn it up.</p>'},{page:39,topic:'DESCRIBING PROBLEMS',book:'Green book',html:'<p><strong>DESCRIBING PROBLEMS</strong></p><p><br><strong>Need + verb (-ing)</strong><br>▸ The house needs cleaning;<br>▸ The bathroom needs washing;<br>▸ The sink needs fixing.</p><p><strong>Need + to be + past participle</strong><br>▸ The book needs to be written;<br>▸ The car needs to be fixed;<br>▸ The house needs to be cleaned.</p><p><strong>Keep + verb (-ing)</strong▸ Refere-se a um problema recorrente.<br>▸ The sink keeps leaking;<br>▸ The car keeps making noise;<br>▸ The glass keeps breaking.</p>'},{page:45,topic:'PASSIVE WITH THE CONTINUOUS AND PERFECT TENSE',book:'Green book',html:'<p><strong>PASSIVE WITH THE CONTINUOUS AND PERFECT TENSE</strong></p><p><em>The passive voice is used to give emphasis to the action, not to who is doing it.</em></p><p><strong>PASSIVE WITH THE CONTINUOUS TENSE</strong▸ Emphasizes an action happening at the moment.</p><p>SUBJECT + IS/ARE + BEING + PAST PARTICIPLE</p><p>▸ Many people are being influenced by the internet.<br>▸ Many rivers are being polluted due to industrial action.<br>▸ My friends are being fooled by the dishonest landlord. </p><p><br><strong>PASSIVE WITH THE perfect TENSE</strong▸ Emphasizes an action that has being recently finished.</p><p>SUBJECT + HAVE/HAS + BEEN + PAST PARTICIPLE</p><p>▸ My has been changed due to that man\'s advice.<br>▸ The planet has been contaminated as a result of human actions.</p>'},{page:47,topic:'INFINITIVES',book:'Green book',html:'<p><strong>INFINITIVES</strong></p><p>_The infinitive is the \'original\' form of the verb. In English, the infinite is created by placing \'to\' before the verb.</p><p>(One way/Another way/The best way) + infinitive + is/are + infinitive</p><p>▸ The best way <strong>to save</strong▸ the world <strong>is to raise people\'s awareness</strong>;<br>▸ Another way <strong>to be</strong▸ a successful businessman <strong>is to take</strong▸ a marketing course;</p>'},{page:51,topic:'WOULD RATHER & WOULD PREFER',book:'Green book',html:'<p><strong>WOULD RATHER & WOULD PREFER</strong></p><p><em>would rather and would prefer mean the same thing. Both are used with choices.</em></p><p><strong>would rather + (not) + base form of verb</strong><br>▸ I would rather be a teacher;<br>▸ I would rather play soccer after class;<br>▸ I would rather see the Star Wars movie.</p><p><strong>would prefer + (not) + to + verb</strong><br>▸ I would prefer to be a teacher;<br>▸ I would prefer to play soccer after class;<br>▸ I would prefer to see the Star Wars Movie.</p><p><br>▸ WOULD + YOU + RATHER + VERB?<br>▸ WOULD + YOU + PREFER + TO + VERB?</p>'},{page:59,topic:'GET OR HAVE SOMETHING DONE',book:'Green book',html:'<p><strong>GET OR HAVE SOMETHING DONE</strong></p><p><strong>When another person is doing something for someone, we use the following structure</strong></p><p><em>have/get + object + past participle (at/by)</em></p><p><em>He is fixing his computer - He is having his computer fixed by an IT worker</em></p><p><em>He cleaned his house -▸ He had his house cleaned by his mother</em></p><p><em>He do the dishes everyday -▸ He has the dishes done everyday by his little brother</em></p>'},{page:65,topic:'Referring to time in the past',book:'Green book',html:'<p><strong>Referring to time in the past</strong></p><p><strong>During & in</strong▸ Used to refer to a specific point in the past:</p><p><em>During 2022, the world was going through a tough period</em><br><em>In 2022, the world was going through a tough period</em></p><p><br><strong>Ago</strong▸ Is used to express how many year have passed:</p><p><em>25 years <strong>ago</strong>, my city was totally different from now</em><br><em>I got married 5 years ago</em></p><p><br><strong>From...to...</strong▸ Used to talk about a period of time:</p><p><em>From 1998 to 1999, rock was in its best moment</em><br><em>I worked for that company <strong>from</strong▸ 2002 <strong>to</strong▸ 2004</em></p><p><br><strong>Since</strong▸ Used to give a starting point in the past:</p><p><em>We have been married since 2010</em><br><em>I\'ve worked as salesperson since my twenties</em></p><p><br><strong>For</strong▸ Is used to talk about a full period of time:</p><p><em>I have live in São Paulo for ten years</em><br><em>I\'ve been studying English for five months</em></p>'},{page:67,topic:'will',book:'Green book',html:'<p>Making predictions using the modal verb <strong>will</strong></p><p>Use <strong>Will + base verb</strong▸ to make a simple prediction about the future:</p><p>▸ In the future, I will work at a different company;<br>▸ In a few years, humans will live for 150 years.</p><p>Use <strong>Will + be + verb (-ing)</strong▸ to make predictions of ongoing actions in the future:</p><p>▸ Soon, we will be working in different countries;<br>▸ In the future, humans will be using flying cars.</p><p>Use <strong>Will + have + past participle</strong▸ for actions that will be finished within a certain period of time.</p><p>▸ By 2100, humans will have acchieved many scientific discoveries.</p><p>▸ In 10 years, we will have finished our cycle at this company.</p>'},{page:73,topic:'TIME CLAUSES',book:'Green book',html:'<p><strong>TIME CLAUSES</strong></p><p><em>Use before, until & by the time with the past perfect tense to express actions that happened before another actions in the past</em></p><p>▸ Until I spoke with her, I had never heard such a beautiful voice.</p><p>▸ By the time I arrived home, my wife had already cooked dinner.</p><p>▸ Before her mother called her, she had already washed the dishes.</p><p><em>Use once, the moment & as soon as to talk about an action that happened at the same time of another action in the past</em></p><p>▸ The moment she looked at my, I fell in love;</p><p>▸ As soon as I arrived home, my dog barked at me;</p><p>▸ Once she started working as a teacher, she felt whole for the first time in her life.</p>'},{page:75,topic:'Modal verbs with the Past Tense',book:'Green book',html:'<p><strong>Modal verbs with the Past Tense</strong></p><p><strong>Use Should/Shouldn\'t + have + past participle to express regret about something or someone</strong></p><p>▸ I should have worked more in my younger years;<br>▸ I should have practiced more sports while I could;<br>▸ I shouldn\'t have spoken to her that way, I was rude.</p><p><strong>Use Would/Wouldn\'t + have + past participle to express a hypothetical outcome to an imaginary situation.</strong></p><p>▸ I should have been a better student, this way I would have got a better job;<br>▸ If she had listened to her husband, she wouldn\'t have had so many problems;<br>▸ If I had worked out more, I would have become a fit guy.</p><p><strong>Use Could/Couldn\'t + have + past participle to express a possible outcomes to certain situations</strong></p><p>▸ She could have won the contest!<br>▸ They could have been friends, they were so alike!</p>'},{page:79,topic:'SENTENCES USING INFINITIVES & FOR TO EXPRESS PURPOSE',book:'Green book',html:'<p><strong>SENTENCES USING INFINITIVES & FOR TO EXPRESS PURPOSE</strong></p><p><em>(In order) + to + verb</em><br>▸ In order to be fluent in English, you should study every day.<br>▸ In order to read a big book, you must start by the smaller ones.</p><p><em>(In order) + for + noun + to + verb</em><br>▸ In order for a company to be big, it must invest in its employees.<br>▸ In order for a person to speak well, they must focus on reading out loud.</p>'},{page:81,topic:'GIVING REASONS',book:'Green book',html:'<p><strong>GIVING REASONS</strong></p><p><strong>1. Because and since.</strong></p><p><em>Both mean the same and are followed by a subject + verb</em></p><p>▸ She is happy because \\\\\\<strong>\\</strong>\\<strong>the ocean is\\</strong>\\<strong>\\\\\\</strong▸ calmer today.<br>▸ You are going to be promoted since \\\\\\<strong>\\</strong>\\<strong>you delivered\\</strong>\\<strong>\\\\\\</strong▸ the reports on time.<br>▸ I will help you \\<strong>\\</strong>since/because\\<strong>\\</strong▸ you read the book.<br>▸ It will be time-consuming \\<strong>\\</strong>because/since\\<strong>\\</strong▸ it is difficult</p><p><strong>2. Because of & due to.</strong></p><p><em>Both have the same meaning, but \'due to\' is commonly used for negative contexts. Both are followed by a noun (object or name)</em></p><p>▸ Due to the \\<strong>\\</strong>bad weather\\<strong>\\</strong>, we cannot go.<br>▸ She is tired because of \\<strong>\\</strong>the training session\\<strong>\\</strong>.<br>▸ Due to \\<strong>\\</strong>the loud noise\\<strong>\\</strong▸ I can\'t hear you.<br>▸ I am sad because of the \\<strong>\\</strong>bad food\\<strong>\\</strong>.</p><p><strong>3. The reason that/why ... is ... </strong></p><p><em>It is used to create a polite sentence</em></p><p>▸ \\\\\\<strong>The reason that/why\\\\\\</strong▸ most people don\'t eat here \\\\\\<strong>is\\\\\\</strong▸ the bad service.<br>▸ The difficult course program \\\\\\<strong>is the reason that/why\\\\\\</strong▸ there aren\'t many students.<br>▸ The reason why/that I don\'t go to parties is the noise.<br>▸ The hot weather is the reason that/why I don\'t go to the beach</p><p>Três frases utilizando Because, since, because of, due to & the reason why/that</p>'},{page:101,topic:'MODAL + BE + PAST PARTICIPLE',book:'Green book',html:'<p><strong>MODAL + BE + PAST PARTICIPLE</strong></p><p> 1.  We use should and ought to when we think <br>something is a good idea.</p><p><em>Teachers should be respected</em><br><em>Funkeiros ought to be prohibited from playing loud music</em><br><em>Students should not be late for class</em></p><p> 2.  We use must and have (got) to when we think <br>something is absolutely necessary. Note: It may <br>even be a law.</p><p><em>The world must be taken care of by us</em><br><em>Schools have to be administered better</em></p>'},{page:103,topic:'TAG QUESTIONS -▸ THEY ARE USED WHEN WE WANT TO HAVE SOMEONE ELSE\'S CONFIRMATION AND OPINION. IT IS EQUIVALENT TO "NÉ" OR "NÃO É?" IN PORTUGUESE',book:'Green book',html:'<p><strong>TAG QUESTIONS -▸ THEY ARE USED WHEN WE WANT TO HAVE SOMEONE ELSE\'S CONFIRMATION AND OPINION. IT IS EQUIVALENT TO "NÉ" OR "NÃO É?" IN PORTUGUESE</strong></p><p><em>NOTE: WHEN USING TAG QUESTIONS, IT IS ESSENTIAL TO INVERT THE SENTENCE. IF THE SENTENCE IS AFFIRMATIVE, THE TAG QUESTION MUST BE NEGATIVE, AND IF THE SENTENCE IS NEGATIVE, THE TAG QUESTION HAS TO BE AFFIRMATIVE</em></p><p><br><strong>SENTENCES WITH TO BE:</strong></p><p>SHE <strong>IS</strong▸ A NICE TEACHER" <strong>ISN\'T SHE?</strong></p><p>YOU <strong>ARE NOT</strong▸ REALLY HAPPY TODAY! <strong>ARE YOU?</strong></p><p></p><p><strong>SENTENCES WITH MODALS:</strong></p><p>THEY SHOULD BE MORE POLITE! SHOULDN\'T THEY?</p><p>YOU <strong>CAN\'T</strong▸ SING! <strong>CAN YOU?</strong></p><p></p><p><strong>WITH THE SIMPLE PRESENT</strong▸ USE THE AUXILIAR "DO, DOES"</p><p>SHE TEACHES ENGLISH, <strong>DOESN\'T SHE?</strong></p><p>YOU DON\'T LIKE PIZZA, <strong>DO YOU</strong></p><p></p><p><strong>WITH THE SIMPLE PAST</strong▸ USE THE AUXILIAR "DID"</p><p>SHE FOUND A NEW JOB! <strong>DIDN\'T SHE</strong></p><p>SHE DIDN\'T PASS THE EXAM! <strong>DID SHE?</strong></p>'},{page:107,topic:'Talking about accomplishments using the simple past & present perfect',book:'Green book',html:'<p><strong>Talking about accomplishments using the simple past & present perfect</strong></p><p><em>To talk about some accomplishments in the past, use the verbs "to manage" & "to be able to"</em></p><p><strong>With a definite time in the past use the simple past</strong></p><p>▸ I managed to finish high school last year;<br>▸ She didn\'t manage to pass her exams last semester;<br>: She was able to buy her firs car this year.</p><p><strong>With an indefinite time use the present perfect</strong></p><p>▸ I have managed to finish high school;<br>▸ She hasn\'t managed to pass her exams;<br>▸ She has been able to buy her first car.</p>'},{page:108,topic:'TAG QUESTIONS -▸ THEY ARE USED WHEN WE WANT TO HAVE SOMEONE ELSE CONFIRMATION AND OPINION. IT IS EQUIVALENT TO "NÉ" OR "NÃO É?" IN PORTUGUESE',book:'Green book',html:'<p><strong>TAG QUESTIONS -▸ THEY ARE USED WHEN WE WANT TO HAVE SOMEONE ELSE CONFIRMATION AND OPINION. IT IS EQUIVALENT TO "NÉ" OR "NÃO É?" IN PORTUGUESE</strong></p><p><em>NOTE: WHEN UTILISING TAG QUESTIONS, IT IS ESSENTIAL TO REVERSE THE SENTENCE. IF THE SENTENCE IS AFFIRMATIVE, THE TAG QUESTION SHOULD BE NEGATIVE, AND IF THE SENTENCE IS NEGATIVE, THE TAG QUESTION SHOULD BE AFFIRMATIVE</em></p><p><br><strong>SENTENCES WITH TO BE:</strong></p><p>SHE <strong>IS</strong▸ A NICE TEACHER" <strong>ISN\'T SHE?</strong></p><p>YOU <strong>ARE NOT</strong▸ REALLY HAPPY TODAY! <strong>ARE YOU?</strong></p><p></p><p><strong>SENTENCES WITH MODALS:</strong></p><p>THEY SHOULD BE MORE POLITE! SHOULDN\'T THEY?</p><p>YOU <strong>CAN\'T</strong▸ SING! <strong>CAN YOU?</strong></p><p></p><p><strong>WITH THE SIMPLE PRESENT</strong▸ USE THE AUXILIAR "DO, DOES"</p><p>SHE TEACHES ENGLISH, <strong>DOESN\'T SHE?</strong></p><p>YOU DON\'T LIKE PIZZA, <strong>DO YOU</strong></p><p></p><p><strong>WITH THE SIMPLE PAST</strong▸ USE THE AUXILIAR "DID"</p><p>SHE FOUND A NEW JOB! <strong>DIDN\'T SHE</strong></p><p>SHE DIDN\'T PASS THE EXAM! <strong>DID SHE?</strong></p>'}],'passages1':[{page:11,topic:'Page 11',book:'Passages 1',html:'<p><strong>SHOULD HAVE</strong▸ DEVERIA TER FEITO</p><p><strong>WAS SUPPOSED TO</strong▸ ERA ESPERADO QUE</p><p><strong>HAD TO</strong▸ TINHA QUE (OBRIGAÇÃO)</p><p><strong>DIDN\'T HAVE TO</strong▸ NÃO TINHA QUE (NÃO HAVIA OBRIGAÇÃO)</p><p><strong>I THOUGHT I NEEDED TO</strong▸ (ACHEI QUE PRECISAVA)</p>'},{page:15,topic:'Modals (or modal auxiliaries) express many different meanings or moods.',book:'Passages 1',html:'<p><strong>Modals (or modal auxiliaries) express many different meanings or moods.</strong></p><p>Modals can express degrees of certainty</p><p>What\'s that noise?</p><p>it must be the phone. (almost 100% sure)</p><p>It might / could be the phone. (less than 50% sure)</p><p><strong>Modals can also express obligation, advice, or opinions</strong></p><p><em>You must be on time for the interview. (obligation)</em></p><p><em>it\'s very cold. You should wear a hat. (advice)</em></p><p><em>Everyone should visit Paris once in their life. (opinion)</em></p><p>OBS.: Modals in the present tense are followed by the base form of the verb</p><p>OBS.: Modals + (not) + have + past participle is used to talk about the past.</p><p><em>You keep sneezing You must have caught a cold.</em></p><p><em>You don\'t look well You could have caught a cold.</em></p><p><em>You have a cold. You should take some medicine.</em></p><p><em>You have a cold, but you shouldn\'t take medicine. You should just drink hot tea.</em></p>'},{page:29,topic:'Time clauses with (right) after, (right) before, and while can be reduced, but only when the subject of the time clause and the main clause is the same.',book:'Passages 1',html:'<p><strong>Time clauses with (right) after, (right) before, and while can be reduced, but only when the subject of the time clause and the main clause is the same.</strong></p><p>OBS.: When reducing a time clause, remember to add -ing to the main verb.</p><p><em>While I eat past, I like to drink coke.</em><br><em>While <strong>eating</strong▸ pasta, I like to drink coke.</em></p>'},{page:33,topic:'CLAUSES STATING CAUSING AND CONDITIONS',book:'Passages 1',html:'<p><strong>CLAUSES STATING CAUSING AND CONDITIONS</strong></p><p><strong>Even if</strong▸ Introduces a conditions that doesn\'t affect the main sentence</p><p><em>She is always happy, even if her day is going terrible</em></p><p><br><strong>Considering that</strong▸ Introduces something that explains the main sentence.</p><p>_He is really tired, considering that he worked a lot-</p><p><em>She is always on time, considering that she comes to work by car</em></p><p><br><strong>As long as</strong▸ Introduces something in which the main sentence depends</p><p><em>As long as I study a lot, I will pass the test (Passing the test depends on studying a lot)</em></p><p><em>She is always on time, as long as she is not stuck at the traffic</em></p><p><br><strong>Unless</strong▸ Introduces an idea that must happen in order to avoid a consequence.</p><p><em>Unless i get a good night of sleep, i won\'t wake up happy</em▸ (To avoid waking up bad, he needs a good night of sleep)_</p><p><em>Unless my mom has cooked me lunch, I will be hungry the entire afternoon (If his mother hasn\'t cooked him lunch, he\'ll be hungry)</em></p><p><br><strong>Just in case</strong▸ Introduces a bad event that must be taken care of.</p><p><em>Just in case I fail the test, I am going to clean the entire house for my mother</em></p><p><em>I\'ll study, just in case tomorrow\'s class is to difficult</em></p>'},{page:37,topic:'INFINITE AND GERUND PHRASES',book:'Passages 1',html:'<p><strong>INFINITE AND GERUND PHRASES</strong></p><p><strong>IT + BE + ADJECTIVE + INFINITIVE PHRASES</strong></p><p>👉 <em>It is unpolite to ask for money from people you are not close to</em></p><p>👉 -It is a good idea to take medications when you are felling sick_</p><p>*ALL THE SENTECES ABOVE CAN BE SHIFTED TO A GERUND PHRASE (-ING), JUST PUT THE VERB IN THE -ING AT THE BEGGINING OF THE SENTENCE.</p><p>👉 <em>Asking for money from people you are not close to is unpolite</em></p><p>👉 <em>Taking medications when you are felling sick is a good idea</em></p>'},{page:41,topic:'Simple present - Simple Past',book:'Passages 1',html:'<p>The statement changes to a tense one step in the past:</p><p><strong>Simple present - Simple Past</strong><br><em>I work everyday - he said (that) he worked everyday</em></p><p><strong>Present Continuous - Past continuous</strong><br><em>I am eating a sandwich - He said (that) he was eating a sandwich</em></p><p><strong>Simple Past - Past Perfect</strong><br><em>I drank a lot of water - He said (that) he had drunken a lot of water</em></p><p><strong>Past Continuous - Past Perfect Continuous</strong><br><em>I was calling him - He said (that) he had been calling him</em></p><p><strong>1 OBS.: IN GENERAL TRUTHS, THERE IS NO CHANGE ON THE VERB TENSE</strong></p><p><em>Water boils at one hundred degrees - He said (that) water boils at one hundred degrees.</em></p><p><strong>2 OBS.: In questions, replace do/does with if.</strong></p><p><em>Does he drink a lot of water? - I asked if he drank a lot of water</em></p>'},{page:45,topic:'USE THE SIMPLE PAST WHEN TALKING OF A DEFINITE TIME IN THE PAST',book:'Passages 1',html:'<p><strong>USE THE SIMPLE PAST WHEN TALKING OF A DEFINITE TIME IN THE PAST</strong></p><p><em>I STARTED WORKING AS A LAWYER LAST YEAR</em><br><em>MY MOM YELLED AT MT TODAY</em></p><p><strong>USE THE PRESENT PERFECT WHEN TALKING ABOUT AN EVENT WITHOUT TIME REFERENCES</strong▸ I, YOU, HE, SHE... + HAVE/HAS + PAST PARTICIPLE</p><p><em>I HAVE STARTED TO WORK AS A LAWYER</em><br><em>MY MOM HAS YELLED AT ME</em></p><p><strong>THE PRESENT PERFECT CONTINUOUS IS USED TO TALK ABOUT TEMPORARY SITUATIONS OR ACTIONS THAT ARE NOT YET COMPLETED</strong▸ I, YOU, HE, SHE... + HAVE/HAS + BEEN + VERB (ING)</p><p><em>MY FRIEND HAS BEEN WORKING AS A TEACHER FOR A LONG TIME</em><br><em>I HAVE BEEN TRYING TO FIX THIS PROBLEM ALL DAY</em></p><p><strong>THE PRESENT PERFECTS IS USED TO TALK ABOUT RECENTLY COMPLETED ACTIONS</strong></p><p><em>I\'VE JUST GOT MY FIRST JOB!</em><br><em>I\'VE ALREADY COOKED DINNER</em></p>'},{page:49,topic:'INDICAM AÇÕES QUE OCORREM DEPOIS DE OUTRAS',book:'Passages 1',html:'<p><strong>INDICAM AÇÕES QUE OCORREM DEPOIS DE OUTRAS</strong></p><p><strong>Afterward, Later, The next day + Simple Past Verb</strong></p><p><em>I was going home. Afterward, I fell into a bush</em></p><p><br><strong>INDICAM AÇÕES QUE OCORREM AO MESMO TEMPO DE OUTRAS</strong></p><p><strong>When, as soon as, the moment I got + Simple Past Verb</strong></p><p><em>When I arrived home, my mom called me</em></p><p></p><p><strong>INDICAM AÇÕES QUE OCORREM ANTES DE OUTRAS</strong></p><p><strong>Up until them, Before that, Until that time + Past Perfect Verb</strong></p><p><em>Before that, I had never eaten a good rice</em></p>'},{page:55,topic:'PASSIVE VOICE',book:'Passages 1',html:'<p><strong>PASSIVE VOICE</strong></p><p><strong>The passive voice is used when the subject of the sentence, the person who does the action, is not relevant</strong></p><p><br><strong>PRESENT CONTINOUS PASSIVE</strong▸ Ongoing actions.</p><p>SUJEITO + TO BE + BEING + PAST PARTICIPLE</p><p><em>Several medications are being made recently</em></p><p><em>He is being hired to help the team</em></p><p><br><strong>PRESENT PERFECT PASSIVE</strong▸ Recently completed actions</p><p>SUJEITO + HAVE BEEN + PAST PARTICIPLE</p><p><em>Many trees have been cut recently</em></p><p><em>Many digital books have been produced in the last year</em></p><p><br><strong>WILL OR BE GOING TO PASSIVE</strong▸ Actions that will begin in the future</p><p>WILL + BE + PAST PARTICIPLE / TO BE + GOING TO BE + PAST PARTICIPLE</p><p><em>They will be taken to prison if they keep making crimes</em></p><p><em>They are going to be taken to prison if they keep making crimes</em></p>'},{page:59,topic:'TAG QUESTIONS -▸ THEY ARE USED WHEN WE WANT TO HAVE SOMEONE ELSE CONFIRMATION AND OPINION. IT IS EQUIVALENT TO "NÉ" OR "NÃO É?" IN PORTUGUESE',book:'Passages 1',html:'<p><strong>TAG QUESTIONS -▸ THEY ARE USED WHEN WE WANT TO HAVE SOMEONE ELSE CONFIRMATION AND OPINION. IT IS EQUIVALENT TO "NÉ" OR "NÃO É?" IN PORTUGUESE</strong></p><p><em>NOTE: WHEN USING TAG QUESTIONS, IT IS ESSENTIAL TO REVERSE THE SENTENCE. IF THE SENTENCE IS AFFIRMATIVE, THE TAG QUESTION SHOULD BE NEGATIVE, AND IF THE SENTENCE IS NEGATIVE, THE TAG QUESTION SHOULD BE AFFIRMATIVE</em></p><p><br><strong>SENTENCES WITH TO BE:</strong></p><p>SHE <strong>IS</strong▸ A NICE TEACHER" <strong>ISN\'T SHE?</strong></p><p>YOU <strong>ARE NOT</strong▸ REALLY HAPPY TODAY! <strong>ARE YOU?</strong></p><p></p><p><strong>SENTENCES WITH MODALS:</strong></p><p>THEY SHOULD BE MORE POLITE! SHOULDN\'T THEY?</p><p>YOU <strong>CAN\'T</strong▸ SING! <strong>CAN YOU?</strong></p><p></p><p><strong>WITH THE SIMPLE PRESENT</strong▸ USE THE AUXILIAR "DO, DOES"</p><p>SHE TEACHES ENGLISH, <strong>DOESN\'T SHE?</strong></p><p>YOU DON\'T LIKE PIZZA, <strong>DO YOU</strong></p><p></p><p><strong>WITH THE SIMPLE PAST</strong▸ USE THE AUXILIAR "DID"</p><p>SHE FOUND A NEW JOB! <strong>DIDN\'T SHE</strong></p><p>SHE DIDN\'T PASS THE EXAM! <strong>DID SHE?</strong></p>'},{page:63,topic:'REDUCED RELATIVE CLAUSES',book:'Passages 1',html:'<p><strong>REDUCED RELATIVE CLAUSES</strong></p><p>Relative clauses often begin with a relative pronoun (Who, that, etc). In most cases, these pronouns can be reduced following certain rules:</p><p><strong>In sentences with relative pronoun + to be, drop both.</strong></p><p><em>A person who is able to face all the troubles in life is a happy one</em></p><p><em>A person able to face all the troubles in life is a happy one</em></p><p></p><p><strong>You can also drop the relative pronoun and change the verb to a gerund one</strong></p><p><em>A man that thinks he is strong, knows nothing about force</em></p><p><em>A man thinking he is strong, knows nothing about force</em></p><p></p><p><strong>Replace the verb have using with</strong></p><p><em>A doctor who has many years of experience is a trustworthy one</em></p><p><em>A doctor with many years of experience is a trustworthy one</em></p>'},{page:71,topic:'CONTRAST AND EXCEPTION',book:'Passages 1',html:'<p><strong>CONTRAST AND EXCEPTION</strong></p><p>Begin a sentence with while, unlike, or in contrast to to indicate a contrast between two clauses. (Use commas to separate them)</p><p>▸ Unlike most Brazilians, I am not a big fan of soccer;</p><p>▸ While most people at my class like math, I prefer literature;</p><p>▸ In contrast to the majority of my family, I don\'t like big parties.</p><p><br>Use except that; except for & except for the fact that to create an exception meaning between two clauses. (Use commas to separate them)</p><p>▸ I study everyday, except for days when I am sick;</p><p>▸ My mothers loves to cook, except for the fact that she needs to be in the mood to do so.</p>'},{page:75,topic:'Referring to past habits & states',book:'Passages 1',html:'<p><strong>Referring to past habits & states</strong></p><p><strong>Used to</strong>+ Is used for past habits and states that are no longer true. It works with both action and stative verbs.</p><p>▸ I used to watch cartoons every Saturday morning.<br>▸ She used to have very long hair.</p><p><strong>Would</strong▸ Is used only for repeated past actions (habits), often to sound nostalgic.</p><p><strong>Important: Would cannot be used with stative verbs (verbs that describe a condition or state, not an action).</strong></p><p>▸ Every holiday, my family would travel to the countryside.<br>▸ He would always bring me flowers on my birthday.</p><p><strong>Stative Verbs List</strong><br>A short list of common stative verbs includes:</p><p>▸ love, hate, like, want, need</p><p>▸ have, own, belong</p><p>▸ seem, look, sound</p><p>▸ believe, know, understand, remember</p><p>▸ be, live, exist</p><p>Example:<br>▸ Incorrect: I would live in that small town.<br>▸ Correct: I used to live in that small town.</p>'},{page:81,topic:'COMPLAINING & RELATIVE PRONOUNS IN ENGLISH',book:'Passages 1',html:'<p><strong>COMPLAINING & RELATIVE PRONOUNS IN ENGLISH</strong></p><p><strong>USING THE PRONOUN \'ME\'</strong></p><p><em>Whenever you use \'me\' as part of a complain in English, remember to use the relative pronoun \'that\'.</em></p><p>▸ Something that irritates me is people who/that are rude to servers.<br>▸ One thing that bugs me is the traffic jam.<br>▸ Two thing that make me fell sad are the economical & social situation of that country.</p><p><em>But, when you use \'I\' the relative pronoun \'that\' is optional.</em></p><p>▸ The restaurant (that) I was in was very dirty.<br>▸ Something (that) I hate is the traffic jam.<br>▸ One thing (that) I can\'t stand is people who/that chew out loud.</p><p>Remember!</p><p>THAT - Can be used for people & thigs.<br>WHO - Used only for people.<br>WHICH - Used only for things.<br>WHEN - Used for events or situations.</p>'},{page:85,topic:'Page 85',book:'Passages 1',html:'<p>🔹 Indirect Questions — perguntas indiretas</p><p>Usamos indirect questions para soar mais educado ou mais formal.<br>Elas não invertem o verbo e o sujeito, como as perguntas diretas.<br>Geralmente começam com frases como:<br>👉 I wonder…, Could you tell me…, Do you know…, Is beyond me…</p><p>🗣 Estrutura</p><p>Direta: auxiliar + sujeito + verbo<br>Indireta: sujeito + verbo (ordem de afirmação)</p><p>❌ Why can you play the guitar?<br>✅ I wonder why <strong>you can</strong▸ play the guitar.<br>✅ Why <strong>you can</strong▸ play the guitar is beyond me.</p><p>❓Com perguntas sem WH- (yes/no questions)</p><p>Se a pergunta começa com do/does/did/will, usamos if ou whether. Se o auxiliar for do/does ou did, remova-os.</p><p>❌ Do you like chocolate?<br>✅ I wonder if/whether you like chocolate.</p><p>❌ Will you help me?<br>✅ Could you tell me whether you will help me?</p>'},{page:88,topic:'Page 88',book:'Passages 1',html:'<p>Relative clauses are sentences used to give more information about a person/noun. (Who, that, where)</p><p>▸ My friend is someone who likes to play videogame;</p><p>▸ I hate people that cannot help one another;</p><p>▸ She lives with people who are really annoying;</p><p>▸ My job has many people who are always absent.</p><p>OBS.: When the relative clause referes to the subject of the sentence, it cannot be omitted.</p><p><br>Noun clauses are used to give more information about a verb or adjective (They are used as object of the verb) and more commonly are started with the relative pronoun \'when\'.</p><p>▸ It bothers me when a friend doesn\'t help me when I need (The relative clause is giving more information about the verb \'bother\').</p><p>▸ The thing I hate is when people offend one another (It is giving more information about the verb \'hate\').</p><p>▸ It is really hard when someone is mean to us; (It is giving more information about the adjective \'hard\').</p><p>▸ She gets really stressed when her parents scream at her. (It is giving more information about the phrase \'gets stressed\');</p>'},{page:89,topic:'PRESENT UNREAL CONDITIONALS',book:'Passages 1',html:'<p><strong>PRESENT UNREAL CONDITIONALS</strong></p><p>_The subjunctive is a verb mood used to talk about hypothetical situations. To use it correctly it is important to replace some structures we normally use:</p><p>▸ Replace the different conjugations of the verb to be for \'were\'<br>▸ Replace \'will\' with \'would\'.</p><p><strong>Unless</strong></p><p><em>It is used to express a condition that would change the speakers decision</em></p><p>▸ I would go to the gym unless it were raining really strongly.<br>▸ She would go out you unless her parents said no.</p><p><br><strong>Only if</strong></p><p><em>It is used when a condition needs to be met in order for certain situation to happen</em></p><p>▸ I would play with you only if you knew how to play soccer;<br>▸ They would eat the pizza only if it had no cheese.</p><p><br><strong>Even if</strong></p><p><em>Represents a very contrary situation that wouldn\'t impact the speakers decision</em></p><p>▸ I wouldn\'t apply to college this semester even if I knew I would certainly be accepted;<br>▸ He wouldn\'t obey his parents even if they gave him the best gift ever.</p>'},{page:93,topic:'WISHES AND REGRETS',book:'Passages 1',html:'<p><strong>WISHES AND REGRETS</strong></p><p>To express something you wish in the present use: wish + simple past / past continuous.</p><p><strong>REMEMBER:</strong▸ Can (Could); Will (Would); To be (Were)</p><p>▸ I wish I had a better car;<br>▸ I wish I were richer;<br>▸ I wish I could afford a better car;</p><p><br>To express a regret about the past, use wish + past perfect (Had + past participle)</p><p>▸ I wish I had studied more;<br>▸ I wish I had been a better son;<br>▸ I wish I had driven slowly.</p><p>To express a regret and give a different outcome, use If + past perfect, could / would + have + past participle.</p><p>▸ If I had studied more, I could have become a doctor now;<br>▸ If she had been more patient, she would have got the job;</p>'},{page:97,topic:'FUTURE PERFECT & FUTURE PERFECT CONTINUOUS',book:'Passages 1',html:'<p><strong>FUTURE PERFECT & FUTURE PERFECT CONTINUOUS</strong></p><p><em>The future perfect is used to express the idea that an action will be completed by a specific time into the future. It is forme by using the following structure: will + have + past participle.</em></p><p>▸ By 2035, the world will have become even more advanced in science.<br>▸ By this time next year, I will have finished college.<br>▸ In one month, she will have got/gotten her promotion.</p><p><em>The future perfect continuous is used to express the duration of an action into a specific point into the future. Will + have + been + verb (ing)</em></p><p>▸ By around 6 pm, he will have been studying for 4 hours.<br>▸ In one hour, I will have been waiting for the doctor for around 5 hours.<br>▸ By 2027, she will have been studying English for five years.</p>'},{page:101,topic:'Mixed Conditionals',book:'Passages 1',html:'<p><strong>Mixed Conditionals</strong></p><p><em>Mixed conditionals are used to talk a hypothetical past situation that could have an impact into the present moment. It is formed by using:</em></p><p><strong>IF + YOU, HE,... + HAD/HADN\'T + PAST PARTICIPLE, + YOU, HE, SHE + WOULD/WOULDN\'T + BASE VERB</strong></p><p>▸ If you had been more engaged with the classes, you would be a millionaire today.<br>▸ If she hadn\'t quit her previous job, she would be in a higher position.<br>▸ If they had taken their passport with them, they wouldn\'t be in trouble now.</p><p>TIP: Don\'t forget the comma (,) to separate both clauses.</p>'}],'special':[{page:0,topic:'AFIRMATIVA: SUJEITO + HAVE/HAS + PAST PARTICIPLE',book:'Special',html:'<p>PRESENT PERFECT - UTILIZADO PARA FALAR DE AÇÕES DO PASSADO QUE AINDA TEM RELEVÂNCIA NO PRESENTE, AÇÕES EM UM TEMPO INDEFINIDO NO PASSADO E/OU AÇÕES QUE FORAM CONCLUÍDAS RECENTEMENTE.</p><p><strong>AFIRMATIVA: SUJEITO + HAVE/HAS + PAST PARTICIPLE</strong></p><p><em>MARIA HAS DRUNK A LOT OF WATER (Sem tempo definido)</em></p><p><em>I HAVE JUST BOUGHT A NEW APARTMENT (Ação recentemente concluída)</em></p><p><strong>NEGATIVA: SUJEITO + HAVE/HAS + NOT + PAST PARTICIPLE</strong></p><p><em>SHE HASN\'T FINISHED HER HOMEWORK YET</em></p><p><strong>INTERROGATIVA: HAVE/HAS + SUJEITO + PAST PARTICIPLE</strong></p><p><em>HAVE YOU EVER EATEN JAPANESE FOOD?</em></p>'}]};
+/* ═══════════════════════════════════════════════════
+   BOOKS METADATA — todos os 6 livros do percurso
+   ═══════════════════════════════════════════════════ */
+const BOOKS = [
+  {
+    id: 'intro',
+    series: 'Interchange',
+    seriesIdx: 0,
+    title: 'Interchange Intro',
+    short: 'intro',
+    levelLabel: 'A1 • Beginner',
+    cefr: 'A1',
+    color: '#f59a1e',
+    bgGrad: 'linear-gradient(160deg, #fde68a 0%, #f59e0b 60%, #d97706 100%)',
+    desc: 'Primeiros passos no idioma. Alfabeto, presente simples, verb to be e bases sólidas para iniciar a jornada — com material da série Interchange 5th Edition.',
+    coverNum: 'intro',
+    coverNumClass: 'small',
+    wsKey: 'intro',
+    grammarKey: 'intro',
+    cambridgeYear: 'Experience · Better · Learning'
+  },
+  {
+    id: 'lvl1',
+    series: 'Interchange',
+    seriesIdx: 0,
+    title: 'Interchange 1',
+    short: 'level1',
+    levelLabel: 'A2 • Elementary',
+    cefr: 'A2',
+    color: '#dc2626',
+    bgGrad: 'linear-gradient(160deg, #fca5a5 0%, #ef4444 50%, #b91c1c 100%)',
+    desc: 'Construção de vocabulário cotidiano, present continuous, simple past e práticas de conversação para situações do dia a dia.',
+    coverNum: '1',
+    wsKey: 'level1',
+    grammarKey: 'lvl1',
+    cambridgeYear: 'Experience · Better · Learning'
+  },
+  {
+    id: 'lvl2',
+    series: 'Interchange',
+    seriesIdx: 0,
+    title: 'Interchange 2',
+    short: 'level2',
+    levelLabel: 'B1 • Pre-Intermediate',
+    cefr: 'B1',
+    color: '#2563eb',
+    bgGrad: 'linear-gradient(160deg, #93c5fd 0%, #3b82f6 50%, #1d4ed8 100%)',
+    desc: 'Tempos verbais avançados, present perfect, condicionais, voz passiva e expansão de fluência para temas mais complexos.',
+    coverNum: '2',
+    wsKey: 'level2',
+    grammarKey: 'lvl2',
+    cambridgeYear: 'Experience · Better · Learning'
+  },
+  {
+    id: 'lvl3',
+    series: 'Interchange',
+    seriesIdx: 0,
+    title: 'Interchange 3',
+    short: 'level3',
+    levelLabel: 'B2 • Intermediate',
+    cefr: 'B2',
+    color: '#059669',
+    bgGrad: 'linear-gradient(160deg, #6ee7b7 0%, #10b981 50%, #047857 100%)',
+    desc: 'Past perfect, modais avançados, voz passiva em múltiplos tempos e discussão de temas profissionais e sociais.',
+    coverNum: '3',
+    wsKey: 'level3',
+    grammarKey: 'lvl3',
+    cambridgeYear: 'Experience · Better · Learning'
+  },
+  {
+    id: 'passages',
+    series: 'Passages',
+    seriesIdx: 1,
+    title: 'Passages 1',
+    short: 'passages',
+    levelLabel: 'B2+ • Upper-Intermediate',
+    cefr: 'B2+',
+    color: '#7c3aed',
+    bgGrad: 'linear-gradient(160deg, #c4b5fd 0%, #8b5cf6 50%, #6d28d9 100%)',
+    desc: 'Continuação natural do Interchange. Estruturas mais sofisticadas, condicionais mistos, future perfect e linguagem acadêmica.',
+    coverNum: '1',
+    wsKey: 'passages',
+    grammarKey: 'passages1',
+    cambridgeYear: 'Experience · Better · Learning'
+  },
+  {
+    id: 'evolve',
+    series: 'Evolve',
+    seriesIdx: 2,
+    title: 'Evolve 5 & 6',
+    short: 'evolve',
+    levelLabel: 'C1 • Advanced',
+    cefr: 'C1',
+    color: '#ea580c',
+    bgGrad: 'linear-gradient(160deg, #fdba74 0%, #f97316 50%, #c2410c 100%)',
+    desc: 'Domínio do idioma. Nuances linguísticas, registro formal, vocabulário acadêmico avançado e preparação para Cambridge C1.',
+    coverNum: '5/6',
+    coverNumClass: 'small',
+    wsKey: 'evolve',
+    grammarKey: 'evolve',
+    cambridgeYear: 'Experience · Better · Learning',
+    placeholder: true
+  }
+];
 
-let currentLevel = 'intro';
-let currentView = 'curriculum';
+const SERIES_META = [
+  { idx: 0, name: 'Interchange', subtitle: 'Do iniciante absoluto ao intermediário — base sólida do A1 ao B2.' },
+  { idx: 1, name: 'Passages',    subtitle: 'A ponte entre o Interchange e o domínio avançado do idioma.' },
+  { idx: 2, name: 'Evolve',      subtitle: 'Para alcançar fluência profissional e nuances avançadas.' }
+];
 
-function setLevel(lvl, btn) {
-  currentLevel = lvl;
-  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
-  btn.classList.add('active');
-  render();
+/* ═══════════════════════════════════════════════════
+   STATE
+   ═══════════════════════════════════════════════════ */
+const state = {
+  open: {},          // bookId → { curriculum: bool, worksheets: bool, grammar: bool }
+  search: ''
+};
+
+function ensureOpen(bookId) {
+  if (!state.open[bookId]) state.open[bookId] = { curriculum: false, worksheets: false, grammar: false };
+  return state.open[bookId];
 }
 
-function setView(view, btn) {
-  currentView = view;
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  btn.classList.add('active');
-  ['curriculum','worksheets','examples'].forEach(v => {
-    document.getElementById('view-' + v).style.display = v === view ? '' : 'none';
-  });
-  render();
+/* ═══════════════════════════════════════════════════
+   HELPERS
+   ═══════════════════════════════════════════════════ */
+function escHtml(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+function stripTags(html) { return String(html || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); }
+
+function getCurriculum(book) { return curriculum[book.id] || []; }
+function getGrammar(book) { return (examples[book.grammarKey] || []).slice().sort((a,b) => (a.page||0) - (b.page||0)); }
+function bookCounts(book) {
+  return {
+    units: getCurriculum(book).length,
+    ws: book.placeholder ? 0 : 16,
+    gr: getGrammar(book).length
+  };
 }
 
-function render() {
-  const search = (document.getElementById('searchInput')?.value || '').toLowerCase();
-  if (currentView === 'curriculum') renderCurriculum(search);
-  else if (currentView === 'worksheets') renderWorksheets();
-  else if (currentView === 'examples') renderExamples(search);
+/* ═══════════════════════════════════════════════════
+   RENDER — BOOK COVER (CSS, Cambridge-style)
+   ═══════════════════════════════════════════════════ */
+function renderCover(book) {
+  return `
+    <div class="book-cover" style="background:${book.bgGrad}">
+      <div class="bc-brand">CAMBRIDGE</div>
+      <div class="bc-edition">FIFTH EDITION</div>
+      <div class="bc-title">${book.series === 'Evolve' ? 'evolve' : book.series === 'Passages' ? 'passages' : 'interchange'}</div>
+      <div class="bc-num ${book.coverNumClass || ''}">${book.coverNum}</div>
+      <div class="bc-footer">${book.cambridgeYear}</div>
+    </div>`;
 }
 
-function renderCurriculum(search) {
-  const units = curriculum[currentLevel] || [];
-  const filtered = search ? units.filter(u =>
-    u.t.toLowerCase().includes(search) || u.g.toLowerCase().includes(search) || u.v.toLowerCase().includes(search)
-  ) : units;
-
-  document.getElementById('view-curriculum').innerHTML = '<table class="curr-table"><thead><tr><th>U.</th><th>Unidade</th><th>Vocabulário</th><th>Gramática</th><th>Objetivo</th><th>Writing</th></tr></thead><tbody>' +
-    filtered.map(u => '<tr><td>' + u.u + '</td><td style="font-weight:700;color:var(--navy)">' + u.t + '</td><td>' + u.v + '</td><td><span class="grammar-chip">' + u.g + '</span></td><td style="color:var(--g500)">' + u.o + '</td><td style="color:var(--g400);font-style:italic;font-size:12px">' + u.w + '</td></tr>'
-    ).join('') + '</tbody></table>';
+/* ═══════════════════════════════════════════════════
+   RENDER — SERIES DIVIDER
+   ═══════════════════════════════════════════════════ */
+function renderSeriesDivider(series) {
+  return `
+    <div class="container">
+      <div class="series-divider reveal">
+        <h3>Série <em>${series.name}</em></h3>
+        <p>${series.subtitle}</p>
+      </div>
+    </div>`;
 }
 
-function renderWorksheets() {
-  const levelKey = {'intro':'intro','lvl1':'level1','lvl2':'level2','lvl3':'level3'}[currentLevel];
-  const div = document.getElementById('view-worksheets');
+/* ═══════════════════════════════════════════════════
+   RENDER — ACCORDION SHELL
+   ═══════════════════════════════════════════════════ */
+function renderAccordion(bookId, kind, icon, title, sub, color, bodyHtml, isOpen) {
+  return `
+    <div class="acc-item ${isOpen ? 'open' : ''}" data-book="${bookId}" data-kind="${kind}">
+      <button class="acc-trigger" type="button" onclick="toggleAcc('${bookId}','${kind}')">
+        <span class="acc-trigger-left">
+          <span class="acc-icon-wrap" style="background:${color}22;color:${color}">${icon}</span>
+          <span class="acc-text">
+            <span class="acc-title">${title}</span>
+            <span class="acc-sub">${sub}</span>
+          </span>
+        </span>
+        <span class="acc-arrow">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </span>
+      </button>
+      <div class="acc-body">
+        <div class="acc-body-inner">${bodyHtml}</div>
+      </div>
+    </div>`;
+}
+
+/* ═══════════════════════════════════════════════════
+   RENDER — CURRICULUM CONTENT
+   ═══════════════════════════════════════════════════ */
+function renderCurriculumBody(book) {
+  const units = getCurriculum(book);
+  if (!units.length) {
+    return `<div class="empty"><div class="empty-icon">📚</div><p>Currículo detalhado para <strong>${escHtml(book.title)}</strong> em construção.<br>Em breve disponível.</p></div>`;
+  }
+  const search = state.search;
+  const filtered = search
+    ? units.filter(u => (u.t+u.g+u.v+u.o+u.w).toLowerCase().includes(search))
+    : units;
+  if (!filtered.length) {
+    return `<div class="empty"><div class="empty-icon">🔍</div><p>Nenhuma unidade encontrada para "${escHtml(search)}".</p></div>`;
+  }
+  return '<div class="curr-grid">' + filtered.map(u => `
+    <div class="curr-row">
+      <div class="curr-num" style="background:${book.color}">${u.u}</div>
+      <div class="curr-content">
+        <div class="curr-title">${escHtml(u.t)}</div>
+        <div class="curr-meta">
+          <div class="curr-meta-row">
+            <span class="curr-meta-key">Vocabulário</span>
+            <span class="curr-meta-val">${escHtml(u.v)}</span>
+          </div>
+          <div class="curr-meta-row">
+            <span class="curr-meta-key">Gramática</span>
+            <span class="curr-meta-val"><span class="chip" style="background:${book.color}1a;color:${book.color}">${escHtml(u.g)}</span></span>
+          </div>
+          <div class="curr-meta-row">
+            <span class="curr-meta-key">Objetivo</span>
+            <span class="curr-meta-val">${escHtml(u.o)}</span>
+          </div>
+          <div class="curr-meta-row">
+            <span class="curr-meta-key">Writing</span>
+            <span class="curr-meta-val" style="font-style:italic;color:var(--g500)">${escHtml(u.w)}</span>
+          </div>
+        </div>
+      </div>
+    </div>`).join('') + '</div>';
+}
+
+/* ═══════════════════════════════════════════════════
+   RENDER — WORKSHEETS CONTENT
+   ═══════════════════════════════════════════════════ */
+function renderWorksheetsBody(book) {
+  if (book.placeholder) {
+    return `<div class="coming-soon"><h4>Worksheets em produção</h4><p>Os PDFs originais para ${escHtml(book.title)} ainda estão sendo desenvolvidos pela coordenação.</p></div>`;
+  }
   let cards = '';
   for (let i = 1; i <= 16; i++) {
-    const path = STORAGE + '/' + levelKey + '/unit-' + String(i).padStart(2,'0') + '.pdf';
-    const levelNames = {'intro':'Intro','lvl1':'Level 1','lvl2':'Level 2','lvl3':'Level 3'};
-    cards += '<div class="ws-card"><div class="ws-unit">' + i + '</div><div class="ws-label">Unit ' + i + ' • ' + (levelNames[currentLevel]||'') + '</div><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center"><a href="' + path + '" target="_blank" class="ws-dl">📥 Baixar</a><button onclick="navigator.clipboard.writeText(\'' + path + '\').then(()=>showToast(\'Link copiado!\'));event.stopPropagation()" style="padding:8px 12px;border-radius:8px;background:var(--navy);color:#fff;font-size:12px;font-weight:700;border:none;cursor:pointer;transition:all 0.2s" onmouseover="this.style.background=\'var(--blue)\'" onmouseout="this.style.background=\'var(--navy)\'">🔗 Copiar</button></div></div>';
+    const path = `${STORAGE}/${book.wsKey}/unit-${String(i).padStart(2,'0')}.pdf`;
+    cards += `
+      <div class="ws-card" style="--book-color:${book.color}">
+        <div class="ws-card-icon">${i}</div>
+        <div class="ws-label">Unit ${i} • ${escHtml(book.title)}</div>
+        <div class="ws-actions">
+          <a href="${path}" target="_blank" class="ws-dl" rel="noopener">📥 Baixar</a>
+          <button class="ws-copy" type="button" onclick="copyLink(this, '${path}')">🔗 Copiar</button>
+        </div>
+      </div>`;
   }
-  div.innerHTML = '<p style="font-size:14px;color:var(--g500);margin-bottom:20px">Worksheets originais da EA English Classes — um PDF por unidade.</p><div class="ws-grid">' + cards + '</div>';
+  return `<p style="font-size:13px;color:var(--g500);margin-bottom:18px;line-height:1.6">PDFs originais da EA English Classes — uma worksheet por unidade. <span style="color:var(--g400)">(Os links abrem em nova aba.)</span></p><div class="ws-grid">${cards}</div>`;
 }
 
-function renderExamples(search) {
-  const items = examples[currentLevel] || [];
-  const filtered = (search ? items.filter(ex =>
-    ex.topic.toLowerCase().includes(search) || ex.html.toLowerCase().includes(search)
-  ) : items).sort((a,b) => a.page - b.page);
-
-  const div = document.getElementById('view-examples');
-  if (!filtered.length) {
-    div.innerHTML = '<div style="text-align:center;padding:48px;color:var(--g400)"><p style="font-size:48px;margin-bottom:12px;opacity:0.3">💡</p><p>Nenhum exemplo encontrado' + (search ? ' para "' + search + '"' : ' para este nível') + '.</p></div>';
-    return;
+/* ═══════════════════════════════════════════════════
+   RENDER — GRAMMAR CARDS CONTENT
+   ═══════════════════════════════════════════════════ */
+function renderGrammarBody(book) {
+  const items = getGrammar(book);
+  if (!items.length) {
+    return `<div class="empty"><div class="empty-icon">💡</div><p>Tópicos gramaticais para <strong>${escHtml(book.title)}</strong> em produção.</p></div>`;
   }
-
-  div.innerHTML = '<p style="font-size:14px;color:var(--g500);margin-bottom:20px">Explicações gramaticais em português — clique para expandir.</p><div class="ex-grid">' +
+  const search = state.search;
+  const filtered = search
+    ? items.filter(ex => (ex.topic + ' ' + stripTags(ex.html)).toLowerCase().includes(search))
+    : items;
+  if (!filtered.length) {
+    return `<div class="empty"><div class="empty-icon">🔍</div><p>Nenhum tópico gramatical encontrado para "${escHtml(search)}".</p></div>`;
+  }
+  return `<p style="font-size:13px;color:var(--g500);margin-bottom:18px;line-height:1.6">${filtered.length} tópico${filtered.length>1?'s':''} de gramática — clique para abrir o card explicativo.</p><div class="gr-grid">` +
     filtered.map((ex, idx) => {
-      const preview = ex.html.replace(/<[^>]*>/g, '').substring(0, 120);
-      return '<div class="ex-card" onclick="showExample(' + idx + ')"><div class="ex-header"><div class="ex-page-num">' + ex.page + '</div><div class="ex-header-text"><div class="ex-topic">' + ex.topic + '</div><div class="ex-book-label">' + ex.book + ' — Página ' + ex.page + '</div></div></div><div class="ex-preview">' + preview + '...</div><div class="ex-footer">Clique para ver completo →</div></div>';
+      const realIdx = items.indexOf(ex);
+      const preview = stripTags(ex.html).substring(0, 140);
+      const cleanTopic = ex.topic.replace(/<[^>]*>/g, '').substring(0, 110);
+      return `
+        <div class="gr-card" style="--book-color:${book.color}" onclick="showGrammar('${book.id}', ${realIdx})">
+          <div class="gr-page-pill">p. ${ex.page}</div>
+          <div class="gr-head">
+            <div class="gr-eyebrow">${escHtml(ex.book)}</div>
+            <div class="gr-topic">${escHtml(cleanTopic)}</div>
+          </div>
+          <div class="gr-preview">${escHtml(preview)}…</div>
+          <div class="gr-foot">
+            <span>Abrir explicação</span>
+            <span class="gr-foot-arrow">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </span>
+          </div>
+        </div>`;
     }).join('') + '</div>';
 }
 
-function showExample(idx) {
-  const items = examples[currentLevel] || [];
-  const search = (document.getElementById('searchInput')?.value || '').toLowerCase();
-  const filtered = search ? items.filter(ex =>
-    ex.topic.toLowerCase().includes(search) || ex.html.toLowerCase().includes(search)
-  ) : items;
+/* ═══════════════════════════════════════════════════
+   RENDER — BOOK SECTION
+   ═══════════════════════════════════════════════════ */
+function renderBookSection(book, idx) {
+  const op = ensureOpen(book.id);
+  const counts = bookCounts(book);
+  const reverse = idx % 2 === 1;
+  return `
+    <section class="book-section reveal" id="book-${book.id}">
+      <div class="container">
+        <div class="book-row ${reverse ? 'reverse' : ''}">
+          <div class="book-cover-wrap">
+            ${renderCover(book)}
+          </div>
+          <div class="book-info">
+            <div class="book-series-tag" style="background:${book.color}15;color:${book.color}">${escHtml(book.series)}</div>
+            <h2 class="book-name">${escHtml(book.title)}</h2>
+            <div class="book-level">
+              <span class="book-level-dot" style="background:${book.color}"></span>
+              ${escHtml(book.levelLabel)}
+            </div>
+            <p class="book-desc">${escHtml(book.desc)}</p>
 
-  const ex = filtered[idx];
+            <div class="book-quick">
+              <div class="book-quick-item">
+                <div class="book-quick-icon" style="background:${book.color}15;color:${book.color}">📋</div>
+                <div>
+                  <div class="book-quick-num">${counts.units || '—'}</div>
+                  <div class="book-quick-lbl">Unidades</div>
+                </div>
+              </div>
+              <div class="book-quick-item">
+                <div class="book-quick-icon" style="background:${book.color}15;color:${book.color}">📄</div>
+                <div>
+                  <div class="book-quick-num">${counts.ws || '—'}</div>
+                  <div class="book-quick-lbl">Worksheets</div>
+                </div>
+              </div>
+              <div class="book-quick-item">
+                <div class="book-quick-icon" style="background:${book.color}15;color:${book.color}">💡</div>
+                <div>
+                  <div class="book-quick-num">${counts.gr || '—'}</div>
+                  <div class="book-quick-lbl">Gramáticas</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="acc-group">
+              ${renderAccordion(book.id, 'curriculum', '📋',
+                `Currículo Pedagógico — ${counts.units || '0'} ${counts.units === 1 ? 'unidade' : 'unidades'}`,
+                'Plano completo da apostila: vocabulário, gramática, objetivo e writing por unidade.',
+                book.color,
+                op.curriculum ? renderCurriculumBody(book) : '',
+                op.curriculum)}
+
+              ${renderAccordion(book.id, 'worksheets', '📄',
+                `Worksheets EA — ${book.placeholder ? 'em breve' : '16 PDFs'}`,
+                'PDFs originais produzidos pela escola — um por unidade.',
+                book.color,
+                op.worksheets ? renderWorksheetsBody(book) : '',
+                op.worksheets)}
+
+              ${renderAccordion(book.id, 'grammar', '💡',
+                `Gramática Explicada — ${counts.gr || '0'} tópico${counts.gr === 1 ? '' : 's'}`,
+                'Explicações em português com exemplos. Clique no card para abrir.',
+                book.color,
+                op.grammar ? renderGrammarBody(book) : '',
+                op.grammar)}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>`;
+}
+
+/* ═══════════════════════════════════════════════════
+   RENDER — FULL PAGE
+   ═══════════════════════════════════════════════════ */
+function renderAll() {
+  const root = document.getElementById('bookSections');
+  let html = '';
+  let lastSeries = -1;
+  BOOKS.forEach((book, idx) => {
+    if (book.seriesIdx !== lastSeries) {
+      html += renderSeriesDivider(SERIES_META[book.seriesIdx]);
+      lastSeries = book.seriesIdx;
+    }
+    html += renderBookSection(book, idx);
+  });
+  root.innerHTML = html;
+
+  // Re-observe reveals for newly inserted nodes
+  initReveals();
+}
+
+/* Re-render JUST the body content of a single accordion */
+function refreshAccBody(bookId, kind) {
+  const wrap = document.querySelector(`.acc-item[data-book="${bookId}"][data-kind="${kind}"]`);
+  if (!wrap) return;
+  const inner = wrap.querySelector('.acc-body-inner');
+  if (!inner) return;
+  const book = BOOKS.find(b => b.id === bookId);
+  if (!book) return;
+  const op = ensureOpen(bookId);
+  let body = '';
+  if (op[kind]) {
+    if (kind === 'curriculum') body = renderCurriculumBody(book);
+    else if (kind === 'worksheets') body = renderWorksheetsBody(book);
+    else if (kind === 'grammar') body = renderGrammarBody(book);
+  }
+  inner.innerHTML = body;
+}
+
+/* ═══════════════════════════════════════════════════
+   INTERACTIONS
+   ═══════════════════════════════════════════════════ */
+function toggleAcc(bookId, kind) {
+  const op = ensureOpen(bookId);
+  const wrap = document.querySelector(`.acc-item[data-book="${bookId}"][data-kind="${kind}"]`);
+  if (!wrap) return;
+  if (op[kind]) {
+    op[kind] = false;
+    wrap.classList.remove('open');
+  } else {
+    op[kind] = true;
+    refreshAccBody(bookId, kind);
+    wrap.classList.add('open');
+  }
+}
+
+function showGrammar(bookId, idx) {
+  const book = BOOKS.find(b => b.id === bookId);
+  if (!book) return;
+  const items = getGrammar(book);
+  const ex = items[idx];
   if (!ex) return;
-
-  document.getElementById('exModalTitle').textContent = ex.topic;
-  document.getElementById('exModalMeta').innerHTML = '<span style="background:var(--navy);color:#fff;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:700;margin-right:8px">Página ' + ex.page + '</span> ' + ex.book;
+  document.getElementById('exModalHead').style.setProperty('--modal-color', book.color);
+  document.getElementById('exModalEyebrow').textContent = `${book.title} · Gramática`;
+  document.getElementById('exModalTitle').textContent = ex.topic.replace(/<[^>]*>/g, '').substring(0, 200);
+  document.getElementById('exModalMeta').innerHTML = `📖 ${escHtml(ex.book)} &nbsp;·&nbsp; Página ${ex.page}`;
   document.getElementById('exModalContent').innerHTML = ex.html;
   document.getElementById('exModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  document.getElementById('exModal').classList.remove('open');
+  document.body.style.overflow = '';
 }
 
-render();
-</script>
-
-<script>
+function copyLink(btn, link) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(link).then(() => showToast('Link copiado!'));
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = link; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('Link copiado!');
+  }
+}
 function showToast(msg) {
-  const t = document.createElement('div');
-  t.style.cssText = 'position:fixed;top:20px;right:20px;z-index:9999;padding:14px 24px;border-radius:12px;font-size:14px;font-weight:600;color:#fff;background:#10b981;box-shadow:0 8px 24px rgba(0,0,0,0.2);transition:all 0.4s;opacity:0;transform:translateY(-10px)';
+  const t = document.getElementById('toast');
   t.textContent = msg;
-  document.body.appendChild(t);
-  requestAnimationFrame(()=>{t.style.opacity='1';t.style.transform='translateY(0)'});
-  setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),400)},2000);
+  t.classList.add('show');
+  clearTimeout(window._toastT);
+  window._toastT = setTimeout(() => t.classList.remove('show'), 2000);
 }
+
+let searchTimer = null;
+function onSearch() {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => {
+    state.search = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+    // Refresh open accordions only
+    BOOKS.forEach(book => {
+      const op = ensureOpen(book.id);
+      ['curriculum','worksheets','grammar'].forEach(k => { if (op[k]) refreshAccBody(book.id, k); });
+    });
+    // If search has matches, auto-expand the relevant accordions for visibility
+    if (state.search) autoExpandMatches();
+  }, 180);
+}
+
+function autoExpandMatches() {
+  const s = state.search;
+  if (!s) return;
+  BOOKS.forEach(book => {
+    const op = ensureOpen(book.id);
+    const units = getCurriculum(book);
+    const grams = getGrammar(book);
+    const hasCurr = units.some(u => (u.t+u.g+u.v+u.o+u.w).toLowerCase().includes(s));
+    const hasGr = grams.some(ex => (ex.topic + ' ' + stripTags(ex.html)).toLowerCase().includes(s));
+    if (hasCurr && !op.curriculum) {
+      op.curriculum = true;
+      const wrap = document.querySelector(`.acc-item[data-book="${book.id}"][data-kind="curriculum"]`);
+      if (wrap) { refreshAccBody(book.id, 'curriculum'); wrap.classList.add('open'); }
+    }
+    if (hasGr && !op.grammar) {
+      op.grammar = true;
+      const wrap = document.querySelector(`.acc-item[data-book="${book.id}"][data-kind="grammar"]`);
+      if (wrap) { refreshAccBody(book.id, 'grammar'); wrap.classList.add('open'); }
+    }
+  });
+}
+
+/* ═══════════════════════════════════════════════════
+   STATS
+   ═══════════════════════════════════════════════════ */
+function computeStats() {
+  let units = 0, ws = 0, gr = 0;
+  BOOKS.forEach(b => {
+    const c = bookCounts(b);
+    units += c.units; ws += c.ws; gr += c.gr;
+  });
+  document.getElementById('stat-units').textContent = units;
+  document.getElementById('stat-ws').textContent = ws;
+  document.getElementById('stat-gr').textContent = gr;
+}
+
+/* ═══════════════════════════════════════════════════
+   REVEALS + NAV SCROLL + JOURNEY SMOOTH
+   ═══════════════════════════════════════════════════ */
+let revealObserver = null;
+function initReveals() {
+  if (revealObserver) revealObserver.disconnect();
+  revealObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+}
+
+function bindJourneyScroll() {
+  document.querySelectorAll('a[href^="#book-"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const t = document.querySelector(a.getAttribute('href'));
+      if (t) {
+        e.preventDefault();
+        window.scrollTo({ top: t.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' });
+      }
+    });
+  });
+}
+
+/* ═══════════════════════════════════════════════════
+   INIT
+   ═══════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  renderAll();
+  computeStats();
+  bindJourneyScroll();
+  initReveals();
+
+  window.addEventListener('scroll', () => {
+    document.getElementById('nav')?.classList.toggle('scrolled', window.scrollY > 30);
+  }, { passive: true });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal();
+  });
+});
 </script>
 </body>
 </html>

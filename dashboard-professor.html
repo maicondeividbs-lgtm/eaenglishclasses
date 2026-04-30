@@ -937,8 +937,9 @@ async function submitXtra(){
   var labels={replacement:'Reposição',meeting:'Reunião pedagógica',note:'Observação'};
   var dbType=type==='meeting'?'note':type;
   try{
-    console.log('Creating event: day='+day+' hour='+hour+' date='+date+' type='+dbType);
-    await addScheduleEvent(null,currentUser.id,date,dbType,(labels[type]||type)+(notes?' — '+notes:''),currentUser.id,student||'Geral',parseInt(day),hour+':00');
+    var gridTag='[GRID:'+day+':'+hour+']';
+    console.log('Creating event:',gridTag,'date='+date,'type='+dbType);
+    await addScheduleEvent(null,currentUser.id,date,dbType,gridTag+' '+(labels[type]||type)+(notes?' — '+notes:''),currentUser.id,student||'Geral');
     popSnd();closePopup();showToast('Evento registrado!');loadSchedule();
   }catch(e){showToast('Erro: '+e.message,'error');}
 }
@@ -969,14 +970,13 @@ async function loadSchedule(){
     }
   }
 
-  // Map events by day_of_week (using replacement_day field)
+  // Map events to grid cells (parse [GRID:day:hour] from notes)
   var evtsByDay={};
   for(var ei=0;ei<evts.length;ei++){
     var ev=evts[ei];
-    var evDay=ev.replacement_day!==null?parseInt(ev.replacement_day):-1;
-    var evTime=ev.replacement_time||'';
-    if(evDay>=0&&evTime){
-      var key=evTime.substring(0,5)+'-'+evDay;
+    var gm=(ev.notes||'').match(/\[GRID:(\d+):([\d:]+)\]/);
+    if(gm){
+      var key=gm[2]+'-'+gm[1];
       if(!evtsByDay[key])evtsByDay[key]=[];
       evtsByDay[key].push(ev);
     }
@@ -1039,7 +1039,7 @@ async function loadProfEvents(){
     var textColor=isCancellation?'#991b1b':'#1e40af';
     h+='<div style="display:flex;align-items:center;gap:14px;padding:14px 18px;background:'+bgColor+';border:1px solid '+borderColor+';border-radius:12px;margin-bottom:8px">'+
       '<div style="font-size:20px">'+icon+'</div>'+
-      '<div style="flex:1"><div style="font-weight:700;color:'+textColor+';font-size:13px">'+(e.student_name||'Geral')+'</div><div style="font-size:12px;color:var(--g500)">'+formatDate(e.event_date)+' — '+(e.notes||'')+'</div></div>'+
+      '<div style="flex:1"><div style="font-weight:700;color:'+textColor+';font-size:13px">'+(e.student_name||'Geral')+'</div><div style="font-size:12px;color:var(--g500)">'+formatDate(e.event_date)+' — '+((e.notes||'').replace(/\[GRID:[^\]]+\]\s*/,''))+'</div></div>'+
       '<button onclick="delEv('+e.id+')" style="border:none;background:rgba(0,0,0,0.05);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:12px">✕</button></div>';
   }
   div.innerHTML=h;

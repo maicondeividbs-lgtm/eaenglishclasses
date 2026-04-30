@@ -737,7 +737,21 @@ body { background: var(--g50); margin: 0; }
       <div class="section" id="sec-writing" style="display:none"></div>
       <div class="section" id="sec-pronunciation-coord" style="display:none"></div>
 
-<div class="section" id="sec-assessments-coord">
+<div class="section" id="sec-messages">
+        <h2>📩 Mensagem para Professor</h2>
+        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Envie mensagens diretas para professores específicos.</p>
+        <div class="form-card" style="margin-bottom:16px">
+          <div class="f-group"><label>Professor</label><select id="msgTeacher"><option value="">Selecione o professor</option></select></div>
+          <div class="f-group"><label>Mensagem</label><textarea id="msgContent" rows="3" placeholder="Escreva a mensagem..."></textarea></div>
+          <button class="btn-send" onclick="sendMsg()">Enviar Mensagem</button>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">Mensagens Enviadas</div></div>
+          <div id="msgList"><div class="empty-state"><div class="empty-icon">📩</div><p>Nenhuma mensagem.</p></div></div>
+        </div>
+      </div>
+
+      <div class="section" id="sec-assessments-coord">
         <h2 style="font-size:22px;font-weight:800;color:var(--navy);margin-bottom:8px">📄 Supervisão de Assessments</h2>
         <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Relatórios mensais enviados pelos professores.</p><div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;align-items:center;background:#fff;padding:16px 20px;border-radius:14px;border:1px solid var(--g100)">
           <span style="font-size:13px;font-weight:700;color:var(--navy)">Filtrar por professor:</span>
@@ -984,6 +998,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function loadTeachersDropdown() {
   const teachers = await getAllTeachers();
   const el = document.getElementById('msgTeacher');
+  if (!el) return;
   el.innerHTML = '<option value="">Selecione o professor</option>';
   teachers.forEach(t => {
     el.innerHTML += '<option value="' + t.id + '">' + t.full_name + '</option>';
@@ -1555,12 +1570,13 @@ async function loadCoordSchedule(){
     for(var r=1;r<span;r++){if(hIdx+r<C_HOURS.length)occupied[(hIdx+r)+'-'+s.day_of_week]=true;}
   }
 
-  // Map events to grid cells
+  // Map events to grid cells (parse [GRID:day:hour] from notes)
   var evtMap={};
   for(var ei=0;ei<evts.length;ei++){
     var ev=evts[ei];
-    if(ev.replacement_day!==null&&ev.replacement_time){
-      var key=ev.replacement_time.substring(0,5)+'-'+ev.replacement_day;
+    var gm=(ev.notes||'').match(/\[GRID:(\d+):([\d:]+)\]/);
+    if(gm){
+      var key=gm[2]+'-'+gm[1];
       if(!evtMap[key])evtMap[key]=[];
       evtMap[key].push(ev);
     }

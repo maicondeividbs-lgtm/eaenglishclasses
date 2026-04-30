@@ -1512,7 +1512,7 @@ async function loadCoordSchedule(){
   // Load events for grid overlay
   var mi=document.getElementById('schedCoordMonth').value;
   var evts=[];
-  if(mi){var p=mi.split('-');evts=await getScheduleEvents(cTeacherId,parseInt(p[1]),parseInt(p[0]));}
+  if(mi){var p=mi.split('-');evts=await getScheduleEvents(cTeacherId,parseInt(p[1]),parseInt(p[0]));console.log('Coord events loaded:',evts.length,'events. With grid data:',evts.filter(function(e){return e.replacement_day!==null}).length);}
 
   // Build occupied map for rowspan
   var occupied={};

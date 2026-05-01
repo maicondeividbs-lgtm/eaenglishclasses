@@ -201,9 +201,9 @@
     <div class="contato-grid">
       <div class="contato-form-card">
         <h3>📅 Agendar Nivelamento Grátis</h3>
-        <p class="subtitle">Preencha seus dados e nossa coordenação entrará em contato.</p>
+        <p class="subtitle">Preencha seus dados. Você será direcionado para o WhatsApp da coordenação.</p>
         <div id="successMsg" style="display:none;padding:16px;background:#d1fae5;border:2px solid #10b981;border-radius:12px;color:#065f46;font-weight:600;text-align:center;margin-bottom:16px">
-          ✅ Agendamento enviado com sucesso!<br><span style="font-weight:400;font-size:13px">Nossa coordenação entrará em contato em até 24h. Enquanto isso, siga-nos no <a href="https://www.instagram.com/contatoea" target="_blank" style="color:#065f46;font-weight:700">Instagram @contatoea</a>.</span>
+          ✅ Solicitação enviada com sucesso!<br><span style="font-weight:400;font-size:13px">Você será redirecionado para o WhatsApp. Caso não abra automaticamente, <a href="https://wa.me/5511978388843" target="_blank" style="color:#065f46;font-weight:700">clique aqui</a>.</span>
         </div>
         <div id="errorMsg" style="display:none;padding:16px;background:#fee2e2;border:2px solid #ef4444;border-radius:12px;color:#991b1b;font-weight:600;text-align:center;margin-bottom:16px"></div>
         <form id="placementForm">
@@ -216,18 +216,18 @@
         </div>
         <div class="form-group"><label>Qual é seu nível atual?</label><select id="flevel"><option>Nunca estudei inglês</option><option>Básico — sei frases simples</option><option>Intermediário — converso com dificuldade</option><option>Avançado — já tenho fluência</option><option>Não tenho certeza</option></select></div>
         <div class="form-group"><label>Mensagem (opcional)</label><textarea rows="3" id="fmessage" placeholder="Conte-nos seus objetivos com o inglês..."></textarea></div>
-        <button type="submit" id="submitBtn" class="btn btn-primary btn-full btn-lg" style="margin-top:12px">Agendar Teste Gratuito</button></form>
+        <button type="submit" id="submitBtn" class="btn btn-primary btn-full btn-lg" style="margin-top:12px">Enviar via WhatsApp 📱</button></form>
       </div>
       <div class="contato-info">
         <div class="info-card">
           <h4>📍 Informações</h4>
           <div class="info-item">
             <div class="info-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="#f36b2e"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
-            <div class="info-text"><strong>E-mail</strong><br>contato@eaenglish.com.br</div>
+            <div class="info-text"><strong>E-mail</strong><br><a href="mailto:eaenglished@gmail.com" style="color:var(--navy);text-decoration:none">eaenglished@gmail.com</a></div>
           </div>
           <div class="info-item">
             <div class="info-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="#f36b2e"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8.9-.9 1.1-.2.2-.3.2-.6.1-1.8-.9-3-1.6-4.2-3.6-.3-.5.3-.5.9-1.6.1-.2 0-.4 0-.5s-.7-1.6-.9-2.2c-.2-.6-.5-.5-.7-.5H8c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3 1.8.8 2.5.8 3.4.7.5-.1 1.8-.7 2-1.5.3-.8.3-1.4.2-1.5z"/></svg></div>
-            <div class="info-text"><strong>WhatsApp</strong><br>(11) 9xxxx-xxxx</div>
+            <div class="info-text"><strong>WhatsApp</strong><br><a href="https://wa.me/5511978388843" target="_blank" style="color:var(--orange);font-weight:700;text-decoration:none">(11) 97838-8843</a></div>
           </div>
           <div class="info-item">
             <div class="info-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="#f36b2e"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></div>
@@ -317,35 +317,64 @@ document.addEventListener('DOMContentLoaded', () => {
       errorMsg.style.display = 'none';
       successMsg.style.display = 'none';
 
-      try {
-        const formData = {
-          fullName: document.getElementById('fname').value.trim(),
-          email: document.getElementById('femail').value.trim(),
-          phone: document.getElementById('fphone').value.trim(),
-          preferredDate: document.getElementById('fdate').value || null,
-          preferredTime: document.getElementById('ftime').value || null,
-          currentLevel: document.getElementById('flevel').value,
-          message: document.getElementById('fmessage')?.value.trim() || null
-        };
+      const fullName = document.getElementById('fname').value.trim();
+      const email = document.getElementById('femail').value.trim();
+      const phone = document.getElementById('fphone').value.trim();
+      const date = document.getElementById('fdate').value || 'A combinar';
+      const time = document.getElementById('ftime').value || 'A combinar';
+      const level = document.getElementById('flevel').value;
+      const message = document.getElementById('fmessage')?.value.trim() || '';
 
-        await submitPlacementTest(formData);
-        
-        successMsg.style.display = 'block';
-        form.reset();
-        
-        // Scroll to success message
-        successMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        
-      } catch (err) {
-        console.error('Error:', err);
-        errorMsg.textContent = 'Ocorreu um erro ao enviar. Tente novamente.';
-        errorMsg.style.display = 'block';
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Agendar Teste Gratuito';
-      }
+      // Build WhatsApp message
+      const wppText = encodeURIComponent(
+        '🎓 *Nova Solicitação de Aula Experimental*\n\n' +
+        '👤 *Nome:* ' + fullName + '\n' +
+        '📧 *E-mail:* ' + email + '\n' +
+        '📱 *WhatsApp:* ' + phone + '\n' +
+        '📅 *Data preferida:* ' + date + '\n' +
+        '⏰ *Horário:* ' + time + '\n' +
+        '📊 *Nível:* ' + level + '\n' +
+        (message ? '💬 *Mensagem:* ' + message + '\n' : '') +
+        '\n_Enviado pelo site EA English Classes_'
+      );
+      
+      const wppUrl = 'https://wa.me/5511978388843?text=' + wppText;
+      
+      // Also send email
+      const emailSubject = encodeURIComponent('Nova Solicitação - Aula Experimental - ' + fullName);
+      const emailBody = encodeURIComponent(
+        'Nova Solicitação de Aula Experimental\n\n' +
+        'Nome: ' + fullName + '\n' +
+        'E-mail: ' + email + '\n' +
+        'WhatsApp: ' + phone + '\n' +
+        'Data preferida: ' + date + '\n' +
+        'Horário: ' + time + '\n' +
+        'Nível: ' + level + '\n' +
+        (message ? 'Mensagem: ' + message + '\n' : '')
+      );
+      
+      // Also save to Supabase for record
+      try {
+        await submitPlacementTest({fullName, email, phone, preferredDate: date, preferredTime: time, currentLevel: level, message});
+      } catch(e) { console.log('Supabase backup save:', e); }
+
+      // Show success and open WhatsApp
+      successMsg.style.display = 'block';
+      form.reset();
+      successMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      
+      // Open WhatsApp after a short delay
+      setTimeout(function() { window.open(wppUrl, '_blank'); }, 800);
+      
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Agendar Teste Gratuito';
     });
   }
 });
 </script>
+
+<!-- WhatsApp floating button -->
+<a href="https://wa.me/5511978388843" target="_blank" rel="noopener" style="position:fixed;bottom:24px;right:24px;z-index:999;width:60px;height:60px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(37,211,102,0.4);transition:all 0.3s" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform=''">
+  <svg width="32" height="32" viewBox="0 0 24 24" fill="white"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8.9-.9 1.1-.2.2-.3.2-.6.1-1.8-.9-3-1.6-4.2-3.6-.3-.5.3-.5.9-1.6.1-.2 0-.4 0-.5s-.7-1.6-.9-2.2c-.2-.6-.5-.5-.7-.5H8c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3 1.8.8 2.5.8 3.4.7.5-.1 1.8-.7 2-1.5.3-.8.3-1.4.2-1.5zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.2-1.3c1.4.7 3 1.1 4.8 1.1 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
+</a>
 </body></html>

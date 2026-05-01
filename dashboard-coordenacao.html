@@ -490,10 +490,6 @@ body { background: var(--g50); margin: 0; }
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-2.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
         <span>Pronúncias</span>
       </button>
-      <button class="sb-link" data-section="assessments-coord">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>
-        <span>Assessments</span>
-      </button>
       <button class="sb-link" data-section="testimonials">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
         <span>Depoimentos</span>
@@ -577,6 +573,10 @@ body { background: var(--g50); margin: 0; }
             <div class="f-group"><label>Senha</label><input type="password" id="newPass" placeholder="Mínimo 6 caracteres" value="EA2026!"></div>
             <div class="f-group"><label>Perfil</label><select id="newRole"><option value="student">Aluno</option><option value="teacher">Professor</option><option value="coordinator">Coordenador</option></select></div>
             <div class="f-group"><label>Nível (opcional)</label><input type="text" id="newLevel" placeholder="Ex: A2 — Interchange 2"></div>
+            <div class="f-row" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <div class="f-group"><label>Início contrato</label><input type="date" id="createContractStart"></div>
+              <div class="f-group"><label>Fim contrato</label><input type="date" id="createContractEnd"></div>
+            </div>
             <button class="btn-send" style="background:var(--mango)" onclick="createUser()">Criar Usuário</button>
           </div>
         </div>
@@ -670,7 +670,7 @@ body { background: var(--g50); margin: 0; }
           <button class="sup-tab" data-sup="fb" onclick="switchSup('fb',this)">💬 Feedbacks</button>
           <button class="sup-tab" data-sup="wr" onclick="switchSup('wr',this)">✍️ Redações</button>
           <button class="sup-tab" data-sup="pr" onclick="switchSup('pr',this)">🎙️ Pronúncias</button>
-          <button class="sup-tab" data-sup="av" onclick="switchSup('av',this)">📢 Avisos</button>
+          <button class="sup-tab" data-sup="as" onclick="switchSup('as',this)">📄 Assessments</button>
         </div>
 
         <!-- Shared filter -->
@@ -713,19 +713,11 @@ body { background: var(--g50); margin: 0; }
           </div>
         </div>
 
-        <!-- Avisos pane -->
-        <div class="sup-pane" id="sup-av" style="display:none">
-          <div class="form-card" style="margin-bottom:16px">
-            <h3 style="font-size:16px;font-weight:800;color:var(--navy);margin-bottom:4px">📢 Publicar Aviso</h3>
-            <p style="font-size:13px;color:var(--g500);margin-bottom:16px">Envie comunicados para alunos, professores ou todos.</p>
-            <div class="f-group"><label>Título</label><input type="text" id="annTitle" placeholder="Ex: Recesso de fim de ano"></div>
-            <div class="f-group"><label>Conteúdo</label><textarea id="annContent" rows="3" placeholder="Escreva o aviso..."></textarea></div>
-            <div class="f-group"><label>Destinatários</label><select id="annTarget"><option value="">Todos</option><option value="student">Apenas alunos</option><option value="teacher">Apenas professores</option></select></div>
-            <button class="btn-send" onclick="sendAnn()">Publicar Aviso</button>
-          </div>
+        <!-- Assessments pane (inside supervision) -->
+        <div class="sup-pane" id="sup-as" style="display:none">
           <div class="panel">
-            <div class="panel-head"><div class="panel-title">Avisos Publicados</div></div>
-            <div id="annList"><div class="empty-state"><div class="empty-icon">📢</div><p>Nenhum aviso.</p></div></div>
+            <div class="panel-head"><div class="panel-title">Assessments Enviados</div></div>
+            <div id="supAssList"><div class="empty-state"><div class="empty-icon">📄</div><p>Nenhum assessment.</p></div></div>
           </div>
         </div>
       </div>
@@ -737,7 +729,22 @@ body { background: var(--g50); margin: 0; }
       <div class="section" id="sec-writing" style="display:none"></div>
       <div class="section" id="sec-pronunciation-coord" style="display:none"></div>
 
-<div class="section" id="sec-messages">
+<div class="section" id="sec-announcements">
+        <h2>📢 Avisos</h2>
+        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Envie comunicados para alunos, professores ou todos.</p>
+        <div class="form-card" style="margin-bottom:16px">
+          <div class="f-group"><label>Título</label><input type="text" id="annTitle" placeholder="Ex: Recesso de fim de ano"></div>
+          <div class="f-group"><label>Conteúdo</label><textarea id="annContent" rows="3" placeholder="Escreva o aviso..."></textarea></div>
+          <div class="f-group"><label>Destinatários</label><select id="annTarget"><option value="">Todos</option><option value="student">Apenas alunos</option><option value="teacher">Apenas professores</option></select></div>
+          <button class="btn-send" onclick="sendAnn()">Publicar Aviso</button>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">Avisos Publicados</div></div>
+          <div id="annList"><div class="empty-state"><div class="empty-icon">📢</div><p>Nenhum aviso.</p></div></div>
+        </div>
+      </div>
+
+      <div class="section" id="sec-messages">
         <h2>📩 Mensagem para Professor</h2>
         <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Envie mensagens diretas para professores específicos.</p>
         <div class="form-card" style="margin-bottom:16px">
@@ -1056,7 +1063,7 @@ async function loadOverview() {
     let alertHtml = '';
     
     if (expiredStudents.length > 0) {
-      alertHtml += '<div style="background:#fef2f2;border:2px solid #dc2626;border-radius:16px;padding:20px;margin-bottom:16px"><h3 style="font-size:16px;font-weight:800;color:#991b1b;margin-bottom:12px">🚨 Contratos VENCIDOS (' + expiredStudents.length + ')</h3>' +
+      alertHtml += '<div style="background:#fef2f2;border:2px solid #dc2626;border-radius:16px;padding:20px;margin-bottom:16px;animation:sectionIn 0.4s"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h3 style="font-size:16px;font-weight:800;color:#991b1b">🚨 Contratos VENCIDOS (' + expiredStudents.length + ')</h3><button onclick="this.parentElement.parentElement.style.display=\'none\'" style="border:none;background:#fecaca;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:12px;color:#991b1b">✕</button></div>' +
         expiredStudents.map(s => {
           const daysExpired = Math.ceil((today - new Date(s.contract_end)) / (1000*60*60*24));
           return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#fff;border-radius:10px;margin-bottom:6px;flex-wrap:wrap;gap:8px"><div><strong style="color:#991b1b">' + s.full_name + '</strong><span style="color:#9CA3AF;font-size:12px;margin-left:8px">' + s.email + '</span></div><span style="background:#dc2626;color:#fff;padding:4px 12px;border-radius:99px;font-size:11px;font-weight:700">Vencido há ' + daysExpired + ' dia(s)</span></div>';
@@ -1574,7 +1581,7 @@ async function loadCoordSchedule(){
   var evtMap={};
   for(var ei=0;ei<evts.length;ei++){
     var ev=evts[ei];
-    var gm=(ev.notes||'').match(/\[GRID:(\d+):([\d:]+)\]/);
+    var gm=(ev.notes||'').match(/\[GRID:(\d+):(\d{2}:\d{2})\]/);
     if(gm){
       var key=gm[2]+'-'+gm[1];
       if(!evtMap[key])evtMap[key]=[];
@@ -1656,7 +1663,7 @@ function loadCurrentSup() {
     case 'fb': loadFeedbacks(); break;
     case 'wr': loadWritingCoord(); break;
     case 'pr': loadPronunciationCoord(); break;
-    case 'av': loadAnnouncementList(); break;
+    case 'as': loadAssessmentsCoord(); break;
   }
 }
 
@@ -1743,6 +1750,7 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'nivelamento': loadNivelamentos(); break;
       case 'homework': loadHomeworks(); break;
       case 'feedbacks': loadFeedbacks(); break;
+      case 'announcements': loadAnnouncementList(); break;
       case 'announcements': loadAnnouncementList(); break;
       case 'messages': loadMsgList(); break;
       case 'writing': loadWritingCoord(); break;

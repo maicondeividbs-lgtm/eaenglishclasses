@@ -533,6 +533,21 @@ body { background: var(--g50); margin: 0; }
         <h2 style="font-size:28px;font-weight:800;color:var(--navy);margin-bottom:6px;letter-spacing:-0.02em" id="greeting">Olá, Coordenador! 📊</h2>
         <p style="font-size:14px;color:var(--g500);margin-bottom:24px">Visão geral de todas as atividades da escola.</p>
         <div id="contractAlerts"></div>
+
+        <!-- To-Do List -->
+        <div class="panel" style="margin-bottom:20px">
+          <div class="panel-head">
+            <div class="panel-title">📋 Minhas Tarefas</div>
+            <span class="badge badge-time" id="todoCount">0</span>
+          </div>
+          <div style="padding:16px 20px">
+            <div style="display:flex;gap:8px;margin-bottom:14px">
+              <input type="text" id="todoInput" placeholder="Nova tarefa..." style="flex:1;padding:10px 14px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;outline:none" onkeydown="if(event.key==='Enter')addTodo()">
+              <button onclick="addTodo()" style="padding:10px 18px;border:none;border-radius:10px;background:var(--mango);color:#fff;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap">+ Adicionar</button>
+            </div>
+            <div id="todoList"></div>
+          </div>
+        </div>
         <div class="stat-row">
           <div class="stat-card"><div class="stat-icon">🎓</div><div class="stat-label">Total de Alunos</div><div class="stat-value" id="statStudents">-</div></div>
           <div class="stat-card"><div class="stat-icon">👨‍🏫</div><div class="stat-label">Professores</div><div class="stat-value" id="statTeachers">-</div></div>
@@ -599,7 +614,7 @@ body { background: var(--g50); margin: 0; }
               <div class="f-group"><label>📋 Fim do Contrato</label><input type="date" id="editContractEnd"></div>
             </div>
             <div class="f-group"><label>Professor responsável</label><select id="editTeacher"><option value="">Selecione</option></select></div>
-            <div class="f-group"><label>Curso</label><select id="editCourse"><option value="">Selecione</option></select></div>
+            <div class="f-group"><label>Curso</label><select id="editCourse"><option value="">Selecione o curso</option><option value="1">Interchange Intro</option><option value="2">Interchange 1</option><option value="3">Interchange 2</option><option value="4">Interchange 3</option><option value="5">Passages 1</option><option value="6">Passages 2</option><option value="7">Evolve 5</option><option value="8">Evolve 6</option></select></div>
             <div style="display:flex;gap:10px;margin-top:16px">
               <button class="btn-send" style="background:var(--mango);flex:1" onclick="saveUserEdit()">Salvar Alterações</button>
               <button onclick="confirmDeleteUser()" style="padding:13px 20px;border:2px solid #ef4444;border-radius:10px;background:#fff;color:#ef4444;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer">🗑️ Excluir</button>
@@ -652,9 +667,10 @@ body { background: var(--g50); margin: 0; }
       </div>
 
             <div class="section" id="sec-nivelamento">
-        <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:20px">📅 Agendamentos de Nivelamento</h2>
+        <h2>📋 Agendamentos de Nivelamento</h2>
+        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Solicitações de aula experimental recebidas pelo site. Entre em contato e converta!</p>
         <div class="panel">
-          <div class="panel-head"><div class="panel-title">Solicitações Recebidas</div></div>
+          <div class="panel-head"><div class="panel-title">Solicitações Recebidas</div><span class="badge badge-time" id="nivCount2">0</span></div>
           <div id="nivelList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhum agendamento recebido.</p></div></div>
         </div>
       </div>
@@ -725,11 +741,10 @@ body { background: var(--g50); margin: 0; }
       <!-- Keep old hidden sections for compatibility -->
       <div class="section" id="sec-homework" style="display:none"></div>
       <div class="section" id="sec-feedbacks" style="display:none"></div>
-      <div class="section" id="sec-announcements" style="display:none"></div>
-      <div class="section" id="sec-writing" style="display:none"></div>
+            <div class="section" id="sec-writing" style="display:none"></div>
       <div class="section" id="sec-pronunciation-coord" style="display:none"></div>
 
-<div class="section" id="sec-announcements">
+      <div class="section" id="sec-announcements">
         <h2>📢 Avisos</h2>
         <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Envie comunicados para alunos, professores ou todos.</p>
         <div class="form-card" style="margin-bottom:16px">
@@ -976,6 +991,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   await loadTeachersDropdown();
   await loadOverview();
+  renderTodos();
   
   // Load sidebar pending counts
   try {
@@ -1013,6 +1029,36 @@ async function loadTeachersDropdown() {
 }
 
 // ═══ OVERVIEW ═══
+
+// ═══ TO-DO LIST (localStorage) ═══
+function getTodos(){try{return JSON.parse(localStorage.getItem('ea_todos')||'[]');}catch(e){return [];}}
+function saveTodos(list){localStorage.setItem('ea_todos',JSON.stringify(list));}
+function renderTodos(){
+  var list=getTodos();
+  document.getElementById('todoCount').textContent=list.filter(function(t){return !t.done;}).length;
+  var div=document.getElementById('todoList');
+  if(!list.length){div.innerHTML='<div style="text-align:center;color:var(--g400);font-size:13px;padding:10px">Nenhuma tarefa ainda.</div>';return;}
+  div.innerHTML=list.map(function(t,i){
+    var style=t.done?'text-decoration:line-through;opacity:0.5':'';
+    return '<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--g100);'+style+'">'+
+    '<input type="checkbox" '+(t.done?'checked':'')+' onchange="toggleTodo('+i+')" style="width:18px;height:18px;cursor:pointer;accent-color:var(--mango)">'+
+    '<span style="flex:1;font-size:13px;color:var(--navy)">'+t.text+'</span>'+
+    '<button onclick="deleteTodo('+i+')" style="border:none;background:none;color:var(--g400);cursor:pointer;font-size:14px;padding:4px">✕</button></div>';
+  }).join('');
+}
+function addTodo(){
+  var input=document.getElementById('todoInput');
+  var text=input.value.trim();
+  if(!text)return;
+  var list=getTodos();
+  list.unshift({text:text,done:false,date:new Date().toISOString()});
+  saveTodos(list);
+  input.value='';
+  renderTodos();
+}
+function toggleTodo(i){var list=getTodos();list[i].done=!list[i].done;saveTodos(list);renderTodos();}
+function deleteTodo(i){var list=getTodos();list.splice(i,1);saveTodos(list);renderTodos();}
+
 async function loadOverview() {
   try {
     const [profiles, placements, announcements] = await Promise.all([
@@ -1091,9 +1137,28 @@ async function loadNivelamentos() {
   const items = await getPlacementTests();
   const div = document.getElementById('nivelList');
   if (!items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📅</div><p>Nenhum agendamento recebido. Quando alguém preencher o formulário do site, aparecerá aqui.</p></div>'; return; }
+  document.getElementById('nivCount2').textContent = items.filter(function(p){return p.status==='pending';}).length;
   div.innerHTML = items.map(p => {
-    const statusBadge = p.status === 'pending' ? '<span class="badge badge-pending">Pendente</span>' : '<span class="badge badge-done">' + p.status + '</span>';
-    return '<div class="list-item"><div><div class="list-title">📅 ' + p.full_name + '</div><div class="list-sub">' + p.email + (p.phone ? ' • ' + p.phone : '') + ' — Nível: ' + (p.current_level||'?') + '</div><div class="list-sub" style="margin-top:2px">' + (p.preferred_date ? 'Data: ' + formatDate(p.preferred_date) : '') + (p.preferred_time ? ' • ' + p.preferred_time : '') + (p.message ? ' — "' + p.message.substring(0,60) + '..."' : '') + '</div></div>' + statusBadge + '</div>';
+    const isPending = p.status === 'pending';
+    const bgColor = isPending ? '#eff6ff' : '#f0fdf4';
+    const borderColor = isPending ? '#93c5fd' : '#86efac';
+    const statusLabel = isPending ? '⏳ Pendente' : '✅ Contatado';
+    const phone = (p.phone||'').replace(/\D/g,'');
+    const wppUrl = 'https://wa.me/55' + phone;
+    const emailUrl = 'mailto:' + (p.email||'');
+    return '<div style="background:'+bgColor+';border:1px solid '+borderColor+';border-radius:14px;padding:18px;margin-bottom:12px">' +
+      '<div style="display:flex;justify-content:space-between;align-items:start;flex-wrap:wrap;gap:12px">' +
+      '<div style="flex:1;min-width:200px">' +
+      '<div style="font-size:15px;font-weight:800;color:var(--navy);margin-bottom:4px">' + p.full_name + '</div>' +
+      '<div style="font-size:12px;color:var(--g500);margin-bottom:2px">📧 ' + (p.email||'—') + ' • 📱 ' + (p.phone||'—') + '</div>' +
+      '<div style="font-size:12px;color:var(--g500);margin-bottom:2px">📊 Nível: ' + (p.current_level||'?') + (p.preferred_date ? ' • 📅 ' + formatDate(p.preferred_date) : '') + (p.preferred_time ? ' ' + p.preferred_time : '') + '</div>' +
+      (p.message ? '<div style="font-size:12px;color:var(--g700);font-style:italic;margin-top:4px">"' + p.message.substring(0,80) + '"</div>' : '') +
+      '</div>' +
+      '<div style="display:flex;gap:6px;align-items:center">' +
+      (phone ? '<a href="'+wppUrl+'" target="_blank" style="padding:8px 14px;border:none;border-radius:8px;background:#25D366;color:#fff;font-size:11px;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:4px">📱 WhatsApp</a>' : '') +
+      '<a href="'+emailUrl+'" style="padding:8px 14px;border:none;border-radius:8px;background:var(--navy);color:#fff;font-size:11px;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:4px">📧 Email</a>' +
+      (isPending ? '<button onclick="markContacted('+p.id+')" style="padding:8px 14px;border:2px solid var(--mango);border-radius:8px;background:#fff;color:var(--navy);font-family:inherit;font-size:11px;font-weight:700;cursor:pointer">✓ Marcar</button>' : '<span style="padding:8px 14px;font-size:11px;font-weight:700;color:#16a34a">'+statusLabel+'</span>') +
+      '</div></div></div>';
   }).join('');
 }
 
@@ -1123,6 +1188,16 @@ async function loadFeedbacks() {
   const div = document.getElementById('fbList');
   if (!fbs || !fbs.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">💬</div><p>Nenhum feedback no sistema.</p></div>'; return; }
   div.innerHTML = fbs.map(f => '<div class="list-item"><div><div class="list-title">💬 ' + f.title + '</div><div class="list-sub">Prof. ' + (f.teacher?.full_name||'?') + ' → ' + (f.student?.full_name||'?') + ' — ' + (f.category||'geral') + ' — ' + formatDateTime(f.created_at) + '</div></div></div>').join('');
+}
+
+
+// ═══ NIVELAMENTO ACTIONS ═══
+async function markContacted(id) {
+  try {
+    await db.from('placement_tests').update({status:'contacted'}).eq('id',id);
+    showToast('Marcado como contatado!');
+    loadNivelamentos();
+  } catch(e) { showToast('Erro','error'); }
 }
 
 // ═══ ANNOUNCEMENTS ═══
@@ -1537,7 +1612,8 @@ async function cSubmitXtra(){
   var day=document.getElementById('cXDay').value,hour=document.getElementById('cXHour').value;
   if(!date){showToast('Selecione a data','error');return;}
   var labels={replacement:'Reposição',meeting:'Reunião pedagógica',note:'Observação'};
-  try{await addScheduleEvent(null,cTeacherId,date,type==='meeting'?'note':type,(labels[type]||type)+(notes?' — '+notes:''),currentUser.id,student||'Geral',day?parseInt(day):undefined,hour?hour+':00':undefined);cPop();closeCPop();showToast('Evento registrado!');loadCoordSchedule();}catch(e){showToast('Erro','error');}
+  var gridTag=(day!==undefined&&day!==''&&hour)?'[GRID:'+day+':'+hour+'] ':'';
+  try{await addScheduleEvent(null,cTeacherId,date,type==='meeting'?'note':type,gridTag+(labels[type]||type)+(notes?' — '+notes:''),currentUser.id,student||'Geral');cPop();closeCPop();showToast('Evento registrado!');loadCoordSchedule();}catch(e){showToast('Erro','error');}
 }
 
 function cFindHourIdx(t){if(!t)return -1;var h=t.substring(0,5);for(var i=0;i<C_HOURS.length;i++){if(C_HOURS[i]===h)return i;}return -1;}

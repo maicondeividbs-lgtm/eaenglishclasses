@@ -500,6 +500,10 @@ body { background: var(--g50); margin: 0; }
       </button>
     </nav>
     <div class="sb-bottom">
+      <button class="sb-link" data-section="my-profile" style="margin-bottom:8px">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        <span>Meu Perfil</span>
+      </button>
       <a href="#" class="sb-logout" onclick="signOut();return false;">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
         Sair
@@ -738,6 +742,32 @@ body { background: var(--g50); margin: 0; }
         </div>
       </div>
 
+      <!-- ═══ MEU PERFIL ═══ -->
+      <div class="section" id="sec-my-profile">
+        <h2>👤 Meu Perfil</h2>
+        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Edite suas informações pessoais.</p>
+        
+        <div style="display:grid;grid-template-columns:200px 1fr;gap:24px;align-items:start">
+          <!-- Avatar -->
+          <div style="background:#fff;border-radius:16px;border:1px solid var(--g100);padding:24px;text-align:center">
+            <div id="profileAvatar" style="width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,var(--mango),var(--orange));margin:0 auto 14px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:40px;font-weight:900;overflow:hidden;cursor:pointer" onclick="document.getElementById('profileAvatarInput').click()">C</div>
+            <input type="file" id="profileAvatarInput" accept="image/*" style="display:none" onchange="uploadProfilePic(this.files[0])">
+            <p style="font-size:12px;color:var(--g400)">Clique para alterar a foto</p>
+          </div>
+          
+          <!-- Form -->
+          <div class="panel" style="padding:24px">
+            <div class="f-group"><label>Nome completo</label><input type="text" id="profName" placeholder="Seu nome"></div>
+            <div class="f-group"><label>E-mail</label><input type="email" id="profEmail" disabled style="opacity:0.6"></div>
+            <hr style="border:none;border-top:1px solid var(--g100);margin:20px 0">
+            <h4 style="font-size:14px;font-weight:800;color:var(--navy);margin-bottom:12px">🔒 Alterar Senha</h4>
+            <div class="f-group"><label>Nova senha</label><input type="password" id="profNewPass" placeholder="Mínimo 6 caracteres"></div>
+            <div class="f-group"><label>Confirmar nova senha</label><input type="password" id="profConfirmPass" placeholder="Repita a senha"></div>
+            <button class="btn-send" onclick="saveMyProfile()">Salvar Alterações</button>
+          </div>
+        </div>
+      </div>
+
       <!-- Keep old hidden sections for compatibility -->
       <div class="section" id="sec-homework" style="display:none"></div>
       <div class="section" id="sec-feedbacks" style="display:none"></div>
@@ -951,7 +981,7 @@ async function initToolProfessors() {
 <script src="supabase.js"></script>
 <script>
 let currentUser = null;
-const sections = {"overview":"Visão Geral","users":"Usuários","schedules":"Schedules","nivelamento":"Nivelamentos","supervision":"Supervisão","homework":"Homeworks","feedbacks":"Feedbacks","announcements":"Avisos","messages":"Msg → Professor","writing":"Redações","pronunciation-coord":"Pronúncias","assessments-coord":"Assessments","testimonials":"Depoimentos","tool":"Ferramenta"};
+const sections = {"overview":"Visão Geral","users":"Usuários","schedules":"Schedules","nivelamento":"Nivelamentos","supervision":"Supervisão","homework":"Homeworks","feedbacks":"Feedbacks","announcements":"Avisos","messages":"Msg → Professor","writing":"Redações","pronunciation-coord":"Pronúncias","assessments-coord":"Assessments","testimonials":"Depoimentos","tool":"Ferramenta","my-profile":"Meu Perfil"};
 
 // ═══ INIT ═══
 document.addEventListener('DOMContentLoaded', async () => {
@@ -1193,11 +1223,14 @@ async function loadFeedbacks() {
 
 // ═══ NIVELAMENTO ACTIONS ═══
 async function markContacted(id) {
+  var note = prompt('Adicionar observação (opcional):') || '';
   try {
-    await db.from('placement_tests').update({status:'contacted'}).eq('id',id);
+    var updateData = {status:'contacted'};
+    if (note) updateData.message = (await db.from('placement_tests').select('message').eq('id',id).single()).data?.message + ' | Obs: ' + note || note;
+    await db.from('placement_tests').update(updateData).eq('id',id);
     showToast('Marcado como contatado!');
     loadNivelamentos();
-  } catch(e) { showToast('Erro','error'); }
+  } catch(e) { showToast('Erro: ' + e.message,'error'); }
 }
 
 // ═══ ANNOUNCEMENTS ═══
@@ -1642,7 +1675,7 @@ async function loadCoordSchedule(){
   // Load events for grid overlay
   var mi=document.getElementById('schedCoordMonth').value;
   var evts=[];
-  if(mi){var p=mi.split('-');evts=await getScheduleEvents(cTeacherId,parseInt(p[1]),parseInt(p[0]));console.log('Coord events loaded:',evts.length,'events. With grid data:',evts.filter(function(e){return e.replacement_day!==null}).length);}
+  if(mi){var p=mi.split('-');evts=await getScheduleEvents(cTeacherId,parseInt(p[1]),parseInt(p[0]));console.log('Coord events loaded:',evts.length,'events. With grid data:',evts.filter(function(e){return (e.notes||'').indexOf('[GRID:')>=0}).length);}
 
   // Build occupied map for rowspan
   var occupied={};
@@ -1754,6 +1787,58 @@ async function initSupFilter() {
 }
 
 
+
+// ═══ MY PROFILE ═══
+function loadMyProfile() {
+  if (!currentUser) return;
+  document.getElementById('profName').value = currentUser.full_name || '';
+  document.getElementById('profEmail').value = currentUser.email || '';
+  var av = document.getElementById('profileAvatar');
+  if (currentUser.avatar_url) {
+    av.innerHTML = '<img src="' + currentUser.avatar_url + '" style="width:100%;height:100%;object-fit:cover">';
+  } else {
+    av.textContent = (currentUser.full_name || 'C')[0];
+  }
+}
+
+async function uploadProfilePic(file) {
+  if (!file) return;
+  if (file.size > 2*1024*1024) { showToast('Máximo 2MB','error'); return; }
+  showToast('Enviando foto...');
+  try {
+    var url = await uploadAvatar(currentUser.id, file);
+    currentUser.avatar_url = url;
+    document.getElementById('profileAvatar').innerHTML = '<img src="'+url+'" style="width:100%;height:100%;object-fit:cover">';
+    var topAv = document.getElementById('userAvatar');
+    topAv.innerHTML = '<img src="'+url+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
+    showToast('Foto atualizada!');
+  } catch(e) { showToast('Erro: '+e.message,'error'); }
+}
+
+async function saveMyProfile() {
+  var name = document.getElementById('profName').value.trim();
+  var newPass = document.getElementById('profNewPass').value;
+  var confirmPass = document.getElementById('profConfirmPass').value;
+  
+  if (!name) { showToast('Preencha o nome','error'); return; }
+  
+  try {
+    await db.from('profiles').update({full_name: name}).eq('id', currentUser.id);
+    currentUser.full_name = name;
+    showToast('Nome atualizado!');
+    
+    if (newPass) {
+      if (newPass.length < 6) { showToast('Senha deve ter 6+ caracteres','error'); return; }
+      if (newPass !== confirmPass) { showToast('Senhas não coincidem','error'); return; }
+      var { error } = await db.auth.updateUser({password: newPass});
+      if (error) throw error;
+      document.getElementById('profNewPass').value = '';
+      document.getElementById('profConfirmPass').value = '';
+      showToast('Senha alterada com sucesso!');
+    }
+  } catch(e) { showToast('Erro: '+e.message,'error'); }
+}
+
 // ═══ USER FILTERS ═══
 let allUsersCache = [];
 let currentRoleFilter = '';
@@ -1834,6 +1919,7 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'assessments-coord': loadAssessmentsCoord(); break;
       case 'testimonials': loadTestimonials(); break;
       case 'tool': initToolProfessors(); break;
+      case 'my-profile': loadMyProfile(); break;
     }
   });
   document.querySelectorAll('.section').forEach(s => observer.observe(s, {attributes:true, attributeFilter:['class']}));

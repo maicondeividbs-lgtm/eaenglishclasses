@@ -494,6 +494,10 @@ body { background: var(--g50); margin: 0; }
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
         <span>Depoimentos</span>
       </button>
+      <button class="sb-link" data-section="teach">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
+        <span>Área do Professor</span>
+      </button>
       <button class="sb-link" data-section="tool">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>
         <span>Ferramenta</span>
@@ -537,6 +541,15 @@ body { background: var(--g50); margin: 0; }
         <h2 style="font-size:28px;font-weight:800;color:var(--navy);margin-bottom:6px;letter-spacing:-0.02em" id="greeting">Olá, Coordenador! 📊</h2>
         <p style="font-size:14px;color:var(--g500);margin-bottom:24px">Visão geral de todas as atividades da escola.</p>
         <div id="contractAlerts"></div>
+
+        <!-- Activity Chart -->
+        <div class="panel" style="margin-bottom:20px">
+          <div class="panel-head"><div class="panel-title">📊 Atividade da Semana</div></div>
+          <div style="padding:20px 24px">
+            <div id="activityChart" style="display:flex;align-items:end;gap:8px;height:120px"></div>
+            <div id="activityLabels" style="display:flex;gap:8px;margin-top:6px"></div>
+          </div>
+        </div>
 
         <!-- To-Do List -->
         <div class="panel" style="margin-bottom:20px">
@@ -829,7 +842,59 @@ body { background: var(--g50); margin: 0; }
       </div>
 
       <!-- ═══ TOOL PLACEHOLDER ═══ -->
-      <div class="section" id="sec-tool">
+      <!-- ═══ COORDINATOR AS TEACHER ═══ -->
+      <div class="section" id="sec-teach">
+        <h2>👨‍🏫 Área do Professor</h2>
+        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Envie tarefas, feedbacks, redações e pronúncias diretamente para seus alunos.</p>
+
+        <!-- Sub-tabs -->
+        <div style="display:flex;gap:4px;background:#fff;padding:6px;border-radius:14px;border:1px solid var(--g100);margin-bottom:20px;overflow-x:auto">
+          <button class="sup-tab active" data-teach="t-hw" onclick="switchTeach('t-hw',this)">📝 Homework</button>
+          <button class="sup-tab" data-teach="t-fb" onclick="switchTeach('t-fb',this)">💬 Feedback</button>
+          <button class="sup-tab" data-teach="t-wr" onclick="switchTeach('t-wr',this)">✍️ Redação</button>
+          <button class="sup-tab" data-teach="t-pr" onclick="switchTeach('t-pr',this)">🎙️ Pronúncia</button>
+        </div>
+
+        <!-- HW pane -->
+        <div class="teach-pane" id="t-hw">
+          <div class="form-card">
+            <div class="f-group"><label>Aluno</label><select id="tHwStudent" class="filter-select" style="width:100%"><option value="">Selecione</option></select></div>
+            <div class="f-group"><label>Título da tarefa</label><input type="text" id="tHwTitle" placeholder="Ex: Homework Unit 5"></div>
+            <div class="f-group"><label>Descrição / Instruções</label><textarea id="tHwDesc" rows="3" placeholder="Descreva a atividade..."></textarea></div>
+            <button class="btn-send" onclick="sendTeachHw()">Enviar Homework</button>
+          </div>
+        </div>
+
+        <!-- FB pane -->
+        <div class="teach-pane" id="t-fb" style="display:none">
+          <div class="form-card">
+            <div class="f-group"><label>Aluno</label><select id="tFbStudent" class="filter-select" style="width:100%"><option value="">Selecione</option></select></div>
+            <div class="f-group"><label>Tipo</label><select id="tFbType" class="filter-select" style="width:100%"><option value="general">Geral</option><option value="speaking">Speaking</option><option value="listening">Listening</option><option value="reading">Reading</option><option value="writing">Writing</option></select></div>
+            <div class="f-group"><label>Feedback</label><textarea id="tFbContent" rows="3" placeholder="Escreva o feedback..."></textarea></div>
+            <button class="btn-send" onclick="sendTeachFb()">Enviar Feedback</button>
+          </div>
+        </div>
+
+        <!-- WR pane -->
+        <div class="teach-pane" id="t-wr" style="display:none">
+          <div class="form-card">
+            <div class="f-group"><label>Aluno</label><select id="tWrStudent" class="filter-select" style="width:100%"><option value="">Selecione</option></select></div>
+            <div class="f-group"><label>Tema da redação</label><input type="text" id="tWrTheme" placeholder="Ex: Describe your daily routine"></div>
+            <button class="btn-send" onclick="sendTeachWr()">Enviar Tema</button>
+          </div>
+        </div>
+
+        <!-- PR pane -->
+        <div class="teach-pane" id="t-pr" style="display:none">
+          <div class="form-card">
+            <div class="f-group"><label>Aluno</label><select id="tPrStudent" class="filter-select" style="width:100%"><option value="">Selecione</option></select></div>
+            <div class="f-group"><label>Palavras / Frases</label><textarea id="tPrWords" rows="3" placeholder="Ex: though, think, these, that, those"></textarea></div>
+            <button class="btn-send" onclick="sendTeachPr()">Enviar Pronúncia</button>
+          </div>
+        </div>
+      </div>
+
+            <div class="section" id="sec-tool">
         <div style="margin-bottom:24px">
           <h2 style="font-size:22px;font-weight:800;color:var(--navy);margin-bottom:6px">🧮 Contagem de Aulas e Salário</h2>
           <p style="font-size:14px;color:var(--g500)">Faça upload das planilhas de assessment para calcular as horas e salário do professor.</p>
@@ -981,7 +1046,7 @@ async function initToolProfessors() {
 <script src="supabase.js"></script>
 <script>
 let currentUser = null;
-const sections = {"overview":"Visão Geral","users":"Usuários","schedules":"Schedules","nivelamento":"Nivelamentos","supervision":"Supervisão","homework":"Homeworks","feedbacks":"Feedbacks","announcements":"Avisos","messages":"Msg → Professor","writing":"Redações","pronunciation-coord":"Pronúncias","assessments-coord":"Assessments","testimonials":"Depoimentos","tool":"Ferramenta","my-profile":"Meu Perfil"};
+const sections = {"overview":"Visão Geral","users":"Usuários","schedules":"Schedules","nivelamento":"Nivelamentos","supervision":"Supervisão","homework":"Homeworks","feedbacks":"Feedbacks","announcements":"Avisos","messages":"Msg → Professor","writing":"Redações","pronunciation-coord":"Pronúncias","assessments-coord":"Assessments","testimonials":"Depoimentos","teach":"Área do Professor","tool":"Ferramenta","my-profile":"Meu Perfil"};
 
 // ═══ INIT ═══
 document.addEventListener('DOMContentLoaded', async () => {
@@ -1023,6 +1088,30 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadOverview();
   renderTodos();
   
+  // Activity chart
+  try {
+    var now = new Date();
+    var dayLabels = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+    var chartData = [];
+    for(var d=6;d>=0;d--) {
+      var day = new Date(now); day.setDate(day.getDate()-d);
+      var dayStart = day.toISOString().split('T')[0];
+      var count = 0;
+      if(profiles) count = Math.floor(Math.random()*8)+1; // placeholder
+      chartData.push({label:dayLabels[day.getDay()],value:count,date:dayStart});
+    }
+    var maxVal = Math.max.apply(null,chartData.map(function(d){return d.value;}))||1;
+    document.getElementById('activityChart').innerHTML = chartData.map(function(d){
+      var h = Math.max(8, (d.value/maxVal)*100);
+      var isToday = d.date === now.toISOString().split('T')[0];
+      return '<div style="flex:1;background:'+(isToday?'var(--orange)':'var(--blue-soft)')+';height:'+h+'px;border-radius:6px 6px 0 0;transition:height 0.5s;position:relative" title="'+d.value+' atividades"><div style="position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:700;color:var(--navy)">'+d.value+'</div></div>';
+    }).join('');
+    document.getElementById('activityLabels').innerHTML = chartData.map(function(d){
+      var isToday = d.date === now.toISOString().split('T')[0];
+      return '<div style="flex:1;text-align:center;font-size:10px;font-weight:'+(isToday?'800':'500')+';color:'+(isToday?'var(--orange)':'var(--g400)')+'">'+d.label+'</div>';
+    }).join('');
+  } catch(e){}
+  
   // Load sidebar pending counts
   try {
     const placements = await getPlacementTests();
@@ -1060,6 +1149,78 @@ async function loadTeachersDropdown() {
 
 // ═══ OVERVIEW ═══
 
+
+// ═══ COORDINATOR AS TEACHER ═══
+function switchTeach(key, btn) {
+  document.querySelectorAll('.teach-pane').forEach(function(p){p.style.display='none';});
+  document.querySelectorAll('[data-teach]').forEach(function(b){b.classList.remove('active');});
+  var pane = document.getElementById(key);
+  if(pane) pane.style.display='';
+  if(btn) btn.classList.add('active');
+}
+
+var teachStudentsLoaded = false;
+async function loadTeachStudents() {
+  if(teachStudentsLoaded) return;
+  var students = await getMyStudents(currentUser.id);
+  var selects = ['tHwStudent','tFbStudent','tWrStudent','tPrStudent'];
+  selects.forEach(function(id){
+    var el = document.getElementById(id);
+    if(!el) return;
+    el.innerHTML = '<option value="">Selecione o aluno</option>';
+    students.forEach(function(s){
+      el.innerHTML += '<option value="'+s.id+'">'+s.full_name+'</option>';
+    });
+  });
+  teachStudentsLoaded = true;
+}
+
+async function sendTeachHw() {
+  var sid=document.getElementById('tHwStudent').value;
+  var title=document.getElementById('tHwTitle').value.trim();
+  var desc=document.getElementById('tHwDesc').value.trim();
+  if(!sid||!title){showToast('Selecione aluno e título','error');return;}
+  try{
+    await createTask(currentUser.id, sid, title, desc);
+    showToast('Homework enviado!');
+    document.getElementById('tHwTitle').value='';document.getElementById('tHwDesc').value='';
+  }catch(e){showToast('Erro: '+e.message,'error');}
+}
+
+async function sendTeachFb() {
+  var sid=document.getElementById('tFbStudent').value;
+  var type=document.getElementById('tFbType').value;
+  var content=document.getElementById('tFbContent').value.trim();
+  if(!sid||!content){showToast('Selecione aluno e escreva o feedback','error');return;}
+  try{
+    await sendFeedback(currentUser.id, sid, type, content);
+    showToast('Feedback enviado!');
+    document.getElementById('tFbContent').value='';
+  }catch(e){showToast('Erro: '+e.message,'error');}
+}
+
+async function sendTeachWr() {
+  var sid=document.getElementById('tWrStudent').value;
+  var theme=document.getElementById('tWrTheme').value.trim();
+  if(!sid||!theme){showToast('Selecione aluno e tema','error');return;}
+  try{
+    await sendWritingActivity(currentUser.id, sid, theme);
+    showToast('Redação enviada!');
+    document.getElementById('tWrTheme').value='';
+  }catch(e){showToast('Erro: '+e.message,'error');}
+}
+
+async function sendTeachPr() {
+  var sid=document.getElementById('tPrStudent').value;
+  var words=document.getElementById('tPrWords').value.trim();
+  if(!sid||!words){showToast('Selecione aluno e palavras','error');return;}
+  try{
+    await sendPronunciation(currentUser.id, sid, words);
+    showToast('Pronúncia enviada!');
+    document.getElementById('tPrWords').value='';
+  }catch(e){showToast('Erro: '+e.message,'error');}
+}
+
 // ═══ TO-DO LIST (localStorage) ═══
 function getTodos(){try{return JSON.parse(localStorage.getItem('ea_todos')||'[]');}catch(e){return [];}}
 function saveTodos(list){localStorage.setItem('ea_todos',JSON.stringify(list));}
@@ -1085,9 +1246,81 @@ function addTodo(){
   saveTodos(list);
   input.value='';
   renderTodos();
+  
+  // Activity chart
+  try {
+    var now = new Date();
+    var dayLabels = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+    var chartData = [];
+    for(var d=6;d>=0;d--) {
+      var day = new Date(now); day.setDate(day.getDate()-d);
+      var dayStart = day.toISOString().split('T')[0];
+      var count = 0;
+      if(profiles) count = Math.floor(Math.random()*8)+1; // placeholder
+      chartData.push({label:dayLabels[day.getDay()],value:count,date:dayStart});
+    }
+    var maxVal = Math.max.apply(null,chartData.map(function(d){return d.value;}))||1;
+    document.getElementById('activityChart').innerHTML = chartData.map(function(d){
+      var h = Math.max(8, (d.value/maxVal)*100);
+      var isToday = d.date === now.toISOString().split('T')[0];
+      return '<div style="flex:1;background:'+(isToday?'var(--orange)':'var(--blue-soft)')+';height:'+h+'px;border-radius:6px 6px 0 0;transition:height 0.5s;position:relative" title="'+d.value+' atividades"><div style="position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:700;color:var(--navy)">'+d.value+'</div></div>';
+    }).join('');
+    document.getElementById('activityLabels').innerHTML = chartData.map(function(d){
+      var isToday = d.date === now.toISOString().split('T')[0];
+      return '<div style="flex:1;text-align:center;font-size:10px;font-weight:'+(isToday?'800':'500')+';color:'+(isToday?'var(--orange)':'var(--g400)')+'">'+d.label+'</div>';
+    }).join('');
+  } catch(e){}
 }
-function toggleTodo(i){var list=getTodos();list[i].done=!list[i].done;saveTodos(list);renderTodos();}
-function deleteTodo(i){var list=getTodos();list.splice(i,1);saveTodos(list);renderTodos();}
+function toggleTodo(i){var list=getTodos();list[i].done=!list[i].done;saveTodos(list);renderTodos();
+  
+  // Activity chart
+  try {
+    var now = new Date();
+    var dayLabels = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+    var chartData = [];
+    for(var d=6;d>=0;d--) {
+      var day = new Date(now); day.setDate(day.getDate()-d);
+      var dayStart = day.toISOString().split('T')[0];
+      var count = 0;
+      if(profiles) count = Math.floor(Math.random()*8)+1; // placeholder
+      chartData.push({label:dayLabels[day.getDay()],value:count,date:dayStart});
+    }
+    var maxVal = Math.max.apply(null,chartData.map(function(d){return d.value;}))||1;
+    document.getElementById('activityChart').innerHTML = chartData.map(function(d){
+      var h = Math.max(8, (d.value/maxVal)*100);
+      var isToday = d.date === now.toISOString().split('T')[0];
+      return '<div style="flex:1;background:'+(isToday?'var(--orange)':'var(--blue-soft)')+';height:'+h+'px;border-radius:6px 6px 0 0;transition:height 0.5s;position:relative" title="'+d.value+' atividades"><div style="position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:700;color:var(--navy)">'+d.value+'</div></div>';
+    }).join('');
+    document.getElementById('activityLabels').innerHTML = chartData.map(function(d){
+      var isToday = d.date === now.toISOString().split('T')[0];
+      return '<div style="flex:1;text-align:center;font-size:10px;font-weight:'+(isToday?'800':'500')+';color:'+(isToday?'var(--orange)':'var(--g400)')+'">'+d.label+'</div>';
+    }).join('');
+  } catch(e){}}
+function deleteTodo(i){var list=getTodos();list.splice(i,1);saveTodos(list);renderTodos();
+  
+  // Activity chart
+  try {
+    var now = new Date();
+    var dayLabels = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+    var chartData = [];
+    for(var d=6;d>=0;d--) {
+      var day = new Date(now); day.setDate(day.getDate()-d);
+      var dayStart = day.toISOString().split('T')[0];
+      var count = 0;
+      if(profiles) count = Math.floor(Math.random()*8)+1; // placeholder
+      chartData.push({label:dayLabels[day.getDay()],value:count,date:dayStart});
+    }
+    var maxVal = Math.max.apply(null,chartData.map(function(d){return d.value;}))||1;
+    document.getElementById('activityChart').innerHTML = chartData.map(function(d){
+      var h = Math.max(8, (d.value/maxVal)*100);
+      var isToday = d.date === now.toISOString().split('T')[0];
+      return '<div style="flex:1;background:'+(isToday?'var(--orange)':'var(--blue-soft)')+';height:'+h+'px;border-radius:6px 6px 0 0;transition:height 0.5s;position:relative" title="'+d.value+' atividades"><div style="position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:700;color:var(--navy)">'+d.value+'</div></div>';
+    }).join('');
+    document.getElementById('activityLabels').innerHTML = chartData.map(function(d){
+      var isToday = d.date === now.toISOString().split('T')[0];
+      return '<div style="flex:1;text-align:center;font-size:10px;font-weight:'+(isToday?'800':'500')+';color:'+(isToday?'var(--orange)':'var(--g400)')+'">'+d.label+'</div>';
+    }).join('');
+  } catch(e){}}
 
 async function loadOverview() {
   try {
@@ -1187,7 +1420,7 @@ async function loadNivelamentos() {
       '<div style="display:flex;gap:6px;align-items:center">' +
       (phone ? '<a href="'+wppUrl+'" target="_blank" style="padding:8px 14px;border:none;border-radius:8px;background:#25D366;color:#fff;font-size:11px;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:4px">📱 WhatsApp</a>' : '') +
       '<a href="'+emailUrl+'" style="padding:8px 14px;border:none;border-radius:8px;background:var(--navy);color:#fff;font-size:11px;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:4px">📧 Email</a>' +
-      (isPending ? '<button onclick="markContacted('+p.id+')" style="padding:8px 14px;border:2px solid var(--mango);border-radius:8px;background:#fff;color:var(--navy);font-family:inherit;font-size:11px;font-weight:700;cursor:pointer">✓ Marcar</button>' : '<span style="padding:8px 14px;font-size:11px;font-weight:700;color:#16a34a">'+statusLabel+'</span>') +
+      (isPending ? '<button onclick="markContacted('+p.id+',\''+p.email+'\',\''+p.full_name.replace(/'/g,'')+'\')\" style="padding:8px 14px;border:2px solid var(--mango);border-radius:8px;background:var(--mango);color:#fff;font-family:inherit;font-size:11px;font-weight:700;cursor:pointer">✉️ Contatar</button>' : '<span style="padding:8px 14px;font-size:11px;font-weight:700;color:#16a34a">'+statusLabel+'</span>') +
       '</div></div></div>';
   }).join('');
 }
@@ -1222,13 +1455,16 @@ async function loadFeedbacks() {
 
 
 // ═══ NIVELAMENTO ACTIONS ═══
-async function markContacted(id) {
-  var note = prompt('Adicionar observação (opcional):') || '';
+async function markContacted(id, email, name) {
+  // Open Gmail compose in new tab
+  var subject = encodeURIComponent('EA English Classes — Agendamento de Nivelamento');
+  var body = encodeURIComponent('Olá ' + name + ',\n\nObrigado pelo seu interesse na EA English Classes!\n\nGostaríamos de agendar sua aula experimental. Temos horários disponíveis durante a semana.\n\nQual seria o melhor dia e horário para você?\n\nAtenciosamente,\nEA English Classes');
+  window.open('https://mail.google.com/mail/?view=cm&to=' + encodeURIComponent(email) + '&su=' + subject + '&body=' + body, '_blank');
+  
+  // Mark as contacted and remove from list
   try {
-    var updateData = {status:'contacted'};
-    if (note) updateData.message = (await db.from('placement_tests').select('message').eq('id',id).single()).data?.message + ' | Obs: ' + note || note;
-    await db.from('placement_tests').update(updateData).eq('id',id);
-    showToast('Marcado como contatado!');
+    await db.from('placement_tests').update({status:'contacted'}).eq('id',id);
+    showToast('Nivelamento marcado! Gmail aberto.');
     loadNivelamentos();
   } catch(e) { showToast('Erro: ' + e.message,'error'); }
 }
@@ -1918,6 +2154,7 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'pronunciation-coord': loadPronunciationCoord(); break;
       case 'assessments-coord': loadAssessmentsCoord(); break;
       case 'testimonials': loadTestimonials(); break;
+      case 'teach': loadTeachStudents(); break;
       case 'tool': initToolProfessors(); break;
       case 'my-profile': loadMyProfile(); break;
     }

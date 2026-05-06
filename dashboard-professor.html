@@ -216,13 +216,37 @@ body { background: var(--g50); margin: 0; }
 .sched-student { position: relative; }
 .sched-student:active { cursor: grabbing; transform: scale(0.95) !important; }
 
+
+@media (max-width: 1024px) {
+  .sb { transform: translateX(-100%); transition: transform 0.3s; }
+  .sb.open { transform: translateX(0); }
+  .main { margin-left: 0 !important; }
+  .content { padding: 20px 16px !important; }
+  .topbar { padding: 0 16px !important; }
+}
+@media (max-width: 768px) {
+  .stat-row { grid-template-columns: 1fr !important; }
+  .content { padding: 16px 12px !important; }
+  .f-row { grid-template-columns: 1fr !important; }
+  #profGridWrap table { min-width: 500px !important; font-size: 10px; }
+}
+@media (max-width: 480px) {
+  .stat-card { padding: 12px !important; }
+  .stat-value { font-size: 24px !important; }
+  .list-item { flex-direction: column; align-items: flex-start !important; gap: 8px; }
+}
+
+@keyframes skelPulse { 0%{background-position:-200px 0} 100%{background-position:calc(200px+100%) 0} }
+.skel-line { height:14px;margin-bottom:10px;border-radius:6px;background:linear-gradient(90deg,var(--g100) 25%,var(--g50) 37%,var(--g100) 63%);background-size:200px 100%;animation:skelPulse 1.5s ease-in-out infinite; }
+.skel-card { padding:16px;border-radius:12px;border:1px solid var(--g100);background:#fff;margin-bottom:10px; }
+.skel-row { display:flex;align-items:center;gap:12px;padding:12px 0; }
 </style>
 </head>
 <body>
 
 <div class="dash">
   <!-- SIDEBAR -->
-  <aside class="sb">
+  <aside class="sb" role="navigation" aria-label="Menu professor">
     <a href="index.html" class="sb-logo"><div class="nav-logo-icon" style="width:36px;height:36px"><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAAAAAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/wAALCABkAGQBAREA/8QAHAABAAEFAQEAAAAAAAAAAAAAAAcEBQYICQID/8QANhAAAQMDAwIDBQQLAAAAAAAAAQACAwQFEQYHEhMhCDFBFCJRYZEVgaGiCRYXGCNCRFViktL/2gAIAQEAAD8A3LRERERERERERERERERERERERERERERWDci51dl271JeLe8R1lBaaqpp3uaHBsjInOaSD2PcDsuff72O9WMfb9BnH9rg/wCVv/tbqE6r2407qR7mukuVtgqJeIwBI5gLxj5O5BZIiIiIiKDvG7fb1p7Y6a42G7V1qrBcqZgqKOodDJxJdkcmkHBx5LQmt3T3KraKeirNfanqKaojdFNFLdJnMkY4Yc1wLsEEEgheLppY0m01j1dxPK4Xetoyf8Yo6ct/F8n0W+vgSvhvHh4tdM54fJaqqooXH1wH9Ro/1kH0U6oiIiIixrcjQ+ndwNNO09qikkqre6ZkxjjmdEeTM8TlpB9Stf8Ae7w3bTaY2j1RqCz2KrhuFBbZZ6eR1wneGvaOx4l2D96jXczRwovARoetEZE8FxbcJXY/kqTMB+Dovosq/RqXwOoNYabe7HTlp66Jvx5B0bz+Vi3FRERERFBHjpudxtOxE1Xa7hV0FQLnStEtNM6N+CXZGWkHC591ms9XVtJLSVmqb5U08zSyWKW4SvY9p9C0uwR8ipJ1f4idV6l2kbtpWWPT0NnZSU1LHJDFKJmNgLCwgmQjPuDPb1Kv3gAvn2Xv7Fb3ScWXe21FLxJ7FzQJh9/8M/VdFERERERYNvftxRbo6GfpWvuNRb4XVMVR1oGNc7LCcDDu3fKg23+CjSNNX09RLq271McUrHvhfTRcZACCWn5EDH3qXtW7J7a1+lbvRUGgdM01ZU0U0UE0NsiY+KRzHBrmkNyCCQQQudexl6dpjefSl2kJjbS3aAT57YY54ZJ+Vzl1hHkiIiIiKOYd59EyvZEyprPaJGB8MJpzylDpHRtx3x3c0+ZGPN2FWVu62kaQROmqKrjLA+oDhTniI2GYOcSTj+nk7eZAyARnFVbtx9M3Cst1NRzVEwuEcckMzYT0wJOr0+Ts4HIQSkefZue2RmAp9vvDNXOdfBYr0faWitMjKipjA5slm7DmMYbDIcD1HEZOQNj9Gaotmp6WoltntHCleyKTrNDTyMbX/E57Pb38j6Ejur8iIiIiw2Xa3QUsPSl07TyARuiaXySFzGFwcWtcXZaMgYAIx6YXv9meieiIDYo3Qh3IROnlLAQZCPdLsYBlkLR5NLyRhfap290hUdHnaAzoxtjj6VRLHhrXPc0e64ZwZZMZ8g9w8iQqd21+hDT+zfq9Tim4BggEsgiawFzg0MDuIbye52AMcjy8wCr5YNPWixGodbKV0T6jpiWR8z5XvDGhjAXPJOGtGAM4Hf4lXVERERERERERERERERERERERERERERf/2Q==" alt="EA"></div><div class="nav-logo-text">EA<span>.</span></div></a>
     <div class="sb-badge">
       <span class="sb-badge-icon">👨‍🏫</span>
@@ -285,7 +309,7 @@ body { background: var(--g50); margin: 0; }
 
   <!-- MAIN CONTENT -->
   <main class="main">
-    <div class="topbar">
+    <div class="topbar" role="banner">
       <span class="topbar-title" id="topbarTitle">Visão Geral</span>
       <button class="mobile-menu-btn" onclick="document.querySelector('.sb').classList.toggle('open');document.getElementById('sbOverlay').classList.toggle('open')">☰</button>
       <div class="topbar-user">
@@ -295,7 +319,7 @@ body { background: var(--g50); margin: 0; }
       </div>
     </div>
 
-    <div class="content">
+    <div class="content" role="main">
       <!-- ═══ OVERVIEW ═══ -->
       <div class="section active" id="sec-overview">
         <h2 style="font-size:24px;font-weight:800;color:var(--navy);margin-bottom:4px" id="greeting">Olá, Professor! 👨‍🏫</h2>
@@ -339,7 +363,7 @@ body { background: var(--g50); margin: 0; }
         </div>
 
         <!-- Centered popup -->
-        <div id="schedPopup" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:999;background:#fff;border-radius:20px;box-shadow:0 24px 64px rgba(0,0,0,0.25);padding:28px;width:380px;max-width:90vw;border-top:4px solid var(--mango)">
+        <div id="schedPopup" role="dialog" aria-modal="true" aria-label="Ação do schedule" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:999;background:#fff;border-radius:20px;box-shadow:0 24px 64px rgba(0,0,0,0.25);padding:28px;width:380px;max-width:90vw;border-top:4px solid var(--mango)">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
             <h4 id="popupTitle" style="font-size:16px;font-weight:800;color:var(--navy)">Ação</h4>
             <button onclick="closePopup()" style="border:none;background:var(--g100);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:14px">✕</button>
@@ -926,7 +950,9 @@ async function submitEvt(slotId,name){
   if(!date){showToast('Selecione a data','error');return;}
   var labels={cancellation:'Cancelamento com 24h',cancellation_no24:'Cancelamento sem 24h',replacement:'Reposição',cancellation_holiday:'Feriado',cancellation_teacher:'Falta do professor'};
   var dbType=type.startsWith('cancellation')?'cancellation':'replacement';
-  try{await addScheduleEvent(slotId,currentUser.id,date,dbType,(labels[type]||type)+(notes?' — '+notes:''),currentUser.id,name);popSnd();closePopup();showToast('Evento registrado!');loadSchedule();}catch(e){showToast('Erro: '+e.message,'error');}
+  try{await addScheduleEvent(slotId,currentUser.id,date,dbType,(labels[type]||type)+(notes?' — '+notes:''),currentUser.id,name);var evtM=document.getElementById('pXDate')?.value?.substring(0,7)||document.getElementById('pEvtDate')?.value?.substring(0,7);
+  if(evtM)document.getElementById('schedMonth').value=evtM;
+  popSnd();closePopup();showToast('Evento registrado!');loadSchedule();}catch(e){showToast('Erro: '+e.message,'error');}
 }
 
 async function submitXtra(){

@@ -42,6 +42,16 @@
   --shadow-orange: 0 8px 24px rgba(243,107,46,0.3);
   --shadow-blue: 0 8px 24px rgba(37,60,150,0.3);
   
+  /* Status colors */
+  --success: #10b981;
+  --success-soft: #d1fae5;
+  --warning: #f59e0b;
+  --warning-soft: #fef3c7;
+  --danger: #ef4444;
+  --danger-soft: #fee2e2;
+  --info: #3b82f6;
+  --info-soft: #dbeafe;
+  
   /* Radius */
   --r-sm: 10px;
   --r-md: 16px;

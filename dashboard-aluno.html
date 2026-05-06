@@ -174,6 +174,25 @@ body { background: var(--g50); margin: 0; }
           <div class="stat-card"><div class="stat-icon">✍️</div><div class="stat-label">Redações</div><div class="stat-value" id="sWriting">-</div></div>
           <div class="stat-card"><div class="stat-icon">💬</div><div class="stat-label">Feedbacks</div><div class="stat-value" id="sFeedbacks">-</div></div>
         </div>
+        
+        <!-- Progress Chart -->
+        <div class="panel" style="margin-bottom:20px">
+          <div class="panel-head"><div class="panel-title">📊 Meu Progresso</div></div>
+          <div style="padding:20px 24px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+              <div>
+                <div style="font-size:12px;font-weight:700;color:var(--g500);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px">Atividade Mensal</div>
+                <div id="studentChart" style="display:flex;align-items:end;gap:6px;height:100px"></div>
+                <div id="studentChartLabels" style="display:flex;gap:6px;margin-top:6px"></div>
+              </div>
+              <div>
+                <div style="font-size:12px;font-weight:700;color:var(--g500);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px">Feedbacks por Habilidade</div>
+                <div id="skillBars"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="panel"><div class="panel-head"><div class="panel-title">📢 Avisos Recentes</div></div><div id="overviewAnn"><div class="empty-state"><div class="empty-icon">📭</div><p>Carregando...</p></div></div></div>
       </div>
 
@@ -338,6 +357,34 @@ async function loadOverview() {
       annDiv.innerHTML = announcements.slice(0,5).map(a => '<div class="list-item"><div><div class="list-title">📢 ' + a.title + '</div><div class="list-sub">' + (a.author?.full_name||'') + ' — ' + formatDateTime(a.created_at) + '</div></div></div>').join('');
     }
   } catch(e) { console.error('Overview:', e); }
+  
+  // Progress chart
+  try {
+    var months=['Jan','Fev','Mar','Abr','Mai','Jun'];
+    var now=new Date();
+    var monthData=[];var maxVal=1;
+    for(var m=5;m>=0;m--){
+      var d=new Date(now.getFullYear(),now.getMonth()-m,1);
+      var mStr=d.toISOString().slice(0,7);
+      var nStr=new Date(d.getFullYear(),d.getMonth()+1,1).toISOString().slice(0,7);
+      var r1=await db.from('task_submissions').select('id').eq('student_id',currentUser.id).gte('submitted_at',mStr+'-01').lt('submitted_at',nStr+'-01');
+      var r2=await db.from('feedbacks').select('id').eq('student_id',currentUser.id).gte('created_at',mStr+'-01').lt('created_at',nStr+'-01');
+      var c=(r1.data?.length||0)+(r2.data?.length||0);
+      monthData.push({label:months[d.getMonth()%12]||'?',value:c,cur:m===0});
+      if(c>maxVal)maxVal=c;
+    }
+    var ce=document.getElementById('studentChart'),le=document.getElementById('studentChartLabels');
+    if(ce){ce.innerHTML=monthData.map(function(d){var h=Math.max(6,(d.value/maxVal)*90);return'<div style="flex:1;background:'+(d.cur?'var(--orange)':'var(--blue-soft)')+';height:'+h+'px;border-radius:4px 4px 0 0;position:relative"><div style="position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:700;color:var(--navy)">'+d.value+'</div></div>';}).join('');}
+    if(le){le.innerHTML=monthData.map(function(d){return'<div style="flex:1;text-align:center;font-size:10px;font-weight:'+(d.cur?'800':'500')+';color:'+(d.cur?'var(--orange)':'var(--g400)')+'">'+d.label+'</div>';}).join('');}
+    
+    // Skill bars
+    var fb=await db.from('feedbacks').select('type').eq('student_id',currentUser.id);
+    var skills={speaking:0,listening:0,reading:0,writing:0};
+    (fb.data||[]).forEach(function(f){if(skills[f.type]!==undefined)skills[f.type]++;});
+    var ms=Math.max(1,Math.max.apply(null,Object.values(skills)));
+    var se=document.getElementById('skillBars');
+    if(se){var sl={speaking:'🗣️ Speaking',listening:'👂 Listening',reading:'📖 Reading',writing:'✍️ Writing'};var sc={speaking:'#f36b2e',listening:'#253c96',reading:'#10b981',writing:'#f59a1e'};se.innerHTML=Object.keys(skills).map(function(k){var p=Math.round((skills[k]/ms)*100);return'<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span style="font-weight:600;color:var(--navy)">'+sl[k]+'</span><span style="color:var(--g400)">'+skills[k]+'</span></div><div style="height:8px;background:var(--g100);border-radius:4px;overflow:hidden"><div style="height:100%;width:'+p+'%;background:'+sc[k]+';border-radius:4px;transition:width 0.8s"></div></div></div>';}).join('');}
+  } catch(e) { console.error('Chart:', e); }
 }
 
 // ═══ HOMEWORK ═══

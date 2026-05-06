@@ -432,13 +432,50 @@ body { background: var(--g50); margin: 0; }
   .main { margin-left: 0; }
   .stat-row { grid-template-columns: repeat(2,1fr); }
 }
+
+/* Dashboard mobile responsive */
+@media (max-width: 1024px) {
+  .sb { transform: translateX(-100%); transition: transform 0.3s; }
+  .sb.open { transform: translateX(0); }
+  .main { margin-left: 0 !important; }
+  .topbar { padding: 0 16px !important; }
+  .content { padding: 20px 16px !important; }
+  .stat-row { grid-template-columns: repeat(2,1fr) !important; }
+  .user-grid { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 768px) {
+  .stat-row { grid-template-columns: 1fr !important; }
+  .content { padding: 16px 12px !important; }
+  .f-row { grid-template-columns: 1fr !important; }
+  .form-card { padding: 16px !important; }
+  #schedGridWrap table,
+  #coordGridWrap table,
+  #profGridWrap table { min-width: 500px !important; font-size: 10px; }
+}
+@media (max-width: 480px) {
+  .stat-card { padding: 12px !important; }
+  .stat-value { font-size: 24px !important; }
+  .panel-head { padding: 14px 16px !important; flex-wrap: wrap; gap: 8px; }
+  .list-item { flex-direction: column; align-items: flex-start !important; gap: 8px; }
+}
+
+
+/* Skeleton loading */
+@keyframes skelPulse { 0%{background-position:-200px 0} 100%{background-position:calc(200px+100%) 0} }
+.skel-line { height:14px; margin-bottom:10px; border-radius:6px; background:linear-gradient(90deg,var(--g100) 25%,var(--g50) 37%,var(--g100) 63%); background-size:200px 100%; animation:skelPulse 1.5s ease-in-out infinite; }
+.skel-line.w60 { width:60%; }
+.skel-line.w80 { width:80%; }
+.skel-line.w40 { width:40%; }
+.skel-card { padding:16px; border-radius:12px; border:1px solid var(--g100); background:#fff; margin-bottom:10px; }
+.skel-avatar { width:40px;height:40px;border-radius:50%;background:var(--g100); }
+.skel-row { display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--g100); }
 </style>
 </head>
 <body>
 
 <div class="dash">
   <!-- SIDEBAR -->
-  <aside class="sb">
+  <aside class="sb" role="navigation" aria-label="Menu principal">
     <a href="index.html" class="sb-logo"><div class="nav-logo-icon" style="width:36px;height:36px"><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAAAAAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/wAALCABkAGQBAREA/8QAHAABAAEFAQEAAAAAAAAAAAAAAAcEBQYICQID/8QANhAAAQMDAwIDBQQLAAAAAAAAAQACAwQFEQYHEhMhCDFBFCJRYZEVgaGiCRYXGCNCRFViktL/2gAIAQEAAD8A3LRERERERERERERERERERERERERERERWDci51dl271JeLe8R1lBaaqpp3uaHBsjInOaSD2PcDsuff72O9WMfb9BnH9rg/wCVv/tbqE6r2407qR7mukuVtgqJeIwBI5gLxj5O5BZIiIiIiKDvG7fb1p7Y6a42G7V1qrBcqZgqKOodDJxJdkcmkHBx5LQmt3T3KraKeirNfanqKaojdFNFLdJnMkY4Yc1wLsEEEgheLppY0m01j1dxPK4Xetoyf8Yo6ct/F8n0W+vgSvhvHh4tdM54fJaqqooXH1wH9Ro/1kH0U6oiIiIixrcjQ+ndwNNO09qikkqre6ZkxjjmdEeTM8TlpB9Stf8Ae7w3bTaY2j1RqCz2KrhuFBbZZ6eR1wneGvaOx4l2D96jXczRwovARoetEZE8FxbcJXY/kqTMB+Dovosq/RqXwOoNYabe7HTlp66Jvx5B0bz+Vi3FRERERFBHjpudxtOxE1Xa7hV0FQLnStEtNM6N+CXZGWkHC591ms9XVtJLSVmqb5U08zSyWKW4SvY9p9C0uwR8ipJ1f4idV6l2kbtpWWPT0NnZSU1LHJDFKJmNgLCwgmQjPuDPb1Kv3gAvn2Xv7Fb3ScWXe21FLxJ7FzQJh9/8M/VdFERERERYNvftxRbo6GfpWvuNRb4XVMVR1oGNc7LCcDDu3fKg23+CjSNNX09RLq271McUrHvhfTRcZACCWn5EDH3qXtW7J7a1+lbvRUGgdM01ZU0U0UE0NsiY+KRzHBrmkNyCCQQQudexl6dpjefSl2kJjbS3aAT57YY54ZJ+Vzl1hHkiIiIiKOYd59EyvZEyprPaJGB8MJpzylDpHRtx3x3c0+ZGPN2FWVu62kaQROmqKrjLA+oDhTniI2GYOcSTj+nk7eZAyARnFVbtx9M3Cst1NRzVEwuEcckMzYT0wJOr0+Ts4HIQSkefZue2RmAp9vvDNXOdfBYr0faWitMjKipjA5slm7DmMYbDIcD1HEZOQNj9Gaotmp6WoltntHCleyKTrNDTyMbX/E57Pb38j6Ejur8iIiIiw2Xa3QUsPSl07TyARuiaXySFzGFwcWtcXZaMgYAIx6YXv9meieiIDYo3Qh3IROnlLAQZCPdLsYBlkLR5NLyRhfap290hUdHnaAzoxtjj6VRLHhrXPc0e64ZwZZMZ8g9w8iQqd21+hDT+zfq9Tim4BggEsgiawFzg0MDuIbye52AMcjy8wCr5YNPWixGodbKV0T6jpiWR8z5XvDGhjAXPJOGtGAM4Hf4lXVERERERERERERERERERERERERERERf/2Q==" alt="EA"></div><div class="nav-logo-text">EA<span>.</span></div></a>
     <div class="sb-badge">
       <span class="sb-badge-icon">📊</span>
@@ -481,6 +518,7 @@ body { background: var(--g50); margin: 0; }
       <button class="sb-link" data-section="messages">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
         <span>Msg → Professor</span>
+        <span id="msgCount" class="sb-count zero">0</span>
       </button>
       <!-- merged into supervision --><button class="sb-link" data-section="supervision" style="display:none">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.996.996 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
@@ -518,7 +556,7 @@ body { background: var(--g50); margin: 0; }
 
   <!-- MAIN -->
   <main class="main">
-    <div class="topbar">
+    <div class="topbar" role="banner">
       <div>
         <span class="topbar-title" id="topbarTitle">Visão Geral</span>
         <div class="topbar-date" id="topbarDate"></div>
@@ -535,7 +573,7 @@ body { background: var(--g50); margin: 0; }
       </div>
     </div>
 
-    <div class="content">
+    <div class="content" role="main">
       <!-- ═══ OVERVIEW ═══ -->
       <div class="section active" id="sec-overview">
         <h2 style="font-size:28px;font-weight:800;color:var(--navy);margin-bottom:6px;letter-spacing:-0.02em" id="greeting">Olá, Coordenador! 📊</h2>
@@ -594,7 +632,7 @@ body { background: var(--g50); margin: 0; }
 
         
         <!-- Create User Modal -->
-        <div id="createModal" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.5);align-items:center;justify-content:center">
+        <div id="createModal" role="dialog" aria-modal="true" aria-label="Novo usuário" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.5);align-items:center;justify-content:center">
           <div style="background:#fff;border-radius:20px;padding:32px;max-width:500px;width:90%;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,0.2)">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
               <h3 style="font-size:20px;font-weight:800;color:var(--navy)">➕ Novo Usuário</h3>
@@ -614,7 +652,7 @@ body { background: var(--g50); margin: 0; }
         </div>
 
         <!-- Edit User Modal -->
-        <div id="editModal" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center">
+        <div id="editModal" role="dialog" aria-modal="true" aria-label="Editar usuário" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center">
           <div style="background:#fff;border-radius:20px;padding:32px;max-width:500px;width:90%;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,0.2)">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
               <h3 style="font-size:20px;font-weight:800;color:var(--navy)">✏️ Editar Aluno</h3>
@@ -668,7 +706,7 @@ body { background: var(--g50); margin: 0; }
         </div>
 
         <!-- Centered popup -->
-        <div id="cSchedPopup" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:999;background:#fff;border-radius:20px;box-shadow:0 24px 64px rgba(0,0,0,0.25);padding:28px;width:380px;max-width:90vw;border-top:4px solid var(--mango)">
+        <div id="cSchedPopup" role="dialog" aria-modal="true" aria-label="Ação do schedule" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:999;background:#fff;border-radius:20px;box-shadow:0 24px 64px rgba(0,0,0,0.25);padding:28px;width:380px;max-width:90vw;border-top:4px solid var(--mango)">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
             <h4 id="cPopTitle" style="font-size:16px;font-weight:800;color:var(--navy)">Ação</h4>
             <button onclick="closeCPop()" style="border:none;background:var(--g100);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:14px">✕</button>
@@ -1088,16 +1126,26 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadOverview();
   renderTodos();
   
-  // Activity chart
+  // Activity chart — REAL DATA
   try {
     var now = new Date();
     var dayLabels = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
     var chartData = [];
+    
+    // Fetch real activity counts for last 7 days
+    var weekAgo = new Date(now); weekAgo.setDate(weekAgo.getDate()-7);
+    var weekStr = weekAgo.toISOString();
+    var [taskData, fbData, wrData] = await Promise.all([
+      db.from('tasks').select('created_at').gte('created_at', weekStr),
+      db.from('feedbacks').select('created_at').gte('created_at', weekStr),
+      db.from('writing_activities').select('created_at').gte('created_at', weekStr)
+    ]);
+    var allActivity = [...(taskData.data||[]),...(fbData.data||[]),...(wrData.data||[])];
+    
     for(var d=6;d>=0;d--) {
       var day = new Date(now); day.setDate(day.getDate()-d);
       var dayStart = day.toISOString().split('T')[0];
-      var count = 0;
-      if(profiles) count = Math.floor(Math.random()*8)+1; // placeholder
+      var count = allActivity.filter(function(a){ return a.created_at && a.created_at.startsWith(dayStart); }).length;
       chartData.push({label:dayLabels[day.getDay()],value:count,date:dayStart});
     }
     var maxVal = Math.max.apply(null,chartData.map(function(d){return d.value;}))||1;
@@ -1118,6 +1166,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const pendingNiv = placements.filter(p => p.status === 'pending').length;
     const nivCount = document.getElementById('nivCount');
     if (nivCount) { nivCount.textContent = pendingNiv; nivCount.className = 'sb-count' + (pendingNiv === 0 ? ' zero' : ''); }
+    
+    // Unread messages count
+    const { data: unreadMsgs } = await db.from('coord_messages').select('id').eq('read', false);
+    const msgBadge = document.getElementById('msgCount');
+    if (msgBadge && unreadMsgs) { msgBadge.textContent = unreadMsgs.length; msgBadge.className = 'sb-count' + (unreadMsgs.length === 0 ? ' zero' : ''); }
   } catch(e) {}
   
   // Populate teacher filters in all supervision sections
@@ -1181,7 +1234,7 @@ async function sendTeachHw() {
   var desc=document.getElementById('tHwDesc').value.trim();
   if(!sid||!title){showToast('Selecione aluno e título','error');return;}
   try{
-    await createTask(currentUser.id, sid, title, desc);
+    await createTask(title, desc, currentUser.id, [sid], null);
     showToast('Homework enviado!');
     document.getElementById('tHwTitle').value='';document.getElementById('tHwDesc').value='';
   }catch(e){showToast('Erro: '+e.message,'error');}
@@ -1193,7 +1246,7 @@ async function sendTeachFb() {
   var content=document.getElementById('tFbContent').value.trim();
   if(!sid||!content){showToast('Selecione aluno e escreva o feedback','error');return;}
   try{
-    await sendFeedback(currentUser.id, sid, type, content);
+    await createFeedback(currentUser.id, sid, type, content, type);
     showToast('Feedback enviado!');
     document.getElementById('tFbContent').value='';
   }catch(e){showToast('Erro: '+e.message,'error');}
@@ -1204,7 +1257,7 @@ async function sendTeachWr() {
   var theme=document.getElementById('tWrTheme').value.trim();
   if(!sid||!theme){showToast('Selecione aluno e tema','error');return;}
   try{
-    await sendWritingActivity(currentUser.id, sid, theme);
+    await createWritingActivity(currentUser.id, sid, theme, theme, null);
     showToast('Redação enviada!');
     document.getElementById('tWrTheme').value='';
   }catch(e){showToast('Erro: '+e.message,'error');}
@@ -1215,7 +1268,7 @@ async function sendTeachPr() {
   var words=document.getElementById('tPrWords').value.trim();
   if(!sid||!words){showToast('Selecione aluno e palavras','error');return;}
   try{
-    await sendPronunciation(currentUser.id, sid, words);
+    await createPronunciation(currentUser.id, sid, words, '', '');
     showToast('Pronúncia enviada!');
     document.getElementById('tPrWords').value='';
   }catch(e){showToast('Erro: '+e.message,'error');}
@@ -1247,80 +1300,24 @@ function addTodo(){
   input.value='';
   renderTodos();
   
-  // Activity chart
-  try {
-    var now = new Date();
-    var dayLabels = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
-    var chartData = [];
-    for(var d=6;d>=0;d--) {
-      var day = new Date(now); day.setDate(day.getDate()-d);
-      var dayStart = day.toISOString().split('T')[0];
-      var count = 0;
-      if(profiles) count = Math.floor(Math.random()*8)+1; // placeholder
-      chartData.push({label:dayLabels[day.getDay()],value:count,date:dayStart});
-    }
-    var maxVal = Math.max.apply(null,chartData.map(function(d){return d.value;}))||1;
-    document.getElementById('activityChart').innerHTML = chartData.map(function(d){
-      var h = Math.max(8, (d.value/maxVal)*100);
-      var isToday = d.date === now.toISOString().split('T')[0];
-      return '<div style="flex:1;background:'+(isToday?'var(--orange)':'var(--blue-soft)')+';height:'+h+'px;border-radius:6px 6px 0 0;transition:height 0.5s;position:relative" title="'+d.value+' atividades"><div style="position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:700;color:var(--navy)">'+d.value+'</div></div>';
-    }).join('');
-    document.getElementById('activityLabels').innerHTML = chartData.map(function(d){
-      var isToday = d.date === now.toISOString().split('T')[0];
-      return '<div style="flex:1;text-align:center;font-size:10px;font-weight:'+(isToday?'800':'500')+';color:'+(isToday?'var(--orange)':'var(--g400)')+'">'+d.label+'</div>';
-    }).join('');
-  } catch(e){}
+
 }
 function toggleTodo(i){var list=getTodos();list[i].done=!list[i].done;saveTodos(list);renderTodos();
   
-  // Activity chart
-  try {
-    var now = new Date();
-    var dayLabels = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
-    var chartData = [];
-    for(var d=6;d>=0;d--) {
-      var day = new Date(now); day.setDate(day.getDate()-d);
-      var dayStart = day.toISOString().split('T')[0];
-      var count = 0;
-      if(profiles) count = Math.floor(Math.random()*8)+1; // placeholder
-      chartData.push({label:dayLabels[day.getDay()],value:count,date:dayStart});
-    }
-    var maxVal = Math.max.apply(null,chartData.map(function(d){return d.value;}))||1;
-    document.getElementById('activityChart').innerHTML = chartData.map(function(d){
-      var h = Math.max(8, (d.value/maxVal)*100);
-      var isToday = d.date === now.toISOString().split('T')[0];
-      return '<div style="flex:1;background:'+(isToday?'var(--orange)':'var(--blue-soft)')+';height:'+h+'px;border-radius:6px 6px 0 0;transition:height 0.5s;position:relative" title="'+d.value+' atividades"><div style="position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:700;color:var(--navy)">'+d.value+'</div></div>';
-    }).join('');
-    document.getElementById('activityLabels').innerHTML = chartData.map(function(d){
-      var isToday = d.date === now.toISOString().split('T')[0];
-      return '<div style="flex:1;text-align:center;font-size:10px;font-weight:'+(isToday?'800':'500')+';color:'+(isToday?'var(--orange)':'var(--g400)')+'">'+d.label+'</div>';
-    }).join('');
-  } catch(e){}}
+}
 function deleteTodo(i){var list=getTodos();list.splice(i,1);saveTodos(list);renderTodos();
   
-  // Activity chart
-  try {
-    var now = new Date();
-    var dayLabels = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
-    var chartData = [];
-    for(var d=6;d>=0;d--) {
-      var day = new Date(now); day.setDate(day.getDate()-d);
-      var dayStart = day.toISOString().split('T')[0];
-      var count = 0;
-      if(profiles) count = Math.floor(Math.random()*8)+1; // placeholder
-      chartData.push({label:dayLabels[day.getDay()],value:count,date:dayStart});
-    }
-    var maxVal = Math.max.apply(null,chartData.map(function(d){return d.value;}))||1;
-    document.getElementById('activityChart').innerHTML = chartData.map(function(d){
-      var h = Math.max(8, (d.value/maxVal)*100);
-      var isToday = d.date === now.toISOString().split('T')[0];
-      return '<div style="flex:1;background:'+(isToday?'var(--orange)':'var(--blue-soft)')+';height:'+h+'px;border-radius:6px 6px 0 0;transition:height 0.5s;position:relative" title="'+d.value+' atividades"><div style="position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:700;color:var(--navy)">'+d.value+'</div></div>';
-    }).join('');
-    document.getElementById('activityLabels').innerHTML = chartData.map(function(d){
-      var isToday = d.date === now.toISOString().split('T')[0];
-      return '<div style="flex:1;text-align:center;font-size:10px;font-weight:'+(isToday?'800':'500')+';color:'+(isToday?'var(--orange)':'var(--g400)')+'">'+d.label+'</div>';
-    }).join('');
-  } catch(e){}}
+}
+
+function showSkeleton(containerId, count) {
+  var el = document.getElementById(containerId);
+  if (!el) return;
+  var h = '';
+  for (var i = 0; i < (count||3); i++) {
+    h += '<div class="skel-card"><div class="skel-row"><div class="skel-avatar skel-line" style="width:40px;height:40px;border-radius:50%"></div><div style="flex:1"><div class="skel-line w80"></div><div class="skel-line w40"></div></div></div></div>';
+  }
+  el.innerHTML = h;
+}
 
 async function loadOverview() {
   try {
@@ -1397,6 +1394,7 @@ async function loadOverview() {
 
 // ═══ NIVELAMENTOS ═══
 async function loadNivelamentos() {
+  showSkeleton('nivelList', 3);
   const items = await getPlacementTests();
   const div = document.getElementById('nivelList');
   if (!items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📅</div><p>Nenhum agendamento recebido. Quando alguém preencher o formulário do site, aparecerá aqui.</p></div>'; return; }
@@ -1427,6 +1425,7 @@ async function loadNivelamentos() {
 
 // ═══ HOMEWORKS SUPERVISION ═══
 async function loadHomeworks() {
+  showSkeleton('hwList', 3);
   const filterTeacher = document.getElementById('hwFilter')?.value || '';
   let query = db.from('tasks').select('*, teacher:profiles!tasks_teacher_id_fkey(full_name, id), task_submissions(*, student:profiles(full_name))').order('created_at', {ascending: false});
   if (filterTeacher) query = query.eq('teacher_id', filterTeacher);
@@ -1444,6 +1443,7 @@ async function loadHomeworks() {
 
 // ═══ FEEDBACKS SUPERVISION ═══
 async function loadFeedbacks() {
+  showSkeleton('fbList', 3);
   const filterTeacher = document.getElementById('fbFilter')?.value || '';
   let query = db.from('feedbacks').select('*, teacher:profiles!feedbacks_teacher_id_fkey(full_name, id), student:profiles!feedbacks_student_id_fkey(full_name)').order('created_at', {ascending: false});
   if (filterTeacher) query = query.eq('teacher_id', filterTeacher);
@@ -1628,6 +1628,18 @@ async function saveUserEdit() {
     }
 
     showToast('Aluno atualizado com sucesso!');
+    // Flash the updated user card
+    setTimeout(function(){
+      var cards = document.querySelectorAll('.user-card');
+      cards.forEach(function(c){
+        if(c.textContent.indexOf(document.getElementById('editName').value) >= 0){
+          c.style.transition='all 0.3s';
+          c.style.boxShadow='0 0 0 3px var(--mango)';
+          c.style.background='var(--cream)';
+          setTimeout(function(){c.style.boxShadow='';c.style.background='';},2000);
+        }
+      });
+    }, 500);
     closeEditModal();
     loadUsers();
   } catch(e) {
@@ -1873,7 +1885,9 @@ async function cSubmitEvt(slotId,name){
   var type=document.getElementById('cEvtType').value,date=document.getElementById('cEvtDate').value,notes=document.getElementById('cEvtNotes').value.trim();
   if(!date){showToast('Selecione a data','error');return;}
   var labels={cancellation:'Cancelamento com 24h',cancellation_no24:'Cancelamento sem 24h',replacement:'Reposição',cancellation_holiday:'Feriado',cancellation_teacher:'Falta do professor'};
-  try{await addScheduleEvent(slotId,cTeacherId,date,type.startsWith('cancellation')?'cancellation':'replacement',(labels[type]||type)+(notes?' — '+notes:''),currentUser.id,name);cPop();closeCPop();showToast('Evento registrado!');loadCoordScheduleEvents();}catch(e){showToast('Erro','error');}
+  try{await addScheduleEvent(slotId,cTeacherId,date,type.startsWith('cancellation')?'cancellation':'replacement',(labels[type]||type)+(notes?' — '+notes:''),currentUser.id,name);var evtMonth2=document.getElementById('cEvtDate').value.substring(0,7);
+  document.getElementById('schedCoordMonth').value=evtMonth2;
+  cPop();closeCPop();showToast('Evento registrado!');loadCoordSchedule();}catch(e){showToast('Erro','error');}
 }
 
 async function cSubmitXtra(){
@@ -1882,7 +1896,9 @@ async function cSubmitXtra(){
   if(!date){showToast('Selecione a data','error');return;}
   var labels={replacement:'Reposição',meeting:'Reunião pedagógica',note:'Observação'};
   var gridTag=(day!==undefined&&day!==''&&hour)?'[GRID:'+day+':'+hour+'] ':'';
-  try{await addScheduleEvent(null,cTeacherId,date,type==='meeting'?'note':type,gridTag+(labels[type]||type)+(notes?' — '+notes:''),currentUser.id,student||'Geral');cPop();closeCPop();showToast('Evento registrado!');loadCoordSchedule();}catch(e){showToast('Erro','error');}
+  try{await addScheduleEvent(null,cTeacherId,date,type==='meeting'?'note':type,gridTag+(labels[type]||type)+(notes?' — '+notes:''),currentUser.id,student||'Geral');var evtMonth=date.substring(0,7);
+  document.getElementById('schedCoordMonth').value=evtMonth;
+  cPop();closeCPop();showToast('Evento registrado!');loadCoordSchedule();}catch(e){showToast('Erro','error');}
 }
 
 function cFindHourIdx(t){if(!t)return -1;var h=t.substring(0,5);for(var i=0;i<C_HOURS.length;i++){if(C_HOURS[i]===h)return i;}return -1;}

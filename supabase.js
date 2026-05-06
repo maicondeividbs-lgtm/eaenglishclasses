@@ -346,11 +346,15 @@ async function getScheduleEvents(teacherId, month, year) {
   return data || [];
 }
 
-async function addScheduleEvent(slotId, teacherId, eventDate, eventType, notes, createdBy, studentName) {
-  const { error } = await db.from('schedule_events').insert([{
-    slot_id: slotId, teacher_id: teacherId, event_date: eventDate,
+async function addScheduleEvent(slotId, teacherId, eventDate, eventType, notes, createdBy, studentName, repDay, repTime) {
+  const row = {
+    teacher_id: teacherId, event_date: eventDate,
     event_type: eventType, notes: notes || '', created_by: createdBy, student_name: studentName || ''
-  }]);
+  };
+  if (slotId) row.slot_id = slotId;
+  if (repDay !== undefined) row.replacement_day = String(repDay);
+  if (repTime) row.replacement_time = repTime;
+  const { error } = await db.from('schedule_events').insert([row]);
   if (error) throw error;
 }
 

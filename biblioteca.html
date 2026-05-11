@@ -2,280 +2,240 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAAAAABWESUoAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAACYktHRAD/h4/MvwAAAAd0SU1FB+oEGBUhLL+MU28AAAF3SURBVDjLvVM7LwRRFP7OzF02xmMFJSEa2dAQQRREo6EWfoN/IH6BUiV6hV7hJ+hokIgQsiHezGLNzD2fwu7s7EvH192bc7/HOecK8Tsc/HmBSR4ojADHpZTvpNokhZBERYKBoHO35X5MLKokXxShVBvyEC5maZUxYpMCiMB1HJz5SeemrP269Nrsa9dj7nJE3VoJy7t2iGClDTsMtVaihJlWHDXogzvw0vz8NNV5c4QGKT59bnucw8AntV4KSaeBfvQhdwmtlyK/8Z7Zn0QWwfEQy72sSOFgem0eWGcQayQK7nvcdAqAi0VGcUFyFl/WIusVTu1JmGKdmGbcZ2Y3E2TPr68Gaz2QqiQ14gKwx7AqJkGlWmtpMQwcgGCFhADOD6vBcgvGEE+ruFGUIOdpUxi2RmF7ZN4LvaWtMqU23W4+tGUL5z295iJvgu7VjmqGt4NUXrv87vSVSWnojXpFhvLSVu5q9SwoVABC+XEvIjUMDfAPf/MbvRIRVjKrblQAAAAASUVORK5CYII=">
-<meta name="description" content="EA English Classes — Escola de inglês online com mais de 10 anos em Osasco, SP. Aulas ao vivo pelo Google Meet do nível A1 ao C1.">
-<meta property="og:title" content="EA English Classes">
-<meta property="og:description" content="Escola de inglês online — aulas ao vivo com foco em conversação e gramática. Do zero à fluência.">
-<meta property="og:type" content="website">
-<meta property="og:locale" content="pt_BR">
-<meta name="theme-color" content="#19244e">
-<title>Biblioteca do Professor — EA English Classes</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Biblioteca — EA English Classes</title>
+<link rel="icon" type="image/png" href="favicon.png">
 <link rel="stylesheet" href="style.css">
 <style>
-body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--off-white); margin: 0; min-height: 100vh; }
-
-.lib-header {
-  background: linear-gradient(135deg, var(--navy) 0%, #1a3070 100%);
-  padding: 32px 32px 24px;
+/* Biblioteca Design — Inspired by cursos.html */
+.bib-hero {
+  background: linear-gradient(135deg, var(--navy) 0%, #1a2d6d 100%);
+  padding: 100px 0 60px;
   color: #fff;
   position: relative;
   overflow: hidden;
 }
-.lib-header::before {
+.bib-hero::before {
   content: '';
   position: absolute;
-  top: -80px; right: -80px;
-  width: 350px; height: 350px;
+  top: -50%;
+  right: -10%;
+  width: 600px;
+  height: 600px;
   background: radial-gradient(circle, rgba(243,107,46,0.15), transparent 60%);
   border-radius: 50%;
 }
-.lib-inner { max-width: 1200px; margin: 0 auto; position: relative; }
-.lib-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
-.lib-title { font-family: 'Fraunces', serif; font-size: 32px; font-weight: 900; }
-.back-btn {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 8px 16px; background: rgba(255,255,255,0.1);
-  border-radius: 8px; color: rgba(255,255,255,0.7);
-  font-size: 13px; font-weight: 600; transition: all 0.2s;
-}
-.back-btn:hover { background: rgba(255,255,255,0.2); color: #fff; }
+.bib-title { font-size: 2.5rem; font-weight: 900; margin-bottom: 8px; position: relative; }
+.bib-title em { color: var(--mango); font-style: italic; }
+.bib-sub { font-size: 15px; opacity: 0.6; max-width: 600px; }
+.bib-back { color: rgba(255,255,255,0.5); font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 16px; text-decoration: none; transition: color 0.2s; }
+.bib-back:hover { color: #fff; }
 
-/* Level pills */
-.level-pills { display: flex; gap: 8px; flex-wrap: wrap; }
-.pill {
-  padding: 10px 22px; border-radius: 99px;
-  border: 2px solid rgba(255,255,255,0.15);
-  background: rgba(255,255,255,0.05);
-  color: rgba(255,255,255,0.6);
-  font-size: 13px; font-weight: 700;
-  cursor: pointer; transition: all 0.2s; font-family: inherit;
-}
-.pill:hover { background: rgba(255,255,255,0.1); color: #fff; }
-.pill.active { background: var(--orange); border-color: var(--orange); color: #fff; }
-
-/* Search */
-.lib-search { position: relative; margin-top: 16px; }
-.lib-search input {
-  width: 100%; max-width: 440px;
-  padding: 12px 16px 12px 40px; border-radius: 12px;
-  border: 2px solid rgba(255,255,255,0.12);
-  background: rgba(255,255,255,0.06);
-  color: #fff; font-family: inherit; font-size: 14px; outline: none;
-}
-.lib-search input::placeholder { color: rgba(255,255,255,0.35); }
-.lib-search input:focus { border-color: var(--orange); background: rgba(255,255,255,0.1); }
-
-/* View tabs */
-.tabs {
-  max-width: 1200px; margin: 0 auto;
-  padding: 16px 32px; display: flex; gap: 6px;
-  background: #fff; border-bottom: 1px solid var(--g100);
-  overflow-x: auto;
-}
-.tab {
-  padding: 10px 20px; border-radius: 10px;
-  border: none; background: var(--g50);
-  color: var(--g500); font-size: 13px;
-  font-weight: 700; cursor: pointer;
-  font-family: inherit; transition: all 0.2s;
-  white-space: nowrap;
-}
-.tab.active { background: var(--navy); color: #fff; }
-.tab:hover:not(.active) { background: var(--g100); }
-
-/* Content */
-.lib-content { max-width: 1200px; margin: 0 auto; padding: 24px 32px 48px; }
-
-/* Curriculum */
-.curr-table {
-  width: 100%; border-collapse: collapse;
-  background: #fff; border-radius: 16px;
-  overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-}
-.curr-table thead th {
-  background: var(--navy); color: #fff;
-  padding: 14px 14px; font-size: 10px; font-weight: 800;
-  text-transform: uppercase; letter-spacing: 1px; text-align: left;
-}
-.curr-table tbody tr { border-bottom: 1px solid var(--g100); transition: background 0.2s; }
-.curr-table tbody tr:hover { background: var(--cream); }
-.curr-table td { padding: 12px 14px; font-size: 13px; color: var(--g700); vertical-align: top; }
-.curr-table td:first-child { font-weight: 800; color: var(--navy); text-align: center; width: 36px; }
-.grammar-chip {
-  display: inline-block; padding: 4px 10px;
-  background: var(--blue-soft); color: var(--blue);
-  border-radius: 8px; font-size: 12px; font-weight: 600;
-  cursor: pointer; transition: all 0.2s; border: 1px solid transparent;
-}
-.grammar-chip:hover { border-color: var(--blue); transform: translateY(-1px); }
-
-/* Worksheets grid */
-.ws-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 14px;
-}
-.ws-card {
-  background: #fff; border-radius: 14px;
-  border: 1px solid var(--g100); overflow: hidden;
-  transition: all 0.3s; text-align: center;
-  padding: 24px 16px;
-  display: flex; flex-direction: column;
-  align-items: center; gap: 10px;
-}
-.ws-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
-  border-color: var(--orange);
-}
-.ws-unit { font-family: 'Fraunces', serif; font-size: 36px; font-weight: 900; color: var(--navy); }
-.ws-label { font-size: 12px; color: var(--g500); }
-.ws-dl {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 8px 16px; border-radius: 8px;
-  background: var(--orange); color: #fff;
-  font-size: 12px; font-weight: 700;
-  text-decoration: none; transition: all 0.2s;
-}
-.ws-dl:hover { background: var(--orange-light); transform: translateY(-1px); }
-
-/* Examples grid */
-.ex-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 16px;
-}
-.ex-card {
-  background: #fff; border-radius: 14px;
-  border: 1px solid var(--g100); overflow: hidden;
-  transition: all 0.3s; cursor: pointer;
-  display: flex; flex-direction: column;
-}
-.ex-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-  border-color: var(--mango);
-}
-.ex-header {
-  padding: 16px 18px;
-  background: var(--navy);
-  color: #fff;
-  display: flex; align-items: center; gap: 12px;
-}
-.ex-page-num {
-  width: 42px; height: 42px; min-width: 42px;
-  border-radius: 10px;
-  background: rgba(255,255,255,0.15);
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Fraunces', serif;
-  font-size: 16px; font-weight: 900; color: #fff;
-}
-.ex-header-text { flex: 1; }
-.ex-topic { font-size: 14px; font-weight: 700; color: #fff; line-height: 1.3; }
-.ex-book-label { font-size: 10px; color: rgba(255,255,255,0.5); margin-top: 3px; }
-.ex-preview {
-  padding: 14px 18px; flex: 1;
-  font-size: 12px; color: var(--g600);
-  line-height: 1.6;
-  max-height: 90px; overflow: hidden;
+/* Journey bar */
+.journey-bar {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  margin-top: 40px;
   position: relative;
 }
-.ex-preview::after {
-  content: '';
-  position: absolute; bottom: 0; left: 0; right: 0;
-  height: 40px;
-  background: linear-gradient(transparent, #fff);
+.j-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 0 20px;
+  position: relative;
+  z-index: 1;
+  transition: transform 0.2s;
 }
-.ex-footer {
-  padding: 10px 18px;
-  border-top: 1px solid var(--g100);
-  font-size: 11px; color: var(--orange);
-  font-weight: 700; text-align: center;
+.j-step:hover { transform: scale(1.1); }
+.j-dot {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 900;
+  color: #fff;
+  background: rgba(255,255,255,0.15);
+  border: 3px solid rgba(255,255,255,0.2);
+  transition: all 0.3s;
+}
+.j-step.active .j-dot {
+  background: var(--mango);
+  border-color: var(--mango);
+  box-shadow: 0 4px 16px rgba(245,154,30,0.4);
+  transform: scale(1.15);
+}
+.j-label { font-size: 11px; font-weight: 700; opacity: 0.5; white-space: nowrap; }
+.j-step.active .j-label { opacity: 1; color: var(--mango); }
+.j-line {
+  position: absolute;
+  top: 20px;
+  left: 10%;
+  right: 10%;
+  height: 3px;
+  background: rgba(255,255,255,0.1);
+  z-index: 0;
 }
 
-/* Example modal */
-.modal-overlay {
-  display: none; position: fixed; inset: 0;
-  background: rgba(0,0,0,0.5); z-index: 999;
-  align-items: center; justify-content: center;
+/* Tabs */
+.bib-tabs {
+  display: flex;
+  gap: 4px;
+  background: #fff;
+  padding: 6px;
+  border-radius: 14px;
+  border: 1px solid var(--g100);
+  max-width: 600px;
+  margin: -24px auto 32px;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
 }
-.modal-overlay.open { display: flex; }
-.modal-box {
-  background: #fff; border-radius: 20px;
-  max-width: 600px; width: 92%;
-  max-height: 85vh; overflow-y: auto;
-  padding: 32px; box-shadow: 0 24px 64px rgba(0,0,0,0.2);
+.bib-tab {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--g500);
+  cursor: pointer;
+  transition: all 0.25s;
 }
-.modal-box h3 { font-size: 22px; font-weight: 900; color: var(--navy); margin-bottom: 6px; }
-.modal-box .modal-meta { font-size: 12px; color: var(--g400); margin-bottom: 20px; }
-.modal-content {
-  font-size: 14px; color: var(--g700); line-height: 1.8;
-}
-.modal-content strong { color: var(--navy); }
-.modal-content em { color: var(--blue); font-style: italic; }
+.bib-tab:hover { background: var(--g50); color: var(--navy); }
+.bib-tab.active { background: var(--navy); color: #fff; box-shadow: 0 2px 8px rgba(25,36,78,0.2); }
 
-@media(max-width:768px) {
-  .lib-header { padding: 20px 16px 16px; }
-  .lib-title { font-size: 24px; }
-  .lib-content { padding: 16px; }
-  .tabs { padding: 10px 16px; }
+/* Content area */
+.bib-content { max-width: 1200px; margin: 0 auto; padding: 0 24px 64px; }
+.bib-view { display: none; animation: bibFade 0.35s ease; }
+.bib-view.active { display: block; }
+@keyframes bibFade { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+
+/* Curriculum table */
+.cur-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+.cur-table thead th { padding: 14px 16px; background: var(--navy); color: #fff; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; text-align: left; }
+.cur-table tbody tr { border-bottom: 1px solid var(--g100); transition: background 0.2s; }
+.cur-table tbody tr:hover { background: var(--cream); }
+.cur-table td { padding: 14px 16px; font-size: 13px; color: var(--g700); vertical-align: top; }
+.cur-table td:first-child { font-weight: 800; color: var(--navy); text-align: center; width: 36px; }
+.cur-table td:nth-child(2) { font-weight: 700; color: var(--navy); }
+
+/* Worksheet grid */
+.ws-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+.ws-card {
+  background: #fff;
+  border: 1px solid var(--g100);
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  cursor: default;
+}
+.ws-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(0,0,0,0.08); border-color: var(--mango); }
+.ws-num { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 900; color: var(--navy); margin-bottom: 6px; }
+.ws-label { font-size: 12px; color: var(--g500); margin-bottom: 12px; }
+.ws-btn { display: inline-flex; align-items: center; gap: 4px; padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 700; text-decoration: none; transition: all 0.2s; border: none; cursor: pointer; font-family: inherit; }
+.ws-dl { background: var(--orange); color: #fff; }
+.ws-dl:hover { background: var(--orange-light); transform: translateY(-1px); }
+.ws-copy { background: var(--navy); color: #fff; }
+.ws-copy:hover { background: var(--blue); }
+
+/* Grammar chips */
+.gram-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+.gram-card {
+  background: #fff;
+  border: 1px solid var(--g100);
+  border-radius: 12px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+.gram-card:hover { border-color: var(--blue); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+.gram-topic { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+.gram-page { font-size: 11px; color: var(--g400); }
+
+/* Modal */
+.modal-bg { display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.5); backdrop-filter:blur(3px); align-items:center; justify-content:center; }
+.modal-bg.open { display:flex; }
+.modal-box { background:#fff; border-radius:20px; max-width:600px; width:90%; max-height:80vh; overflow-y:auto; padding:28px; box-shadow:0 24px 64px rgba(0,0,0,0.2); animation:bibFade 0.3s; }
+
+/* Search */
+.bib-search { position:relative; max-width:400px; margin-top:20px; }
+.bib-search input { width:100%; padding:12px 16px 12px 42px; border:2px solid rgba(255,255,255,0.15); border-radius:12px; background:rgba(255,255,255,0.08); color:#fff; font-family:inherit; font-size:14px; outline:none; transition:all 0.2s; }
+.bib-search input::placeholder { color:rgba(255,255,255,0.35); }
+.bib-search input:focus { border-color:var(--mango); background:rgba(255,255,255,0.12); }
+.bib-search svg { position:absolute; left:14px; top:14px; }
+
+@media (max-width: 768px) {
+  .bib-title { font-size: 1.8rem; }
+  .journey-bar { flex-wrap: wrap; gap: 8px; }
+  .j-step { padding: 0 10px; }
+  .bib-tabs { flex-wrap: wrap; }
   .ws-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
-  .ex-grid { grid-template-columns: 1fr; }
-  .curr-table { font-size: 11px; }
-  .curr-table th, .curr-table td { padding: 8px 6px; }
+  .gram-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 <body>
 
-<!-- Example Modal -->
-<div class="modal-overlay" id="exModal" onclick="if(event.target===this)this.classList.remove('open')">
+<!-- Modal -->
+<div class="modal-bg" id="gramModal" onclick="if(event.target===this)this.classList.remove('open')">
   <div class="modal-box">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-      <h3 id="exModalTitle">Example</h3>
-      <button onclick="document.getElementById('exModal').classList.remove('open')" style="border:none;background:var(--g100);width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:16px">✕</button>
+      <h3 id="gramTitle" style="font-size:18px;font-weight:800;color:var(--navy)">Grammar</h3>
+      <button onclick="document.getElementById('gramModal').classList.remove('open')" style="border:none;background:var(--g100);width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:16px">✕</button>
     </div>
-    <div class="modal-meta" id="exModalMeta"></div>
-    <div class="modal-content" id="exModalContent"></div>
+    <div id="gramMeta" style="font-size:12px;color:var(--g500);margin-bottom:16px"></div>
+    <div id="gramBody" style="font-size:14px;color:var(--g700);line-height:1.8"></div>
   </div>
 </div>
 
-<!-- Header -->
-<header class="lib-header">
-  <div class="lib-inner">
-    <div class="lib-top">
-      <div>
-        <a href="dashboard-professor.html" class="back-btn">← Dashboard</a>
-        <div class="lib-title">📚 Biblioteca do Professor</div>
-        <div style="font-size:13px;opacity:0.5;margin-top:4px">Interchange 5th Edition — Currículo, Worksheets e Exemplos</div>
-      </div>
-    </div>
-    <div class="level-pills">
-      <button class="pill active" onclick="setLevel('intro',this)">🟡 Intro</button>
-      <button class="pill" onclick="setLevel('lvl1',this)">🔴 Level 1</button>
-      <button class="pill" onclick="setLevel('lvl2',this)">🔵 Level 2</button>
-      <button class="pill" onclick="setLevel('lvl3',this)">🟢 Level 3</button>
-    </div>
-    <div class="lib-search">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2" style="position:absolute;left:14px;top:14px"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+<!-- Hero -->
+<header class="bib-hero">
+  <div class="container" style="position:relative">
+    <a href="dashboard-professor.html" class="bib-back">← Voltar ao Dashboard</a>
+    <h1 class="bib-title">Biblioteca <em>Pedagógica</em></h1>
+    <p class="bib-sub">Currículo completo, worksheets e explicações gramaticais — tudo organizado por livro e nível.</p>
+    
+    <div class="bib-search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
       <input type="text" id="searchInput" placeholder="Buscar gramática, vocabulário, unidade..." oninput="render()">
+    </div>
+    
+    <!-- Journey bar -->
+    <div style="position:relative;margin-top:40px">
+      <div class="j-line"></div>
+      <div class="journey-bar">
+        <div class="j-step active" onclick="setLevel('intro',this)"><div class="j-dot">I</div><div class="j-label">Intro</div></div>
+        <div class="j-step" onclick="setLevel('lvl1',this)"><div class="j-dot">1</div><div class="j-label">Level 1</div></div>
+        <div class="j-step" onclick="setLevel('lvl2',this)"><div class="j-dot">2</div><div class="j-label">Level 2</div></div>
+        <div class="j-step" onclick="setLevel('lvl3',this)"><div class="j-dot">3</div><div class="j-label">Level 3</div></div>
+      </div>
     </div>
   </div>
 </header>
 
 <!-- Tabs -->
-<div class="tabs">
-  <button class="tab active" onclick="setView('curriculum',this)">📋 Currículo</button>
-  <button class="tab" onclick="setView('worksheets',this)">📄 Worksheets</button>
-  <button class="tab" onclick="setView('examples',this)">💡 Exemplos & Explicações</button>
+<div class="container">
+  <div class="bib-tabs">
+    <button class="bib-tab active" onclick="setView('curriculum',this)">📋 Currículo</button>
+    <button class="bib-tab" onclick="setView('worksheets',this)">📄 Worksheets</button>
+    <button class="bib-tab" onclick="setView('examples',this)">💡 Gramática</button>
+  </div>
 </div>
 
 <!-- Content -->
-<div class="lib-content">
-  <div id="view-curriculum"></div>
-  <div id="view-worksheets" style="display:none"></div>
-  <div id="view-examples" style="display:none"></div>
+<div class="bib-content">
+  <div class="bib-view active" id="v-curriculum"></div>
+  <div class="bib-view" id="v-worksheets"></div>
+  <div class="bib-view" id="v-examples"></div>
 </div>
 
 <script>
@@ -361,100 +321,93 @@ const examples = {'intro':[{page:3,topic:'POSSESSIVE ADJECTIVES',book:'Intro',ht
 let currentLevel = 'intro';
 let currentView = 'curriculum';
 
-function setLevel(lvl, btn) {
-  currentLevel = lvl;
-  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
-  btn.classList.add('active');
+function setLevel(level, el) {
+  currentLevel = level;
+  document.querySelectorAll('.j-step').forEach(s => s.classList.remove('active'));
+  if(el) el.classList.add('active');
   render();
 }
 
-function setView(view, btn) {
+function setView(view, el) {
   currentView = view;
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  btn.classList.add('active');
-  ['curriculum','worksheets','examples'].forEach(v => {
-    document.getElementById('view-' + v).style.display = v === view ? '' : 'none';
-  });
+  document.querySelectorAll('.bib-tab').forEach(t => t.classList.remove('active'));
+  if(el) el.classList.add('active');
+  document.querySelectorAll('.bib-view').forEach(v => v.classList.remove('active'));
+  document.getElementById('v-' + view).classList.add('active');
   render();
 }
 
 function render() {
-  const search = (document.getElementById('searchInput')?.value || '').toLowerCase();
-  if (currentView === 'curriculum') renderCurriculum(search);
-  else if (currentView === 'worksheets') renderWorksheets();
-  else if (currentView === 'examples') renderExamples(search);
+  var search = (document.getElementById('searchInput').value || '').toLowerCase();
+  if(currentView === 'curriculum') renderCurriculum(search);
+  else if(currentView === 'worksheets') renderWorksheets();
+  else renderExamples(search);
 }
 
 function renderCurriculum(search) {
-  const units = curriculum[currentLevel] || [];
-  const filtered = search ? units.filter(u =>
-    u.t.toLowerCase().includes(search) || u.g.toLowerCase().includes(search) || u.v.toLowerCase().includes(search)
-  ) : units;
-
-  document.getElementById('view-curriculum').innerHTML = '<table class="curr-table"><thead><tr><th>U.</th><th>Unidade</th><th>Vocabulário</th><th>Gramática</th><th>Objetivo</th><th>Writing</th></tr></thead><tbody>' +
-    filtered.map(u => '<tr><td>' + u.u + '</td><td style="font-weight:700;color:var(--navy)">' + u.t + '</td><td>' + u.v + '</td><td><span class="grammar-chip">' + u.g + '</span></td><td style="color:var(--g500)">' + u.o + '</td><td style="color:var(--g400);font-style:italic;font-size:12px">' + u.w + '</td></tr>'
-    ).join('') + '</tbody></table>';
+  var items = curriculum[currentLevel] || [];
+  var filtered = search ? items.filter(function(u){
+    return (u.t+u.v+u.g+u.o).toLowerCase().indexOf(search)>=0;
+  }) : items;
+  
+  var div = document.getElementById('v-curriculum');
+  if(!filtered.length) { div.innerHTML = '<div style="text-align:center;padding:48px;color:var(--g400)"><p style="font-size:48px;opacity:0.3">📋</p><p>Nenhuma unidade encontrada.</p></div>'; return; }
+  
+  div.innerHTML = '<table class="cur-table"><thead><tr><th>#</th><th>Unidade</th><th>Vocabulário</th><th>Gramática</th><th>Objetivos</th></tr></thead><tbody>' +
+    filtered.map(function(u){
+      return '<tr><td>'+u.u+'</td><td>'+u.t+'</td><td>'+u.v+'</td><td>'+u.g+'</td><td>'+u.o+'</td></tr>';
+    }).join('') + '</tbody></table>';
 }
 
 function renderWorksheets() {
-  const levelKey = {'intro':'intro','lvl1':'level1','lvl2':'level2','lvl3':'level3'}[currentLevel];
-  const div = document.getElementById('view-worksheets');
-  let cards = '';
-  for (let i = 1; i <= 16; i++) {
-    const path = STORAGE + '/' + levelKey + '/unit-' + String(i).padStart(2,'0') + '.pdf';
-    const levelNames = {'intro':'Intro','lvl1':'Level 1','lvl2':'Level 2','lvl3':'Level 3'};
-    cards += '<div class="ws-card"><div class="ws-unit">' + i + '</div><div class="ws-label">Unit ' + i + ' • ' + (levelNames[currentLevel]||'') + '</div><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center"><a href="' + path + '" target="_blank" class="ws-dl">📥 Baixar</a><button onclick="navigator.clipboard.writeText(\'' + path + '\').then(()=>showToast(\'Link copiado!\'));event.stopPropagation()" style="padding:8px 12px;border-radius:8px;background:var(--navy);color:#fff;font-size:12px;font-weight:700;border:none;cursor:pointer;transition:all 0.2s" onmouseover="this.style.background=\'var(--blue)\'" onmouseout="this.style.background=\'var(--navy)\'">🔗 Copiar</button></div></div>';
+  var wsKeys = {intro:'intro',lvl1:'level1',lvl2:'level2',lvl3:'level3'};
+  var levelKey = wsKeys[currentLevel] || 'intro';
+  var levelNames = {intro:'Intro',lvl1:'Level 1',lvl2:'Level 2',lvl3:'Level 3'};
+  
+  var div = document.getElementById('v-worksheets');
+  var cards = '';
+  for(var i=1;i<=16;i++) {
+    var path = STORAGE + '/' + levelKey + '/unit-' + String(i).padStart(2,'0') + '.pdf';
+    cards += '<div class="ws-card"><div class="ws-num">' + i + '</div><div class="ws-label">Unit ' + i + ' — ' + (levelNames[currentLevel]||'') + '</div><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center"><a href="' + path + '" target="_blank" class="ws-btn ws-dl">📥 Baixar</a><button onclick="navigator.clipboard.writeText(\''+path+'\').then(function(){showToast(\'Link copiado!\')})" class="ws-btn ws-copy">🔗 Copiar</button></div></div>';
   }
-  div.innerHTML = '<p style="font-size:14px;color:var(--g500);margin-bottom:20px">Worksheets originais da EA English Classes — um PDF por unidade.</p><div class="ws-grid">' + cards + '</div>';
+  div.innerHTML = '<div class="ws-grid">' + cards + '</div>';
 }
 
 function renderExamples(search) {
-  const items = examples[currentLevel] || [];
-  const filtered = (search ? items.filter(ex =>
-    ex.topic.toLowerCase().includes(search) || ex.html.toLowerCase().includes(search)
-  ) : items).sort((a,b) => a.page - b.page);
-
-  const div = document.getElementById('view-examples');
-  if (!filtered.length) {
-    div.innerHTML = '<div style="text-align:center;padding:48px;color:var(--g400)"><p style="font-size:48px;margin-bottom:12px;opacity:0.3">💡</p><p>Nenhum exemplo encontrado' + (search ? ' para "' + search + '"' : ' para este nível') + '.</p></div>';
-    return;
-  }
-
-  div.innerHTML = '<p style="font-size:14px;color:var(--g500);margin-bottom:20px">Explicações gramaticais em português — clique para expandir.</p><div class="ex-grid">' +
-    filtered.map((ex, idx) => {
-      const preview = ex.html.replace(/<[^>]*>/g, '').substring(0, 120);
-      return '<div class="ex-card" onclick="showExample(' + idx + ')"><div class="ex-header"><div class="ex-page-num">' + ex.page + '</div><div class="ex-header-text"><div class="ex-topic">' + ex.topic + '</div><div class="ex-book-label">' + ex.book + ' — Página ' + ex.page + '</div></div></div><div class="ex-preview">' + preview + '...</div><div class="ex-footer">Clique para ver completo →</div></div>';
-    }).join('') + '</div>';
+  var items = examples[currentLevel] || [];
+  var filtered = search ? items.filter(function(ex){
+    return (ex.topic+ex.html).toLowerCase().indexOf(search)>=0;
+  }) : items;
+  filtered.sort(function(a,b){return a.page-b.page;});
+  
+  var div = document.getElementById('v-examples');
+  if(!filtered.length) { div.innerHTML = '<div style="text-align:center;padding:48px;color:var(--g400)"><p style="font-size:48px;opacity:0.3">💡</p><p>Nenhum exemplo encontrado.</p></div>'; return; }
+  
+  div.innerHTML = '<div class="gram-grid">' + filtered.map(function(ex,i){
+    return '<div class="gram-card" onclick="openGram('+i+')"><div class="gram-topic">'+ex.topic+'</div><div class="gram-page">📖 Página '+ex.page+'</div></div>';
+  }).join('') + '</div>';
+  
+  window._filteredExamples = filtered;
 }
 
-function showExample(idx) {
-  const items = examples[currentLevel] || [];
-  const search = (document.getElementById('searchInput')?.value || '').toLowerCase();
-  const filtered = search ? items.filter(ex =>
-    ex.topic.toLowerCase().includes(search) || ex.html.toLowerCase().includes(search)
-  ) : items;
+function openGram(idx) {
+  var ex = window._filteredExamples[idx];
+  if(!ex) return;
+  document.getElementById('gramTitle').textContent = ex.topic;
+  document.getElementById('gramMeta').textContent = '📖 Página ' + ex.page + ' — ' + currentLevel.replace('lvl','Level ').replace('intro','Intro');
+  document.getElementById('gramBody').innerHTML = ex.html;
+  document.getElementById('gramModal').classList.add('open');
+}
 
-  const ex = filtered[idx];
-  if (!ex) return;
-
-  document.getElementById('exModalTitle').textContent = ex.topic;
-  document.getElementById('exModalMeta').innerHTML = '<span style="background:var(--navy);color:#fff;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:700;margin-right:8px">Página ' + ex.page + '</span> ' + ex.book;
-  document.getElementById('exModalContent').innerHTML = ex.html;
-  document.getElementById('exModal').classList.add('open');
+function showToast(msg){
+  var t=document.createElement('div');
+  t.style.cssText='position:fixed;bottom:24px;right:24px;padding:14px 20px;border-radius:12px;background:#10b981;color:#fff;font-size:14px;font-weight:600;z-index:9999;animation:bibFade 0.3s;box-shadow:0 8px 24px rgba(0,0,0,0.15)';
+  t.textContent='✅ '+msg;
+  document.body.appendChild(t);
+  setTimeout(function(){t.remove();},3000);
 }
 
 render();
-</script>
-
-<script>
-function showToast(msg) {
-  const t = document.createElement('div');
-  t.style.cssText = 'position:fixed;top:20px;right:20px;z-index:9999;padding:14px 24px;border-radius:12px;font-size:14px;font-weight:600;color:#fff;background:#10b981;box-shadow:0 8px 24px rgba(0,0,0,0.2);transition:all 0.4s;opacity:0;transform:translateY(-10px)';
-  t.textContent = msg;
-  document.body.appendChild(t);
-  requestAnimationFrame(()=>{t.style.opacity='1';t.style.transform='translateY(0)'});
-  setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),400)},2000);
-}
 </script>
 </body>
 </html>

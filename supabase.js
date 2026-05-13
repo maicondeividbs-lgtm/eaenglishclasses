@@ -318,6 +318,147 @@ async function getUnreadCount(userId, role) {
   return count;
 }
 
+// Returns a flat list of notification items (recent events) for the bell dropdown.
+// We use a recency-window approach: items created/updated in the last 14 days,
+// limited to the most recent 20. Each item: { type, icon, title, sub, when, section, badge }
+async function getNotificationItems(userId, role) {
+  const cutoff = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString();
+  const items = [];
+
+  try {
+    if (role === 'student') {
+      // Homework atribuído (task_submissions pending) — recent
+      const subs = await db.from('task_submissions')
+        .select('id, status, created_at, task:tasks(title, teacher:profiles!tasks_teacher_id_fkey(full_name))')
+        .eq('student_id', userId).gte('created_at', cutoff)
+        .order('created_at', { ascending: false }).limit(10);
+      (subs.data || []).forEach(s => {
+        const isPending = s.status === 'pending';
+        items.push({
+          type: 'homework', icon: '📝',
+          title: (isPending ? 'Novo homework: ' : 'Homework: ') + (s.task?.title || 'sem título'),
+          sub: (s.task?.teacher?.full_name || 'Professor') + (isPending ? ' • aguardando sua entrega' : ''),
+          when: s.created_at, section: 'homework', isNew: isPending
+        });
+      });
+
+      // Redações: status submitted → aguardando | graded → corrigida
+      const wr = await db.from('writing_activities')
+        .select('id, title, status, created_at, reviewed_at, teacher:profiles!writing_activities_teacher_id_fkey(full_name)')
+        .eq('student_id', userId).gte('created_at', cutoff)
+        .order('created_at', { ascending: false }).limit(10);
+      (wr.data || []).forEach(w => {
+        if (w.status === 'pending') {
+          items.push({ type: 'writing', icon: '✍️', title: 'Tema de redação: ' + (w.title||''), sub: (w.teacher?.full_name||'Professor') + ' • escreva sua resposta', when: w.created_at, section: 'writing', isNew: true });
+        } else if (w.status === 'graded') {
+          items.push({ type: 'writing', icon: '✅', title: 'Redação corrigida: ' + (w.title||''), sub: (w.teacher?.full_name||'Professor') + ' • veja os comentários', when: w.reviewed_at || w.created_at, section: 'writing', isNew: true });
+        }
+      });
+
+      // Feedbacks recebidos
+      const fb = await db.from('feedbacks')
+        .select('id, title, created_at, teacher:profiles!feedbacks_teacher_id_fkey(full_name)')
+        .eq('student_id', userId).gte('created_at', cutoff)
+        .order('created_at', { ascending: false }).limit(10);
+      (fb.data || []).forEach(f => {
+        items.push({ type: 'feedback', icon: '💬', title: 'Feedback: ' + (f.title||''), sub: (f.teacher?.full_name||'Professor'), when: f.created_at, section: 'feedback' });
+      });
+
+      // Avisos (announcements) gerais
+      const ann = await db.from('announcements')
+        .select('id, title, created_at, author:profiles!announcements_author_id_fkey(full_name)')
+        .gte('created_at', cutoff)
+        .order('created_at', { ascending: false }).limit(10);
+      (ann.data || []).forEach(a => {
+        items.push({ type: 'announcement', icon: '📢', title: 'Aviso: ' + (a.title||''), sub: (a.author?.full_name||'EA English'), when: a.created_at, section: 'announcements' });
+      });
+
+      // Respostas a help_requests
+      try {
+        const helps = await db.from('help_requests')
+          .select('id, subject, answered_at, status, teacher:profiles!help_requests_teacher_id_fkey(full_name)')
+          .eq('student_id', userId).eq('status', 'answered').gte('answered_at', cutoff)
+          .order('answered_at', { ascending: false }).limit(10);
+        (helps.data || []).forEach(h => {
+          items.push({ type: 'help', icon: '✅', title: 'Professor respondeu sua dúvida' + (h.subject ? ': ' + h.subject : ''), sub: (h.teacher?.full_name||'Professor'), when: h.answered_at, section: null, isNew: true });
+        });
+      } catch(e) { /* table may not exist */ }
+
+    } else if (role === 'teacher') {
+      // Redações submitted (aluno enviou)
+      const wr = await db.from('writing_activities')
+        .select('id, title, submitted_at, student:profiles!writing_activities_student_id_fkey(full_name)')
+        .eq('teacher_id', userId).eq('status','submitted').gte('submitted_at', cutoff)
+        .order('submitted_at', { ascending: false }).limit(10);
+      (wr.data || []).forEach(w => {
+        items.push({ type: 'writing', icon: '✍️', title: 'Redação aguardando correção: ' + (w.title||''), sub: (w.student?.full_name||'Aluno'), when: w.submitted_at, section: 'writing', isNew: true });
+      });
+
+      // Homework entregue (task_submissions submitted/completed)
+      const subs = await db.from('task_submissions')
+        .select('id, status, submitted_at, task:tasks(title), student:profiles!task_submissions_student_id_fkey(full_name)')
+        .eq('status','submitted').gte('submitted_at', cutoff)
+        .order('submitted_at', { ascending: false }).limit(10);
+      (subs.data || []).forEach(s => {
+        items.push({ type: 'homework', icon: '📥', title: 'Homework entregue: ' + (s.task?.title||''), sub: (s.student?.full_name||'Aluno'), when: s.submitted_at, section: 'homework' });
+      });
+
+      // Mensagens da coord
+      const msgs = await db.from('coord_messages')
+        .select('id, title, created_at, read, author:profiles!coord_messages_author_id_fkey(full_name)')
+        .eq('teacher_id', userId).gte('created_at', cutoff)
+        .order('created_at', { ascending: false }).limit(10);
+      (msgs.data || []).forEach(m => {
+        items.push({ type: 'message', icon: '✉️', title: 'Coordenação: ' + (m.title||''), sub: (m.author?.full_name||''), when: m.created_at, section: 'messages', isNew: !m.read });
+      });
+
+      // Help requests recebidos (perguntas dos alunos)
+      try {
+        const helps = await db.from('help_requests')
+          .select('id, subject, message, created_at, status, student:profiles!help_requests_student_id_fkey(full_name)')
+          .eq('teacher_id', userId).gte('created_at', cutoff)
+          .order('created_at', { ascending: false }).limit(10);
+        (helps.data || []).forEach(h => {
+          const isOpen = h.status !== 'answered';
+          items.push({ type: 'help', icon: '❓', title: 'Pergunta de aluno' + (h.subject ? ': ' + h.subject : ''), sub: (h.student?.full_name||'Aluno'), when: h.created_at, section: 'help-requests', isNew: isOpen });
+        });
+      } catch(e) { /* table may not exist */ }
+
+    } else if (role === 'coordinator') {
+      // Nivelamentos pendentes
+      const pl = await db.from('placement_tests')
+        .select('id, full_name, created_at, status')
+        .eq('status','pending').gte('created_at', cutoff)
+        .order('created_at', { ascending: false }).limit(10);
+      (pl.data || []).forEach(p => {
+        items.push({ type: 'placement', icon: '📅', title: 'Novo nivelamento: ' + (p.full_name||''), sub: 'Aguardando agendamento', when: p.created_at, section: 'nivelamento', isNew: true });
+      });
+
+      // Redações submitted no sistema
+      const wr = await db.from('writing_activities')
+        .select('id, title, submitted_at, student:profiles!writing_activities_student_id_fkey(full_name), teacher:profiles!writing_activities_teacher_id_fkey(full_name)')
+        .eq('status','submitted').gte('submitted_at', cutoff)
+        .order('submitted_at', { ascending: false }).limit(10);
+      (wr.data || []).forEach(w => {
+        items.push({ type: 'writing', icon: '✍️', title: 'Redação aguardando correção', sub: (w.student?.full_name||'Aluno') + ' → Prof. ' + (w.teacher?.full_name||'?'), when: w.submitted_at, section: 'supervision' });
+      });
+
+      // Avisos recentes
+      const ann = await db.from('announcements')
+        .select('id, title, created_at')
+        .gte('created_at', cutoff)
+        .order('created_at', { ascending: false }).limit(5);
+      (ann.data || []).forEach(a => {
+        items.push({ type: 'announcement', icon: '📢', title: 'Aviso publicado: ' + (a.title||''), sub: '', when: a.created_at, section: 'announcements' });
+      });
+    }
+  } catch(e) { console.error('Notification items error:', e); }
+
+  // Sort all items by recency
+  items.sort((a, b) => (new Date(b.when||0)) - (new Date(a.when||0)));
+  return items.slice(0, 20);
+}
+
 
 // ═══ SCHEDULE ═══
 async function getScheduleSlots(teacherId) {
@@ -426,4 +567,65 @@ function showLastUpdate() {
     el.textContent = 'Atualizado às ' + now.toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
     el.style.display = '';
   }
+}
+
+// ═══ HELP REQUESTS (Pedir ajuda ao professor) ═══
+async function getStudentMainTeacher(studentId) {
+  // Find first active enrollment with a teacher
+  const { data, error } = await db
+    .from('enrollments')
+    .select('teacher_id, teacher:profiles!enrollments_teacher_id_fkey(id, full_name)')
+    .eq('student_id', studentId)
+    .not('teacher_id', 'is', null)
+    .limit(1);
+  if (error) throw error;
+  return (data && data[0]) ? data[0] : null;
+}
+
+async function createHelpRequest(studentId, teacherId, subject, message) {
+  const { error } = await db.from('help_requests').insert([{
+    student_id: studentId,
+    teacher_id: teacherId,
+    subject: subject || null,
+    message,
+    status: 'open'
+  }]);
+  if (error) throw error;
+}
+
+async function getHelpRequestsForTeacher(teacherId) {
+  const { data, error } = await db
+    .from('help_requests')
+    .select('*, student:profiles!help_requests_student_id_fkey(full_name)')
+    .eq('teacher_id', teacherId)
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+  return data || [];
+}
+
+async function getHelpRequestsForStudent(studentId) {
+  const { data, error } = await db
+    .from('help_requests')
+    .select('*, teacher:profiles!help_requests_teacher_id_fkey(full_name)')
+    .eq('student_id', studentId)
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+  return data || [];
+}
+
+async function answerHelpRequest(requestId, answer) {
+  const { error } = await db
+    .from('help_requests')
+    .update({ answer, answered_at: new Date().toISOString(), status: 'answered' })
+    .eq('id', requestId);
+  if (error) throw error;
+}
+
+async function markHelpRead(requestId) {
+  const { error } = await db
+    .from('help_requests')
+    .update({ read_at: new Date().toISOString() })
+    .eq('id', requestId)
+    .is('read_at', null);
+  if (error) throw error;
 }

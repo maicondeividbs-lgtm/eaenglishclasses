@@ -923,6 +923,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('notifBell').classList.add('has-new');
   }
   initNotifications('student');
+  // Help request: floating button + modal (needs currentUser)
+  initHelpRequest();
   // Load avatar if exists
   if (currentUser.avatar_url) setAvatarEverywhere(currentUser.avatar_url);
 });
@@ -1493,9 +1495,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
   document.querySelectorAll('.section').forEach(s => observer.observe(s, {attributes:true, attributeFilter:['class']}));
-
-  // ═══ HELP REQUEST: wire up floating button ═══
-  initHelpRequest();
 });
 
 // ═══ HELP REQUEST (Pedir ajuda ao professor) ═══
@@ -1507,6 +1506,7 @@ async function initHelpRequest() {
   if (!fab) return;
   fab.addEventListener('click', openHelpModal);
   // Try to resolve teacher once at startup
+  if (!currentUser || !currentUser.id) return;
   try {
     const info = await getStudentMainTeacher(currentUser.id);
     if (info && info.teacher) {

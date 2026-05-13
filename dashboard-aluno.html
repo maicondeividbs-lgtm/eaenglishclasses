@@ -125,29 +125,249 @@ body { background: var(--g50); margin: 0; }
 
 @keyframes skelPulse { 0%{background-position:-200px 0} 100%{background-position:calc(200px+100%) 0} }
 .skel-line { height:14px;margin-bottom:10px;border-radius:6px;background:linear-gradient(90deg,var(--g100) 25%,var(--g50) 37%,var(--g100) 63%);background-size:200px 100%;animation:skelPulse 1.5s ease-in-out infinite; }
+
+/* ═══ COLLAPSIBLE SIDEBAR ═══ */
+.sb { transition: width 0.3s cubic-bezier(0.4,0,0.2,1); }
+.sb-toggle {
+  position: absolute; top: 16px; right: -14px;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--orange);
+  border: 3px solid var(--navy);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; z-index: 110;
+  box-shadow: 0 4px 12px rgba(243,107,46,0.4);
+  transition: all 0.3s ease;
+}
+.sb-toggle:hover { transform: scale(1.1) rotate(-5deg); background: var(--mango); }
+.sb-toggle svg { transition: transform 0.3s ease; }
+.sb.collapsed .sb-toggle svg { transform: rotate(180deg); }
+.sb.collapsed { width: 72px !important; padding: 20px 8px; }
+.sb.collapsed .sb-logo .nav-logo-text,
+.sb.collapsed .sb-badge,
+.sb.collapsed .sb-link span,
+.sb.collapsed .sb-bottom a span {
+  opacity: 0; width: 0; overflow: hidden; pointer-events: none; white-space: nowrap;
+}
+.sb.collapsed .sb-link,
+.sb.collapsed .sb-bottom a { justify-content: center; padding: 11px 8px; position: relative; gap: 0; }
+.sb.collapsed .sb-logo { justify-content: center; padding: 0 0 18px; gap: 0; }
+.sb.collapsed .sb-link::after,
+.sb.collapsed .sb-bottom a::after {
+  content: attr(data-tip);
+  position: absolute; left: calc(100% + 12px); top: 50%;
+  transform: translateY(-50%);
+  background: var(--navy); color: #fff;
+  padding: 6px 12px; border-radius: 8px;
+  font-size: 12px; font-weight: 600;
+  white-space: nowrap; pointer-events: none;
+  opacity: 0; z-index: 200;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  transition: opacity 0.2s 0.15s ease;
+}
+.sb.collapsed .sb-link:hover::after,
+.sb.collapsed .sb-bottom a:hover::after { opacity: 1; }
+.main { transition: margin-left 0.3s cubic-bezier(0.4,0,0.2,1); }
+body.sb-collapsed .main { margin-left: 92px !important; }
+@media (max-width: 1024px) {
+  .sb-toggle { display: none; }
+  .sb.collapsed { width: 260px !important; padding: 20px 14px; }
+  .sb.collapsed .sb-logo .nav-logo-text,
+  .sb.collapsed .sb-badge,
+  .sb.collapsed .sb-link span,
+  .sb.collapsed .sb-bottom a span { opacity: 1; width: auto; pointer-events: auto; }
+  body.sb-collapsed .main { margin-left: 0 !important; }
+}
+
+/* ═══ CURRENT BOOK CARD ═══ */
+@keyframes bookCardIn {
+  0% { opacity: 0; transform: translateY(16px) scale(0.95); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes bookShimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(150%); }
+}
+@keyframes bookFloat {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-6px) rotate(-2deg); }
+}
+.book-card {
+  position: relative;
+  border-radius: 16px;
+  padding: 18px;
+  min-height: 160px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: #fff;
+  animation: bookCardIn 0.6s cubic-bezier(0.4,0,0.2,1) backwards;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+}
+.book-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(255,255,255,0.18), transparent 50%),
+              radial-gradient(circle at 20% 90%, rgba(0,0,0,0.15), transparent 60%);
+  pointer-events: none;
+}
+.book-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 40%; height: 100%;
+  background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,0.18) 50%, transparent 70%);
+  animation: bookShimmer 3s ease-in-out infinite;
+  pointer-events: none;
+}
+.book-card.theme-intro    { background: linear-gradient(135deg, #f59a1e, #f7c668); }
+.book-card.theme-level1   { background: linear-gradient(135deg, #ef4444, #f87171); }
+.book-card.theme-level2   { background: linear-gradient(135deg, #3b82f6, #60a5fa); }
+.book-card.theme-level3   { background: linear-gradient(135deg, #10b981, #34d399); }
+.book-card.theme-passages { background: linear-gradient(135deg, #8b5cf6, #a78bfa); }
+.book-card.theme-evolve   { background: linear-gradient(135deg, #06b6d4, #22d3ee); }
+.book-cover {
+  position: relative;
+  width: 88px;
+  min-width: 88px;
+  height: 116px;
+  border-radius: 4px 8px 8px 4px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.78));
+  box-shadow: 0 8px 22px rgba(0,0,0,0.25), inset 4px 0 0 rgba(0,0,0,0.18);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px 8px 8px 14px;
+  animation: bookFloat 4s ease-in-out infinite;
+  flex-shrink: 0;
+}
+.book-cover-brand {
+  font-family: 'Fraunces', serif;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.6px;
+  color: #19244e;
+  background: #19244e;
+  color: #fff;
+  display: inline-block;
+  padding: 2px 4px;
+  border-radius: 2px;
+  align-self: flex-start;
+}
+.book-cover-title {
+  font-family: 'Fraunces', serif;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+.book-cover-num {
+  font-family: 'Fraunces', serif;
+  font-size: 32px;
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -2px;
+  margin-top: -4px;
+}
+.book-cover-edition {
+  font-size: 6px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  opacity: 0.65;
+}
+.book-info {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-width: 0;
+}
+.book-info .b-cefr {
+  display: inline-block;
+  background: rgba(255,255,255,0.22);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.35);
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+.book-info .b-name {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.book-info .b-sub {
+  font-size: 12px;
+  font-weight: 500;
+  opacity: 0.92;
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+.book-info .b-series {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  opacity: 0.85;
+}
+.book-empty {
+  background: var(--g50);
+  border: 2px dashed var(--g200);
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: var(--g500);
+  font-size: 13px;
+}
+@media (max-width: 900px) {
+  .progress-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
+}
+@media (max-width: 480px) {
+  .book-card { flex-direction: column; align-items: flex-start; min-height: auto; padding: 20px; }
+  .book-cover { width: 80px; height: 106px; }
+}
 </style>
 </head>
 <body>
 <div class="dash">
   <aside class="sb" role="navigation" aria-label="Menu aluno">
-    <a href="index.html" class="sb-logo"><div class="nav-logo-icon" style="width:36px;height:36px"><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAAAAAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/wAALCABkAGQBAREA/8QAHAABAAEFAQEAAAAAAAAAAAAAAAcEBQYICQID/8QANhAAAQMDAwIDBQQLAAAAAAAAAQACAwQFEQYHEhMhCDFBFCJRYZEVgaGiCRYXGCNCRFViktL/2gAIAQEAAD8A3LRERERERERERERERERERERERERERERWDci51dl271JeLe8R1lBaaqpp3uaHBsjInOaSD2PcDsuff72O9WMfb9BnH9rg/wCVv/tbqE6r2407qR7mukuVtgqJeIwBI5gLxj5O5BZIiIiIiKDvG7fb1p7Y6a42G7V1qrBcqZgqKOodDJxJdkcmkHBx5LQmt3T3KraKeirNfanqKaojdFNFLdJnMkY4Yc1wLsEEEgheLppY0m01j1dxPK4Xetoyf8Yo6ct/F8n0W+vgSvhvHh4tdM54fJaqqooXH1wH9Ro/1kH0U6oiIiIixrcjQ+ndwNNO09qikkqre6ZkxjjmdEeTM8TlpB9Stf8Ae7w3bTaY2j1RqCz2KrhuFBbZZ6eR1wneGvaOx4l2D96jXczRwovARoetEZE8FxbcJXY/kqTMB+Dovosq/RqXwOoNYabe7HTlp66Jvx5B0bz+Vi3FRERERFBHjpudxtOxE1Xa7hV0FQLnStEtNM6N+CXZGWkHC591ms9XVtJLSVmqb5U08zSyWKW4SvY9p9C0uwR8ipJ1f4idV6l2kbtpWWPT0NnZSU1LHJDFKJmNgLCwgmQjPuDPb1Kv3gAvn2Xv7Fb3ScWXe21FLxJ7FzQJh9/8M/VdFERERERYNvftxRbo6GfpWvuNRb4XVMVR1oGNc7LCcDDu3fKg23+CjSNNX09RLq271McUrHvhfTRcZACCWn5EDH3qXtW7J7a1+lbvRUGgdM01ZU0U0UE0NsiY+KRzHBrmkNyCCQQQudexl6dpjefSl2kJjbS3aAT57YY54ZJ+Vzl1hHkiIiIiKOYd59EyvZEyprPaJGB8MJpzylDpHRtx3x3c0+ZGPN2FWVu62kaQROmqKrjLA+oDhTniI2GYOcSTj+nk7eZAyARnFVbtx9M3Cst1NRzVEwuEcckMzYT0wJOr0+Ts4HIQSkefZue2RmAp9vvDNXOdfBYr0faWitMjKipjA5slm7DmMYbDIcD1HEZOQNj9Gaotmp6WoltntHCleyKTrNDTyMbX/E57Pb38j6Ejur8iIiIiw2Xa3QUsPSl07TyARuiaXySFzGFwcWtcXZaMgYAIx6YXv9meieiIDYo3Qh3IROnlLAQZCPdLsYBlkLR5NLyRhfap290hUdHnaAzoxtjj6VRLHhrXPc0e64ZwZZMZ8g9w8iQqd21+hDT+zfq9Tim4BggEsgiawFzg0MDuIbye52AMcjy8wCr5YNPWixGodbKV0T6jpiWR8z5XvDGhjAXPJOGtGAM4Hf4lXVERERERERERERERERERERERERERERf/2Q==" alt="EA"></div><div class="nav-logo-text">EA<span>.</span></div></a>
+    <button class="sb-toggle" id="sbToggle" type="button" aria-label="Recolher menu" title="Recolher menu">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+    </button>
+    <a href="index.html" class="sb-logo" data-tip="Início"><div class="nav-logo-icon" style="width:36px;height:36px"><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAAAAAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/wAALCABkAGQBAREA/8QAHAABAAEFAQEAAAAAAAAAAAAAAAcEBQYICQID/8QANhAAAQMDAwIDBQQLAAAAAAAAAQACAwQFEQYHEhMhCDFBFCJRYZEVgaGiCRYXGCNCRFViktL/2gAIAQEAAD8A3LRERERERERERERERERERERERERERERWDci51dl271JeLe8R1lBaaqpp3uaHBsjInOaSD2PcDsuff72O9WMfb9BnH9rg/wCVv/tbqE6r2407qR7mukuVtgqJeIwBI5gLxj5O5BZIiIiIiKDvG7fb1p7Y6a42G7V1qrBcqZgqKOodDJxJdkcmkHBx5LQmt3T3KraKeirNfanqKaojdFNFLdJnMkY4Yc1wLsEEEgheLppY0m01j1dxPK4Xetoyf8Yo6ct/F8n0W+vgSvhvHh4tdM54fJaqqooXH1wH9Ro/1kH0U6oiIiIixrcjQ+ndwNNO09qikkqre6ZkxjjmdEeTM8TlpB9Stf8Ae7w3bTaY2j1RqCz2KrhuFBbZZ6eR1wneGvaOx4l2D96jXczRwovARoetEZE8FxbcJXY/kqTMB+Dovosq/RqXwOoNYabe7HTlp66Jvx5B0bz+Vi3FRERERFBHjpudxtOxE1Xa7hV0FQLnStEtNM6N+CXZGWkHC591ms9XVtJLSVmqb5U08zSyWKW4SvY9p9C0uwR8ipJ1f4idV6l2kbtpWWPT0NnZSU1LHJDFKJmNgLCwgmQjPuDPb1Kv3gAvn2Xv7Fb3ScWXe21FLxJ7FzQJh9/8M/VdFERERERYNvftxRbo6GfpWvuNRb4XVMVR1oGNc7LCcDDu3fKg23+CjSNNX09RLq271McUrHvhfTRcZACCWn5EDH3qXtW7J7a1+lbvRUGgdM01ZU0U0UE0NsiY+KRzHBrmkNyCCQQQudexl6dpjefSl2kJjbS3aAT57YY54ZJ+Vzl1hHkiIiIiKOYd59EyvZEyprPaJGB8MJpzylDpHRtx3x3c0+ZGPN2FWVu62kaQROmqKrjLA+oDhTniI2GYOcSTj+nk7eZAyARnFVbtx9M3Cst1NRzVEwuEcckMzYT0wJOr0+Ts4HIQSkefZue2RmAp9vvDNXOdfBYr0faWitMjKipjA5slm7DmMYbDIcD1HEZOQNj9Gaotmp6WoltntHCleyKTrNDTyMbX/E57Pb38j6Ejur8iIiIiw2Xa3QUsPSl07TyARuiaXySFzGFwcWtcXZaMgYAIx6YXv9meieiIDYo3Qh3IROnlLAQZCPdLsYBlkLR5NLyRhfap290hUdHnaAzoxtjj6VRLHhrXPc0e64ZwZZMZ8g9w8iQqd21+hDT+zfq9Tim4BggEsgiawFzg0MDuIbye52AMcjy8wCr5YNPWixGodbKV0T6jpiWR8z5XvDGhjAXPJOGtGAM4Hf4lXVERERERERERERERERERERERERERERf/2Q==" alt="EA"></div><div class="nav-logo-text">EA<span>.</span></div></a>
     <div class="sb-badge"><span style="font-size:18px">🎓</span><span class="sb-badge-text">Área do Aluno</span></div>
     <nav class="sb-nav">
-      <button class="sb-link active" data-section="overview"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>Visão Geral</span></button>
-      <button class="sb-link" data-section="homework"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg><span>Homework</span></button>
-      <button class="sb-link" data-section="feedback"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg><span>Feedbacks</span></button>
-      <button class="sb-link" data-section="announcements"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg><span>Avisos</span></button>
-      <button class="sb-link" data-section="writing"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.996.996 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg><span>Redação</span></button>
-      <button class="sb-link" data-section="pronunciation"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-2.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg><span>Pronúncia</span></button>
+      <button class="sb-link active" data-section="overview" data-tip="Visão Geral"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>Visão Geral</span></button>
+      <button class="sb-link" data-section="homework" data-tip="Homework"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg><span>Homework</span></button>
+      <button class="sb-link" data-section="feedback" data-tip="Feedbacks"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg><span>Feedbacks</span></button>
+      <button class="sb-link" data-section="announcements" data-tip="Avisos"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg><span>Avisos</span></button>
+      <button class="sb-link" data-section="writing" data-tip="Redação"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.996.996 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg><span>Redação</span></button>
+      <button class="sb-link" data-section="pronunciation" data-tip="Pronúncia"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-2.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg><span>Pronúncia</span></button>
     </nav>
     <div class="sb-bottom">
-      <a href="https://www.cambridgeone.org/" target="_blank" class="sb-link" style="color:rgba(255,255,255,0.5)">
+      <a href="https://www.cambridgeone.org/" target="_blank" class="sb-link" data-tip="Cambridge One" style="color:rgba(255,255,255,0.5)">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
         <span>Cambridge One</span>
       </a>
-      <button class="sb-link" data-section="assessments"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11zM8 15.01l1.41 1.41L11 14.84V19h2v-4.16l1.59 1.59L16 15.01 12.01 11z"/></svg><span>Assessments</span></button>
-      <button class="sb-link" data-section="profile" style="color:rgba(255,255,255,0.5)"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>Meu Perfil</span></button>
-      <a href="#" class="sb-logout" onclick="signOut();return false;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>Sair</a>
+      <button class="sb-link" data-section="profile" data-tip="Meu Perfil" style="color:rgba(255,255,255,0.5)"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>Meu Perfil</span></button>
+      <a href="#" class="sb-logout" data-tip="Sair" onclick="signOut();return false;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg><span>Sair</span></a>
     </div>
   </aside>
   <div id="sbOverlay" class="sb-overlay" onclick="document.querySelector('.sb').classList.remove('open');this.classList.remove('open')"></div>
@@ -175,19 +395,19 @@ body { background: var(--g50); margin: 0; }
           <div class="stat-card"><div class="stat-icon">💬</div><div class="stat-label">Feedbacks</div><div class="stat-value" id="sFeedbacks">-</div></div>
         </div>
         
-        <!-- Progress Chart -->
+        <!-- Progress + Current Book -->
         <div class="panel" style="margin-bottom:20px">
           <div class="panel-head"><div class="panel-title">📊 Meu Progresso</div></div>
           <div style="padding:20px 24px">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+            <div style="display:grid;grid-template-columns:1fr 1.1fr;gap:24px;align-items:stretch" class="progress-grid">
               <div>
                 <div style="font-size:12px;font-weight:700;color:var(--g500);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px">Atividade Mensal</div>
                 <div id="studentChart" style="display:flex;align-items:end;gap:6px;height:100px"></div>
                 <div id="studentChartLabels" style="display:flex;gap:6px;margin-top:6px"></div>
               </div>
               <div>
-                <div style="font-size:12px;font-weight:700;color:var(--g500);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px">Feedbacks por Habilidade</div>
-                <div id="skillBars"></div>
+                <div style="font-size:12px;font-weight:700;color:var(--g500);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px">Meu Livro Atual</div>
+                <div id="currentBookCard"><div class="skel-line" style="height:160px"></div></div>
               </div>
             </div>
           </div>
@@ -225,15 +445,6 @@ body { background: var(--g50); margin: 0; }
         <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:8px">🎙️ Prática de Pronúncia</h2>
         <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Clique no botão 🔊 para ouvir a pronúncia correta em inglês.</p>
         <div id="prList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhuma prática de pronúncia.</p></div></div>
-      </div>
-
-
-      
-      <!-- ASSESSMENTS -->
-      <div class="section" id="sec-assessments">
-        <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:20px">📄 Meus Assessments</h2>
-        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Relatórios mensais enviados pelo seu professor.</p>
-        <div id="assessList"><div class="empty-state"><div class="empty-icon">📄</div><p>Nenhum assessment disponível.</p></div></div>
       </div>
 
       <!-- PROFILE -->
@@ -297,7 +508,10 @@ body { background: var(--g50); margin: 0; }
 <script src="supabase.js"></script>
 <script>
 let currentUser = null;
-const sections = {"overview":"Visão Geral","homework":"Homework","feedback":"Feedbacks","announcements":"Avisos","writing":"Redação","pronunciation":"Pronúncia","assessments":"Assessments","profile":"Meu Perfil"};
+const sections = {"overview":"Visão Geral","homework":"Homework","feedback":"Feedbacks","announcements":"Avisos","writing":"Redação","pronunciation":"Pronúncia","profile":"Meu Perfil"};
+
+// Init collapsible sidebar immediately (independent of auth)
+document.addEventListener('DOMContentLoaded', () => { initCollapsibleSidebar(); });
 
 document.addEventListener('DOMContentLoaded', async () => {
   currentUser = await requireAuth(['student']);
@@ -330,6 +544,26 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Load avatar if exists
   if (currentUser.avatar_url) setAvatarEverywhere(currentUser.avatar_url);
 });
+
+// ═══ COLLAPSIBLE SIDEBAR ═══
+function initCollapsibleSidebar() {
+  const sb = document.querySelector('.sb');
+  const toggle = document.getElementById('sbToggle');
+  if (!sb || !toggle) return;
+  const saved = localStorage.getItem('eaSidebarCollapsed');
+  if (saved === '1' && window.innerWidth > 1024) {
+    sb.classList.add('collapsed');
+    document.body.classList.add('sb-collapsed');
+  }
+  toggle.addEventListener('click', () => {
+    sb.classList.toggle('collapsed');
+    document.body.classList.toggle('sb-collapsed');
+    const isCollapsed = sb.classList.contains('collapsed');
+    localStorage.setItem('eaSidebarCollapsed', isCollapsed ? '1' : '0');
+    toggle.setAttribute('aria-label', isCollapsed ? 'Expandir menu' : 'Recolher menu');
+    toggle.setAttribute('title', isCollapsed ? 'Expandir menu' : 'Recolher menu');
+  });
+}
 
 // ═══ OVERVIEW ═══
 async function loadOverview() {
@@ -377,14 +611,64 @@ async function loadOverview() {
     if(ce){ce.innerHTML=monthData.map(function(d){var h=Math.max(6,(d.value/maxVal)*90);return'<div style="flex:1;background:'+(d.cur?'var(--orange)':'var(--blue-soft)')+';height:'+h+'px;border-radius:4px 4px 0 0;position:relative"><div style="position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:700;color:var(--navy)">'+d.value+'</div></div>';}).join('');}
     if(le){le.innerHTML=monthData.map(function(d){return'<div style="flex:1;text-align:center;font-size:10px;font-weight:'+(d.cur?'800':'500')+';color:'+(d.cur?'var(--orange)':'var(--g400)')+'">'+d.label+'</div>';}).join('');}
     
-    // Skill bars
-    var fb=await db.from('feedbacks').select('type').eq('student_id',currentUser.id);
-    var skills={speaking:0,listening:0,reading:0,writing:0};
-    (fb.data||[]).forEach(function(f){if(skills[f.type]!==undefined)skills[f.type]++;});
-    var ms=Math.max(1,Math.max.apply(null,Object.values(skills)));
-    var se=document.getElementById('skillBars');
-    if(se){var sl={speaking:'🗣️ Speaking',listening:'👂 Listening',reading:'📖 Reading',writing:'✍️ Writing'};var sc={speaking:'#f36b2e',listening:'#253c96',reading:'#10b981',writing:'#f59a1e'};se.innerHTML=Object.keys(skills).map(function(k){var p=Math.round((skills[k]/ms)*100);return'<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span style="font-weight:600;color:var(--navy)">'+sl[k]+'</span><span style="color:var(--g400)">'+skills[k]+'</span></div><div style="height:8px;background:var(--g100);border-radius:4px;overflow:hidden"><div style="height:100%;width:'+p+'%;background:'+sc[k]+';border-radius:4px;transition:width 0.8s"></div></div></div>';}).join('');}
+    // Current book card
+    try {
+      const enr = await db.from('enrollments')
+        .select('course:courses(id, name, cefr_level, description, series)')
+        .eq('student_id', currentUser.id)
+        .eq('active', true)
+        .order('created_at', { ascending: false })
+        .limit(1);
+      const course = enr.data?.[0]?.course;
+      renderCurrentBook(course);
+    } catch(e) { console.error('Current book:', e); renderCurrentBook(null); }
   } catch(e) { console.error('Chart:', e); }
+}
+
+// Render the student's current book card based on the course they are enrolled in
+function renderCurrentBook(course) {
+  const el = document.getElementById('currentBookCard');
+  if (!el) return;
+  if (!course || !course.name) {
+    el.innerHTML = '<div class="book-empty"><div style="font-size:32px;margin-bottom:8px;opacity:0.5">📚</div><strong style="color:var(--navy)">Nenhum livro vinculado</strong><div style="margin-top:6px">Aguarde a coordenação atribuir seu curso.</div></div>';
+    return;
+  }
+  // Map course name to theme + cover data
+  const name = (course.name || '').toLowerCase();
+  let theme = 'theme-intro', series = 'Cambridge', num = '', display = course.name, sub = course.description || '';
+  if (name.includes('intro')) { theme = 'theme-intro'; series = 'Interchange'; num = 'intro'; display = 'Interchange Intro'; }
+  else if (name.match(/interchange\s*1\b/) || name === 'interchange 1') { theme = 'theme-level1'; series = 'Interchange'; num = '1'; display = 'Interchange 1'; }
+  else if (name.match(/interchange\s*2\b/)) { theme = 'theme-level2'; series = 'Interchange'; num = '2'; display = 'Interchange 2'; }
+  else if (name.match(/interchange\s*3\b/)) { theme = 'theme-level3'; series = 'Interchange'; num = '3'; display = 'Interchange 3'; }
+  else if (name.includes('passages 1')) { theme = 'theme-passages'; series = 'Passages'; num = '1'; display = 'Passages 1'; }
+  else if (name.includes('passages 2')) { theme = 'theme-passages'; series = 'Passages'; num = '2'; display = 'Passages 2'; }
+  else if (name.includes('evolve 5')) { theme = 'theme-evolve'; series = 'Evolve'; num = '5'; display = 'Evolve 5'; }
+  else if (name.includes('evolve 6')) { theme = 'theme-evolve'; series = 'Evolve'; num = '6'; display = 'Evolve 6'; }
+  // Subtitle by CEFR if no description
+  const cefr = course.cefr_level || '';
+  if (!sub) {
+    const subs = { 'A1':'Iniciantes — primeiros passos no inglês.', 'A2':'Pré-intermediário — construindo bases.', 'B1':'Intermediário — comunicação confiante.', 'B2':'Intermediário-avançado — fluência prática.', 'C1':'Avançado — domínio do idioma.' };
+    sub = subs[cefr] || 'Seu material de estudo atual.';
+  }
+  // Build cover HTML — CSS-rendered, no base64
+  const coverNumHtml = num === 'intro'
+    ? '<div class="book-cover-title" style="font-size:18px">intro</div>'
+    : '<div class="book-cover-num">' + num + '</div>';
+  const coverSeriesHtml = '<div class="book-cover-title">' + (series === 'Interchange' ? 'interchange' : series === 'Passages' ? 'passages' : 'evolve') + '</div>';
+  el.innerHTML = '' +
+    '<div class="book-card ' + theme + '">' +
+      '<div class="book-cover">' +
+        '<div class="book-cover-brand">CAMBRIDGE</div>' +
+        '<div>' + coverSeriesHtml + '<div class="book-cover-edition">Fifth Edition</div></div>' +
+        coverNumHtml +
+      '</div>' +
+      '<div class="book-info">' +
+        (cefr ? '<div class="b-cefr">CEFR ' + cefr + '</div>' : '') +
+        '<div class="b-name">' + display + '</div>' +
+        '<div class="b-sub">' + sub + '</div>' +
+        '<div class="b-series">📖 Série ' + series + '</div>' +
+      '</div>' +
+    '</div>';
 }
 
 // ═══ HOMEWORK ═══
@@ -552,20 +836,6 @@ function setAvatarEverywhere(url) {
   }
 }
 
-// ═══ ASSESSMENTS ═══
-async function loadAssessments() {
-  const items = await getAssessmentsForStudent(currentUser.id);
-  const div = document.getElementById('assessList');
-  if (!items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📄</div><p>Nenhum assessment disponível ainda. Seu professor enviará os relatórios mensais aqui.</p></div>'; return; }
-  div.innerHTML = items.map(a => {
-    const monthName = MONTHS[a.month] || a.month;
-    return '<div style="background:#fff;border-radius:14px;border:1px solid var(--g100);padding:20px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;transition:all 0.2s" onmouseover="this.style.boxShadow=\'0 4px 16px rgba(0,0,0,0.06)\'" onmouseout="this.style.boxShadow=\'\'">' +
-      '<div><div style="font-size:15px;font-weight:700;color:var(--navy)">📄 ' + a.title + '</div>' +
-      '<div style="font-size:13px;color:var(--g500);margin-top:4px">' + monthName + ' ' + a.year + ' — Prof. ' + (a.teacher?.full_name||'') + '</div></div>' +
-      '<a href="' + a.file_url + '" target="_blank" download style="padding:10px 20px;border-radius:10px;background:var(--blue);color:#fff;font-size:13px;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:6px;transition:all 0.2s"><svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>Baixar</a></div>';
-  }).join('');
-}
-
 // ═══ PROFILE ═══
 async function loadProfile() {
   document.getElementById('profName').value = currentUser.full_name || '';
@@ -618,7 +888,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const id = active.id.replace('sec-','');
     switch(id) {
       case 'homework': loadHomework(); break;
-      case 'assessments': loadAssessments(); break;
       case 'profile': loadProfile(); break;
       case 'feedback': loadFeedbacks(); break;
       case 'announcements': loadAnnouncements(); break;

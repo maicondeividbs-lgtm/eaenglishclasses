@@ -1367,7 +1367,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Contratos vencendo (next 30 days)
     const today = new Date();
-    const contractAlerts = profiles.filter(function(p){
+    const allProfiles = await getAllProfiles();
+    const contractAlerts = allProfiles.filter(function(p){
       if(!p.contract_end || p.role!=='student') return false;
       var d = Math.ceil((new Date(p.contract_end)-today)/(1000*60*60*24));
       return d <= 30;
@@ -2409,8 +2410,27 @@ function filterUsersByRole(role) {
     b.style.background = '#fff';
     b.style.color = 'var(--g700)';
   });
-  event.target.style.background = 'var(--navy)';
-  event.target.style.color = '#fff';
+  // Find the button that represents this role (works both when called via
+  // event handler with `event` and when called programmatically from card click)
+  let activeBtn = null;
+  if (typeof event !== 'undefined' && event && event.target) {
+    activeBtn = event.target;
+  } else {
+    // Match by onclick attribute pattern: filterUsersByRole('<role>')
+    document.querySelectorAll('.user-filter').forEach(b => {
+      const onclick = b.getAttribute('onclick') || '';
+      const wantsAll = role === '';
+      if ((wantsAll && /filterUsersByRole\(\s*['"]?\s*['"]\s*\)/.test(onclick))
+          || onclick.indexOf("'" + role + "'") !== -1
+          || onclick.indexOf('"' + role + '"') !== -1) {
+        activeBtn = b;
+      }
+    });
+  }
+  if (activeBtn) {
+    activeBtn.style.background = 'var(--navy)';
+    activeBtn.style.color = '#fff';
+  }
   applyUserFilters();
 }
 

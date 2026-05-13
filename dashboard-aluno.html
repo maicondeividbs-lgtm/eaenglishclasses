@@ -239,6 +239,229 @@ body { background: var(--g50); margin: 0; }
   width: 12px; height: 12px; border-radius: 3px;
 }
 
+/* ═══ HELP REQUEST (botão flutuante) ═══ */
+.help-fab {
+  position: fixed; bottom: 24px; right: 24px;
+  z-index: 90;
+  display: flex; align-items: center; gap: 8px;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, var(--orange), var(--mango));
+  color: #fff; border: none; border-radius: 999px;
+  font-family: inherit; font-size: 14px; font-weight: 700;
+  box-shadow: 0 8px 24px rgba(243,107,46,0.35);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+.help-fab:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(243,107,46,0.5); }
+.help-fab .help-fab-icon { font-size: 18px; }
+@media (max-width: 768px) {
+  .help-fab { bottom: 16px; right: 16px; padding: 12px 16px; font-size: 13px; }
+  .help-fab .help-fab-label { display: none; }
+}
+.help-modal-bg {
+  position: fixed; inset: 0;
+  background: rgba(25,36,78,0.6); backdrop-filter: blur(4px);
+  z-index: 200; display: none;
+  align-items: center; justify-content: center;
+  animation: helpModalIn 0.2s ease;
+  padding: 16px;
+}
+.help-modal-bg.open { display: flex; }
+@keyframes helpModalIn { from { opacity: 0; } to { opacity: 1; } }
+.help-modal {
+  background: #fff; border-radius: 18px;
+  width: 100%; max-width: 520px; max-height: 90vh; overflow: auto;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+  animation: helpModalContentIn 0.25s ease;
+}
+@keyframes helpModalContentIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.help-modal-head {
+  padding: 20px 24px;
+  background: linear-gradient(135deg, var(--orange), var(--mango));
+  color: #fff; border-radius: 18px 18px 0 0;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.help-modal-head h3 { margin: 0; font-size: 18px; font-weight: 800; }
+.help-modal-head .help-close {
+  background: rgba(255,255,255,0.2); border: none; color: #fff;
+  width: 32px; height: 32px; border-radius: 50%;
+  font-size: 18px; cursor: pointer; transition: background 0.2s;
+}
+.help-modal-head .help-close:hover { background: rgba(255,255,255,0.35); }
+.help-modal-body { padding: 24px; }
+.help-modal-body label {
+  display: block; font-size: 12px; font-weight: 700;
+  color: var(--navy); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.help-modal-body input,
+.help-modal-body textarea {
+  width: 100%; padding: 12px 14px;
+  border: 2px solid var(--g200); border-radius: 10px;
+  font-family: inherit; font-size: 14px; color: var(--navy);
+  outline: none; transition: border-color 0.2s;
+  resize: vertical;
+}
+.help-modal-body input:focus,
+.help-modal-body textarea:focus { border-color: var(--orange); }
+.help-modal-body .help-teacher-info {
+  background: var(--cream); border-radius: 10px;
+  padding: 12px 14px; margin-bottom: 16px;
+  font-size: 13px; color: var(--g700);
+  display: flex; align-items: center; gap: 8px;
+}
+.help-modal-foot {
+  padding: 16px 24px;
+  display: flex; gap: 10px; justify-content: flex-end;
+  border-top: 1px solid var(--g100);
+}
+.help-modal-foot button {
+  padding: 11px 22px; border-radius: 10px;
+  font-family: inherit; font-size: 13px; font-weight: 700;
+  cursor: pointer; border: none;
+  transition: all 0.2s;
+}
+.help-btn-cancel { background: var(--g100); color: var(--g700); }
+.help-btn-cancel:hover { background: var(--g200); }
+.help-btn-send { background: var(--orange); color: #fff; }
+.help-btn-send:hover { background: var(--mango); }
+.help-btn-send:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* History list inside modal */
+.help-history {
+  margin-top: 18px; padding-top: 16px;
+  border-top: 1px dashed var(--g200);
+}
+.help-history-title {
+  font-size: 11px; font-weight: 700; color: var(--g500);
+  text-transform: uppercase; letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+.help-history-item {
+  padding: 12px; background: var(--g50); border-radius: 10px;
+  margin-bottom: 8px; font-size: 12px;
+}
+.help-history-item .h-subject { font-weight: 700; color: var(--navy); margin-bottom: 3px; }
+.help-history-item .h-msg { color: var(--g700); margin-bottom: 6px; }
+.help-history-item .h-answer {
+  background: var(--blue-soft); color: var(--blue);
+  padding: 8px 10px; border-radius: 8px;
+  margin-top: 6px; font-size: 12px;
+}
+.help-history-item .h-status {
+  display: inline-block; padding: 2px 8px; border-radius: 6px;
+  font-size: 10px; font-weight: 700;
+}
+.help-history-item .h-status.open { background: #fef3c7; color: #92400e; }
+.help-history-item .h-status.answered { background: #d1fae5; color: #065f46; }
+
+/* ═══ NOTIFICATION BELL + DROPDOWN ═══ */
+.notif-wrap { position: relative; display: inline-block; }
+.notif-bell-btn {
+  position: relative;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: var(--g50); border: 1px solid var(--g100);
+  cursor: pointer; transition: all 0.2s;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--navy); font-size: 18px;
+  padding: 0;
+  margin-right: 8px;
+}
+.notif-bell-btn:hover { background: var(--cream); border-color: var(--orange); }
+.notif-bell-btn .notif-badge {
+  position: absolute; top: -4px; right: -4px;
+  min-width: 18px; height: 18px;
+  background: var(--orange); color: #fff;
+  border-radius: 9px; padding: 0 5px;
+  font-size: 10px; font-weight: 800;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 2px solid #fff;
+}
+.notif-bell-btn.has-new::after {
+  content: ''; position: absolute; inset: -1px;
+  border-radius: 50%; border: 2px solid var(--orange);
+  animation: notifRing 1.6s ease-out infinite;
+  pointer-events: none;
+}
+@keyframes notifRing { 0%{opacity:1;transform:scale(1)} 100%{opacity:0;transform:scale(1.4)} }
+
+.notif-dropdown {
+  position: absolute; top: calc(100% + 10px); right: -8px;
+  width: 380px; max-height: 480px; overflow: hidden;
+  background: #fff; border-radius: 14px;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.18), 0 0 0 1px var(--g100);
+  z-index: 150;
+  display: none;
+  flex-direction: column;
+  animation: notifIn 0.18s ease;
+}
+.notif-dropdown.open { display: flex; }
+@keyframes notifIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+.notif-dropdown::before {
+  content: ''; position: absolute; top: -8px; right: 20px;
+  width: 14px; height: 14px; background: #fff;
+  border-left: 1px solid var(--g100); border-top: 1px solid var(--g100);
+  transform: rotate(45deg);
+}
+.notif-head {
+  padding: 14px 18px;
+  display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 1px solid var(--g100);
+  flex-shrink: 0;
+}
+.notif-head h4 { margin: 0; font-size: 14px; font-weight: 800; color: var(--navy); }
+.notif-head .notif-count { font-size: 11px; color: var(--g500); font-weight: 600; }
+.notif-list {
+  flex: 1; overflow-y: auto; padding: 4px 0;
+}
+.notif-item {
+  display: flex; gap: 10px;
+  padding: 12px 18px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--g50);
+  transition: background 0.15s;
+  position: relative;
+}
+.notif-item:hover { background: var(--g50); }
+.notif-item:last-child { border-bottom: none; }
+.notif-item.is-new::before {
+  content: ''; position: absolute; left: 8px; top: 50%;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--orange); transform: translateY(-50%);
+}
+.notif-item .notif-icon {
+  flex-shrink: 0; font-size: 22px; line-height: 1;
+  width: 36px; height: 36px; border-radius: 10px;
+  background: var(--cream); display: flex; align-items: center; justify-content: center;
+}
+.notif-item .notif-body { flex: 1; min-width: 0; }
+.notif-item .notif-title {
+  font-size: 13px; font-weight: 600; color: var(--navy);
+  margin-bottom: 2px; line-height: 1.35;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.notif-item .notif-sub {
+  font-size: 11px; color: var(--g500);
+  display: flex; gap: 6px; align-items: center;
+}
+.notif-item .notif-time { color: var(--g400); font-weight: 600; }
+.notif-empty {
+  padding: 40px 20px; text-align: center; color: var(--g400);
+}
+.notif-empty .empty-icon { font-size: 36px; opacity: 0.4; margin-bottom: 8px; }
+.notif-loading { padding: 20px; text-align: center; color: var(--g400); font-size: 13px; }
+.notif-foot {
+  padding: 10px 18px;
+  border-top: 1px solid var(--g100);
+  font-size: 11px; color: var(--g500);
+  text-align: center;
+  flex-shrink: 0;
+}
+@media (max-width: 480px) {
+  .notif-dropdown { width: calc(100vw - 24px); right: -8px; max-height: 70vh; }
+}
+
 @media(max-width:1024px) {
   .sb { transform: translateX(-100%); }
   .main { margin-left: 0; }
@@ -516,7 +739,22 @@ body.sb-collapsed .main { margin-left: 92px !important; }
       <span class="topbar-title" id="topbarTitle">Visão Geral</span>
       <button class="mobile-menu-btn" onclick="document.querySelector('.sb').classList.toggle('open');document.getElementById('sbOverlay').classList.toggle('open')">☰</button>
       <div class="topbar-user">
-        <span id="notifBadge" style="display:none;min-width:20px;height:20px;border-radius:50%;background:var(--orange);color:#fff;font-size:11px;font-weight:800;text-align:center;line-height:20px;padding:0 6px"></span>
+        <div class="notif-wrap">
+          <button id="notifBell" class="notif-bell-btn" type="button" aria-label="Notificações" title="Notificações">
+            🔔
+            <span id="notifBadge" class="notif-badge" style="display:none">0</span>
+          </button>
+          <div id="notifDropdown" class="notif-dropdown" role="menu" aria-label="Notificações">
+            <div class="notif-head">
+              <h4>🔔 Notificações</h4>
+              <span class="notif-count" id="notifCount"></span>
+            </div>
+            <div class="notif-list" id="notifList">
+              <div class="notif-loading">Carregando...</div>
+            </div>
+            <div class="notif-foot">Mostrando atividade dos últimos 14 dias</div>
+          </div>
+        </div>
         <span class="topbar-name" id="userName">Aluno</span>
         <div class="topbar-avatar" id="userAvatar">A</div>
       </div>
@@ -679,7 +917,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadOverview();
   // Load notifications
   const unread = await getUnreadCount(currentUser.id, 'student');
-  if (unread > 0) { document.getElementById('notifBadge').style.display = ''; document.getElementById('notifBadge').textContent = unread; }
+  if (unread > 0) {
+    document.getElementById('notifBadge').style.display = '';
+    document.getElementById('notifBadge').textContent = unread;
+    document.getElementById('notifBell').classList.add('has-new');
+  }
+  initNotifications('student');
   // Load avatar if exists
   if (currentUser.avatar_url) setAvatarEverywhere(currentUser.avatar_url);
 });
@@ -1250,11 +1493,224 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
   document.querySelectorAll('.section').forEach(s => observer.observe(s, {attributes:true, attributeFilter:['class']}));
+
+  // ═══ HELP REQUEST: wire up floating button ═══
+  initHelpRequest();
+});
+
+// ═══ HELP REQUEST (Pedir ajuda ao professor) ═══
+let _helpTeacherId = null;
+let _helpTeacherName = '';
+
+async function initHelpRequest() {
+  const fab = document.getElementById('helpFab');
+  if (!fab) return;
+  fab.addEventListener('click', openHelpModal);
+  // Try to resolve teacher once at startup
+  try {
+    const info = await getStudentMainTeacher(currentUser.id);
+    if (info && info.teacher) {
+      _helpTeacherId = info.teacher.id;
+      _helpTeacherName = info.teacher.full_name;
+    }
+  } catch(e) { console.error('Help — fetch teacher:', e); }
+}
+
+async function openHelpModal() {
+  const modal = document.getElementById('helpModal');
+  modal.classList.add('open');
+  const teacherInfo = document.getElementById('helpTeacherName');
+  if (_helpTeacherName) {
+    teacherInfo.textContent = 'Sua mensagem vai para ' + _helpTeacherName;
+  } else {
+    teacherInfo.innerHTML = '<span style="color:var(--g500)">Nenhum professor atribuído. Fale com a coordenação.</span>';
+    document.getElementById('helpSendBtn').disabled = true;
+  }
+  // Load history
+  try {
+    const hist = await getHelpRequestsForStudent(currentUser.id);
+    renderHelpHistory(hist);
+  } catch(e) {
+    console.error('Help history:', e);
+    document.getElementById('helpHistory').style.display = 'none';
+  }
+}
+
+function closeHelpModal() {
+  document.getElementById('helpModal').classList.remove('open');
+  document.getElementById('helpSubject').value = '';
+  document.getElementById('helpMessage').value = '';
+}
+
+async function sendHelpRequest() {
+  const subject = document.getElementById('helpSubject').value.trim();
+  const message = document.getElementById('helpMessage').value.trim();
+  const btn = document.getElementById('helpSendBtn');
+  if (!message) { showToast('Escreva sua dúvida antes de enviar.', 'error'); return; }
+  if (!_helpTeacherId) { showToast('Nenhum professor atribuído. Fale com a coordenação.', 'error'); return; }
+  btn.disabled = true;
+  btn.textContent = 'Enviando...';
+  try {
+    await createHelpRequest(currentUser.id, _helpTeacherId, subject, message);
+    showToast('Pergunta enviada para ' + _helpTeacherName + '!');
+    closeHelpModal();
+  } catch(e) {
+    showToast('Erro ao enviar: ' + e.message, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Enviar pergunta';
+  }
+}
+
+function renderHelpHistory(items) {
+  const wrap = document.getElementById('helpHistory');
+  const list = document.getElementById('helpHistoryList');
+  if (!items || !items.length) { wrap.style.display = 'none'; return; }
+  wrap.style.display = '';
+  list.innerHTML = items.slice(0, 5).map(h => {
+    const statusLabel = h.status === 'answered' ? 'Respondida' : 'Aguardando';
+    const subj = h.subject ? '<div class="h-subject">📌 ' + escapeHtmlBasic(h.subject) + '</div>' : '';
+    const answer = h.answer ? '<div class="h-answer"><strong>' + escapeHtmlBasic(_helpTeacherName || 'Professor') + ' respondeu:</strong><br>' + escapeHtmlBasic(h.answer) + '</div>' : '';
+    return '<div class="help-history-item">' +
+      subj +
+      '<div class="h-msg">' + escapeHtmlBasic(h.message) + '</div>' +
+      '<span class="h-status ' + h.status + '">' + statusLabel + '</span>' +
+      answer +
+      '</div>';
+  }).join('');
+}
+
+function escapeHtmlBasic(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ═══ NOTIFICATIONS BELL ═══
+function initNotifications(role) {
+  const bell = document.getElementById('notifBell');
+  const dd = document.getElementById('notifDropdown');
+  if (!bell || !dd) return;
+
+  bell.addEventListener('click', async (ev) => {
+    ev.stopPropagation();
+    const isOpen = dd.classList.contains('open');
+    if (isOpen) { dd.classList.remove('open'); return; }
+    dd.classList.add('open');
+    await loadNotifications(role);
+  });
+
+  // Close on outside click
+  document.addEventListener('click', (ev) => {
+    if (!dd.contains(ev.target) && ev.target !== bell) {
+      dd.classList.remove('open');
+    }
+  });
+
+  // Close on Esc
+  document.addEventListener('keydown', (ev) => {
+    if (ev.key === 'Escape') dd.classList.remove('open');
+  });
+}
+
+async function loadNotifications(role) {
+  const list = document.getElementById('notifList');
+  const count = document.getElementById('notifCount');
+  list.innerHTML = '<div class="notif-loading">Carregando...</div>';
+  try {
+    const items = await getNotificationItems(currentUser.id, role);
+    if (!items.length) {
+      list.innerHTML = '<div class="notif-empty"><div class="empty-icon">📭</div><div>Tudo em dia! Sem notificações.</div></div>';
+      count.textContent = '';
+      return;
+    }
+    const newCount = items.filter(i => i.isNew).length;
+    count.textContent = newCount > 0 ? newCount + ' nova(s)' : items.length + ' itens';
+
+    list.innerHTML = items.map((it, idx) => {
+      const newCls = it.isNew ? ' is-new' : '';
+      const sectionAttr = it.section ? ' data-notif-section="' + it.section + '"' : '';
+      return '<div class="notif-item' + newCls + '"' + sectionAttr + ' data-notif-idx="' + idx + '">' +
+        '<div class="notif-icon">' + (it.icon || '🔔') + '</div>' +
+        '<div class="notif-body">' +
+          '<div class="notif-title">' + escapeHtmlBasic(it.title) + '</div>' +
+          '<div class="notif-sub"><span>' + escapeHtmlBasic(it.sub || '') + '</span>' +
+            (it.when ? '<span class="notif-time">• ' + notifFormatTime(it.when) + '</span>' : '') +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+
+    // Wire up navigation
+    list.querySelectorAll('.notif-item[data-notif-section]').forEach(el => {
+      el.addEventListener('click', () => {
+        const sec = el.getAttribute('data-notif-section');
+        document.getElementById('notifDropdown').classList.remove('open');
+        const btn = document.querySelector('.sb-link[data-section="' + sec + '"]');
+        if (btn) btn.click();
+      });
+    });
+  } catch(e) {
+    list.innerHTML = '<div class="notif-empty"><div class="empty-icon">⚠️</div><div>Erro ao carregar notificações</div></div>';
+    console.error('Notifications:', e);
+  }
+}
+
+function notifFormatTime(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  const now = new Date();
+  const diffMin = Math.floor((now - d) / 60000);
+  if (diffMin < 1) return 'agora';
+  if (diffMin < 60) return diffMin + 'min';
+  const diffH = Math.floor(diffMin / 60);
+  if (diffH < 24) return diffH + 'h';
+  const diffD = Math.floor(diffH / 24);
+  if (diffD < 7) return diffD + 'd';
+  return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+}
+
+// Close modal on backdrop click
+document.addEventListener('click', (ev) => {
+  const modal = document.getElementById('helpModal');
+  if (modal && ev.target === modal) closeHelpModal();
 });
 </script>
 
 <!-- Scroll to top -->
-<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="display:none;position:fixed;bottom:24px;right:24px;z-index:90;width:44px;height:44px;border-radius:50%;border:none;background:var(--blue);color:#fff;font-size:18px;cursor:pointer;box-shadow:0 4px 12px rgba(37,60,150,0.3);transition:all 0.3s">↑</button>
+<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="display:none;position:fixed;bottom:90px;right:24px;z-index:91;width:44px;height:44px;border-radius:50%;border:none;background:var(--blue);color:#fff;font-size:18px;cursor:pointer;box-shadow:0 4px 12px rgba(37,60,150,0.3);transition:all 0.3s">↑</button>
+
+<!-- Help request: floating button + modal -->
+<button id="helpFab" class="help-fab" type="button" title="Pedir ajuda ao professor">
+  <span class="help-fab-icon">💬</span>
+  <span class="help-fab-label">Pedir ajuda</span>
+</button>
+
+<div id="helpModal" class="help-modal-bg" role="dialog" aria-modal="true" aria-labelledby="helpModalTitle">
+  <div class="help-modal" role="document">
+    <div class="help-modal-head">
+      <h3 id="helpModalTitle">💬 Pedir ajuda ao professor</h3>
+      <button class="help-close" type="button" aria-label="Fechar" onclick="closeHelpModal()">×</button>
+    </div>
+    <div class="help-modal-body">
+      <div id="helpTeacherInfo" class="help-teacher-info">
+        <span>👨‍🏫</span>
+        <span id="helpTeacherName">Carregando seu professor...</span>
+      </div>
+      <label for="helpSubject">Sobre o quê? (opcional)</label>
+      <input id="helpSubject" type="text" placeholder="Ex: Unidade 5, Past Continuous, redação...">
+      <label for="helpMessage" style="margin-top:14px">Sua dúvida</label>
+      <textarea id="helpMessage" rows="5" placeholder="Descreva sua dúvida com detalhes. Quanto mais claro, melhor a resposta!"></textarea>
+
+      <div id="helpHistory" class="help-history" style="display:none">
+        <div class="help-history-title">📜 Suas perguntas anteriores</div>
+        <div id="helpHistoryList"></div>
+      </div>
+    </div>
+    <div class="help-modal-foot">
+      <button class="help-btn-cancel" type="button" onclick="closeHelpModal()">Cancelar</button>
+      <button class="help-btn-send" type="button" id="helpSendBtn" onclick="sendHelpRequest()">Enviar pergunta</button>
+    </div>
+  </div>
+</div>
 <script>
 window.addEventListener('scroll', () => {
   const btn = document.getElementById('scrollTop');

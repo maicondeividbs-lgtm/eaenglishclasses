@@ -100,6 +100,145 @@ body { background: var(--g50); margin: 0; }
 .feedback-card { background: var(--cream); border-left: 4px solid var(--orange); border-radius: 0 12px 12px 0; padding: 16px 20px; margin-bottom: 12px; }
 .pron-word { font-size: 22px; font-weight: 900; color: var(--navy); }
 .pron-phonetic { font-size: 14px; color: var(--g500); font-style: italic; }
+
+/* ═══ PRONUNCIATION ADVANCED CONTROLS ═══ */
+.pron-card {
+  background: #fff; border: 1px solid var(--g100); border-radius: 14px;
+  padding: 16px; margin-bottom: 12px;
+  transition: all 0.2s ease;
+}
+.pron-card:hover { border-color: var(--blue); box-shadow: 0 4px 12px rgba(37,60,150,0.08); }
+.pron-card.done { background: linear-gradient(135deg, #f0fdf4, #ffffff); border-color: #86efac; }
+.pron-header { display: flex; align-items: flex-start; gap: 14px; justify-content: space-between; flex-wrap: wrap; }
+.pron-info { flex: 1; min-width: 0; }
+.pron-notes { font-size: 12px; color: var(--g500); margin-top: 4px; }
+.pron-controls {
+  display: flex; align-items: center; gap: 8px;
+  flex-wrap: wrap; margin-top: 12px;
+  padding-top: 12px; border-top: 1px dashed var(--g100);
+}
+.pron-play-btn {
+  width: 44px; height: 44px; min-width: 44px;
+  border-radius: 50%; border: 2px solid var(--blue);
+  background: var(--blue-soft); color: var(--blue);
+  font-size: 18px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.pron-play-btn:hover { background: var(--blue); color: #fff; transform: scale(1.05); }
+.pron-play-btn.playing { background: var(--blue); color: #fff; animation: pronPulse 1s ease-in-out infinite; }
+@keyframes pronPulse { 0%,100%{box-shadow:0 0 0 0 rgba(37,60,150,0.5)} 50%{box-shadow:0 0 0 8px rgba(37,60,150,0)} }
+.pron-speed-group {
+  display: inline-flex; background: var(--g50);
+  border-radius: 10px; padding: 3px; gap: 2px;
+}
+.pron-speed-btn {
+  padding: 6px 11px; font-size: 11px; font-weight: 700;
+  border: none; background: transparent; color: var(--g500);
+  border-radius: 7px; cursor: pointer; transition: all 0.15s;
+  font-family: inherit;
+}
+.pron-speed-btn:hover { color: var(--navy); }
+.pron-speed-btn.active { background: #fff; color: var(--blue); box-shadow: 0 2px 4px rgba(0,0,0,0.06); }
+.pron-rec-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 14px; border-radius: 10px;
+  border: 2px solid #ef4444; background: #fef2f2; color: #dc2626;
+  font-size: 12px; font-weight: 700; cursor: pointer;
+  transition: all 0.2s; font-family: inherit;
+}
+.pron-rec-btn:hover { background: #ef4444; color: #fff; }
+.pron-rec-btn.recording {
+  background: #ef4444; color: #fff;
+  animation: pronRecPulse 0.8s ease-in-out infinite;
+}
+.pron-rec-btn.recording::before {
+  content: ''; width: 8px; height: 8px;
+  background: #fff; border-radius: 50%;
+  animation: pronBlink 0.6s ease-in-out infinite;
+}
+@keyframes pronRecPulse { 0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0.5)} 50%{box-shadow:0 0 0 10px rgba(239,68,68,0)} }
+@keyframes pronBlink { 50%{opacity:0.3} }
+.pron-compare-btn {
+  padding: 8px 14px; border-radius: 10px;
+  border: 2px solid var(--orange); background: var(--orange-soft); color: var(--orange);
+  font-size: 12px; font-weight: 700; cursor: pointer;
+  transition: all 0.2s; font-family: inherit;
+}
+.pron-compare-btn:hover:not(:disabled) { background: var(--orange); color: #fff; }
+.pron-compare-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.pron-timer {
+  font-variant-numeric: tabular-nums;
+  font-size: 11px; color: var(--g500); font-weight: 600;
+  min-width: 38px;
+}
+.pron-mark-done {
+  margin-left: auto;
+  padding: 8px 14px; border-radius: 10px;
+  border: none; background: #10b981; color: #fff;
+  font-size: 12px; font-weight: 700; cursor: pointer;
+  transition: all 0.2s; font-family: inherit;
+}
+.pron-mark-done:hover { background: #059669; }
+
+/* ═══ INLINE COMMENTS (student view, read-only) ═══ */
+.wr-essay-view {
+  background: #fff; border: 2px solid var(--ocean);
+  border-radius: 12px; padding: 16px; margin-bottom: 10px;
+  font-size: 14px; color: var(--g700); line-height: 1.8;
+  white-space: pre-wrap; word-break: break-word;
+}
+.wr-highlight {
+  background: linear-gradient(180deg, transparent 40%, var(--cat-color, #fde68a) 40%);
+  padding: 1px 2px; border-radius: 3px;
+  font-weight: 500; cursor: help;
+  transition: background 0.15s;
+}
+.wr-highlight:hover { background: var(--cat-color, #fde68a); }
+.wr-highlight.cat-grammar    { --cat-color: #fecaca; }
+.wr-highlight.cat-vocabulary { --cat-color: #bfdbfe; }
+.wr-highlight.cat-structure  { --cat-color: #ddd6fe; }
+.wr-highlight.cat-praise     { --cat-color: #bbf7d0; }
+.wr-highlight-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 16px; height: 16px; font-size: 9px; font-weight: 800;
+  background: var(--navy); color: #fff; border-radius: 50%;
+  margin-left: 3px; vertical-align: super;
+}
+.wr-comments-list {
+  margin-top: 12px; display: flex; flex-direction: column; gap: 8px;
+}
+.wr-comment-item {
+  display: flex; gap: 12px; padding: 10px 14px;
+  background: var(--g50); border-radius: 10px;
+  border-left: 3px solid var(--cat-bord, var(--navy));
+  font-size: 13px;
+}
+.wr-comment-item.cat-grammar    { --cat-bord: #ef4444; }
+.wr-comment-item.cat-vocabulary { --cat-bord: #3b82f6; }
+.wr-comment-item.cat-structure  { --cat-bord: #8b5cf6; }
+.wr-comment-item.cat-praise     { --cat-bord: #10b981; }
+.wr-comment-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; min-width: 22px;
+  background: var(--cat-bord); color: #fff;
+  border-radius: 50%; font-size: 11px; font-weight: 800;
+}
+.wr-comment-body { flex: 1; }
+.wr-comment-quote {
+  color: var(--g500); font-style: italic; font-size: 12px;
+  margin-bottom: 3px;
+}
+.wr-comment-text { color: var(--navy); }
+.wr-cat-legend {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  font-size: 11px; color: var(--g500); margin-bottom: 10px;
+}
+.wr-cat-legend span { display: inline-flex; align-items: center; gap: 4px; }
+.wr-cat-legend .cat-swatch {
+  width: 12px; height: 12px; border-radius: 3px;
+}
+
 @media(max-width:1024px) {
   .sb { transform: translateX(-100%); }
   .main { margin-left: 0; }
@@ -730,12 +869,72 @@ async function loadWriting() {
     if (w.status === 'pending') {
       statusHtml = '<textarea id="wr-' + w.id + '" rows="6" placeholder="Escreva sua redação aqui..."></textarea><button class="btn-action btn-submit" style="margin-top:10px" onclick="submitWr(' + w.id + ')">Enviar Redação</button>';
     } else if (w.status === 'submitted') {
-      statusHtml = '<div style="padding:12px;background:var(--mango-soft);border-radius:8px;font-size:13px;color:var(--mango)"><strong>⏳ Aguardando correção do professor</strong></div><div style="margin-top:10px;padding:12px;background:var(--g50);border-radius:8px;font-size:13px;color:var(--g700)"><strong>Sua resposta:</strong><br>' + (w.response||'') + '</div>';
+      statusHtml = '<div style="padding:12px;background:var(--mango-soft);border-radius:8px;font-size:13px;color:var(--mango)"><strong>⏳ Aguardando correção do professor</strong></div><div style="margin-top:10px;padding:12px;background:var(--g50);border-radius:8px;font-size:13px;color:var(--g700)"><strong>Sua resposta:</strong><br>' + wrEscapeHtml(w.response||'') + '</div>';
     } else if (w.status === 'graded') {
-      statusHtml = '<div style="padding:12px;background:#d1fae5;border-radius:8px;font-size:13px;color:#065f46;margin-bottom:10px"><strong>✅ Corrigida — Nota: ' + (w.grade||'') + '</strong></div><div style="padding:12px;background:var(--g50);border-radius:8px;font-size:13px;color:var(--g700);margin-bottom:10px"><strong>Sua resposta:</strong><br>' + (w.response||'') + '</div><div style="padding:12px;background:var(--blue-soft);border-radius:8px;font-size:13px;color:var(--blue)"><strong>Feedback do professor:</strong><br>' + (w.feedback||'') + '</div>';
+      const parsed = wrParseFeedback(w.feedback);
+      const response = w.response || '';
+      const inline = parsed.inline || [];
+      const highlighted = wrRenderHighlighted(response, inline);
+      const commentsBlock = inline.length
+        ? '<div class="wr-cat-legend">' +
+            '<span><i class="cat-swatch" style="background:#fecaca"></i>Gramática</span>' +
+            '<span><i class="cat-swatch" style="background:#bfdbfe"></i>Vocabulário</span>' +
+            '<span><i class="cat-swatch" style="background:#ddd6fe"></i>Estrutura</span>' +
+            '<span><i class="cat-swatch" style="background:#bbf7d0"></i>Elogio</span>' +
+          '</div>' +
+          '<div class="wr-essay-view">' + highlighted + '</div>' +
+          '<div class="wr-comments-list">' + inline.map((c, i) =>
+            '<div class="wr-comment-item cat-' + (c.category||'grammar') + '">' +
+              '<div class="wr-comment-num">' + (i+1) + '</div>' +
+              '<div class="wr-comment-body">' +
+                '<div class="wr-comment-quote">"' + wrEscapeHtml(c.text||'') + '"</div>' +
+                '<div class="wr-comment-text">' + wrEscapeHtml(c.comment||'') + '</div>' +
+              '</div>' +
+            '</div>'
+          ).join('') + '</div>'
+        : '<div class="wr-essay-view">' + wrEscapeHtml(response) + '</div>';
+
+      statusHtml =
+        '<div style="padding:12px;background:#d1fae5;border-radius:8px;font-size:13px;color:#065f46;margin-bottom:10px"><strong>✅ Corrigida — Nota: ' + (w.grade||'') + '</strong></div>' +
+        commentsBlock +
+        (parsed.general
+          ? '<div style="padding:12px;background:var(--blue-soft);border-radius:8px;font-size:13px;color:var(--blue);margin-top:10px"><strong>Feedback geral do professor:</strong><br>' + wrEscapeHtml(parsed.general) + '</div>'
+          : '');
     }
     return '<div class="writing-card"><h4>✍️ ' + w.title + '</h4><div style="font-size:11px;color:var(--g500);margin-bottom:8px">' + (w.teacher?.full_name||'Professor') + ' — Prazo: ' + formatDate(w.due_date) + '</div><div class="prompt">"' + w.prompt + '"</div>' + statusHtml + '</div>';
   }).join('');
+}
+
+function wrEscapeHtml(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function wrParseFeedback(raw) {
+  if (!raw || typeof raw !== 'string') return { general: '', inline: [] };
+  if (raw.trim().startsWith('{')) {
+    try {
+      const obj = JSON.parse(raw);
+      return { general: obj.general || '', inline: Array.isArray(obj.inline) ? obj.inline : [] };
+    } catch(e) {}
+  }
+  return { general: raw, inline: [] };
+}
+
+function wrRenderHighlighted(text, inline) {
+  if (!inline || !inline.length) return wrEscapeHtml(text);
+  const sorted = [...inline].map((c, i) => ({...c, _i: i})).sort((a,b) => (a.start||0) - (b.start||0));
+  let out = '';
+  let cursor = 0;
+  sorted.forEach(c => {
+    const s = Math.max(0, Math.min(text.length, c.start||0));
+    const e = Math.max(s, Math.min(text.length, c.end||0));
+    if (s < cursor) return;
+    if (s > cursor) out += wrEscapeHtml(text.slice(cursor, s));
+    out += '<span class="wr-highlight cat-' + (c.category||'grammar') + '" title="' + wrEscapeHtml(c.comment||'') + '">' + wrEscapeHtml(text.slice(s, e)) + '<span class="wr-highlight-num">' + (c._i+1) + '</span></span>';
+    cursor = e;
+  });
+  if (cursor < text.length) out += wrEscapeHtml(text.slice(cursor));
+  return out;
 }
 
 async function submitWr(activityId) {
@@ -755,12 +954,162 @@ async function loadPronunciation() {
   const div = document.getElementById('prList');
   if (!items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">🎙️</div><p>Nenhuma prática de pronúncia.</p></div>'; return; }
   div.innerHTML = items.map(p => {
-    const btn = p.practiced
-      ? '<span class="badge badge-done">✅ Praticado</span>'
-      : '<button class="btn-action btn-done" onclick="markPron(' + p.id + ',this)">Marcar como praticado</button>';
-    const playBtn = '<button onclick="speakWord(\'' + p.word.replace(/'/g, "\\'") + '\')" style="width:44px;height:44px;min-width:44px;border-radius:50%;border:2px solid var(--blue);background:var(--blue-soft);color:var(--blue);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s" onmouseover="this.style.background=\'var(--blue)\';this.style.color=\'#fff\'" onmouseout="this.style.background=\'var(--blue-soft)\';this.style.color=\'var(--blue)\'">🔊</button>';
-    return '<div class="list-item" style="gap:14px"><div style="display:flex;align-items:center;gap:14px">' + playBtn + '<div><div class="pron-word">' + p.word + '</div>' + (p.phonetic ? '<div class="pron-phonetic">' + p.phonetic + '</div>' : '') + (p.notes ? '<div class="list-sub" style="margin-top:4px">💡 ' + p.notes + '</div>' : '') + '</div></div>' + btn + '</div>';
+    const wordEsc = (p.word || '').replace(/"/g, '&quot;');
+    const doneClass = p.practiced ? ' done' : '';
+    const actionHtml = p.practiced
+      ? '<span class="badge badge-done" style="margin-left:auto">✅ Praticado</span>'
+      : '<button class="pron-mark-done" data-pron-done="' + p.id + '">✓ Marcar como praticado</button>';
+    return '' +
+      '<div class="pron-card' + doneClass + '" data-pron-id="' + p.id + '">' +
+        '<div class="pron-header">' +
+          '<div class="pron-info">' +
+            '<div class="pron-word">' + (p.word || '') + '</div>' +
+            (p.phonetic ? '<div class="pron-phonetic">' + p.phonetic + '</div>' : '') +
+            (p.notes ? '<div class="pron-notes">💡 ' + p.notes + '</div>' : '') +
+          '</div>' +
+        '</div>' +
+        '<div class="pron-controls">' +
+          '<button class="pron-play-btn" data-pron-play="' + wordEsc + '" title="Ouvir pronúncia">🔊</button>' +
+          '<div class="pron-speed-group" role="group" aria-label="Velocidade">' +
+            '<button class="pron-speed-btn" data-speed="0.5">0.5x</button>' +
+            '<button class="pron-speed-btn" data-speed="0.75">0.75x</button>' +
+            '<button class="pron-speed-btn active" data-speed="1">1x</button>' +
+          '</div>' +
+          '<button class="pron-rec-btn" data-pron-rec="' + p.id + '" title="Gravar sua pronúncia"><span>🎤</span><span class="pron-rec-label">Gravar</span></button>' +
+          '<span class="pron-timer" data-pron-timer="' + p.id + '"></span>' +
+          '<button class="pron-compare-btn" data-pron-compare="' + p.id + '" data-word="' + wordEsc + '" disabled>↔ Comparar</button>' +
+          actionHtml +
+        '</div>' +
+      '</div>';
   }).join('');
+}
+
+// Event delegation for pronunciation controls (one listener, survives re-render)
+document.addEventListener('click', (ev) => {
+  const card = ev.target.closest('.pron-card');
+  if (!card) return;
+
+  // Speed selector
+  const speedBtn = ev.target.closest('[data-speed]');
+  if (speedBtn) {
+    card.querySelectorAll('.pron-speed-btn').forEach(b => b.classList.remove('active'));
+    speedBtn.classList.add('active');
+    return;
+  }
+
+  // Play reference word
+  const playBtn = ev.target.closest('[data-pron-play]');
+  if (playBtn) {
+    const word = playBtn.getAttribute('data-pron-play');
+    const speed = parseFloat(card.querySelector('.pron-speed-btn.active')?.dataset.speed || '1');
+    playBtn.classList.add('playing');
+    speakWord(word, speed, () => playBtn.classList.remove('playing'));
+    return;
+  }
+
+  // Record toggle
+  const recBtn = ev.target.closest('[data-pron-rec]');
+  if (recBtn) {
+    togglePronRecording(card, recBtn);
+    return;
+  }
+
+  // Compare (play reference then recording)
+  const cmpBtn = ev.target.closest('[data-pron-compare]');
+  if (cmpBtn) {
+    const word = cmpBtn.getAttribute('data-word');
+    const speed = parseFloat(card.querySelector('.pron-speed-btn.active')?.dataset.speed || '1');
+    runPronComparison(card, word, speed);
+    return;
+  }
+
+  // Mark as practiced
+  const doneBtn = ev.target.closest('[data-pron-done]');
+  if (doneBtn) {
+    const id = doneBtn.getAttribute('data-pron-done');
+    markPron(id, doneBtn);
+    return;
+  }
+});
+
+// In-memory cache of recordings (key = pron id)
+const _pronRecordings = {};
+let _activeRecorder = null; // { card, recorder, chunks, startedAt, intervalId, btn }
+
+async function togglePronRecording(card, btn) {
+  // If already recording, stop it
+  if (_activeRecorder && _activeRecorder.card === card) {
+    stopPronRecording();
+    return;
+  }
+  // Stop any other active recording first
+  if (_activeRecorder) stopPronRecording();
+
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    showToast('Seu navegador não suporta gravação de áudio.', 'error');
+    return;
+  }
+
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const recorder = new MediaRecorder(stream);
+    const chunks = [];
+    recorder.ondataavailable = (e) => { if (e.data && e.data.size > 0) chunks.push(e.data); };
+    recorder.onstop = () => {
+      stream.getTracks().forEach(t => t.stop());
+      if (!chunks.length) return;
+      const blob = new Blob(chunks, { type: recorder.mimeType || 'audio/webm' });
+      const id = card.getAttribute('data-pron-id');
+      _pronRecordings[id] = URL.createObjectURL(blob);
+      const cmpBtn = card.querySelector('[data-pron-compare]');
+      if (cmpBtn) cmpBtn.disabled = false;
+      showToast('Gravação salva! Clique em ↔ Comparar.');
+    };
+
+    recorder.start();
+    const startedAt = Date.now();
+    btn.classList.add('recording');
+    btn.querySelector('.pron-rec-label').textContent = 'Parar';
+    const timerEl = card.querySelector('[data-pron-timer]');
+    const intervalId = setInterval(() => {
+      const s = Math.floor((Date.now() - startedAt) / 1000);
+      if (timerEl) timerEl.textContent = '⏱ ' + s + 's';
+      // Auto-stop at 10s
+      if (s >= 10) stopPronRecording();
+    }, 200);
+
+    _activeRecorder = { card, recorder, chunks, startedAt, intervalId, btn };
+  } catch (err) {
+    if (err.name === 'NotAllowedError') {
+      showToast('Permissão de microfone negada. Habilite nas configurações do navegador.', 'error');
+    } else {
+      showToast('Erro ao acessar o microfone: ' + err.message, 'error');
+    }
+  }
+}
+
+function stopPronRecording() {
+  if (!_activeRecorder) return;
+  const { recorder, intervalId, btn, card } = _activeRecorder;
+  clearInterval(intervalId);
+  if (recorder.state !== 'inactive') recorder.stop();
+  btn.classList.remove('recording');
+  const label = btn.querySelector('.pron-rec-label');
+  if (label) label.textContent = 'Regravar';
+  const timerEl = card.querySelector('[data-pron-timer]');
+  if (timerEl) setTimeout(() => { timerEl.textContent = ''; }, 1200);
+  _activeRecorder = null;
+}
+
+async function runPronComparison(card, word, speed) {
+  const id = card.getAttribute('data-pron-id');
+  const url = _pronRecordings[id];
+  if (!url) { showToast('Grave sua pronúncia primeiro.', 'error'); return; }
+  // Play reference first, then recording
+  speakWord(word, speed, () => {
+    const audio = new Audio(url);
+    audio.play().catch(e => showToast('Não foi possível reproduzir a gravação.', 'error'));
+  });
 }
 
 async function markPron(pronId, btn) {
@@ -773,7 +1122,7 @@ async function markPron(pronId, btn) {
   } catch(e) {
     showToast('Erro: ' + e.message, 'error');
     btn.disabled = false;
-    btn.textContent = 'Marcar como praticado';
+    btn.textContent = '✓ Marcar como praticado';
   }
 }
 
@@ -781,26 +1130,31 @@ async function markPron(pronId, btn) {
 
 
 // ═══ TEXT-TO-SPEECH ═══
-function speakWord(word) {
+function speakWord(word, rate, onEnd) {
   if (!('speechSynthesis' in window)) {
     showToast('Seu navegador não suporta áudio de pronúncia.', 'error');
+    if (onEnd) onEnd();
     return;
   }
   // Cancel any ongoing speech
   window.speechSynthesis.cancel();
-  
+
   const utterance = new SpeechSynthesisUtterance(word);
   utterance.lang = 'en-US';
-  utterance.rate = 0.85; // Slightly slower for clarity
+  utterance.rate = (typeof rate === 'number' && rate > 0) ? rate : 0.85;
   utterance.pitch = 1;
-  
+  if (onEnd) {
+    utterance.onend = onEnd;
+    utterance.onerror = onEnd;
+  }
+
   // Try to find an English voice
   const voices = window.speechSynthesis.getVoices();
   const enVoice = voices.find(v => v.lang.startsWith('en-') && v.name.includes('Google')) 
                 || voices.find(v => v.lang.startsWith('en-US'))
                 || voices.find(v => v.lang.startsWith('en'));
   if (enVoice) utterance.voice = enVoice;
-  
+
   window.speechSynthesis.speak(utterance);
 }
 

@@ -133,6 +133,102 @@ body { background: var(--g50); margin: 0; }
 .empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; opacity: 0.4; }
 .empty-state p { font-size: 14px; }
 
+/* ═══ INLINE COMMENTS (writing correction) ═══ */
+.wr-essay-box {
+  background: #fff; border: 2px solid var(--ocean);
+  border-radius: 12px; padding: 16px; margin-bottom: 12px;
+  font-size: 14px; color: var(--g700); line-height: 1.8;
+  white-space: pre-wrap; word-break: break-word;
+  position: relative; user-select: text;
+  cursor: text;
+}
+.wr-essay-box[data-mode="select"]::after {
+  content: '✏️ Selecione um trecho com o mouse para comentar';
+  position: absolute; bottom: 8px; right: 12px;
+  font-size: 10px; font-style: italic; color: var(--g400);
+  pointer-events: none;
+}
+.wr-highlight {
+  background: linear-gradient(180deg, transparent 40%, var(--cat-color, #fde68a) 40%);
+  padding: 1px 2px; border-radius: 3px; cursor: pointer;
+  transition: all 0.15s; font-weight: 500;
+  position: relative;
+}
+.wr-highlight:hover { background: var(--cat-color, #fde68a); }
+.wr-highlight.cat-grammar    { --cat-color: #fecaca; } /* red-200 */
+.wr-highlight.cat-vocabulary { --cat-color: #bfdbfe; } /* blue-200 */
+.wr-highlight.cat-structure  { --cat-color: #ddd6fe; } /* purple-200 */
+.wr-highlight.cat-praise     { --cat-color: #bbf7d0; } /* green-200 */
+.wr-highlight-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 16px; height: 16px; font-size: 9px; font-weight: 800;
+  background: var(--navy); color: #fff; border-radius: 50%;
+  margin-left: 3px; vertical-align: super;
+}
+
+.wr-selection-popover {
+  position: absolute; z-index: 100;
+  background: var(--navy); color: #fff;
+  border-radius: 10px; padding: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  display: none; gap: 4px;
+}
+.wr-selection-popover.show { display: inline-flex; }
+.wr-selection-popover button {
+  padding: 6px 10px; border: none; border-radius: 6px;
+  background: transparent; color: #fff;
+  font-size: 11px; font-weight: 700; cursor: pointer;
+  font-family: inherit; transition: background 0.15s;
+}
+.wr-selection-popover button:hover { background: rgba(255,255,255,0.15); }
+.wr-selection-popover .cat-dot {
+  display: inline-block; width: 8px; height: 8px;
+  border-radius: 50%; margin-right: 4px;
+  vertical-align: middle;
+}
+
+.wr-comments-list {
+  margin-top: 14px; display: flex; flex-direction: column; gap: 8px;
+}
+.wr-comment-item {
+  display: flex; gap: 12px; padding: 10px 14px;
+  background: var(--g50); border-radius: 10px;
+  border-left: 3px solid var(--cat-bord, var(--navy));
+  font-size: 13px;
+}
+.wr-comment-item.cat-grammar    { --cat-bord: #ef4444; }
+.wr-comment-item.cat-vocabulary { --cat-bord: #3b82f6; }
+.wr-comment-item.cat-structure  { --cat-bord: #8b5cf6; }
+.wr-comment-item.cat-praise     { --cat-bord: #10b981; }
+.wr-comment-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; min-width: 22px;
+  background: var(--cat-bord); color: #fff;
+  border-radius: 50%; font-size: 11px; font-weight: 800;
+}
+.wr-comment-body { flex: 1; }
+.wr-comment-quote {
+  color: var(--g500); font-style: italic; font-size: 12px;
+  margin-bottom: 3px;
+}
+.wr-comment-text { color: var(--navy); }
+.wr-comment-delete {
+  background: transparent; border: none;
+  color: var(--g400); cursor: pointer;
+  font-size: 16px; padding: 0 4px;
+  transition: color 0.15s;
+}
+.wr-comment-delete:hover { color: #ef4444; }
+
+.wr-cat-legend {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  font-size: 11px; color: var(--g500); margin: 8px 0 14px;
+}
+.wr-cat-legend span { display: inline-flex; align-items: center; gap: 4px; }
+.wr-cat-legend .cat-swatch {
+  width: 12px; height: 12px; border-radius: 3px;
+}
+
 /* Responsive */
 @media(max-width:1024px) {
   .sb { transform: translateX(-100%); }
@@ -781,45 +877,203 @@ async function loadWritingList() {
   const items = await getWritingByTeacher(currentUser.id);
   const div = document.getElementById('wrList');
   if (!items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>Nenhuma atividade de redação.</p></div>'; return; }
-  
+
   div.innerHTML = items.map(w => {
     let cardHtml = '';
-    
+
     if (w.status === 'pending') {
       // Student hasn't submitted yet
       cardHtml = '<div style="padding:20px 24px;border-bottom:1px solid var(--g100)">' +
         '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div><div class="list-title">✍️ ' + w.title + '</div><div class="list-sub">' + (w.student?.full_name||'') + ' — Prazo: ' + formatDate(w.due_date) + '</div></div><span class="badge badge-pending">⏳ Aguardando aluno</span></div>' +
         '<div style="background:var(--g50);padding:12px;border-radius:8px;font-size:13px;color:var(--g700);font-style:italic;margin-top:8px"><strong>Tema:</strong> ' + w.prompt + '</div></div>';
-    
+
     } else if (w.status === 'submitted') {
-      // Student submitted — professor needs to grade
-      cardHtml = '<div style="padding:20px 24px;border-bottom:1px solid var(--g100);border-left:4px solid var(--orange)">' +
+      // Student submitted — professor needs to grade with inline comments
+      const responseText = (w.response||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      cardHtml = '<div style="padding:20px 24px;border-bottom:1px solid var(--g100);border-left:4px solid var(--orange)" data-wr-id="' + w.id + '">' +
         '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px"><div><div class="list-title">✍️ ' + w.title + '</div><div class="list-sub">' + (w.student?.full_name||'') + ' — Enviada em ' + formatDateTime(w.submitted_at) + '</div></div><span class="badge badge-done">📩 Corrigir agora</span></div>' +
         '<div style="background:var(--g50);padding:12px;border-radius:8px;font-size:13px;color:var(--g700);font-style:italic;margin-bottom:10px"><strong>Tema:</strong> ' + w.prompt + '</div>' +
-        '<div style="background:var(--cream);border:2px solid var(--ocean);padding:14px;border-radius:10px;margin-bottom:12px"><p style="font-size:11px;font-weight:700;color:var(--navy);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px">📝 Redação do aluno:</p><p style="font-size:14px;color:var(--g700);line-height:1.7;white-space:pre-wrap">' + (w.response||'').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</p></div>' +
-        '<div style="display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end"><div><label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px">Feedback / Correção</label><textarea id="wrFb-' + w.id + '" rows="4" placeholder="Escreva sua correção e comentários aqui..." style="width:100%;padding:11px 14px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;color:var(--navy);outline:none;resize:vertical"></textarea></div><div><label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px">Nota</label><select id="wrGr-' + w.id + '" style="padding:11px 14px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;color:var(--navy)"><option value="A+">A+</option><option value="A">A</option><option value="A-">A-</option><option value="B+">B+</option><option value="B">B</option><option value="B-">B-</option><option value="C+">C+</option><option value="C">C</option><option value="D">D</option></select></div></div>' +
+
+        '<div class="wr-cat-legend">' +
+          '<span><i class="cat-swatch" style="background:#fecaca"></i>Gramática</span>' +
+          '<span><i class="cat-swatch" style="background:#bfdbfe"></i>Vocabulário</span>' +
+          '<span><i class="cat-swatch" style="background:#ddd6fe"></i>Estrutura</span>' +
+          '<span><i class="cat-swatch" style="background:#bbf7d0"></i>Elogio</span>' +
+        '</div>' +
+
+        '<div class="wr-essay-box" data-mode="select" data-wr-essay="' + w.id + '">' + responseText + '</div>' +
+
+        '<div class="wr-comments-list" data-wr-comments="' + w.id + '"></div>' +
+
+        '<div style="display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end;margin-top:14px"><div><label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px">Feedback geral (resumo)</label><textarea id="wrFb-' + w.id + '" rows="3" placeholder="Comentário geral sobre a redação (parabéns, pontos a melhorar, próximos passos...)" style="width:100%;padding:11px 14px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;color:var(--navy);outline:none;resize:vertical"></textarea></div><div><label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px">Nota</label><select id="wrGr-' + w.id + '" style="padding:11px 14px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;color:var(--navy)"><option value="A+">A+</option><option value="A">A</option><option value="A-">A-</option><option value="B+">B+</option><option value="B">B</option><option value="B-">B-</option><option value="C+">C+</option><option value="C">C</option><option value="D">D</option></select></div></div>' +
+
         '<button onclick="gradeWritingActivity(' + w.id + ')" style="margin-top:12px;padding:12px 24px;border:none;border-radius:10px;background:var(--orange);color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s">✅ Enviar Correção</button></div>';
-    
+
     } else if (w.status === 'graded') {
-      // Already graded
+      // Already graded — render highlighted text + comments
+      const parsed = parseWritingFeedback(w.feedback);
+      const responseText = w.response || '';
+      const inline = parsed.inline || [];
+      const highlightedHtml = renderHighlightedEssay(responseText, inline);
+      const commentsHtml = inline.length
+        ? inline.map((c, i) => '<div class="wr-comment-item cat-' + (c.category||'grammar') + '"><div class="wr-comment-num">' + (i+1) + '</div><div class="wr-comment-body"><div class="wr-comment-quote">"' + escapeHtml(c.text||'') + '"</div><div class="wr-comment-text">' + escapeHtml(c.comment||'') + '</div></div></div>').join('')
+        : '';
+
       cardHtml = '<div style="padding:20px 24px;border-bottom:1px solid var(--g100)">' +
         '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div><div class="list-title">✍️ ' + w.title + '</div><div class="list-sub">' + (w.student?.full_name||'') + ' — Corrigida em ' + formatDateTime(w.reviewed_at) + '</div></div><span class="badge badge-graded">✅ Nota: ' + (w.grade||'') + '</span></div>' +
         '<div style="background:var(--g50);padding:10px;border-radius:8px;font-size:12px;color:var(--g500);margin-bottom:8px"><strong>Tema:</strong> ' + w.prompt + '</div>' +
-        '<div style="background:var(--cream);padding:10px;border-radius:8px;font-size:13px;color:var(--g700);margin-bottom:8px"><strong>Redação:</strong><br>' + (w.response||'').substring(0,200) + (w.response && w.response.length > 200 ? '...' : '') + '</div>' +
-        '<div style="background:var(--blue-soft);padding:10px;border-radius:8px;font-size:13px;color:var(--blue)"><strong>Seu feedback:</strong><br>' + (w.feedback||'') + '</div></div>';
+        (inline.length ? '<div class="wr-cat-legend"><span><i class="cat-swatch" style="background:#fecaca"></i>Gramática</span><span><i class="cat-swatch" style="background:#bfdbfe"></i>Vocabulário</span><span><i class="cat-swatch" style="background:#ddd6fe"></i>Estrutura</span><span><i class="cat-swatch" style="background:#bbf7d0"></i>Elogio</span></div>' : '') +
+        '<div class="wr-essay-box">' + highlightedHtml + '</div>' +
+        (commentsHtml ? '<div class="wr-comments-list">' + commentsHtml + '</div>' : '') +
+        '<div style="background:var(--blue-soft);padding:10px;border-radius:8px;font-size:13px;color:var(--blue);margin-top:12px"><strong>Feedback geral:</strong><br>' + escapeHtml(parsed.general||'') + '</div></div>';
     }
-    
+
     return cardHtml;
   }).join('');
+
+  // Wire up selection-based commenting for all submitted essays
+  document.querySelectorAll('.wr-essay-box[data-mode="select"]').forEach(box => attachEssaySelection(box));
+}
+
+// In-memory store: { activityId: [{ text, start, end, comment, category }] }
+const _wrInlineComments = {};
+
+function getCommentsFor(id) {
+  if (!_wrInlineComments[id]) _wrInlineComments[id] = [];
+  return _wrInlineComments[id];
+}
+
+function escapeHtml(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function parseWritingFeedback(raw) {
+  if (!raw) return { general: '', inline: [] };
+  if (typeof raw !== 'string') return { general: '', inline: [] };
+  // Try JSON first
+  if (raw.trim().startsWith('{')) {
+    try {
+      const obj = JSON.parse(raw);
+      return { general: obj.general || '', inline: Array.isArray(obj.inline) ? obj.inline : [] };
+    } catch(e) { /* fall through */ }
+  }
+  return { general: raw, inline: [] };
+}
+
+function renderHighlightedEssay(text, inline) {
+  if (!inline || !inline.length) return escapeHtml(text);
+  // Sort by start asc, ensure no overlap (later highlights replacing earlier overlapping ones)
+  const sorted = [...inline].map((c, i) => ({...c, _i: i})).sort((a,b) => (a.start||0) - (b.start||0));
+  let out = '';
+  let cursor = 0;
+  sorted.forEach(c => {
+    const s = Math.max(0, Math.min(text.length, c.start||0));
+    const e = Math.max(s, Math.min(text.length, c.end||0));
+    if (s < cursor) return; // skip overlapping
+    if (s > cursor) out += escapeHtml(text.slice(cursor, s));
+    out += '<span class="wr-highlight cat-' + (c.category||'grammar') + '" title="' + escapeHtml(c.comment||'') + '">' + escapeHtml(text.slice(s, e)) + '<span class="wr-highlight-num">' + (c._i+1) + '</span></span>';
+    cursor = e;
+  });
+  if (cursor < text.length) out += escapeHtml(text.slice(cursor));
+  return out;
+}
+
+let _wrPopover = null;
+function attachEssaySelection(box) {
+  const activityId = box.getAttribute('data-wr-essay');
+  // Ensure a popover exists
+  if (!_wrPopover) {
+    _wrPopover = document.createElement('div');
+    _wrPopover.className = 'wr-selection-popover';
+    _wrPopover.innerHTML =
+      '<button data-cat="grammar"><span class="cat-dot" style="background:#fecaca"></span>Gramática</button>' +
+      '<button data-cat="vocabulary"><span class="cat-dot" style="background:#bfdbfe"></span>Vocab</button>' +
+      '<button data-cat="structure"><span class="cat-dot" style="background:#ddd6fe"></span>Estrutura</button>' +
+      '<button data-cat="praise"><span class="cat-dot" style="background:#bbf7d0"></span>Elogio</button>';
+    document.body.appendChild(_wrPopover);
+  }
+
+  box.addEventListener('mouseup', (ev) => {
+    const sel = window.getSelection();
+    if (!sel || sel.isCollapsed) { _wrPopover.classList.remove('show'); return; }
+    const range = sel.getRangeAt(0);
+    if (!box.contains(range.commonAncestorContainer)) { _wrPopover.classList.remove('show'); return; }
+    const selText = sel.toString().trim();
+    if (!selText) { _wrPopover.classList.remove('show'); return; }
+
+    // Compute offsets relative to the box's text
+    const fullText = box.innerText;
+    const start = fullText.indexOf(selText);
+    if (start < 0) return;
+    const end = start + selText.length;
+
+    const rect = range.getBoundingClientRect();
+    const top = window.scrollY + rect.top - 44;
+    const left = window.scrollX + rect.left + (rect.width/2) - 110;
+    _wrPopover.style.top = Math.max(8, top) + 'px';
+    _wrPopover.style.left = Math.max(8, left) + 'px';
+    _wrPopover.classList.add('show');
+
+    // Re-wire buttons each time (avoid stacking listeners)
+    _wrPopover.querySelectorAll('button').forEach(b => {
+      b.onclick = () => addInlineComment(activityId, selText, start, end, b.getAttribute('data-cat'));
+    });
+  });
+}
+
+// Hide popover on outside click
+document.addEventListener('mousedown', (ev) => {
+  if (!_wrPopover) return;
+  if (_wrPopover.contains(ev.target)) return;
+  if (ev.target.closest('.wr-essay-box')) return;
+  _wrPopover.classList.remove('show');
+});
+
+function addInlineComment(activityId, text, start, end, category) {
+  const comment = prompt('Comentário para "' + (text.length > 40 ? text.slice(0,40)+'...' : text) + '":');
+  if (!comment || !comment.trim()) { _wrPopover && _wrPopover.classList.remove('show'); return; }
+  const arr = getCommentsFor(activityId);
+  arr.push({ text, start, end, comment: comment.trim(), category });
+  renderInlineCommentsList(activityId);
+  _wrPopover && _wrPopover.classList.remove('show');
+  window.getSelection().removeAllRanges();
+  showToast('Comentário adicionado.');
+}
+
+function renderInlineCommentsList(activityId) {
+  const wrap = document.querySelector('[data-wr-comments="' + activityId + '"]');
+  if (!wrap) return;
+  const arr = getCommentsFor(activityId);
+  if (!arr.length) { wrap.innerHTML = ''; return; }
+  wrap.innerHTML = arr.map((c, i) =>
+    '<div class="wr-comment-item cat-' + (c.category||'grammar') + '">' +
+      '<div class="wr-comment-num">' + (i+1) + '</div>' +
+      '<div class="wr-comment-body">' +
+        '<div class="wr-comment-quote">"' + escapeHtml(c.text) + '"</div>' +
+        '<div class="wr-comment-text">' + escapeHtml(c.comment) + '</div>' +
+      '</div>' +
+      '<button class="wr-comment-delete" onclick="removeInlineComment(\'' + activityId + '\',' + i + ')" title="Remover">×</button>' +
+    '</div>'
+  ).join('');
+}
+
+function removeInlineComment(activityId, idx) {
+  const arr = getCommentsFor(activityId);
+  arr.splice(idx, 1);
+  renderInlineCommentsList(activityId);
 }
 
 async function gradeWritingActivity(activityId) {
-  const feedback = document.getElementById('wrFb-' + activityId).value.trim();
+  const general = document.getElementById('wrFb-' + activityId).value.trim();
   const grade = document.getElementById('wrGr-' + activityId).value;
-  if (!feedback) { showToast('Escreva o feedback antes de enviar.','error'); return; }
+  const inline = getCommentsFor(activityId);
+  if (!general && !inline.length) { showToast('Adicione pelo menos um comentário ou feedback geral.','error'); return; }
+  // Always store as JSON so the student dashboard can render highlights
+  const feedback = JSON.stringify({ general, inline });
   try {
     await gradeWriting(activityId, feedback, grade);
-    showToast('Correção enviada! O aluno verá a nota e o feedback.');
+    showToast('Correção enviada! O aluno verá os comentários inline.');
+    delete _wrInlineComments[activityId];
     loadWritingList();
     loadOverview();
   } catch(e) {

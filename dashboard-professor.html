@@ -241,6 +241,60 @@ body { background: var(--g50); margin: 0; }
 .skel-line { height:14px;margin-bottom:10px;border-radius:6px;background:linear-gradient(90deg,var(--g100) 25%,var(--g50) 37%,var(--g100) 63%);background-size:200px 100%;animation:skelPulse 1.5s ease-in-out infinite; }
 .skel-card { padding:16px;border-radius:12px;border:1px solid var(--g100);background:#fff;margin-bottom:10px; }
 .skel-row { display:flex;align-items:center;gap:12px;padding:12px 0; }
+
+/* ═══ COLLAPSIBLE SIDEBAR ═══ */
+.sb { transition: width 0.3s cubic-bezier(0.4,0,0.2,1); }
+.sb-toggle {
+  position: absolute; top: 16px; right: -14px;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--orange);
+  border: 3px solid var(--navy);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; z-index: 110;
+  box-shadow: 0 4px 12px rgba(243,107,46,0.4);
+  transition: all 0.3s ease;
+}
+.sb-toggle:hover { transform: scale(1.1) rotate(-5deg); background: var(--mango); }
+.sb-toggle svg { transition: transform 0.3s ease; }
+.sb.collapsed .sb-toggle svg { transform: rotate(180deg); }
+.sb.collapsed { width: 72px !important; padding: 20px 8px; }
+.sb.collapsed .sb-logo .nav-logo-text,
+.sb.collapsed .sb-badge,
+.sb.collapsed .sb-link span,
+.sb.collapsed .sb-bottom a span {
+  opacity: 0; width: 0; overflow: hidden; pointer-events: none; white-space: nowrap;
+}
+.sb.collapsed .sb-link,
+.sb.collapsed .sb-bottom a { justify-content: center; padding: 11px 8px; position: relative; gap: 0; }
+.sb.collapsed .sb-logo { justify-content: center; padding: 0 0 18px; gap: 0; }
+.sb.collapsed .sb-link::after,
+.sb.collapsed .sb-bottom a::after {
+  content: attr(data-tip);
+  position: absolute; left: calc(100% + 12px); top: 50%;
+  transform: translateY(-50%);
+  background: var(--navy); color: #fff;
+  padding: 6px 12px; border-radius: 8px;
+  font-size: 12px; font-weight: 600;
+  white-space: nowrap; pointer-events: none;
+  opacity: 0; z-index: 200;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  transition: opacity 0.2s 0.15s ease;
+}
+.sb.collapsed .sb-link:hover::after,
+.sb.collapsed .sb-bottom a:hover::after { opacity: 1; }
+.main { transition: margin-left 0.3s cubic-bezier(0.4,0,0.2,1); }
+body.sb-collapsed .main { margin-left: 92px !important; }
+@media (max-width: 1024px) {
+  .sb-toggle { display: none; }
+  .sb.collapsed { width: 260px !important; padding: 20px 14px; }
+  .sb.collapsed .sb-logo .nav-logo-text,
+  .sb.collapsed .sb-badge,
+  .sb.collapsed .sb-link span,
+  .sb.collapsed .sb-bottom a span { opacity: 1; width: auto; pointer-events: auto; }
+  body.sb-collapsed .main { margin-left: 0 !important; }
+}
 </style>
 </head>
 <body>
@@ -248,61 +302,60 @@ body { background: var(--g50); margin: 0; }
 <div class="dash">
   <!-- SIDEBAR -->
   <aside class="sb" role="navigation" aria-label="Menu professor">
-    <a href="index.html" class="sb-logo"><div class="nav-logo-icon" style="width:36px;height:36px"><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAAAAAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/wAALCABkAGQBAREA/8QAHAABAAEFAQEAAAAAAAAAAAAAAAcEBQYICQID/8QANhAAAQMDAwIDBQQLAAAAAAAAAQACAwQFEQYHEhMhCDFBFCJRYZEVgaGiCRYXGCNCRFViktL/2gAIAQEAAD8A3LRERERERERERERERERERERERERERERWDci51dl271JeLe8R1lBaaqpp3uaHBsjInOaSD2PcDsuff72O9WMfb9BnH9rg/wCVv/tbqE6r2407qR7mukuVtgqJeIwBI5gLxj5O5BZIiIiIiKDvG7fb1p7Y6a42G7V1qrBcqZgqKOodDJxJdkcmkHBx5LQmt3T3KraKeirNfanqKaojdFNFLdJnMkY4Yc1wLsEEEgheLppY0m01j1dxPK4Xetoyf8Yo6ct/F8n0W+vgSvhvHh4tdM54fJaqqooXH1wH9Ro/1kH0U6oiIiIixrcjQ+ndwNNO09qikkqre6ZkxjjmdEeTM8TlpB9Stf8Ae7w3bTaY2j1RqCz2KrhuFBbZZ6eR1wneGvaOx4l2D96jXczRwovARoetEZE8FxbcJXY/kqTMB+Dovosq/RqXwOoNYabe7HTlp66Jvx5B0bz+Vi3FRERERFBHjpudxtOxE1Xa7hV0FQLnStEtNM6N+CXZGWkHC591ms9XVtJLSVmqb5U08zSyWKW4SvY9p9C0uwR8ipJ1f4idV6l2kbtpWWPT0NnZSU1LHJDFKJmNgLCwgmQjPuDPb1Kv3gAvn2Xv7Fb3ScWXe21FLxJ7FzQJh9/8M/VdFERERERYNvftxRbo6GfpWvuNRb4XVMVR1oGNc7LCcDDu3fKg23+CjSNNX09RLq271McUrHvhfTRcZACCWn5EDH3qXtW7J7a1+lbvRUGgdM01ZU0U0UE0NsiY+KRzHBrmkNyCCQQQudexl6dpjefSl2kJjbS3aAT57YY54ZJ+Vzl1hHkiIiIiKOYd59EyvZEyprPaJGB8MJpzylDpHRtx3x3c0+ZGPN2FWVu62kaQROmqKrjLA+oDhTniI2GYOcSTj+nk7eZAyARnFVbtx9M3Cst1NRzVEwuEcckMzYT0wJOr0+Ts4HIQSkefZue2RmAp9vvDNXOdfBYr0faWitMjKipjA5slm7DmMYbDIcD1HEZOQNj9Gaotmp6WoltntHCleyKTrNDTyMbX/E57Pb38j6Ejur8iIiIiw2Xa3QUsPSl07TyARuiaXySFzGFwcWtcXZaMgYAIx6YXv9meieiIDYo3Qh3IROnlLAQZCPdLsYBlkLR5NLyRhfap290hUdHnaAzoxtjj6VRLHhrXPc0e64ZwZZMZ8g9w8iQqd21+hDT+zfq9Tim4BggEsgiawFzg0MDuIbye52AMcjy8wCr5YNPWixGodbKV0T6jpiWR8z5XvDGhjAXPJOGtGAM4Hf4lXVERERERERERERERERERERERERERERf/2Q==" alt="EA"></div><div class="nav-logo-text">EA<span>.</span></div></a>
+    <button class="sb-toggle" id="sbToggle" type="button" aria-label="Recolher menu" title="Recolher menu">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+    </button>
+    <a href="index.html" class="sb-logo" data-tip="Início"><div class="nav-logo-icon" style="width:36px;height:36px"><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAAAAAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/wAALCABkAGQBAREA/8QAHAABAAEFAQEAAAAAAAAAAAAAAAcEBQYICQID/8QANhAAAQMDAwIDBQQLAAAAAAAAAQACAwQFEQYHEhMhCDFBFCJRYZEVgaGiCRYXGCNCRFViktL/2gAIAQEAAD8A3LRERERERERERERERERERERERERERERWDci51dl271JeLe8R1lBaaqpp3uaHBsjInOaSD2PcDsuff72O9WMfb9BnH9rg/wCVv/tbqE6r2407qR7mukuVtgqJeIwBI5gLxj5O5BZIiIiIiKDvG7fb1p7Y6a42G7V1qrBcqZgqKOodDJxJdkcmkHBx5LQmt3T3KraKeirNfanqKaojdFNFLdJnMkY4Yc1wLsEEEgheLppY0m01j1dxPK4Xetoyf8Yo6ct/F8n0W+vgSvhvHh4tdM54fJaqqooXH1wH9Ro/1kH0U6oiIiIixrcjQ+ndwNNO09qikkqre6ZkxjjmdEeTM8TlpB9Stf8Ae7w3bTaY2j1RqCz2KrhuFBbZZ6eR1wneGvaOx4l2D96jXczRwovARoetEZE8FxbcJXY/kqTMB+Dovosq/RqXwOoNYabe7HTlp66Jvx5B0bz+Vi3FRERERFBHjpudxtOxE1Xa7hV0FQLnStEtNM6N+CXZGWkHC591ms9XVtJLSVmqb5U08zSyWKW4SvY9p9C0uwR8ipJ1f4idV6l2kbtpWWPT0NnZSU1LHJDFKJmNgLCwgmQjPuDPb1Kv3gAvn2Xv7Fb3ScWXe21FLxJ7FzQJh9/8M/VdFERERERYNvftxRbo6GfpWvuNRb4XVMVR1oGNc7LCcDDu3fKg23+CjSNNX09RLq271McUrHvhfTRcZACCWn5EDH3qXtW7J7a1+lbvRUGgdM01ZU0U0UE0NsiY+KRzHBrmkNyCCQQQudexl6dpjefSl2kJjbS3aAT57YY54ZJ+Vzl1hHkiIiIiKOYd59EyvZEyprPaJGB8MJpzylDpHRtx3x3c0+ZGPN2FWVu62kaQROmqKrjLA+oDhTniI2GYOcSTj+nk7eZAyARnFVbtx9M3Cst1NRzVEwuEcckMzYT0wJOr0+Ts4HIQSkefZue2RmAp9vvDNXOdfBYr0faWitMjKipjA5slm7DmMYbDIcD1HEZOQNj9Gaotmp6WoltntHCleyKTrNDTyMbX/E57Pb38j6Ejur8iIiIiw2Xa3QUsPSl07TyARuiaXySFzGFwcWtcXZaMgYAIx6YXv9meieiIDYo3Qh3IROnlLAQZCPdLsYBlkLR5NLyRhfap290hUdHnaAzoxtjj6VRLHhrXPc0e64ZwZZMZ8g9w8iQqd21+hDT+zfq9Tim4BggEsgiawFzg0MDuIbye52AMcjy8wCr5YNPWixGodbKV0T6jpiWR8z5XvDGhjAXPJOGtGAM4Hf4lXVERERERERERERERERERERERERERERf/2Q==" alt="EA"></div><div class="nav-logo-text">EA<span>.</span></div></a>
     <div class="sb-badge">
       <span class="sb-badge-icon">👨‍🏫</span>
       <span class="sb-badge-text">Área do Professor</span>
     </div>
     <nav class="sb-nav" id="sidebarNav">
-      <button class="sb-link active" data-section="overview">
+      <button class="sb-link active" data-section="overview" data-tip="Visão Geral">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
         <span>Visão Geral</span>
       </button>
-      <button class="sb-link" data-section="schedule">
+      <button class="sb-link" data-section="schedule" data-tip="Schedule">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
         <span>Meu Schedule</span>
       </button>
-      <button class="sb-link" data-section="students">
+      <button class="sb-link" data-section="students" data-tip="Meus Alunos">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
         <span>Meus Alunos</span>
       </button>
-      <button class="sb-link" data-section="homework">
+      <button class="sb-link" data-section="homework" data-tip="Homework">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
         <span>Homework</span>
       </button>
-      <button class="sb-link" data-section="feedback">
+      <button class="sb-link" data-section="feedback" data-tip="Feedbacks">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
         <span>Feedbacks</span>
       </button>
-      <button class="sb-link" data-section="announcements">
+      <button class="sb-link" data-section="announcements" data-tip="Avisos">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
         <span>Avisos</span>
       </button>
-      <button class="sb-link" data-section="writing">
+      <button class="sb-link" data-section="writing" data-tip="Redação">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.996.996 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
         <span>Redação</span>
       </button>
-      <button class="sb-link" data-section="pronunciation">
+      <button class="sb-link" data-section="pronunciation" data-tip="Pronúncia">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm-1-9c0-.55.45-1 1-1s1 .45 1 1v6c0 .55-.45 1-1 1s-1-.45-1-1V6zm6 6c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-2.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
         <span>Pronúncia</span>
       </button>
-      <a href="biblioteca.html" class="sb-link" style="color:rgba(255,255,255,0.5)">
+      <a href="biblioteca.html" class="sb-link" data-tip="Biblioteca" style="color:rgba(255,255,255,0.5)">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg>
         <span>Biblioteca</span>
       </a>
-      <button class="sb-link" data-section="assessments">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11zM8 15.01l1.41 1.41L11 14.84V19h2v-4.16l1.59 1.59L16 15.01 12.01 11z"/></svg>
-        <span>Assessments</span>
-      </button>
-      <button class="sb-link" data-section="messages">
+      <button class="sb-link" data-section="messages" data-tip="Mensagens">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
         <span>Mensagens</span>
       </button>
     </nav>
     <div class="sb-bottom">
-      <a href="#" class="sb-logout" onclick="signOut();return false;">
+      <a href="#" class="sb-logout" data-tip="Sair" onclick="signOut();return false;">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
-        Sair
+        <span>Sair</span>
       </a>
     </div>
   </aside>
@@ -416,9 +469,8 @@ body { background: var(--g50); margin: 0; }
           <h3>💬 Enviar Feedback</h3>
           <p class="sub">Registre um feedback para seu aluno.</p>
           <div class="f-group"><label>Aluno</label><select id="fbStudent"><option value="">Carregando...</option></select></div>
-          <div class="f-group"><label>Título</label><input type="text" id="fbTitle" placeholder="Ex: Progresso em Speaking"></div>
-          <div class="f-group"><label>Categoria</label><select id="fbCategory"><option value="general">Geral</option><option value="speaking">Speaking</option><option value="listening">Listening</option><option value="reading">Reading</option><option value="writing">Writing</option><option value="grammar">Grammar</option></select></div>
-          <div class="f-group"><label>Conteúdo do feedback</label><textarea id="fbContent" rows="4" placeholder="Escreva o feedback detalhado..."></textarea></div>
+          <div class="f-group"><label>Título</label><input type="text" id="fbTitle" placeholder="Ex: Progresso da semana"></div>
+          <div class="f-group"><label>Conteúdo do feedback</label><textarea id="fbContent" rows="5" placeholder="Escreva o feedback detalhado..."></textarea></div>
           <button class="btn-send" onclick="sendFeedback()">Enviar Feedback</button>
         </div>
         <div class="panel">
@@ -479,47 +531,6 @@ body { background: var(--g50); margin: 0; }
       </div>
 
       
-      <!-- ═══ ASSESSMENTS ═══ -->
-      <div class="section" id="sec-assessments">
-        <div class="form-card">
-          <h3>📄 Enviar Assessment Mensal</h3>
-          <p class="sub">Envie o relatório mensal (Excel) para um aluno.</p>
-          <div class="f-row">
-            <div class="f-group"><label>Aluno</label><select id="assStudent"><option value="">Carregando...</option></select></div>
-            <div class="f-group"><label>Título</label><input type="text" id="assTitle" placeholder="Ex: Assessment Abril 2026"></div>
-          </div>
-          <div class="f-row">
-            <div class="f-group">
-              <label>Mês</label>
-              <select id="assMonth">
-                <option value="">Selecione</option>
-                <option value="1">Janeiro</option><option value="2">Fevereiro</option><option value="3">Março</option>
-                <option value="4">Abril</option><option value="5">Maio</option><option value="6">Junho</option>
-                <option value="7">Julho</option><option value="8">Agosto</option><option value="9">Setembro</option>
-                <option value="10">Outubro</option><option value="11">Novembro</option><option value="12">Dezembro</option>
-              </select>
-            </div>
-            <div class="f-group">
-              <label>Ano</label>
-              <select id="assYear">
-                <option value="2025">2025</option>
-                <option value="2026" selected>2026</option>
-                <option value="2027">2027</option>
-              </select>
-            </div>
-          </div>
-          <div class="f-group">
-            <label>Arquivo (.xlsx, .xls, .pdf)</label>
-            <input type="file" id="assFile" accept=".xlsx,.xls,.pdf,.csv" style="width:100%;padding:11px 14px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;color:var(--navy);background:#fff;outline:none">
-          </div>
-          <button class="btn-send" onclick="sendAssessment()">📤 Enviar Assessment</button>
-        </div>
-        <div class="panel">
-          <div class="panel-head"><div class="panel-title">📄 Assessments Enviados</div></div>
-          <div id="assList"><div class="empty-state"><div class="empty-icon">📄</div><p>Nenhum assessment enviado ainda.</p></div></div>
-        </div>
-      </div>
-
       <!-- ═══ MESSAGES ═══ -->
       <div class="section" id="sec-messages">
         <div class="panel">
@@ -537,9 +548,12 @@ body { background: var(--g50); margin: 0; }
 <script src="supabase.js"></script>
 <script>
 let currentUser = null;
-const sections = {"overview":"Visão Geral","schedule":"Meu Schedule","students":"Meus Alunos","homework":"Homework","feedback":"Feedbacks","announcements":"Avisos","writing":"Redação","pronunciation":"Pronúncia","assessments":"Assessments","messages":"Mensagens"};
+const sections = {"overview":"Visão Geral","schedule":"Meu Schedule","students":"Meus Alunos","homework":"Homework","feedback":"Feedbacks","announcements":"Avisos","writing":"Redação","pronunciation":"Pronúncia","messages":"Mensagens"};
 
 // ═══ INIT ═══
+// Init collapsible sidebar immediately (independent of auth)
+document.addEventListener('DOMContentLoaded', () => { initCollapsibleSidebar(); });
+
 document.addEventListener('DOMContentLoaded', async () => {
   currentUser = await requireAuth(['teacher','coordinator']);
   if (!currentUser) return;
@@ -571,11 +585,31 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (unread > 0) { document.getElementById('notifBadge').style.display = ''; document.getElementById('notifBadge').textContent = unread; }
 });
 
+// ═══ COLLAPSIBLE SIDEBAR ═══
+function initCollapsibleSidebar() {
+  const sb = document.querySelector('.sb');
+  const toggle = document.getElementById('sbToggle');
+  if (!sb || !toggle) return;
+  const saved = localStorage.getItem('eaSidebarCollapsed');
+  if (saved === '1' && window.innerWidth > 1024) {
+    sb.classList.add('collapsed');
+    document.body.classList.add('sb-collapsed');
+  }
+  toggle.addEventListener('click', () => {
+    sb.classList.toggle('collapsed');
+    document.body.classList.toggle('sb-collapsed');
+    const isCollapsed = sb.classList.contains('collapsed');
+    localStorage.setItem('eaSidebarCollapsed', isCollapsed ? '1' : '0');
+    toggle.setAttribute('aria-label', isCollapsed ? 'Expandir menu' : 'Recolher menu');
+    toggle.setAttribute('title', isCollapsed ? 'Expandir menu' : 'Recolher menu');
+  });
+}
+
 // ═══ LOAD STUDENTS INTO ALL SELECTS ═══
 async function loadStudents() {
   const students = await getMyStudents(currentUser.id);
   window._myStudents = students; // store for reuse
-  const selects = ['hwStudent','fbStudent','wrStudent','prStudent','assStudent'];
+  const selects = ['hwStudent','fbStudent','wrStudent','prStudent'];
   selects.forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
@@ -671,10 +705,9 @@ async function sendFeedback() {
   const studentId = document.getElementById('fbStudent').value;
   const title = document.getElementById('fbTitle').value.trim();
   const content = document.getElementById('fbContent').value.trim();
-  const category = document.getElementById('fbCategory').value;
   if (!studentId || !title || !content) { showToast('Preencha todos os campos','error'); return; }
   try {
-    await createFeedback(currentUser.id, studentId, title, content, category);
+    await createFeedback(currentUser.id, studentId, title, content, 'general');
     showToast('Feedback enviado!');
     document.getElementById('fbTitle').value = '';
     document.getElementById('fbContent').value = '';
@@ -696,7 +729,7 @@ async function loadFeedbackList() {
   const fbs = await getFeedbacksByTeacher(currentUser.id);
   const div = document.getElementById('fbList');
   if (!fbs.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>Nenhum feedback registrado.</p></div>'; return; }
-  div.innerHTML = fbs.map(f => '<div class="list-item"><div><div class="list-title">💬 ' + f.title + '</div><div class="list-sub">' + (f.student?.full_name||'') + ' — ' + f.category + ' — ' + formatDateTime(f.created_at) + '</div></div></div>').join('');
+  div.innerHTML = fbs.map(f => '<div class="list-item"><div><div class="list-title">💬 ' + f.title + '</div><div class="list-sub">' + (f.student?.full_name||'') + ' — ' + formatDateTime(f.created_at) + '</div></div></div>').join('');
 }
 
 // ═══ SEND ANNOUNCEMENT ═══
@@ -1101,44 +1134,6 @@ async function loadStudentsList() {
 }
 
 
-// ═══ ASSESSMENTS ═══
-async function sendAssessment() {
-  const studentId = document.getElementById('assStudent').value;
-  const title = document.getElementById('assTitle').value.trim();
-  const month = parseInt(document.getElementById('assMonth').value);
-  const year = parseInt(document.getElementById('assYear').value);
-  const fileInput = document.getElementById('assFile');
-  const file = fileInput.files[0];
-  
-  if (!studentId) { showToast('Selecione um aluno','error'); return; }
-  if (!title) { showToast('Preencha o título','error'); return; }
-  if (!month) { showToast('Selecione o mês','error'); return; }
-  if (!file) { showToast('Selecione o arquivo','error'); return; }
-  if (file.size > 10 * 1024 * 1024) { showToast('Arquivo muito grande. Máximo 10MB.','error'); return; }
-  
-  showToast('Enviando assessment...','info');
-  try {
-    await uploadAssessment(currentUser.id, studentId, month, year, title, file);
-    showToast('Assessment enviado com sucesso!');
-    document.getElementById('assTitle').value = '';
-    document.getElementById('assMonth').value = '';
-    document.getElementById('assFile').value = '';
-    loadAssessmentList();
-  } catch(e) {
-    showToast('Erro: ' + e.message, 'error');
-  }
-}
-
-async function loadAssessmentList() {
-  const items = await getAssessmentsByTeacher(currentUser.id);
-  const div = document.getElementById('assList');
-  if (!items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📄</div><p>Nenhum assessment enviado.</p></div>'; return; }
-  div.innerHTML = items.map(a => {
-    const monthName = MONTHS[a.month] || a.month;
-    return '<div class="list-item"><div><div class="list-title">📄 ' + a.title + '</div><div class="list-sub">' + (a.student?.full_name||'') + ' — ' + monthName + ' ' + a.year + ' — ' + formatDateTime(a.created_at) + '</div></div><a href="' + a.file_url + '" target="_blank" style="padding:6px 14px;border-radius:8px;background:var(--blue-soft);color:var(--blue);font-size:12px;font-weight:700;text-decoration:none">📥 Baixar</a></div>';
-  }).join('');
-}
-
 // ═══ SIDEBAR NAVIGATION HOOKS ═══
 document.addEventListener('DOMContentLoaded', () => {
   // Load content when switching sections
@@ -1154,7 +1149,6 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'announcements': loadAnnouncementList(); break;
       case 'writing': loadWritingList(); break;
       case 'pronunciation': loadPronunciationList(); break;
-      case 'assessments': loadAssessmentList(); break;
       case 'messages': loadMessages(); break;
     }
   });

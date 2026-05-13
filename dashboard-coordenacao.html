@@ -246,6 +246,10 @@ body { background: var(--g50); margin: 0; }
 .stat-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(0,0,0,0.08); }
 .stat-card:hover .stat-icon { transform: scale(1.15); }
 .stat-icon { transition: transform 0.3s; }
+.stat-card.clickable { cursor: pointer; }
+.stat-card.clickable:hover { box-shadow: 0 12px 28px rgba(243,107,46,0.15); border-color: var(--orange); }
+.stat-card.clickable::after { content: '→'; position: absolute; top: 14px; right: 16px; font-size: 16px; font-weight: 800; color: var(--g300); transition: all 0.2s; }
+.stat-card.clickable:hover::after { color: var(--orange); transform: translateX(4px); }
 
 /* Panel improvements */
 .panel { transition: box-shadow 0.3s; border-radius: 16px !important; }
@@ -479,6 +483,64 @@ body { background: var(--g50); margin: 0; }
   .stat-row { grid-template-columns: repeat(2,1fr); }
 }
 
+/* ═══ NOTIFICATION BELL + DROPDOWN ═══ */
+.notif-wrap { position: relative; display: inline-block; }
+.notif-bell-btn {
+  position: relative; width: 40px; height: 40px;
+  border-radius: 50%;
+  background: var(--g50); border: 1px solid var(--g100);
+  cursor: pointer; transition: all 0.2s;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--navy); font-size: 18px; padding: 0; margin-right: 8px;
+}
+.notif-bell-btn:hover { background: var(--cream); border-color: var(--orange); }
+.notif-bell-btn .notif-badge {
+  position: absolute; top: -4px; right: -4px;
+  min-width: 18px; height: 18px; background: var(--orange); color: #fff;
+  border-radius: 9px; padding: 0 5px; font-size: 10px; font-weight: 800;
+  display: inline-flex; align-items: center; justify-content: center; border: 2px solid #fff;
+}
+.notif-bell-btn.has-new::after {
+  content: ''; position: absolute; inset: -1px;
+  border-radius: 50%; border: 2px solid var(--orange);
+  animation: notifRing 1.6s ease-out infinite; pointer-events: none;
+}
+@keyframes notifRing { 0%{opacity:1;transform:scale(1)} 100%{opacity:0;transform:scale(1.4)} }
+.notif-dropdown {
+  position: absolute; top: calc(100% + 10px); right: -8px;
+  width: 380px; max-height: 480px; overflow: hidden;
+  background: #fff; border-radius: 14px;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.18), 0 0 0 1px var(--g100);
+  z-index: 150; display: none; flex-direction: column;
+  animation: notifIn 0.18s ease;
+}
+.notif-dropdown.open { display: flex; }
+@keyframes notifIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+.notif-dropdown::before {
+  content: ''; position: absolute; top: -8px; right: 20px;
+  width: 14px; height: 14px; background: #fff;
+  border-left: 1px solid var(--g100); border-top: 1px solid var(--g100);
+  transform: rotate(45deg);
+}
+.notif-head { padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--g100); flex-shrink: 0; }
+.notif-head h4 { margin: 0; font-size: 14px; font-weight: 800; color: var(--navy); }
+.notif-head .notif-count { font-size: 11px; color: var(--g500); font-weight: 600; }
+.notif-list { flex: 1; overflow-y: auto; padding: 4px 0; }
+.notif-item { display: flex; gap: 10px; padding: 12px 18px; cursor: pointer; border-bottom: 1px solid var(--g50); transition: background 0.15s; position: relative; }
+.notif-item:hover { background: var(--g50); }
+.notif-item:last-child { border-bottom: none; }
+.notif-item.is-new::before { content: ''; position: absolute; left: 8px; top: 50%; width: 6px; height: 6px; border-radius: 50%; background: var(--orange); transform: translateY(-50%); }
+.notif-item .notif-icon { flex-shrink: 0; font-size: 22px; line-height: 1; width: 36px; height: 36px; border-radius: 10px; background: var(--cream); display: flex; align-items: center; justify-content: center; }
+.notif-item .notif-body { flex: 1; min-width: 0; }
+.notif-item .notif-title { font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 2px; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.notif-item .notif-sub { font-size: 11px; color: var(--g500); display: flex; gap: 6px; align-items: center; }
+.notif-item .notif-time { color: var(--g400); font-weight: 600; }
+.notif-empty { padding: 40px 20px; text-align: center; color: var(--g400); }
+.notif-empty .empty-icon { font-size: 36px; opacity: 0.4; margin-bottom: 8px; }
+.notif-loading { padding: 20px; text-align: center; color: var(--g400); font-size: 13px; }
+.notif-foot { padding: 10px 18px; border-top: 1px solid var(--g100); font-size: 11px; color: var(--g500); text-align: center; flex-shrink: 0; }
+@media (max-width: 480px) { .notif-dropdown { width: calc(100vw - 24px); right: -8px; max-height: 70vh; } }
+
 /* Dashboard mobile responsive */
 @media (max-width: 1024px) {
   .sb { transform: translateX(-100%); transition: transform 0.3s; }
@@ -690,7 +752,22 @@ body.sb-collapsed .main { margin-left: 92px !important; }
       </div>
       <button class="mobile-menu-btn" onclick="document.querySelector('.sb').classList.toggle('open');document.getElementById('sbOverlay').classList.toggle('open')">☰</button>
       <div class="topbar-user">
-        <span id="notifBadge" style="display:none;min-width:20px;height:20px;border-radius:50%;background:var(--orange);color:#fff;font-size:11px;font-weight:800;text-align:center;line-height:20px;padding:0 6px"></span>
+        <div class="notif-wrap">
+          <button id="notifBell" class="notif-bell-btn" type="button" aria-label="Notificações" title="Notificações">
+            🔔
+            <span id="notifBadge" class="notif-badge" style="display:none">0</span>
+          </button>
+          <div id="notifDropdown" class="notif-dropdown" role="menu" aria-label="Notificações">
+            <div class="notif-head">
+              <h4>🔔 Notificações</h4>
+              <span class="notif-count" id="notifCount"></span>
+            </div>
+            <div class="notif-list" id="notifList">
+              <div class="notif-loading">Carregando...</div>
+            </div>
+            <div class="notif-foot">Mostrando atividade dos últimos 14 dias</div>
+          </div>
+        </div>
         <span class="topbar-name" id="userName">Coordenação</span>
         <div style="position:relative;cursor:pointer" onclick="document.getElementById('coordAvatarInput').click()">
           <div class="topbar-avatar" id="userAvatar" style="overflow:hidden">C</div>
@@ -722,10 +799,10 @@ body.sb-collapsed .main { margin-left: 92px !important; }
           </div>
         </div>
         <div class="stat-row">
-          <div class="stat-card"><div class="stat-icon">🎓</div><div class="stat-label">Total de Alunos</div><div class="stat-value" id="statStudents">-</div></div>
-          <div class="stat-card"><div class="stat-icon">👨‍🏫</div><div class="stat-label">Professores</div><div class="stat-value" id="statTeachers">-</div></div>
-          <div class="stat-card"><div class="stat-icon">📝</div><div class="stat-label">Homeworks</div><div class="stat-value" id="statHomeworks">-</div></div>
-          <div class="stat-card"><div class="stat-icon">📅</div><div class="stat-label">Nivelamentos</div><div class="stat-value" id="statNivelamentos">-</div></div>
+          <div class="stat-card clickable" data-goto="users" data-filter="student"><div class="stat-icon">🎓</div><div class="stat-label">Total de Alunos</div><div class="stat-value" id="statStudents">-</div></div>
+          <div class="stat-card clickable" data-goto="users" data-filter="teacher"><div class="stat-icon">👨‍🏫</div><div class="stat-label">Professores</div><div class="stat-value" id="statTeachers">-</div></div>
+          <div class="stat-card clickable" data-goto="supervision" data-pane="sup-hw"><div class="stat-icon">📝</div><div class="stat-label">Homeworks</div><div class="stat-value" id="statHomeworks">-</div></div>
+          <div class="stat-card clickable" data-goto="nivelamento"><div class="stat-icon">📅</div><div class="stat-label">Nivelamentos</div><div class="stat-value" id="statNivelamentos">-</div></div>
         </div>
         <div class="panel">
           <div class="panel-head"><div class="panel-title">📋 Atividade Recente</div></div>
@@ -1254,6 +1331,28 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadTeachersDropdown();
   await loadOverview();
   renderTodos();
+
+  // Stat cards click → navigate to section (+ optional filter/pane)
+  document.querySelectorAll('.stat-card.clickable').forEach(card => {
+    card.addEventListener('click', () => {
+      const sec = card.dataset.goto;
+      if (!sec) return;
+      const btn = document.querySelector('.sb-link[data-section="' + sec + '"]');
+      if (btn) btn.click();
+      // Optional sub-actions after navigating
+      const filter = card.dataset.filter;
+      const pane = card.dataset.pane;
+      setTimeout(() => {
+        if (filter && typeof filterUsersByRole === 'function') filterUsersByRole(filter);
+        if (pane && typeof switchSup === 'function') {
+          // pane is e.g. "sup-hw" — extract suffix and call switchSup
+          const supKey = pane.replace(/^sup-/, '');
+          const tabBtn = document.querySelector('[data-sup="' + supKey + '"]');
+          if (tabBtn) switchSup(supKey, tabBtn);
+        }
+      }, 100);
+    });
+  });
   
   // Load all sidebar badges
   try {
@@ -1303,7 +1402,12 @@ function setBadge(id, count) {
     });
   });
   const unread = await getUnreadCount(currentUser.id, 'coordinator');
-  if (unread > 0) { document.getElementById('notifBadge').style.display = ''; document.getElementById('notifBadge').textContent = unread; }
+  if (unread > 0) {
+    document.getElementById('notifBadge').style.display = '';
+    document.getElementById('notifBadge').textContent = unread;
+    document.getElementById('notifBell').classList.add('has-new');
+  }
+  initNotifications('coordinator');
 });
 
 // ═══ TEACHER DROPDOWN ═══
@@ -1435,6 +1539,80 @@ function showSkeleton(containerId, count) {
     h += '<div class="skel-card"><div class="skel-row"><div class="skel-avatar skel-line" style="width:40px;height:40px;border-radius:50%"></div><div style="flex:1"><div class="skel-line w80"></div><div class="skel-line w40"></div></div></div></div>';
   }
   el.innerHTML = h;
+}
+
+// ═══ NOTIFICATIONS BELL ═══
+function initNotifications(role) {
+  const bell = document.getElementById('notifBell');
+  const dd = document.getElementById('notifDropdown');
+  if (!bell || !dd) return;
+  bell.addEventListener('click', async (ev) => {
+    ev.stopPropagation();
+    const isOpen = dd.classList.contains('open');
+    if (isOpen) { dd.classList.remove('open'); return; }
+    dd.classList.add('open');
+    await loadNotifications(role);
+  });
+  document.addEventListener('click', (ev) => {
+    if (!dd.contains(ev.target) && ev.target !== bell) dd.classList.remove('open');
+  });
+  document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape') dd.classList.remove('open'); });
+}
+
+async function loadNotifications(role) {
+  const list = document.getElementById('notifList');
+  const count = document.getElementById('notifCount');
+  list.innerHTML = '<div class="notif-loading">Carregando...</div>';
+  try {
+    const items = await getNotificationItems(currentUser.id, role);
+    if (!items.length) {
+      list.innerHTML = '<div class="notif-empty"><div class="empty-icon">📭</div><div>Tudo em dia! Sem notificações.</div></div>';
+      count.textContent = '';
+      return;
+    }
+    const newCount = items.filter(i => i.isNew).length;
+    count.textContent = newCount > 0 ? newCount + ' nova(s)' : items.length + ' itens';
+    list.innerHTML = items.map((it, idx) => {
+      const newCls = it.isNew ? ' is-new' : '';
+      const sectionAttr = it.section ? ' data-notif-section="' + it.section + '"' : '';
+      return '<div class="notif-item' + newCls + '"' + sectionAttr + ' data-notif-idx="' + idx + '">' +
+        '<div class="notif-icon">' + (it.icon || '🔔') + '</div>' +
+        '<div class="notif-body">' +
+          '<div class="notif-title">' + notifEsc(it.title) + '</div>' +
+          '<div class="notif-sub"><span>' + notifEsc(it.sub || '') + '</span>' +
+            (it.when ? '<span class="notif-time">• ' + notifFormatTime(it.when) + '</span>' : '') +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+    list.querySelectorAll('.notif-item[data-notif-section]').forEach(el => {
+      el.addEventListener('click', () => {
+        const sec = el.getAttribute('data-notif-section');
+        document.getElementById('notifDropdown').classList.remove('open');
+        const btn = document.querySelector('.sb-link[data-section="' + sec + '"]');
+        if (btn) btn.click();
+      });
+    });
+  } catch(e) {
+    list.innerHTML = '<div class="notif-empty"><div class="empty-icon">⚠️</div><div>Erro ao carregar notificações</div></div>';
+    console.error('Notifications:', e);
+  }
+}
+
+function notifEsc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function notifFormatTime(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  const now = new Date();
+  const diffMin = Math.floor((now - d) / 60000);
+  if (diffMin < 1) return 'agora';
+  if (diffMin < 60) return diffMin + 'min';
+  const diffH = Math.floor(diffMin / 60);
+  if (diffH < 24) return diffH + 'h';
+  const diffD = Math.floor(diffH / 24);
+  if (diffD < 7) return diffD + 'd';
+  return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
 }
 
 async function loadOverview() {

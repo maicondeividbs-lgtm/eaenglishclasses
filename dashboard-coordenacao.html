@@ -541,6 +541,55 @@ body { background: var(--g50); margin: 0; }
 .notif-foot { padding: 10px 18px; border-top: 1px solid var(--g100); font-size: 11px; color: var(--g500); text-align: center; flex-shrink: 0; }
 @media (max-width: 480px) { .notif-dropdown { width: calc(100vw - 24px); right: -8px; max-height: 70vh; } }
 
+/* ═══ CONTRACT ALERTS (overview) ═══ */
+.ctr-panel { border-radius: 16px !important; overflow: hidden; animation: sectionIn 0.4s; }
+.ctr-panel-expired { border: 1px solid #fecaca !important; }
+.ctr-panel-warn { border: 1px solid #fed7aa !important; }
+.ctr-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 14px; background: #fff;
+  border-radius: 12px; border: 1px solid var(--g100);
+  margin-bottom: 8px;
+  transition: all 0.2s;
+  flex-wrap: wrap;
+}
+.ctr-item:hover { border-color: var(--g200); box-shadow: 0 4px 12px rgba(0,0,0,0.05); transform: translateY(-1px); }
+.ctr-item.ctr-expired:hover { border-color: #fca5a5; box-shadow: 0 4px 12px rgba(220,38,38,0.1); }
+.ctr-info { flex: 1; min-width: 180px; }
+.ctr-name { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 2px; }
+.ctr-expired .ctr-name { color: #991b1b; }
+.ctr-meta { font-size: 12px; color: var(--g500); }
+.ctr-actions { display: inline-flex; gap: 6px; align-items: center; }
+.ctr-action {
+  width: 34px; height: 34px; border-radius: 10px;
+  border: 1px solid var(--g200); background: #fff;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 15px; cursor: pointer; text-decoration: none;
+  transition: all 0.15s; padding: 0;
+}
+.ctr-action:hover { transform: translateY(-2px); }
+.ctr-action-wpp { background: #25D366; border-color: #25D366; }
+.ctr-action-wpp:hover { background: #20b358; }
+.ctr-action-email { background: var(--blue-soft); border-color: var(--blue-soft); }
+.ctr-action-email:hover { background: var(--blue); color: #fff; }
+.ctr-action-edit { background: var(--cream); }
+.ctr-action-edit:hover { background: var(--mango); color: #fff; border-color: var(--mango); }
+.ctr-badge {
+  padding: 6px 12px; border-radius: 99px;
+  font-size: 11px; font-weight: 700;
+  white-space: nowrap; flex-shrink: 0;
+}
+.ctr-badge-expired { background: #dc2626; color: #fff; }
+.ctr-badge-urgent { background: #ef4444; color: #fff; }
+.ctr-badge-warn { background: #f59a1e; color: #fff; }
+.ctr-badge-soft { background: #fef3c7; color: #92400e; }
+@media (max-width: 640px) {
+  .ctr-item { padding: 12px; }
+  .ctr-info { width: 100%; min-width: 0; }
+  .ctr-actions { width: 100%; justify-content: flex-end; }
+  .ctr-badge { width: 100%; text-align: center; }
+}
+
 /* Dashboard mobile responsive */
 @media (max-width: 1024px) {
   .sb { transform: translateX(-100%); transition: transform 0.3s; }
@@ -936,7 +985,6 @@ body.sb-collapsed .main { margin-left: 92px !important; }
           <button class="sup-tab" data-sup="fb" onclick="switchSup('fb',this)">💬 Feedbacks</button>
           <button class="sup-tab" data-sup="wr" onclick="switchSup('wr',this)">✍️ Redações</button>
           <button class="sup-tab" data-sup="pr" onclick="switchSup('pr',this)">🎙️ Pronúncias</button>
-          <button class="sup-tab" data-sup="as" onclick="switchSup('as',this)">📄 Assessments</button>
         </div>
 
         <!-- Shared filter -->
@@ -976,14 +1024,6 @@ body.sb-collapsed .main { margin-left: 92px !important; }
           <div class="panel">
             <div class="panel-head"><div class="panel-title">Todas as Pronúncias</div></div>
             <div id="prCoordList"><div class="empty-state"><div class="empty-icon">🎙️</div><p>Nenhuma pronúncia.</p></div></div>
-          </div>
-        </div>
-
-        <!-- Assessments pane (inside supervision) -->
-        <div class="sup-pane" id="sup-as" style="display:none">
-          <div class="panel">
-            <div class="panel-head"><div class="panel-title">Assessments Enviados</div></div>
-            <div id="supAssList"><div class="empty-state"><div class="empty-icon">📄</div><p>Nenhum assessment.</p></div></div>
           </div>
         </div>
       </div>
@@ -1394,7 +1434,7 @@ function setBadge(id, count) {
   const allTeachers = await getAllTeachers();
   const allCoords = (await getAllProfiles()).filter(p => p.role === 'coordinator');
   const staffList = [...allTeachers, ...allCoords];
-  const filterIds = ['hwFilter','fbFilter','wrFilter','prFilter','assFilter'];
+  const filterIds = ['hwFilter','fbFilter','wrFilter','prFilter'];
   filterIds.forEach(fid => {
     const el = document.getElementById(fid);
     if (!el) return;
@@ -1664,22 +1704,52 @@ async function loadOverview() {
     
     const alertDiv = document.getElementById('contractAlerts');
     let alertHtml = '';
-    
-    if (expiredStudents.length > 0) {
-      alertHtml += '<div style="background:#fef2f2;border:2px solid #dc2626;border-radius:16px;padding:20px;margin-bottom:16px;animation:sectionIn 0.4s"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h3 style="font-size:16px;font-weight:800;color:#991b1b">🚨 Contratos VENCIDOS (' + expiredStudents.length + ')</h3><button onclick="this.parentElement.parentElement.style.display=\'none\'" style="border:none;background:#fecaca;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:12px;color:#991b1b">✕</button></div>' +
-        expiredStudents.map(s => {
-          const daysExpired = Math.ceil((today - new Date(s.contract_end)) / (1000*60*60*24));
-          return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#fff;border-radius:10px;margin-bottom:6px;flex-wrap:wrap;gap:8px"><div><strong style="color:#991b1b">' + s.full_name + '</strong><span style="color:#9CA3AF;font-size:12px;margin-left:8px">' + s.email + '</span></div><span style="background:#dc2626;color:#fff;padding:4px 12px;border-radius:99px;font-size:11px;font-weight:700">Vencido há ' + daysExpired + ' dia(s)</span></div>';
-        }).join('') + '</div>';
+
+    // Helper to build a contract card (interactive)
+    function buildContractCard(s, isExpired) {
+      const endDate = new Date(s.contract_end);
+      const diffMs = today - endDate;
+      const days = Math.ceil(Math.abs(diffMs) / (1000*60*60*24));
+      const safeName = (s.full_name || '').replace(/'/g, "\\'");
+      const safeEmail = (s.email || '').replace(/'/g, "\\'");
+      const wppPhone = (s.phone || '').replace(/\D/g, '');
+      const wppLink = wppPhone ? '<a href="https://wa.me/55' + wppPhone + '" target="_blank" class="ctr-action ctr-action-wpp" title="WhatsApp">📱</a>' : '';
+      const emailLink = '<a href="mailto:' + safeEmail + '" class="ctr-action ctr-action-email" title="E-mail">📧</a>';
+      const editBtn = '<button class="ctr-action ctr-action-edit" title="Editar/renovar contrato" onclick="openEditUserFromAlert(\'' + s.id + '\')">✏️</button>';
+      const badgeClass = isExpired ? 'ctr-badge-expired' : (days <= 7 ? 'ctr-badge-urgent' : days <= 15 ? 'ctr-badge-warn' : 'ctr-badge-soft');
+      const badgeLabel = isExpired ? ('Vencido há ' + days + ' dia' + (days === 1 ? '' : 's')) : (days + ' dia' + (days === 1 ? '' : 's') + ' restante' + (days === 1 ? '' : 's'));
+      return '<div class="ctr-item' + (isExpired ? ' ctr-expired' : '') + '">' +
+        '<div class="ctr-info">' +
+          '<div class="ctr-name">' + notifEsc(s.full_name || '—') + '</div>' +
+          '<div class="ctr-meta">' + notifEsc(s.email || '') + (s.phone ? ' • ' + notifEsc(s.phone) : '') + '</div>' +
+        '</div>' +
+        '<div class="ctr-actions">' + wppLink + emailLink + editBtn + '</div>' +
+        '<span class="ctr-badge ' + badgeClass + '">' + badgeLabel + '</span>' +
+      '</div>';
     }
-    
+
+    if (expiredStudents.length > 0) {
+      alertHtml += '<div class="panel ctr-panel ctr-panel-expired" style="margin-bottom:16px">' +
+        '<div class="panel-head" style="background:#fef2f2;border-radius:16px 16px 0 0">' +
+          '<div class="panel-title" style="color:#991b1b">🚨 Contratos vencidos <span class="badge" style="background:#dc2626;color:#fff;margin-left:6px">' + expiredStudents.length + '</span></div>' +
+          '<button onclick="this.closest(\'.panel\').style.display=\'none\'" title="Fechar" style="border:none;background:#fecaca;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:14px;color:#991b1b;font-weight:700">×</button>' +
+        '</div>' +
+        '<div style="padding:8px 16px 16px">' +
+          expiredStudents.map(s => buildContractCard(s, true)).join('') +
+        '</div>' +
+      '</div>';
+    }
+
     if (expiringStudents.length > 0) {
-      alertHtml += '<div style="background:#fff7ed;border:2px solid #f59a1e;border-radius:16px;padding:20px;margin-bottom:16px"><h3 style="font-size:16px;font-weight:800;color:#92400e;margin-bottom:12px">⚠️ Contratos próximos do vencimento (' + expiringStudents.length + ')</h3>' +
-        expiringStudents.map(s => {
-          const daysLeft = Math.ceil((new Date(s.contract_end) - today) / (1000*60*60*24));
-          const urgency = daysLeft <= 7 ? 'background:#ef4444;color:#fff' : daysLeft <= 15 ? 'background:#f59a1e;color:#fff' : 'background:#fef3c7;color:#92400e';
-          return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#fff;border-radius:10px;margin-bottom:6px;flex-wrap:wrap;gap:8px"><div><strong style="color:#92400e">' + s.full_name + '</strong><span style="color:#9CA3AF;font-size:12px;margin-left:8px">' + s.email + '</span></div><span style="' + urgency + ';padding:4px 12px;border-radius:99px;font-size:11px;font-weight:700">' + daysLeft + ' dia(s) restantes</span></div>';
-        }).join('') + '</div>';
+      alertHtml += '<div class="panel ctr-panel ctr-panel-warn" style="margin-bottom:16px">' +
+        '<div class="panel-head" style="background:#fff7ed;border-radius:16px 16px 0 0">' +
+          '<div class="panel-title" style="color:#92400e">⚠️ Vencendo nos próximos 30 dias <span class="badge" style="background:#f59a1e;color:#fff;margin-left:6px">' + expiringStudents.length + '</span></div>' +
+          '<button onclick="this.closest(\'.panel\').style.display=\'none\'" title="Fechar" style="border:none;background:#fed7aa;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:14px;color:#92400e;font-weight:700">×</button>' +
+        '</div>' +
+        '<div style="padding:8px 16px 16px">' +
+          expiringStudents.map(s => buildContractCard(s, false)).join('') +
+        '</div>' +
+      '</div>';
     }
     
     if (alertDiv) alertDiv.innerHTML = alertHtml;
@@ -1821,6 +1891,13 @@ async function loadMsgList() {
 
 
 // ═══ USER MANAGEMENT ═══
+// Wrapper called from contract alerts on overview — navigates to Users + opens edit modal
+function openEditUserFromAlert(userId) {
+  const btn = document.querySelector('.sb-link[data-section="users"]');
+  if (btn) btn.click();
+  setTimeout(() => openEditModal(userId), 250);
+}
+
 async function openEditModal(userId) {
   const profiles = await getAllProfiles();
   const user = profiles.find(p => p.id === userId);
@@ -1971,20 +2048,6 @@ async function loadPronunciationCoord() {
   if (!items || !items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">🎙️</div><p>Nenhuma pronúncia no sistema.</p></div>'; return; }
   div.innerHTML = items.map(p => '<div class="list-item"><div><div class="list-title">🎙️ ' + p.word + (p.phonetic ? ' <span style="color:var(--g400);font-weight:400;font-style:italic">' + p.phonetic + '</span>' : '') + '</div><div class="list-sub">Prof. ' + (p.teacher?.full_name||'?') + ' → ' + (p.student?.full_name||'?') + ' — ' + formatDateTime(p.created_at) + '</div></div><span class="badge ' + (p.practiced ? 'badge-done' : 'badge-pending') + '">' + (p.practiced ? 'Praticado' : 'Pendente') + '</span></div>').join('');
 }
-
-// ═══ ASSESSMENTS SUPERVISION ═══
-async function loadAssessmentsCoord() {
-  const filterTeacher = document.getElementById('assFilter')?.value || '';
-  let query = db.from('assessments').select('*, teacher:profiles!assessments_teacher_id_fkey(full_name, id), student:profiles!assessments_student_id_fkey(full_name)').order('created_at', {ascending: false});
-  if (filterTeacher) query = query.eq('teacher_id', filterTeacher);
-  const { data: items } = await query;
-  const div = document.getElementById('assCoordList');
-  if (!items || !items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📄</div><p>Nenhum assessment no sistema.</p></div>'; return; }
-  const MONTHS = ['','Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-  div.innerHTML = items.map(a => '<div class="list-item"><div><div class="list-title">📄 ' + a.title + '</div><div class="list-sub">Prof. ' + (a.teacher?.full_name||'?') + ' → ' + (a.student?.full_name||'?') + ' — ' + (MONTHS[a.month]||'') + '/' + a.year + '</div></div><a href="' + a.file_url + '" target="_blank" style="padding:6px 14px;border-radius:8px;background:var(--blue-soft);color:var(--blue);font-size:12px;font-weight:700;text-decoration:none">📥 Ver</a></div>').join('');
-}
-
-
 
 // ═══ CREATE USER ═══
 function openCreateModal() {
@@ -2326,7 +2389,6 @@ function loadCurrentSup() {
     case 'fb': loadFeedbacks(); break;
     case 'wr': loadWritingCoord(); break;
     case 'pr': loadPronunciationCoord(); break;
-    case 'as': loadAssessmentsCoord(); break;
   }
 }
 

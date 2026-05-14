@@ -462,6 +462,232 @@ body { background: var(--g50); margin: 0; }
   .notif-dropdown { width: calc(100vw - 24px); right: -8px; max-height: 70vh; }
 }
 
+/* ═══ PROFILE PAGE (aluno) ═══ */
+.profile-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 20px;
+  align-items: start;
+}
+.profile-card {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid var(--g100);
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+.profile-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.05); }
+.profile-card-head {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--g100);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.profile-card-title {
+  font-size: 14px; font-weight: 800;
+  color: var(--navy);
+}
+.profile-card-body { padding: 20px; }
+
+/* Hero card (left) */
+.profile-hero {
+  text-align: center;
+  padding: 28px 20px;
+  background: linear-gradient(180deg, var(--cream) 0%, #fff 100%);
+  border: 1px solid var(--g100);
+  position: sticky; top: 84px;
+}
+.profile-avatar-wrap {
+  position: relative;
+  width: 130px; height: 130px;
+  margin: 0 auto 16px;
+  cursor: pointer;
+}
+.profile-avatar {
+  width: 130px; height: 130px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--blue), var(--blue-light, #4f6cdd));
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 50px; font-weight: 900;
+  font-family: 'Fraunces', serif;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(37,60,150,0.25);
+  transition: transform 0.2s;
+}
+.profile-avatar-wrap:hover .profile-avatar { transform: scale(1.03); }
+.profile-avatar-wrap:hover .profile-avatar-edit { background: var(--mango); transform: scale(1.1); }
+.profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.profile-avatar-edit {
+  position: absolute; bottom: 4px; right: 4px;
+  width: 36px; height: 36px;
+  background: var(--orange);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  border: 3px solid #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(243,107,46,0.4);
+}
+.profile-hero-name {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 4px;
+  letter-spacing: -0.01em;
+}
+.profile-hero-role {
+  font-size: 12px;
+  color: var(--g500);
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+.profile-hero-level {
+  display: inline-block;
+  padding: 6px 14px;
+  background: var(--orange);
+  color: #fff;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.profile-hero-since {
+  font-size: 11px;
+  color: var(--g400);
+  margin-top: 8px;
+}
+
+/* Right column */
+.profile-right { display: flex; flex-direction: column; gap: 20px; }
+
+/* Stats row */
+.profile-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.profile-stat {
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid var(--g100);
+  padding: 16px;
+  text-align: center;
+  transition: all 0.2s;
+}
+.profile-stat:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+  border-color: var(--ocean);
+}
+.profile-stat-icon { font-size: 22px; margin-bottom: 6px; }
+.profile-stat-num {
+  font-family: 'Fraunces', serif;
+  font-size: 30px;
+  font-weight: 900;
+  color: var(--navy);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.profile-stat-lbl {
+  font-size: 11px;
+  color: var(--g500);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Inputs */
+.profile-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.profile-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 2px solid var(--g200);
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--navy);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.profile-input:focus { border-color: var(--blue); }
+.profile-input-locked {
+  background: var(--g50);
+  color: var(--g500);
+  cursor: not-allowed;
+}
+.profile-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.profile-help {
+  font-size: 12px;
+  color: var(--g500);
+  background: var(--g50);
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin: 14px 0;
+  line-height: 1.5;
+}
+.profile-btn {
+  padding: 13px 24px;
+  border: none;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+}
+.profile-btn:hover { transform: translateY(-2px); }
+.profile-btn-primary { background: var(--orange); color: #fff; }
+.profile-btn-primary:hover { background: var(--mango); box-shadow: 0 8px 20px rgba(243,107,46,0.3); }
+.profile-btn-dark { background: var(--navy); color: #fff; }
+.profile-btn-dark:hover { background: var(--blue); box-shadow: 0 8px 20px rgba(25,36,78,0.3); }
+
+/* Teacher card */
+.profile-teacher-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.profile-teacher-avatar {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--orange), var(--mango));
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 22px; font-weight: 800;
+  font-family: 'Fraunces', serif;
+  flex-shrink: 0;
+}
+.profile-teacher-name {
+  font-size: 16px; font-weight: 700; color: var(--navy);
+  margin-bottom: 3px;
+}
+.profile-teacher-course {
+  font-size: 12px; color: var(--g500);
+}
+
+@media (max-width: 900px) {
+  .profile-grid { grid-template-columns: 1fr; }
+  .profile-hero { position: static; }
+  .profile-stats { grid-template-columns: repeat(2, 1fr); }
+  .profile-row-2 { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .profile-stats { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .profile-stat { padding: 12px; }
+  .profile-stat-num { font-size: 24px; }
+}
+
 @media(max-width:1024px) {
   .sb { transform: translateX(-100%); }
   .main { margin-left: 0; }
@@ -826,55 +1052,105 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 
       <!-- PROFILE -->
       <div class="section" id="sec-profile">
-        <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:20px">👤 Meu Perfil</h2>
-        
-        <div style="background:#fff;border-radius:16px;border:2px solid var(--ocean);padding:28px;max-width:500px">
-          <!-- Avatar -->
-          <div style="text-align:center;margin-bottom:24px">
-            <div style="position:relative;width:80px;height:80px;margin:0 auto 12px;cursor:pointer" onclick="document.getElementById('avatarInput').click()">
-              <div id="profileAvatar" style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--blue-light));display:flex;align-items:center;justify-content:center;color:#fff;font-size:32px;font-weight:800;overflow:hidden">A</div>
-              <div style="position:absolute;bottom:0;right:0;width:28px;height:28px;background:var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;border:3px solid #fff;cursor:pointer">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        <h2 style="font-size:24px;font-weight:800;color:var(--navy);margin-bottom:8px;letter-spacing:-0.02em">👤 Meu Perfil</h2>
+        <p style="font-size:14px;color:var(--g500);margin-bottom:24px">Suas informações pessoais e progresso na EA English Classes.</p>
+
+        <div class="profile-grid">
+          <!-- LEFT: Avatar + identity card -->
+          <div class="profile-card profile-hero">
+            <div class="profile-avatar-wrap" onclick="document.getElementById('avatarInput').click()" title="Clique para alterar a foto">
+              <div id="profileAvatar" class="profile-avatar">A</div>
+              <div class="profile-avatar-edit">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.996.996 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
               </div>
               <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="handleAvatarUpload(this.files[0])">
             </div>
-            <p style="font-size:11px;color:var(--g500)">Clique na foto para alterar</p>
+            <div class="profile-hero-name" id="profileHeroName">—</div>
+            <div class="profile-hero-role">🎓 Aluno</div>
+            <div class="profile-hero-level" id="profileHeroLevel">—</div>
+            <div class="profile-hero-since" id="profileHeroSince" style="display:none"></div>
           </div>
-          
-          <div class="f-group">
-            <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px">Nome completo</label>
-            <input type="text" id="profName" style="width:100%;padding:11px 14px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;color:var(--navy);outline:none">
+
+          <!-- RIGHT: stats + info + actions -->
+          <div class="profile-right">
+            <!-- Stats row -->
+            <div class="profile-stats">
+              <div class="profile-stat">
+                <div class="profile-stat-icon">📝</div>
+                <div class="profile-stat-num" id="profStatHomework">-</div>
+                <div class="profile-stat-lbl">Tarefas feitas</div>
+              </div>
+              <div class="profile-stat">
+                <div class="profile-stat-icon">✍️</div>
+                <div class="profile-stat-num" id="profStatWriting">-</div>
+                <div class="profile-stat-lbl">Redações</div>
+              </div>
+              <div class="profile-stat">
+                <div class="profile-stat-icon">💬</div>
+                <div class="profile-stat-num" id="profStatFeedback">-</div>
+                <div class="profile-stat-lbl">Feedbacks</div>
+              </div>
+              <div class="profile-stat">
+                <div class="profile-stat-icon">🎙️</div>
+                <div class="profile-stat-num" id="profStatPron">-</div>
+                <div class="profile-stat-lbl">Pronúncias</div>
+              </div>
+            </div>
+
+            <!-- Personal info card -->
+            <div class="profile-card">
+              <div class="profile-card-head">
+                <div class="profile-card-title">📋 Informações pessoais</div>
+              </div>
+              <div class="profile-card-body">
+                <div class="f-group">
+                  <label class="profile-label">Nome completo</label>
+                  <input type="text" id="profName" class="profile-input">
+                </div>
+                <div class="profile-row-2">
+                  <div class="f-group">
+                    <label class="profile-label">E-mail</label>
+                    <input type="email" id="profEmail" disabled class="profile-input profile-input-locked">
+                  </div>
+                  <div class="f-group">
+                    <label class="profile-label">Nível atual</label>
+                    <input type="text" id="profLevel" disabled class="profile-input profile-input-locked">
+                  </div>
+                </div>
+                <p class="profile-help">🔒 E-mail e nível são definidos pela coordenação. Fale com seu professor se precisar alterar.</p>
+                <button onclick="saveProfile()" class="profile-btn profile-btn-primary">💾 Salvar alterações</button>
+              </div>
+            </div>
+
+            <!-- My teacher card -->
+            <div class="profile-card" id="profTeacherCard" style="display:none">
+              <div class="profile-card-head">
+                <div class="profile-card-title">👨‍🏫 Meu professor</div>
+              </div>
+              <div class="profile-card-body" id="profTeacherBody"></div>
+            </div>
+
+            <!-- Password change card -->
+            <div class="profile-card">
+              <div class="profile-card-head">
+                <div class="profile-card-title">🔒 Segurança</div>
+              </div>
+              <div class="profile-card-body">
+                <p class="profile-help" style="margin-bottom:14px;margin-top:0">Recomendamos trocar a senha padrão no primeiro acesso.</p>
+                <div class="profile-row-2">
+                  <div class="f-group">
+                    <label class="profile-label">Nova senha</label>
+                    <input type="password" id="profNewPass" placeholder="Mínimo 6 caracteres" class="profile-input">
+                  </div>
+                  <div class="f-group">
+                    <label class="profile-label">Confirmar nova senha</label>
+                    <input type="password" id="profConfirmPass" placeholder="Repita a senha" class="profile-input">
+                  </div>
+                </div>
+                <button onclick="changePassword()" class="profile-btn profile-btn-dark">🔐 Alterar senha</button>
+              </div>
+            </div>
           </div>
-          
-          <div class="f-group">
-            <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px">E-mail</label>
-            <input type="email" id="profEmail" disabled style="width:100%;padding:11px 14px;border:2px solid var(--g200);border-radius:10px;font-size:13px;color:var(--g500);background:var(--g50);opacity:0.7">
-            <p style="font-size:11px;color:var(--g400);margin-top:4px">O e-mail não pode ser alterado</p>
-          </div>
-          
-          <div class="f-group">
-            <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px">Nível atual</label>
-            <input type="text" id="profLevel" disabled style="width:100%;padding:11px 14px;border:2px solid var(--g200);border-radius:10px;font-size:13px;color:var(--g500);background:var(--g50);opacity:0.7">
-            <p style="font-size:11px;color:var(--g400);margin-top:4px">O nível é definido pela coordenação</p>
-          </div>
-          
-          <button onclick="saveProfile()" style="width:100%;padding:13px;border:none;border-radius:10px;background:var(--blue);color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s;margin-top:8px">Salvar Nome</button>
-          
-          <hr style="border:none;border-top:2px dashed var(--g200);margin:24px 0">
-          
-          <h3 style="font-size:16px;font-weight:800;color:var(--navy);margin-bottom:14px">🔒 Alterar Senha</h3>
-          
-          <div class="f-group">
-            <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px">Nova senha</label>
-            <input type="password" id="profNewPass" placeholder="Mínimo 6 caracteres" style="width:100%;padding:11px 14px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;color:var(--navy);outline:none">
-          </div>
-          
-          <div class="f-group">
-            <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px">Confirmar nova senha</label>
-            <input type="password" id="profConfirmPass" placeholder="Repita a nova senha" style="width:100%;padding:11px 14px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;color:var(--navy);outline:none">
-          </div>
-          
-          <button onclick="changePassword()" style="width:100%;padding:13px;border:none;border-radius:10px;background:var(--navy);color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s;margin-top:8px">Alterar Senha</button>
         </div>
       </div>
     </div>
@@ -1440,11 +1716,58 @@ async function loadProfile() {
   document.getElementById('profName').value = currentUser.full_name || '';
   document.getElementById('profEmail').value = currentUser.email || '';
   document.getElementById('profLevel').value = currentUser.level || '';
+
+  // Hero card
+  document.getElementById('profileHeroName').textContent = currentUser.full_name || 'Aluno';
+  document.getElementById('profileHeroLevel').textContent = currentUser.level || 'Sem nível definido';
+
+  // "Member since" — uses created_at if available
+  if (currentUser.created_at) {
+    const created = new Date(currentUser.created_at);
+    const since = document.getElementById('profileHeroSince');
+    since.textContent = '📅 Aluno desde ' + created.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+    since.style.display = '';
+  }
+
   if (currentUser.avatar_url) {
     setAvatarEverywhere(currentUser.avatar_url);
   } else {
-    document.getElementById('profileAvatar').textContent = (currentUser.full_name || 'A')[0];
+    document.getElementById('profileAvatar').textContent = (currentUser.full_name || 'A')[0].toUpperCase();
   }
+
+  // Stats — fetch counts in parallel
+  try {
+    const [tasksRes, writingRes, fbRes, pronRes] = await Promise.all([
+      db.from('task_submissions').select('id', { count: 'exact', head: true }).eq('student_id', currentUser.id).neq('status', 'pending'),
+      db.from('writing_activities').select('id', { count: 'exact', head: true }).eq('student_id', currentUser.id),
+      db.from('feedbacks').select('id', { count: 'exact', head: true }).eq('student_id', currentUser.id),
+      db.from('pronunciation').select('id', { count: 'exact', head: true }).eq('student_id', currentUser.id).eq('practiced', true)
+    ]);
+    document.getElementById('profStatHomework').textContent = tasksRes.count || 0;
+    document.getElementById('profStatWriting').textContent = writingRes.count || 0;
+    document.getElementById('profStatFeedback').textContent = fbRes.count || 0;
+    document.getElementById('profStatPron').textContent = pronRes.count || 0;
+  } catch(e) { console.error('Profile stats:', e); }
+
+  // Teacher info card
+  try {
+    const info = await getStudentMainTeacher(currentUser.id);
+    if (info && info.teacher) {
+      const card = document.getElementById('profTeacherCard');
+      const body = document.getElementById('profTeacherBody');
+      const tName = info.teacher.full_name || 'Professor';
+      const initial = tName[0].toUpperCase();
+      body.innerHTML =
+        '<div class="profile-teacher-info">' +
+          '<div class="profile-teacher-avatar">' + initial + '</div>' +
+          '<div>' +
+            '<div class="profile-teacher-name">' + wrEscapeHtml(tName) + '</div>' +
+            '<div class="profile-teacher-course">Use o botão "Pedir ajuda" no canto da tela para tirar dúvidas.</div>' +
+          '</div>' +
+        '</div>';
+      card.style.display = '';
+    }
+  } catch(e) { console.error('Teacher card:', e); }
 }
 
 async function saveProfile() {
@@ -1458,8 +1781,11 @@ async function saveProfile() {
     if (error) throw error;
     currentUser.full_name = name;
     document.getElementById('userName').textContent = name;
-    document.getElementById('userAvatar').textContent = name[0];
-    document.getElementById('profileAvatar').textContent = name[0];
+    document.getElementById('userAvatar').textContent = name[0].toUpperCase();
+    if (!currentUser.avatar_url) {
+      document.getElementById('profileAvatar').textContent = name[0].toUpperCase();
+    }
+    document.getElementById('profileHeroName').textContent = name;
     document.getElementById('greeting').textContent = 'Olá, ' + name + '! 🎓';
     showToast('Nome atualizado!');
   } catch(e) { showToast('Erro: ' + e.message, 'error'); }

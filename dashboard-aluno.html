@@ -931,6 +931,751 @@ body.sb-collapsed .main { margin-left: 92px !important; }
   .book-card { flex-direction: column; align-items: flex-start; min-height: auto; padding: 20px; }
   .book-cover { width: 80px; height: 106px; }
 }
+
+/* ════════════════════════════════════════════════════════
+   ✦ REFINAMENTO VISUAL — ABAS DO ALUNO (v7.2)
+   Não altera lógica: apenas substitui aparência via CSS
+   e classes adicionais aplicadas pelo JS já existente.
+   ════════════════════════════════════════════════════════ */
+
+/* === GLOBAL: header de seção mais elegante === */
+.section-head {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 18px; margin-bottom: 24px;
+  padding-bottom: 18px; border-bottom: 1px solid var(--g100);
+}
+.section-head-text { flex: 1; min-width: 0; }
+.section-head h2 {
+  font-family: 'Fraunces', serif !important;
+  font-size: 28px !important; font-weight: 800 !important;
+  color: var(--navy) !important;
+  letter-spacing: -0.02em !important;
+  margin: 0 !important; padding: 0 !important;
+  line-height: 1.15;
+}
+.section-head h2::after { display: none; }
+.section-head .section-sub {
+  font-size: 13.5px; color: var(--g500);
+  margin-top: 6px; line-height: 1.5;
+}
+.section-head-icon {
+  width: 52px; height: 52px; min-width: 52px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--orange-soft), var(--mango-soft));
+  display: flex; align-items: center; justify-content: center;
+  color: var(--orange);
+  box-shadow: 0 6px 16px rgba(243,107,46,0.12);
+}
+.section-head-icon.blue {
+  background: linear-gradient(135deg, var(--blue-soft), #dbeafe);
+  color: var(--blue);
+  box-shadow: 0 6px 16px rgba(37,60,150,0.12);
+}
+.section-head-icon.green {
+  background: linear-gradient(135deg, #d1fae5, #bbf7d0);
+  color: #059669;
+  box-shadow: 0 6px 16px rgba(16,185,129,0.12);
+}
+.section-head-icon.purple {
+  background: linear-gradient(135deg, #ede9fe, #ddd6fe);
+  color: #7c3aed;
+  box-shadow: 0 6px 16px rgba(124,58,237,0.12);
+}
+.section-head-icon.ocean {
+  background: linear-gradient(135deg, var(--ocean-light), var(--ocean));
+  color: var(--blue);
+  box-shadow: 0 6px 16px rgba(37,60,150,0.10);
+}
+.section-head-icon svg { width: 26px; height: 26px; }
+
+/* === OVERVIEW: cards de estatística refinados === */
+.stat-row { gap: 16px !important; }
+.stat-card {
+  padding: 20px !important;
+  border-radius: 16px !important;
+  transition: all 0.3s cubic-bezier(0.4,0,0.2,1) !important;
+  display: flex; flex-direction: column; gap: 0;
+  position: relative;
+}
+.stat-card::before {
+  height: 100% !important; width: 4px !important;
+  top: 0 !important; bottom: 0 !important; right: auto !important; left: 0 !important;
+  border-radius: 16px 0 0 16px !important;
+  background: linear-gradient(180deg, var(--blue), var(--blue-light)) !important;
+}
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(25,36,78,0.10);
+  border-color: transparent;
+}
+.stat-card:nth-child(1)::before { background: linear-gradient(180deg, var(--orange), var(--mango)) !important; }
+.stat-card:nth-child(2)::before { background: linear-gradient(180deg, #10b981, #34d399) !important; }
+.stat-card:nth-child(3)::before { background: linear-gradient(180deg, var(--blue), var(--blue-light)) !important; }
+.stat-card:nth-child(4)::before { background: linear-gradient(180deg, #8b5cf6, #a78bfa) !important; }
+.stat-icon {
+  font-size: 22px !important; margin-bottom: 12px !important;
+  width: 40px; height: 40px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--g50); border-radius: 10px;
+}
+.stat-card:nth-child(1) .stat-icon { background: var(--mango-soft); }
+.stat-card:nth-child(2) .stat-icon { background: rgba(16,185,129,0.10); }
+.stat-card:nth-child(3) .stat-icon { background: var(--blue-soft); }
+.stat-card:nth-child(4) .stat-icon { background: rgba(139,92,246,0.10); }
+.stat-label {
+  font-size: 11.5px !important;
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+.stat-value {
+  font-size: 36px !important;
+  background: linear-gradient(135deg, var(--navy), #2d3a5e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Greeting refinado */
+.overview-greeting {
+  font-family: 'Fraunces', serif !important;
+  font-size: 30px !important; font-weight: 700 !important;
+  color: var(--navy) !important;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px !important;
+  line-height: 1.15;
+}
+.overview-greeting em {
+  color: var(--orange); font-style: italic;
+}
+.overview-subline {
+  font-size: 14px; color: var(--g500);
+  margin-bottom: 28px !important;
+  display: flex; align-items: center; gap: 10px;
+}
+.overview-subline .pill {
+  padding: 4px 12px; border-radius: 999px;
+  background: var(--blue-soft); color: var(--blue);
+  font-size: 12px; font-weight: 700;
+}
+
+/* Panels refinados */
+.panel {
+  border-radius: 18px !important;
+  border-color: var(--g100) !important;
+  box-shadow: 0 2px 8px rgba(25,36,78,0.03);
+}
+.panel-head {
+  padding: 18px 26px !important;
+  background: linear-gradient(180deg, #fff, #fafbfd);
+}
+.panel-title {
+  font-size: 14.5px !important;
+  display: inline-flex; align-items: center; gap: 10px;
+  letter-spacing: -0.005em;
+}
+.panel-title .panel-icon {
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  background: var(--mango-soft);
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--orange);
+}
+.panel-title .panel-icon.blue { background: var(--blue-soft); color: var(--blue); }
+.panel-title .panel-icon.purple { background: rgba(139,92,246,0.10); color: #7c3aed; }
+.panel-title .panel-icon svg { width: 16px; height: 16px; }
+
+/* === HOMEWORK: cards refinados === */
+.hw-card {
+  display: flex; align-items: flex-start; gap: 16px;
+  padding: 18px 22px;
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid var(--g100);
+  margin-bottom: 12px;
+  transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+  position: relative; overflow: hidden;
+}
+.hw-card::before {
+  content: ''; position: absolute;
+  left: 0; top: 0; bottom: 0; width: 4px;
+  background: var(--g200);
+  transition: background 0.25s ease;
+}
+.hw-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(25,36,78,0.06);
+  border-color: transparent;
+}
+.hw-card:hover::before { background: var(--blue); }
+.hw-card.is-new::before { background: linear-gradient(180deg, var(--orange), var(--mango)); }
+.hw-card.is-new {
+  background: linear-gradient(135deg, #fff, var(--mango-soft));
+  border-color: var(--mango-soft);
+}
+.hw-card.is-done::before { background: #10b981; }
+.hw-card.is-done {
+  background: linear-gradient(135deg, #fff, rgba(16,185,129,0.04));
+}
+.hw-icon {
+  width: 44px; height: 44px; min-width: 44px;
+  border-radius: 12px;
+  background: var(--blue-soft);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--blue);
+  flex-shrink: 0;
+}
+.hw-card.is-new .hw-icon { background: var(--mango-soft); color: var(--orange); }
+.hw-card.is-done .hw-icon { background: rgba(16,185,129,0.12); color: #10b981; }
+.hw-icon svg { width: 20px; height: 20px; }
+.hw-body { flex: 1; min-width: 0; }
+.hw-title-row {
+  display: flex; align-items: center; gap: 8px;
+  flex-wrap: wrap; margin-bottom: 6px;
+}
+.hw-title {
+  font-size: 15px; font-weight: 700; color: var(--navy);
+  letter-spacing: -0.01em;
+}
+.hw-new-badge {
+  background: linear-gradient(135deg, var(--orange), var(--mango));
+  color: #fff;
+  padding: 2px 9px; border-radius: 999px;
+  font-size: 10px; font-weight: 800;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  animation: hwNewPulse 1.8s ease-in-out infinite;
+  box-shadow: 0 2px 8px rgba(243,107,46,0.30);
+}
+@keyframes hwNewPulse {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+.hw-desc {
+  font-size: 13px; color: var(--g600);
+  line-height: 1.55; margin-bottom: 10px;
+}
+.hw-meta {
+  display: flex; flex-wrap: wrap; gap: 12px;
+  font-size: 11.5px; color: var(--g500);
+}
+.hw-meta-item {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-weight: 600;
+}
+.hw-meta-item svg { width: 13px; height: 13px; opacity: 0.7; }
+.hw-action {
+  display: flex; align-items: center; flex-shrink: 0;
+}
+.hw-action .btn-done {
+  padding: 10px 18px !important;
+  border-radius: 10px !important;
+  background: #10b981 !important;
+  font-size: 12.5px !important;
+  display: inline-flex; align-items: center; gap: 6px;
+  box-shadow: 0 4px 12px rgba(16,185,129,0.20);
+  transition: all 0.2s !important;
+}
+.hw-action .btn-done:hover {
+  background: #059669 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(16,185,129,0.30);
+}
+.hw-done-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 14px;
+  background: rgba(16,185,129,0.12);
+  color: #059669;
+  border-radius: 999px;
+  font-size: 12px; font-weight: 700;
+}
+.hw-done-tag svg { width: 14px; height: 14px; }
+
+/* === FEEDBACKS / AVISOS: cards refinados === */
+.fb-card {
+  background: #fff;
+  border: 1px solid var(--g100);
+  border-radius: 16px;
+  padding: 20px 22px;
+  margin-bottom: 14px;
+  position: relative; overflow: hidden;
+  transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+.fb-card::before {
+  content: ''; position: absolute;
+  left: 0; top: 0; bottom: 0; width: 4px;
+  background: linear-gradient(180deg, var(--orange), var(--mango));
+}
+.fb-card.ann::before {
+  background: linear-gradient(180deg, var(--blue), var(--blue-light));
+}
+.fb-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(25,36,78,0.07);
+  border-color: transparent;
+}
+.fb-head {
+  display: flex; align-items: flex-start; gap: 14px;
+  margin-bottom: 12px;
+}
+.fb-avatar {
+  width: 42px; height: 42px; min-width: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--orange), var(--mango));
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 16px;
+  box-shadow: 0 4px 10px rgba(243,107,46,0.20);
+}
+.fb-card.ann .fb-avatar {
+  background: linear-gradient(135deg, var(--blue), var(--blue-light));
+  box-shadow: 0 4px 10px rgba(37,60,150,0.20);
+}
+.fb-head-text { flex: 1; min-width: 0; }
+.fb-title {
+  font-size: 15.5px; font-weight: 800;
+  color: var(--navy); letter-spacing: -0.01em;
+  margin-bottom: 4px;
+}
+.fb-meta {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  font-size: 11.5px; color: var(--g500);
+  align-items: center;
+}
+.fb-meta-author { font-weight: 700; color: var(--g700); }
+.fb-meta-sep { opacity: 0.5; }
+.fb-category {
+  display: inline-block;
+  padding: 3px 10px; border-radius: 999px;
+  background: var(--mango-soft); color: var(--orange);
+  font-size: 10.5px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+.fb-content {
+  font-size: 14px; color: var(--g700);
+  line-height: 1.65;
+  padding-left: 56px;
+}
+.fb-card.ann .fb-content { padding-left: 56px; }
+@media (max-width: 560px) {
+  .fb-content { padding-left: 0; margin-top: 4px; }
+}
+
+/* === WRITING (REDAÇÃO): redesign completo === */
+.wr-card {
+  background: #fff;
+  border: 1px solid var(--g100);
+  border-radius: 20px;
+  margin-bottom: 22px;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  box-shadow: 0 2px 8px rgba(25,36,78,0.03);
+}
+.wr-card:hover {
+  box-shadow: 0 10px 30px rgba(25,36,78,0.07);
+}
+.wr-header {
+  padding: 20px 26px;
+  background: linear-gradient(135deg, var(--cream) 0%, var(--ocean-light) 100%);
+  border-bottom: 1px solid var(--g100);
+  position: relative;
+}
+.wr-header-row {
+  display: flex; align-items: center; gap: 14px;
+}
+.wr-header-icon {
+  width: 44px; height: 44px; min-width: 44px;
+  border-radius: 12px;
+  background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--orange);
+  box-shadow: 0 4px 12px rgba(243,107,46,0.15);
+}
+.wr-header-icon svg { width: 22px; height: 22px; }
+.wr-header-info { flex: 1; min-width: 0; }
+.wr-header-info h4 {
+  font-family: 'Fraunces', serif;
+  font-size: 19px !important; font-weight: 800;
+  color: var(--navy);
+  margin: 0 0 4px 0 !important;
+  letter-spacing: -0.01em;
+}
+.wr-header-meta {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  font-size: 11.5px; color: var(--g600);
+  font-weight: 600;
+}
+.wr-header-meta-item {
+  display: inline-flex; align-items: center; gap: 5px;
+}
+.wr-header-meta-item svg { width: 13px; height: 13px; opacity: 0.75; }
+.wr-status-badge {
+  padding: 6px 14px; border-radius: 999px;
+  font-size: 11.5px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.wr-status-badge svg { width: 12px; height: 12px; }
+.wr-status-badge.pending { background: var(--mango-soft); color: var(--orange); }
+.wr-status-badge.submitted { background: var(--blue-soft); color: var(--blue); }
+.wr-status-badge.graded { background: rgba(16,185,129,0.12); color: #059669; }
+
+.wr-body { padding: 24px 26px; }
+
+/* Prompt como blockquote elegante */
+.wr-prompt {
+  position: relative;
+  padding: 18px 22px 18px 50px;
+  background: var(--off-white);
+  border-radius: 12px;
+  border-left: 3px solid var(--mango);
+  font-style: italic;
+  font-size: 14.5px; color: var(--g700);
+  line-height: 1.65;
+  margin-bottom: 22px;
+}
+.wr-prompt::before {
+  content: '\201C';
+  position: absolute;
+  font-family: 'Fraunces', serif;
+  font-size: 56px; font-weight: 900;
+  color: var(--orange);
+  top: -4px; left: 14px;
+  line-height: 1; opacity: 0.55;
+}
+
+/* Textarea de redação */
+.wr-textarea-wrap { position: relative; }
+.wr-card textarea {
+  width: 100%;
+  padding: 16px 18px !important;
+  border: 1.5px solid var(--g200) !important;
+  border-radius: 14px !important;
+  font-family: inherit;
+  font-size: 14px !important;
+  color: var(--navy);
+  background: var(--off-white);
+  line-height: 1.65;
+  outline: none;
+  transition: all 0.25s ease;
+  resize: vertical;
+  min-height: 160px;
+}
+.wr-card textarea:focus {
+  border-color: var(--orange) !important;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(243,107,46,0.08);
+}
+.wr-char-counter {
+  text-align: right;
+  font-size: 11.5px; color: var(--g400);
+  font-weight: 600;
+  margin-top: 6px;
+}
+.wr-submit-btn {
+  margin-top: 14px;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 13px 22px;
+  border: none; border-radius: 12px;
+  background: linear-gradient(135deg, var(--orange), var(--mango));
+  color: #fff;
+  font-family: inherit; font-size: 14px; font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(243,107,46,0.25);
+  transition: all 0.25s ease;
+}
+.wr-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(243,107,46,0.35);
+}
+.wr-submit-btn svg { width: 16px; height: 16px; }
+
+/* Status: aguardando */
+.wr-state-wait {
+  padding: 18px 22px;
+  background: linear-gradient(135deg, var(--mango-soft), #fff);
+  border-radius: 12px;
+  border: 1px solid var(--mango-soft);
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 14px;
+}
+.wr-state-wait-icon {
+  width: 40px; height: 40px; min-width: 40px;
+  border-radius: 50%;
+  background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--orange);
+  box-shadow: 0 4px 10px rgba(243,107,46,0.12);
+}
+.wr-state-wait-icon svg {
+  width: 18px; height: 18px;
+  animation: wrSpin 2.5s linear infinite;
+}
+@keyframes wrSpin { to { transform: rotate(360deg); } }
+.wr-state-wait-text strong {
+  display: block; font-size: 14px;
+  color: var(--navy); margin-bottom: 2px;
+}
+.wr-state-wait-text span {
+  font-size: 12.5px; color: var(--g600);
+}
+
+.wr-response-preview {
+  padding: 16px 18px;
+  background: var(--g50); border-radius: 12px;
+  font-size: 13.5px; color: var(--g700);
+  line-height: 1.7;
+  white-space: pre-wrap; word-break: break-word;
+  position: relative;
+}
+.wr-response-preview::before {
+  content: 'Sua resposta';
+  position: absolute; top: -9px; left: 14px;
+  background: #fff; padding: 0 8px;
+  font-size: 10.5px; font-weight: 800;
+  color: var(--g500); letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Status: corrigida — nota como medalha */
+.wr-grade-wrap {
+  display: flex; align-items: center; gap: 16px;
+  padding: 18px 22px;
+  background: linear-gradient(135deg, rgba(16,185,129,0.08), #fff);
+  border: 1px solid rgba(16,185,129,0.25);
+  border-radius: 14px;
+  margin-bottom: 20px;
+}
+.wr-grade-medal {
+  width: 56px; height: 56px; min-width: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #10b981, #34d399);
+  color: #fff;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  box-shadow: 0 8px 20px rgba(16,185,129,0.30);
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  line-height: 0.9;
+}
+.wr-grade-medal .wr-grade-num { font-size: 18px; }
+.wr-grade-text strong {
+  display: block; font-size: 15px;
+  color: #065f46; margin-bottom: 2px;
+}
+.wr-grade-text span {
+  font-size: 12.5px; color: var(--g600);
+}
+
+/* Legenda de categorias mais bonita */
+.wr-cat-legend {
+  display: flex !important; flex-wrap: wrap; gap: 14px !important;
+  font-size: 11.5px !important; color: var(--g600) !important;
+  margin-bottom: 14px !important;
+  padding: 12px 16px;
+  background: var(--g50); border-radius: 10px;
+  font-weight: 600;
+}
+.wr-cat-legend span {
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.wr-cat-legend .cat-swatch {
+  width: 14px !important; height: 14px !important;
+  border-radius: 4px !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+}
+
+/* Essay view refinado */
+.wr-essay-view {
+  background: linear-gradient(180deg, #fff, var(--off-white)) !important;
+  border: 1.5px solid var(--ocean) !important;
+  border-radius: 14px !important;
+  padding: 22px 24px !important;
+  font-size: 14.5px !important; color: var(--g700) !important;
+  line-height: 1.85 !important;
+  position: relative;
+}
+
+/* Comments refinados */
+.wr-comments-list {
+  margin-top: 18px !important;
+  padding: 18px;
+  background: var(--off-white);
+  border-radius: 14px;
+  border: 1px solid var(--g100);
+}
+.wr-comments-list::before {
+  content: 'Comentários do professor';
+  display: block;
+  font-size: 11.5px; font-weight: 800;
+  color: var(--navy); letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.wr-comment-item {
+  background: #fff !important;
+  padding: 12px 16px !important;
+  border-radius: 12px !important;
+  border-left-width: 3px;
+  border-left-style: solid;
+  border-left-color: var(--cat-bord, var(--navy));
+  box-shadow: 0 2px 6px rgba(25,36,78,0.04);
+  transition: all 0.2s ease;
+}
+.wr-comment-item:hover {
+  transform: translateX(2px);
+  box-shadow: 0 4px 12px rgba(25,36,78,0.07);
+}
+
+/* General feedback */
+.wr-general-feedback {
+  margin-top: 16px;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, var(--blue-soft), #fff);
+  border-radius: 14px;
+  border: 1px solid rgba(37,60,150,0.12);
+  position: relative;
+}
+.wr-general-feedback::before {
+  content: 'Feedback geral';
+  display: block;
+  font-size: 11px; font-weight: 800;
+  color: var(--blue); letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.wr-general-feedback p {
+  font-size: 14px; color: var(--g700);
+  line-height: 1.65; margin: 0;
+}
+
+/* === PRONUNCIATION: refinamentos === */
+.pron-card {
+  border-radius: 16px !important;
+  padding: 18px 22px !important;
+  margin-bottom: 14px !important;
+  box-shadow: 0 2px 6px rgba(25,36,78,0.03);
+  transition: all 0.3s cubic-bezier(0.4,0,0.2,1) !important;
+  position: relative;
+  overflow: hidden;
+}
+.pron-card::before {
+  content: ''; position: absolute;
+  left: 0; top: 0; bottom: 0; width: 4px;
+  background: var(--blue);
+  transition: background 0.25s ease;
+}
+.pron-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(25,36,78,0.07) !important;
+}
+.pron-card.done::before { background: #10b981; }
+.pron-card.done {
+  background: linear-gradient(135deg, rgba(16,185,129,0.04), #fff) !important;
+  border-color: rgba(16,185,129,0.25) !important;
+}
+.pron-word {
+  font-family: 'Fraunces', serif !important;
+  font-size: 26px !important; font-weight: 800 !important;
+  color: var(--navy) !important;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+.pron-phonetic {
+  font-size: 14px !important;
+  color: var(--blue) !important;
+  font-style: italic;
+  font-family: 'Fraunces', serif;
+  margin-top: 3px;
+}
+.pron-notes {
+  font-size: 12.5px !important;
+  color: var(--g600) !important;
+  margin-top: 8px !important;
+  padding: 8px 12px;
+  background: var(--mango-soft);
+  border-radius: 8px;
+  display: inline-block;
+}
+.pron-controls {
+  margin-top: 14px !important;
+  padding-top: 14px !important;
+  border-top: 1px solid var(--g100) !important;
+}
+.pron-play-btn {
+  border-color: var(--blue) !important;
+  background: var(--blue-soft) !important;
+  box-shadow: 0 4px 12px rgba(37,60,150,0.12);
+}
+.pron-play-btn:hover {
+  box-shadow: 0 6px 18px rgba(37,60,150,0.25);
+}
+.pron-mark-done {
+  padding: 9px 16px !important;
+  border-radius: 10px !important;
+  font-size: 12.5px !important;
+  display: inline-flex; align-items: center; gap: 6px;
+  box-shadow: 0 4px 10px rgba(16,185,129,0.20);
+  transition: all 0.2s !important;
+}
+.pron-mark-done:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(16,185,129,0.30);
+}
+.pron-card .badge-done {
+  margin-left: auto;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 14px;
+  background: rgba(16,185,129,0.12) !important;
+  color: #059669 !important;
+  border-radius: 999px !important;
+  font-size: 11.5px !important; font-weight: 700;
+}
+
+/* === EMPTY STATE: mais bonito === */
+.empty-state {
+  padding: 64px 24px !important;
+  background: linear-gradient(135deg, var(--off-white) 0%, var(--cream) 100%);
+  border-radius: 16px;
+  border: 1px dashed var(--g200);
+}
+.empty-state .empty-icon {
+  font-size: 56px !important;
+  opacity: 0.6 !important;
+  margin-bottom: 16px !important;
+}
+.empty-state p {
+  font-size: 14px;
+  color: var(--g500);
+  font-weight: 500;
+}
+
+/* Fade-in animation para qualquer card */
+@keyframes dashCardIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.hw-card, .fb-card, .wr-card, .pron-card {
+  animation: dashCardIn 0.35s cubic-bezier(0.4,0,0.2,1) backwards;
+}
+.hw-card:nth-child(1), .fb-card:nth-child(1), .wr-card:nth-child(1), .pron-card:nth-child(1) { animation-delay: 0.02s; }
+.hw-card:nth-child(2), .fb-card:nth-child(2), .wr-card:nth-child(2), .pron-card:nth-child(2) { animation-delay: 0.07s; }
+.hw-card:nth-child(3), .fb-card:nth-child(3), .wr-card:nth-child(3), .pron-card:nth-child(3) { animation-delay: 0.12s; }
+.hw-card:nth-child(4), .fb-card:nth-child(4), .wr-card:nth-child(4), .pron-card:nth-child(4) { animation-delay: 0.17s; }
+.hw-card:nth-child(5), .fb-card:nth-child(5), .wr-card:nth-child(5), .pron-card:nth-child(5) { animation-delay: 0.22s; }
+.hw-card:nth-child(n+6), .fb-card:nth-child(n+6), .wr-card:nth-child(n+6), .pron-card:nth-child(n+6) { animation-delay: 0.27s; }
+
+/* Mobile adjustments */
+@media (max-width: 640px) {
+  .section-head { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .section-head h2 { font-size: 24px !important; }
+  .section-head-icon { width: 44px; height: 44px; min-width: 44px; }
+  .stat-row { grid-template-columns: repeat(2,1fr) !important; }
+  .hw-card { padding: 16px; gap: 12px; }
+  .hw-card .hw-action { width: 100%; margin-top: 10px; }
+  .hw-card { flex-wrap: wrap; }
+  .wr-body { padding: 20px; }
+  .wr-header { padding: 18px 20px; }
+  .pron-card { padding: 16px; }
+  .pron-word { font-size: 22px !important; }
+}
 </style>
 </head>
 <body>
@@ -989,8 +1734,8 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 
       <!-- OVERVIEW -->
       <div class="section active" id="sec-overview">
-        <h2 style="font-size:24px;font-weight:800;color:var(--navy);margin-bottom:4px" id="greeting">Olá! 🎓</h2>
-        <p style="font-size:14px;color:var(--g500);margin-bottom:24px" id="levelInfo">Carregando...</p>
+        <h2 class="overview-greeting" id="greeting">Olá! 🎓</h2>
+        <p class="overview-subline" id="levelInfo">Carregando...</p>
         <div class="stat-row">
           <div class="stat-card"><div class="stat-icon">📝</div><div class="stat-label">Tarefas Pendentes</div><div class="stat-value" id="sPending">-</div></div>
           <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-label">Concluídas</div><div class="stat-value" id="sDone">-</div></div>
@@ -1000,7 +1745,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
         
         <!-- Progress + Current Book -->
         <div class="panel" style="margin-bottom:20px">
-          <div class="panel-head"><div class="panel-title">📊 Meu Progresso</div></div>
+          <div class="panel-head"><div class="panel-title"><span class="panel-icon purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>Meu Progresso</div></div>
           <div style="padding:20px 24px">
             <div style="display:grid;grid-template-columns:1fr 1.1fr;gap:24px;align-items:stretch" class="progress-grid">
               <div>
@@ -1016,37 +1761,76 @@ body.sb-collapsed .main { margin-left: 92px !important; }
           </div>
         </div>
 
-        <div class="panel"><div class="panel-head"><div class="panel-title">📢 Avisos Recentes</div></div><div id="overviewAnn"><div class="empty-state"><div class="empty-icon">📭</div><p>Carregando...</p></div></div></div>
+        <div class="panel"><div class="panel-head"><div class="panel-title"><span class="panel-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>Avisos Recentes</div></div><div id="overviewAnn"><div class="empty-state"><div class="empty-icon">📭</div><p>Carregando...</p></div></div></div>
       </div>
 
       <!-- HOMEWORK -->
       <div class="section" id="sec-homework">
-        <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:20px">📝 Minhas Tarefas</h2>
-        <div class="panel"><div class="panel-head"><div class="panel-title">Tarefas Recebidas</div></div><div id="hwList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhuma tarefa recebida.</p></div></div></div>
+        <div class="section-head">
+          <div class="section-head-icon blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </div>
+          <div class="section-head-text">
+            <h2>Minhas Tarefas</h2>
+            <p class="section-sub">Acompanhe suas atividades e marque como concluídas conforme avança.</p>
+          </div>
+        </div>
+        <div id="hwList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhuma tarefa recebida.</p></div></div>
       </div>
 
       <!-- FEEDBACKS -->
       <div class="section" id="sec-feedback">
-        <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:20px">💬 Meus Feedbacks</h2>
+        <div class="section-head">
+          <div class="section-head-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div class="section-head-text">
+            <h2>Meus Feedbacks</h2>
+            <p class="section-sub">Comentários dos professores sobre seu desempenho nas aulas.</p>
+          </div>
+        </div>
         <div id="fbList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhum feedback recebido.</p></div></div>
       </div>
 
       <!-- ANNOUNCEMENTS -->
       <div class="section" id="sec-announcements">
-        <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:20px">📢 Avisos</h2>
+        <div class="section-head">
+          <div class="section-head-icon ocean">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
+          </div>
+          <div class="section-head-text">
+            <h2>Avisos</h2>
+            <p class="section-sub">Comunicados importantes da coordenação e dos professores.</p>
+          </div>
+        </div>
         <div id="annList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhum aviso.</p></div></div>
       </div>
 
       <!-- WRITING -->
       <div class="section" id="sec-writing">
-        <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:20px">✍️ Minhas Redações</h2>
+        <div class="section-head">
+          <div class="section-head-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+          </div>
+          <div class="section-head-text">
+            <h2>Minhas Redações</h2>
+            <p class="section-sub">Pratique sua escrita e receba correções detalhadas dos professores.</p>
+          </div>
+        </div>
         <div id="wrList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhum tema de redação recebido.</p></div></div>
       </div>
 
       <!-- PRONUNCIATION -->
       <div class="section" id="sec-pronunciation">
-        <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:8px">🎙️ Prática de Pronúncia</h2>
-        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Clique no botão 🔊 para ouvir a pronúncia correta em inglês.</p>
+        <div class="section-head">
+          <div class="section-head-icon purple">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+          </div>
+          <div class="section-head-text">
+            <h2>Prática de Pronúncia</h2>
+            <p class="section-sub">Ouça, grave e compare sua pronúncia com a versão de referência.</p>
+          </div>
+        </div>
         <div id="prList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhuma prática de pronúncia.</p></div></div>
       </div>
 
@@ -1341,11 +2125,28 @@ async function loadHomework() {
     const isDone = t.status !== 'pending';
     const ago = timeAgo(t.created_at);
     const isNew = !isDone && ago && (ago === 'agora' || ago.includes('min') || ago.includes('h'));
-    const newBadge = isNew ? '<span style="background:var(--orange);color:#fff;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:700;margin-left:8px">NOVA!</span>' : '';
-    const btn = isDone
-      ? '<span class="badge badge-done">✅ Concluída</span>'
-      : '<button class="btn-action btn-done" onclick="markDone(' + t.id + ',this)">Marcar como feita</button>';
-    return '<div class="list-item" style="' + (isNew ? 'background:var(--mango-soft);border-left:4px solid var(--mango)' : '') + '"><div><div class="list-title">' + (task.title||'Tarefa') + newBadge + '</div><div class="list-sub">' + (task.description||'') + '</div><div class="list-sub" style="margin-top:4px">Prazo: ' + formatDate(task.due_date) + ' — Recebida ' + ago + '</div></div>' + btn + '</div>';
+    const stateClass = isDone ? ' is-done' : (isNew ? ' is-new' : '');
+    const iconSvg = isDone
+      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>';
+    const newBadge = isNew ? '<span class="hw-new-badge">Nova</span>' : '';
+    const action = isDone
+      ? '<div class="hw-done-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Concluída</div>'
+      : '<button class="btn-action btn-done" onclick="markDone(' + t.id + ',this)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Marcar como feita</button>';
+    const dueIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>';
+    const recIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
+    return '<div class="hw-card' + stateClass + '">' +
+      '<div class="hw-icon">' + iconSvg + '</div>' +
+      '<div class="hw-body">' +
+        '<div class="hw-title-row"><span class="hw-title">' + (task.title||'Tarefa') + '</span>' + newBadge + '</div>' +
+        (task.description ? '<div class="hw-desc">' + task.description + '</div>' : '') +
+        '<div class="hw-meta">' +
+          '<span class="hw-meta-item">' + dueIcon + 'Prazo: ' + formatDate(task.due_date) + '</span>' +
+          '<span class="hw-meta-item">' + recIcon + 'Recebida ' + ago + '</span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="hw-action">' + action + '</div>' +
+    '</div>';
   }).join('');
 }
 
@@ -1369,7 +2170,27 @@ async function loadFeedbacks() {
   const fbs = await getFeedbacksForStudent(currentUser.id);
   const div = document.getElementById('fbList');
   if (!fbs.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">💬</div><p>Nenhum feedback recebido ainda.</p></div>'; return; }
-  div.innerHTML = fbs.map(f => '<div class="feedback-card"><h4>💬 ' + f.title + '</h4><div style="font-size:11px;color:var(--g500);margin-bottom:8px">' + (f.teacher?.full_name||'Professor') + ' — ' + (f.category||'geral') + ' — ' + formatDateTime(f.created_at) + '</div><p style="font-size:14px;color:var(--g700);line-height:1.6">' + f.content + '</p></div>').join('');
+  div.innerHTML = fbs.map(f => {
+    const authorName = f.teacher?.full_name || 'Professor';
+    const initial = authorName.charAt(0).toUpperCase();
+    const cat = (f.category || 'geral');
+    return '<div class="fb-card">' +
+      '<div class="fb-head">' +
+        '<div class="fb-avatar">' + initial + '</div>' +
+        '<div class="fb-head-text">' +
+          '<div class="fb-title">' + f.title + '</div>' +
+          '<div class="fb-meta">' +
+            '<span class="fb-meta-author">' + authorName + '</span>' +
+            '<span class="fb-meta-sep">•</span>' +
+            '<span class="fb-category">' + cat + '</span>' +
+            '<span class="fb-meta-sep">•</span>' +
+            '<span>' + formatDateTime(f.created_at) + '</span>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="fb-content">' + f.content + '</div>' +
+    '</div>';
+  }).join('');
 }
 
 // ═══ ANNOUNCEMENTS ═══
@@ -1377,7 +2198,24 @@ async function loadAnnouncements() {
   const anns = await getAnnouncements();
   const div = document.getElementById('annList');
   if (!anns.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📢</div><p>Nenhum aviso.</p></div>'; return; }
-  div.innerHTML = anns.map(a => '<div class="feedback-card" style="border-left-color:var(--blue)"><h4>📢 ' + a.title + '</h4><div style="font-size:11px;color:var(--g500);margin-bottom:8px">' + (a.author?.full_name||'') + ' — ' + formatDateTime(a.created_at) + '</div><p style="font-size:14px;color:var(--g700);line-height:1.6">' + a.content + '</p></div>').join('');
+  div.innerHTML = anns.map(a => {
+    const authorName = a.author?.full_name || 'Coordenação';
+    const initial = authorName.charAt(0).toUpperCase();
+    return '<div class="fb-card ann">' +
+      '<div class="fb-head">' +
+        '<div class="fb-avatar">' + initial + '</div>' +
+        '<div class="fb-head-text">' +
+          '<div class="fb-title">' + a.title + '</div>' +
+          '<div class="fb-meta">' +
+            '<span class="fb-meta-author">' + authorName + '</span>' +
+            '<span class="fb-meta-sep">•</span>' +
+            '<span>' + formatDateTime(a.created_at) + '</span>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="fb-content">' + a.content + '</div>' +
+    '</div>';
+  }).join('');
 }
 
 // ═══ WRITING ═══
@@ -1386,11 +2224,37 @@ async function loadWriting() {
   const div = document.getElementById('wrList');
   if (!items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">✍️</div><p>Nenhum tema de redação recebido.</p></div>'; return; }
   div.innerHTML = items.map(w => {
-    let statusHtml = '';
+    // Status badge
+    let statusBadge = '';
     if (w.status === 'pending') {
-      statusHtml = '<textarea id="wr-' + w.id + '" rows="6" placeholder="Escreva sua redação aqui..."></textarea><button class="btn-action btn-submit" style="margin-top:10px" onclick="submitWr(' + w.id + ')">Enviar Redação</button>';
+      statusBadge = '<div class="wr-status-badge pending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg>Pendente</div>';
     } else if (w.status === 'submitted') {
-      statusHtml = '<div style="padding:12px;background:var(--mango-soft);border-radius:8px;font-size:13px;color:var(--mango)"><strong>⏳ Aguardando correção do professor</strong></div><div style="margin-top:10px;padding:12px;background:var(--g50);border-radius:8px;font-size:13px;color:var(--g700)"><strong>Sua resposta:</strong><br>' + wrEscapeHtml(w.response||'') + '</div>';
+      statusBadge = '<div class="wr-status-badge submitted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Em correção</div>';
+    } else if (w.status === 'graded') {
+      statusBadge = '<div class="wr-status-badge graded"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Corrigida</div>';
+    }
+
+    // Body content por status
+    let bodyContent = '';
+    if (w.status === 'pending') {
+      bodyContent =
+        '<div class="wr-textarea-wrap">' +
+          '<textarea id="wr-' + w.id + '" rows="7" placeholder="Comece a escrever sua redação aqui... Use suas próprias palavras, capriche na gramática e no vocabulário." oninput="wrUpdateCount(' + w.id + ')"></textarea>' +
+          '<div class="wr-char-counter" id="wr-count-' + w.id + '">0 caracteres</div>' +
+        '</div>' +
+        '<button class="wr-submit-btn" onclick="submitWr(' + w.id + ')">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>' +
+          '<span>Enviar Redação</span>' +
+        '</button>';
+    } else if (w.status === 'submitted') {
+      bodyContent =
+        '<div class="wr-state-wait">' +
+          '<div class="wr-state-wait-icon">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>' +
+          '</div>' +
+          '<div class="wr-state-wait-text"><strong>Aguardando correção</strong><span>Seu professor receberá uma notificação e responderá em breve.</span></div>' +
+        '</div>' +
+        '<div class="wr-response-preview">' + wrEscapeHtml(w.response||'') + '</div>';
     } else if (w.status === 'graded') {
       const parsed = wrParseFeedback(w.feedback);
       const response = w.response || '';
@@ -1415,15 +2279,51 @@ async function loadWriting() {
           ).join('') + '</div>'
         : '<div class="wr-essay-view">' + wrEscapeHtml(response) + '</div>';
 
-      statusHtml =
-        '<div style="padding:12px;background:#d1fae5;border-radius:8px;font-size:13px;color:#065f46;margin-bottom:10px"><strong>✅ Corrigida — Nota: ' + (w.grade||'') + '</strong></div>' +
+      bodyContent =
+        '<div class="wr-grade-wrap">' +
+          '<div class="wr-grade-medal"><span class="wr-grade-num">' + (w.grade||'—') + '</span></div>' +
+          '<div class="wr-grade-text"><strong>Redação corrigida</strong><span>Confira os comentários e o feedback geral abaixo.</span></div>' +
+        '</div>' +
         commentsBlock +
         (parsed.general
-          ? '<div style="padding:12px;background:var(--blue-soft);border-radius:8px;font-size:13px;color:var(--blue);margin-top:10px"><strong>Feedback geral do professor:</strong><br>' + wrEscapeHtml(parsed.general) + '</div>'
+          ? '<div class="wr-general-feedback"><p>' + wrEscapeHtml(parsed.general) + '</p></div>'
           : '');
     }
-    return '<div class="writing-card"><h4>✍️ ' + w.title + '</h4><div style="font-size:11px;color:var(--g500);margin-bottom:8px">' + (w.teacher?.full_name||'Professor') + ' — Prazo: ' + formatDate(w.due_date) + '</div><div class="prompt">"' + w.prompt + '"</div>' + statusHtml + '</div>';
+
+    // Header meta
+    const teacherName = w.teacher?.full_name || 'Professor';
+    const dueIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>';
+    const teacherIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
+
+    return '<div class="wr-card">' +
+      '<div class="wr-header">' +
+        '<div class="wr-header-row">' +
+          '<div class="wr-header-icon">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg>' +
+          '</div>' +
+          '<div class="wr-header-info">' +
+            '<h4>' + w.title + '</h4>' +
+            '<div class="wr-header-meta">' +
+              '<span class="wr-header-meta-item">' + teacherIcon + teacherName + '</span>' +
+              '<span class="wr-header-meta-item">' + dueIcon + 'Prazo: ' + formatDate(w.due_date) + '</span>' +
+            '</div>' +
+          '</div>' +
+          statusBadge +
+        '</div>' +
+      '</div>' +
+      '<div class="wr-body">' +
+        '<div class="wr-prompt">' + w.prompt + '</div>' +
+        bodyContent +
+      '</div>' +
+    '</div>';
   }).join('');
+}
+
+// Atualizador do contador de caracteres
+function wrUpdateCount(id) {
+  const ta = document.getElementById('wr-' + id);
+  const counter = document.getElementById('wr-count-' + id);
+  if (ta && counter) counter.textContent = ta.value.length + ' caracteres';
 }
 
 function wrEscapeHtml(s) {
@@ -1474,12 +2374,17 @@ async function loadPronunciation() {
   const items = await getPronunciationForStudent(currentUser.id);
   const div = document.getElementById('prList');
   if (!items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">🎙️</div><p>Nenhuma prática de pronúncia.</p></div>'; return; }
+  const playIcon = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg>';
+  const micIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>';
+  const compareIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>';
+  const checkIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+
   div.innerHTML = items.map(p => {
     const wordEsc = (p.word || '').replace(/"/g, '&quot;');
     const doneClass = p.practiced ? ' done' : '';
     const actionHtml = p.practiced
-      ? '<span class="badge badge-done" style="margin-left:auto">✅ Praticado</span>'
-      : '<button class="pron-mark-done" data-pron-done="' + p.id + '">✓ Marcar como praticado</button>';
+      ? '<span class="badge badge-done" style="margin-left:auto">' + checkIcon + 'Praticado</span>'
+      : '<button class="pron-mark-done" data-pron-done="' + p.id + '">' + checkIcon + 'Marcar como praticado</button>';
     return '' +
       '<div class="pron-card' + doneClass + '" data-pron-id="' + p.id + '">' +
         '<div class="pron-header">' +
@@ -1490,15 +2395,15 @@ async function loadPronunciation() {
           '</div>' +
         '</div>' +
         '<div class="pron-controls">' +
-          '<button class="pron-play-btn" data-pron-play="' + wordEsc + '" title="Ouvir pronúncia">🔊</button>' +
+          '<button class="pron-play-btn" data-pron-play="' + wordEsc + '" title="Ouvir pronúncia">' + playIcon + '</button>' +
           '<div class="pron-speed-group" role="group" aria-label="Velocidade">' +
             '<button class="pron-speed-btn" data-speed="0.5">0.5x</button>' +
             '<button class="pron-speed-btn" data-speed="0.75">0.75x</button>' +
             '<button class="pron-speed-btn active" data-speed="1">1x</button>' +
           '</div>' +
-          '<button class="pron-rec-btn" data-pron-rec="' + p.id + '" title="Gravar sua pronúncia"><span>🎤</span><span class="pron-rec-label">Gravar</span></button>' +
+          '<button class="pron-rec-btn" data-pron-rec="' + p.id + '" title="Gravar sua pronúncia">' + micIcon + '<span class="pron-rec-label">Gravar</span></button>' +
           '<span class="pron-timer" data-pron-timer="' + p.id + '"></span>' +
-          '<button class="pron-compare-btn" data-pron-compare="' + p.id + '" data-word="' + wordEsc + '" disabled>↔ Comparar</button>' +
+          '<button class="pron-compare-btn" data-pron-compare="' + p.id + '" data-word="' + wordEsc + '" disabled>' + compareIcon + ' Comparar</button>' +
           actionHtml +
         '</div>' +
       '</div>';

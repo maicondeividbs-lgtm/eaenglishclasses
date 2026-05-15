@@ -573,84 +573,230 @@
   .insta-post:hover .insta-overlay { opacity: 1; }
   .insta-overlay svg { width: 28px; height: 28px; fill: white; }
   .insta-overlay p { color: white; font-size: 11px; font-weight: 700; margin-top: 4px; }
-  
-  /* FAQ */
+  /* ═══════════════════════════════════════════
+     FAQ — Reformulado com layout duplo e microanimações
+     ═══════════════════════════════════════════ */
   .faq {
-    padding: 100px 0;
-    background: var(--off-white);
+    padding: 110px 0;
+    background: linear-gradient(180deg, var(--off-white) 0%, var(--cream) 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .faq::before {
+    content: '?';
+    position: absolute;
+    font-family: 'Fraunces', serif;
+    font-size: 320px;
+    font-style: italic;
+    font-weight: 900;
+    color: var(--mango);
+    opacity: 0.06;
+    top: 40px;
+    right: -30px;
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+  .faq::after {
+    content: '?';
+    position: absolute;
+    font-family: 'Fraunces', serif;
+    font-size: 240px;
+    font-style: italic;
+    font-weight: 900;
+    color: var(--ocean);
+    opacity: 0.18;
+    bottom: 60px;
+    left: -30px;
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+    transform: scaleX(-1);
+  }
+  .faq .container {
+    position: relative;
+    z-index: 1;
   }
   .faq-header {
     text-align: center;
-    margin-bottom: 48px;
+    margin-bottom: 56px;
   }
   .faq-header .section-subtitle {
     margin: 0 auto;
+    max-width: 560px;
   }
+
+  /* Layout em duas colunas no desktop */
   .faq-list {
-    max-width: 720px;
+    max-width: 1120px;
     margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    align-items: start;
   }
+
   .faq-item {
     background: var(--white);
     border-radius: var(--r-md);
-    margin-bottom: 12px;
     overflow: hidden;
-    border: 2px solid var(--g100);
+    border: 1px solid var(--g100);
     cursor: pointer;
-    transition: all 0.3s;
+    position: relative;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(25,36,78,0.03);
+    /* Stagger entrance animation */
+    opacity: 0;
+    transform: translateY(16px);
+    animation: faqFadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+  .reveal.visible .faq-item:nth-child(1) { animation-delay: 0.05s; }
+  .reveal.visible .faq-item:nth-child(2) { animation-delay: 0.1s; }
+  .reveal.visible .faq-item:nth-child(3) { animation-delay: 0.15s; }
+  .reveal.visible .faq-item:nth-child(4) { animation-delay: 0.2s; }
+  .reveal.visible .faq-item:nth-child(5) { animation-delay: 0.25s; }
+  .reveal.visible .faq-item:nth-child(6) { animation-delay: 0.3s; }
+  .reveal.visible .faq-item:nth-child(7) { animation-delay: 0.35s; }
+  .reveal.visible .faq-item:nth-child(8) { animation-delay: 0.4s; }
+  @keyframes faqFadeIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Faixa lateral colorida (à esquerda) */
+  .faq-item::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: linear-gradient(180deg, var(--orange), var(--mango));
+    transform: scaleY(0);
+    transform-origin: top center;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .faq-item:hover {
-    border-color: var(--orange);
+    border-color: var(--mango-soft);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(25,36,78,0.07);
+  }
+  .faq-item:hover::before {
+    transform: scaleY(0.6);
   }
   .faq-item.open {
-    border-color: var(--orange);
-    background: var(--cream);
+    border-color: transparent;
+    background: var(--white);
+    box-shadow: 0 12px 32px rgba(243,107,46,0.10);
   }
+  .faq-item.open::before {
+    transform: scaleY(1);
+  }
+
   .faq-q {
-    padding: 20px 24px;
+    padding: 22px 26px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 16px;
+    user-select: none;
   }
   .faq-q h4 {
     font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 16px;
+    font-size: 15.5px;
     font-weight: 700;
     color: var(--navy);
+    line-height: 1.45;
+    letter-spacing: -0.01em;
+    margin: 0;
+    transition: color 0.3s ease;
   }
+  .faq-item.open .faq-q h4 {
+    color: var(--orange);
+  }
+
+  /* Toggle: ícone + animado para × */
   .faq-toggle {
-    width: 32px; height: 32px;
-    min-width: 32px;
+    width: 36px; height: 36px;
+    min-width: 36px;
     border-radius: 50%;
-    background: var(--orange-soft);
+    background: var(--mango-soft);
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--orange);
-    font-weight: 700;
-    font-size: 18px;
-    transition: all 0.3s;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    position: relative;
+  }
+  .faq-toggle::before,
+  .faq-toggle::after {
+    content: '';
+    position: absolute;
+    background: currentColor;
+    border-radius: 2px;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .faq-toggle::before {
+    width: 14px; height: 2.5px;
+  }
+  .faq-toggle::after {
+    width: 2.5px; height: 14px;
   }
   .faq-item.open .faq-toggle {
-    background: var(--orange);
-    color: white;
-    transform: rotate(45deg);
+    background: linear-gradient(135deg, var(--orange), var(--mango));
+    color: #fff;
+    transform: rotate(135deg);
+    box-shadow: 0 6px 16px rgba(243,107,46,0.30);
   }
+  .faq-item.open .faq-toggle::after {
+    opacity: 0;
+  }
+
+  /* Answer: max-height transition + inner padding */
   .faq-a {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.4s ease, padding 0.4s ease;
-    padding: 0 24px;
+    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .faq-a-inner {
+    padding: 0 26px 22px;
+    border-top: 1px solid var(--g100);
+    padding-top: 18px;
+    margin-top: 4px;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.4s ease 0.1s, transform 0.4s ease 0.1s;
   }
   .faq-item.open .faq-a {
-    max-height: 200px;
-    padding: 0 24px 20px;
+    max-height: 600px;
+  }
+  .faq-item.open .faq-a-inner {
+    opacity: 1;
+    transform: translateY(0);
   }
   .faq-a p {
     font-size: 14px;
-    color: var(--g500);
+    color: var(--g600);
     line-height: 1.7;
+  }
+  .faq-a p strong {
+    color: var(--navy);
+    font-weight: 700;
+  }
+
+  /* Tablet/mobile: 1 coluna */
+  @media (max-width: 900px) {
+    .faq-list {
+      grid-template-columns: 1fr;
+      max-width: 720px;
+      gap: 12px;
+    }
+  }
+  @media (max-width: 560px) {
+    .faq { padding: 80px 0; }
+    .faq::before { font-size: 200px; top: 20px; right: -40px; }
+    .faq::after { font-size: 160px; bottom: 40px; left: -40px; }
+    .faq-q { padding: 18px 20px; }
+    .faq-q h4 { font-size: 14.5px; }
+    .faq-a-inner { padding: 18px 20px 20px; }
+    .faq-toggle { width: 32px; height: 32px; min-width: 32px; }
   }
   
   /* CTA Final */
@@ -2118,66 +2264,89 @@
       <div class="faq-item">
         <div class="faq-q">
           <h4>Como funcionam as aulas online?</h4>
-          <div class="faq-toggle">+</div>
+          <div class="faq-toggle" aria-hidden="true"></div>
         </div>
         <div class="faq-a">
-          <p>As aulas acontecem ao vivo pelo Google Meet, em horários pré-agendados. Você precisa apenas de um computador ou celular com conexão à internet e o aplicativo instalado. O material didático é compartilhado digitalmente.</p>
+          <div class="faq-a-inner">
+            <p>As aulas acontecem ao vivo pelo Google Meet, em horários pré-agendados. Você precisa apenas de um computador ou celular com conexão à internet e o aplicativo instalado. O material didático é compartilhado digitalmente.</p>
+          </div>
         </div>
       </div>
       <div class="faq-item">
         <div class="faq-q">
           <h4>Preciso já saber inglês para começar?</h4>
-          <div class="faq-toggle">+</div>
+          <div class="faq-toggle" aria-hidden="true"></div>
         </div>
         <div class="faq-a">
-          <p>Não! Temos turmas desde o nível Intro (iniciante absoluto) até B2 (intermediário superior). O teste de nivelamento gratuito define exatamente qual curso é ideal para você.</p>
+          <div class="faq-a-inner">
+            <p>Não! Temos turmas desde o nível Intro (iniciante absoluto) até C1 (avançado). O teste de nivelamento gratuito define exatamente qual curso é ideal para você.</p>
+          </div>
         </div>
       </div>
       <div class="faq-item">
         <div class="faq-q">
           <h4>Qual é a duração de cada curso?</h4>
-          <div class="faq-toggle">+</div>
+          <div class="faq-toggle" aria-hidden="true"></div>
         </div>
         <div class="faq-a">
-          <p>Cada nível (Intro, Interchange 1, 2 e 3) tem duração média de 6 a 9 meses, com aulas semanais. O ritmo pode ser personalizado conforme a disponibilidade do aluno.</p>
+          <div class="faq-a-inner">
+            <p>Cada nível (Intro, Interchange 1, 2 e 3, Evolve 5 e 6) tem duração média de 6 a 9 meses, com aulas semanais. O ritmo pode ser personalizado conforme a disponibilidade do aluno.</p>
+          </div>
         </div>
       </div>
       <div class="faq-item">
         <div class="faq-q">
           <h4>O teste de nivelamento é realmente gratuito?</h4>
-          <div class="faq-toggle">+</div>
+          <div class="faq-toggle" aria-hidden="true"></div>
         </div>
         <div class="faq-a">
-          <p>Sim, 100% gratuito e sem compromisso. Você faz o teste online pelo Google Meet com nosso coordenador, recebe uma avaliação completa do seu nível e uma recomendação do curso ideal — tudo isso sem pagar nada.</p>
+          <div class="faq-a-inner">
+            <p>Sim, <strong>100% gratuito e sem compromisso</strong>. Você faz o teste online pelo Google Meet com nosso coordenador, recebe uma avaliação completa do seu nível e uma recomendação do curso ideal — tudo isso sem pagar nada.</p>
+          </div>
         </div>
       </div>
-
       <div class="faq-item">
         <div class="faq-q">
-          <h4>🏆 A EA English Classes oferece certificado de conclusão de curso?</h4>
-          <div class="faq-toggle">+</div>
+          <h4>A EA oferece certificado de conclusão?</h4>
+          <div class="faq-toggle" aria-hidden="true"></div>
         </div>
         <div class="faq-a">
-          <p><strong>Sim!</strong> Ao concluir cada nível com aproveitamento satisfatório, o aluno recebe um <strong>certificado digital de conclusão de curso</strong> com o nível CEFR correspondente (A1, A2, B1, B2, C1). O certificado inclui a carga horária total, o conteúdo estudado e a data de conclusão. É um documento que comprova oficialmente sua evolução no idioma.</p>
+          <div class="faq-a-inner">
+            <p><strong>Sim!</strong> Ao concluir cada nível com aproveitamento satisfatório, o aluno recebe um <strong>certificado digital de conclusão</strong> com o nível CEFR correspondente (A1, A2, B1, B2, C1). O certificado inclui a carga horária total, o conteúdo estudado e a data de conclusão.</p>
+          </div>
         </div>
       </div>
-
       <div class="faq-item">
         <div class="faq-q">
-          <h4>⚠️ Como funciona o cancelamento e reposição de aulas?</h4>
-          <div class="faq-toggle">+</div>
+          <h4>Como funciona o cancelamento e reposição de aulas?</h4>
+          <div class="faq-toggle" aria-hidden="true"></div>
         </div>
         <div class="faq-a">
-          <p>As aulas canceladas <strong>com pelo menos 24 horas de antecedência</strong> podem ser repostas em outro horário combinado com o professor. Cancelamentos feitos <strong>sem 24 horas de antecedência</strong> são contabilizados como aula dada e <strong>não dão direito a reposição</strong>. Essa política garante organização e respeito ao tempo dos professores e dos demais alunos.</p>
+          <div class="faq-a-inner">
+            <p>Aulas canceladas <strong>com pelo menos 24 horas de antecedência</strong> podem ser repostas em outro horário combinado com o professor. Cancelamentos feitos <strong>sem 24 horas de antecedência</strong> são contabilizados como aula dada e <strong>não dão direito a reposição</strong>.</p>
+          </div>
         </div>
       </div>
       <div class="faq-item">
         <div class="faq-q">
           <h4>Como acompanho meu progresso?</h4>
-          <div class="faq-toggle">+</div>
+          <div class="faq-toggle" aria-hidden="true"></div>
         </div>
         <div class="faq-a">
-          <p>Através da nossa <strong>plataforma exclusiva</strong>, você acompanha suas tarefas, redações e exercícios de pronúncia. Além disso, recebe um <strong>assessment mensal</strong> detalhado sobre seu desempenho em cada aula e um <strong>feedback bimestral</strong> completo avaliando sua evolução nas 4 habilidades (fala, escuta, leitura e escrita). Tudo centralizado e sempre atualizado.</p>
+          <div class="faq-a-inner">
+            <p>Através da nossa <strong>plataforma exclusiva</strong>, você acompanha suas tarefas, redações e exercícios. Recebe também um <strong>assessment mensal</strong> detalhado e um <strong>feedback bimestral</strong> completo avaliando sua evolução nas 4 habilidades.</p>
+          </div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">
+          <h4>Posso experimentar antes de me matricular?</h4>
+          <div class="faq-toggle" aria-hidden="true"></div>
+        </div>
+        <div class="faq-a">
+          <div class="faq-a-inner">
+            <p>Sim! Além do teste de nivelamento gratuito, oferecemos uma <strong>aula experimental</strong> para você sentir como funciona o método EA, conhecer um de nossos professores e tirar todas as dúvidas antes de decidir.</p>
+          </div>
         </div>
       </div>
     </div>

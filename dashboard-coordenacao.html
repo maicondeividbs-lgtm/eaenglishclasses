@@ -693,188 +693,314 @@ body.sb-collapsed .main { margin-left: 92px !important; }
    Não altera lógica funcional — apenas aparência
    ════════════════════════════════════════════════════════ */
 
-/* === SIDEBAR REFINADA === */
+/* === SIDEBAR — v2 (redesign completo) ===
+   Conceito: navy profunda + active como pill sólida laranja deslizante,
+   ícone + texto ganham brilho no ativo, dot indicator para contadores,
+   separadores hairline sutis entre grupos (sem títulos de seção).
+   ════════════════════════════════════════════════════════ */
 .sb {
-  background: linear-gradient(180deg, var(--navy) 0%, #161f3f 100%) !important;
-  box-shadow: 4px 0 24px rgba(0,0,0,0.08) !important;
+  width: 250px !important;
+  background: #131c3d !important;
+  background-image:
+    radial-gradient(ellipse 600px 400px at 0% 0%, rgba(243,107,46,0.08), transparent 60%),
+    radial-gradient(ellipse 500px 500px at 100% 100%, rgba(37,60,150,0.20), transparent 65%) !important;
+  border-right: 1px solid rgba(255,255,255,0.04) !important;
+  box-shadow: 1px 0 0 rgba(255,255,255,0.02), 8px 0 32px rgba(0,0,0,0.18) !important;
+  padding: 14px 14px 18px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+  font-feature-settings: "ss01", "cv01";
 }
+
+/* Toggle (botão recolher) */
+.sb-toggle {
+  width: 26px !important; height: 26px !important;
+  background: rgba(255,255,255,0.06) !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  color: rgba(255,255,255,0.50) !important;
+  border-radius: 999px !important;
+  right: -13px !important;
+  transition: all 0.2s ease !important;
+}
+.sb-toggle:hover {
+  background: var(--mango) !important;
+  border-color: var(--mango) !important;
+  color: #fff !important;
+  transform: scale(1.08);
+}
+
+/* Logo */
 .sb-logo {
-  padding: 4px 8px 22px !important;
-  border-bottom: 1px solid rgba(255,255,255,0.08) !important;
-  margin-bottom: 22px !important;
+  display: flex !important; align-items: center !important; gap: 10px;
+  padding: 4px 6px 14px !important;
+  margin-bottom: 12px !important;
   text-decoration: none !important;
+  border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+}
+.sb-logo .nav-logo-icon {
+  width: 32px !important; height: 32px !important;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
 }
 .sb-logo .nav-logo-text {
-  letter-spacing: -0.02em;
+  font-family: 'Fraunces', serif !important;
   font-size: 19px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em;
+  color: #fff !important;
 }
+.sb-logo .nav-logo-text span { color: var(--mango); }
+
+/* Badge "Coordenação" — chip discreto, não mais um retângulo gigante */
 .sb-badge {
-  padding: 14px 16px !important;
-  background: linear-gradient(135deg, rgba(245,154,30,0.18), rgba(243,107,46,0.12)) !important;
-  border: 1px solid rgba(245,154,30,0.32) !important;
-  border-radius: 14px !important;
-  display: flex !important; align-items: center !important; gap: 12px !important;
-  margin-bottom: 22px !important;
-  position: relative; overflow: hidden;
-  transition: all 0.25s ease;
+  display: inline-flex !important; align-items: center !important;
+  gap: 7px !important;
+  padding: 6px 11px !important;
+  background: rgba(245,154,30,0.10) !important;
+  border: 1px solid rgba(245,154,30,0.25) !important;
+  border-radius: 999px !important;
+  margin: 0 4px 18px !important;
+  align-self: flex-start !important;
+  width: auto !important;
+  position: relative !important;
+  overflow: visible !important;
+  transition: all 0.2s ease;
 }
-.sb-badge::before {
-  content: ''; position: absolute;
-  inset: -50% -50% auto auto;
-  width: 100px; height: 100px;
-  background: radial-gradient(circle, rgba(245,154,30,0.25), transparent 70%);
-  pointer-events: none;
+.sb-badge::before { display: none !important; }
+.sb-badge::after {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--mango);
+  box-shadow: 0 0 0 0 rgba(245,154,30,0.6);
+  animation: badgeDot 2s ease-out infinite;
+}
+@keyframes badgeDot {
+  0% { box-shadow: 0 0 0 0 rgba(245,154,30,0.6); }
+  70% { box-shadow: 0 0 0 6px rgba(245,154,30,0); }
+  100% { box-shadow: 0 0 0 0 rgba(245,154,30,0); }
 }
 .sb-badge-icon {
-  font-size: 16px !important;
-  width: 32px; height: 32px;
-  border-radius: 8px;
-  background: rgba(245,154,30,0.20);
-  display: inline-flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
+  display: none !important;
 }
 .sb-badge-text {
-  font-size: 13px !important;
-  font-weight: 800 !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
   color: var(--mango) !important;
-  letter-spacing: 0.02em;
-}
-.sb-nav { gap: 2px !important; }
-
-/* Grupos colapsáveis */
-.sb-group { margin-bottom: 8px !important; }
-.sb-group-title {
-  display: flex !important;
-  align-items: center; gap: 8px;
-  padding: 8px 10px !important;
-  font-size: 10.5px !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.12em !important;
+  letter-spacing: 0.06em !important;
   text-transform: uppercase !important;
-  color: rgba(255,255,255,0.32) !important;
-  cursor: pointer;
-  border-radius: 6px;
-  transition: all 0.2s;
-  user-select: none;
-}
-.sb-group-title:hover {
-  color: rgba(255,255,255,0.55) !important;
-  background: rgba(255,255,255,0.03);
-}
-.sb-group-title svg {
-  transition: transform 0.25s cubic-bezier(0.4,0,0.2,1);
-  flex-shrink: 0;
-  opacity: 0.6;
-}
-.sb-group-title.collapsed svg { transform: rotate(-90deg); }
-.sb-group-items {
-  overflow: hidden;
-  transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease;
-  max-height: 500px;
-  display: flex; flex-direction: column; gap: 2px;
-  padding-top: 4px;
-}
-.sb-group-items.collapsed {
-  max-height: 0 !important;
-  opacity: 0;
-  padding-top: 0;
 }
 
-/* Links da sidebar */
+/* Nav container */
+.sb-nav {
+  gap: 1px !important;
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 2px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.08) transparent;
+}
+.sb-nav::-webkit-scrollbar { width: 4px; }
+.sb-nav::-webkit-scrollbar-track { background: transparent; }
+.sb-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 4px; }
+
+/* Grupos: sem títulos, só usados como container lógico + separador */
+.sb-group {
+  margin: 0 !important;
+  display: flex; flex-direction: column;
+  gap: 1px;
+  padding: 6px 0;
+  position: relative;
+}
+.sb-group + .sb-group::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 12px; right: 12px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08) 30%, rgba(255,255,255,0.08) 70%, transparent);
+}
+
+/* Esconder títulos GESTÃO/ACADÊMICO/FERRAMENTAS (caso ainda existam) */
+.sb-group-title {
+  display: none !important;
+}
+
+.sb-group-items {
+  display: flex !important;
+  flex-direction: column;
+  gap: 1px;
+  max-height: none !important;
+  opacity: 1 !important;
+  overflow: visible !important;
+  padding-top: 0 !important;
+}
+.sb-group-items.collapsed { max-height: none !important; opacity: 1 !important; }
+
+/* Links — design completamente novo */
 .sb-link {
   display: flex !important;
   align-items: center !important;
-  gap: 12px !important;
-  padding: 11px 14px !important;
-  min-height: 42px;
+  gap: 11px !important;
+  padding: 9px 12px !important;
+  min-height: 38px;
   border-radius: 10px !important;
-  color: rgba(255,255,255,0.55) !important;
+  color: rgba(255,255,255,0.62) !important;
   font-size: 13px !important;
-  font-weight: 600 !important;
+  font-weight: 500 !important;
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.4,0,0.2,1) !important;
-  border: none; background: none; width: 100%;
+  transition: color 0.2s ease, background 0.2s ease, transform 0.15s ease !important;
+  border: none; background: transparent; width: 100%;
   text-align: left; font-family: inherit;
   position: relative; overflow: hidden;
+  letter-spacing: -0.005em;
+}
+.sb-link::before,
+.sb-link::after {
+  display: none !important;
 }
 .sb-link svg {
   flex-shrink: 0;
-  opacity: 0.85;
-  transition: all 0.25s ease;
+  width: 17px !important; height: 17px !important;
+  opacity: 0.7;
+  transition: all 0.2s ease;
+  position: relative; z-index: 1;
 }
-.sb-link::before {
-  content: ''; position: absolute;
-  left: 0; top: 50%; transform: translateY(-50%) scaleY(0);
-  width: 3px; height: 22px;
-  background: linear-gradient(180deg, var(--orange), var(--mango));
-  border-radius: 0 3px 3px 0;
-  transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+.sb-link > span:not(.tip):not(.sb-count) {
+  position: relative; z-index: 1;
+  flex: 1; min-width: 0;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-.sb-link::after { display: none !important; }
-.sb-link:hover {
-  background: rgba(255,255,255,0.06) !important;
-  color: #fff !important;
-}
-.sb-link:hover svg { opacity: 1; }
-.sb-link:hover::before { transform: translateY(-50%) scaleY(0.6); }
-.sb-link.active {
-  background: linear-gradient(90deg, rgba(245,154,30,0.18), rgba(245,154,30,0.04)) !important;
-  color: var(--mango) !important;
-  font-weight: 700 !important;
-}
-.sb-link.active svg { color: var(--mango) !important; opacity: 1; }
-.sb-link.active::before { transform: translateY(-50%) scaleY(1); }
 
-/* Contadores ao lado dos links */
+/* Hover state — fundo translúcido sutil + leve slide */
+.sb-link:hover {
+  background: rgba(255,255,255,0.04) !important;
+  color: rgba(255,255,255,0.90) !important;
+}
+.sb-link:hover svg {
+  opacity: 1;
+  transform: scale(1.04);
+}
+
+/* Active state — pill laranja sólida com gradient sutil */
+.sb-link.active {
+  background: linear-gradient(135deg, var(--orange) 0%, var(--mango) 100%) !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 14px rgba(243,107,46,0.30), inset 0 1px 0 rgba(255,255,255,0.18) !important;
+}
+.sb-link.active svg {
+  color: #fff !important;
+  opacity: 1;
+}
+
+/* Focus visible (acessibilidade) */
+.sb-link:focus-visible {
+  outline: 2px solid var(--mango);
+  outline-offset: -2px;
+}
+
+/* Contadores: pequenos chips discretos, sem pulse animation */
 .sb-count {
-  margin-left: auto;
-  min-width: 22px;
-  height: 22px;
-  padding: 0 7px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, var(--orange), var(--mango));
-  color: #fff;
-  font-size: 10.5px;
-  font-weight: 800;
-  display: inline-flex; align-items: center; justify-content: center;
-  box-shadow: 0 3px 8px rgba(243,107,46,0.35);
-  letter-spacing: 0;
-  animation: pulseBadge 2.4s ease-in-out infinite;
+  margin-left: auto !important;
+  min-width: 20px !important;
+  height: 18px !important;
+  padding: 0 6px !important;
+  border-radius: 999px !important;
+  background: var(--mango) !important;
+  color: #fff !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  letter-spacing: 0 !important;
+  position: relative; z-index: 1;
+  animation: none !important;
+  box-shadow: 0 2px 6px rgba(245,154,30,0.30);
+  line-height: 1;
 }
 .sb-count.zero { display: none !important; }
-@keyframes pulseBadge {
-  0%, 100% { transform: scale(1); box-shadow: 0 3px 8px rgba(243,107,46,0.35); }
-  50% { transform: scale(1.08); box-shadow: 0 5px 14px rgba(243,107,46,0.55); }
+.sb-link.active .sb-count {
+  background: rgba(255,255,255,0.25) !important;
+  color: #fff !important;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.15);
 }
 
-/* Sidebar bottom (perfil + sair) */
-.sb-bottom {
-  border-top: 1px solid rgba(255,255,255,0.08) !important;
-  padding-top: 14px !important;
-  margin-top: 14px !important;
-  display: flex; flex-direction: column; gap: 4px;
+/* Tip (tooltip quando colapsada) */
+.sb-link .tip {
+  display: none !important;
 }
-.sb-bottom .sb-link { padding: 10px 14px !important; }
-.sb-bottom a, .sb-logout {
-  display: flex; align-items: center; gap: 12px !important;
-  padding: 10px 14px !important;
+
+/* Rodapé — Meu Perfil + Sair */
+.sb-bottom {
+  margin-top: auto !important;
+  padding-top: 14px !important;
+  border-top: 1px solid rgba(255,255,255,0.06) !important;
+  display: flex; flex-direction: column;
+  gap: 1px;
+}
+.sb-bottom a,
+.sb-bottom button,
+.sb-logout {
+  display: flex !important;
+  align-items: center !important;
+  gap: 11px !important;
+  padding: 9px 12px !important;
   border-radius: 10px !important;
   font-size: 13px !important;
-  font-weight: 600 !important;
-  text-decoration: none;
-  color: rgba(255,255,255,0.45) !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  color: rgba(255,255,255,0.55) !important;
   transition: all 0.2s !important;
+  background: transparent !important;
+  border: none !important;
+  cursor: pointer;
+  font-family: inherit;
+  width: 100%;
+  text-align: left;
 }
-.sb-bottom a:hover, .sb-logout:hover {
-  background: rgba(255,255,255,0.06) !important;
-  color: #fff !important;
+.sb-bottom a:hover,
+.sb-bottom button:hover {
+  background: rgba(255,255,255,0.04) !important;
+  color: rgba(255,255,255,0.90) !important;
 }
 .sb-logout {
-  color: rgba(239,68,68,0.75) !important;
+  color: rgba(248,113,113,0.70) !important;
 }
 .sb-logout:hover {
   background: rgba(239,68,68,0.10) !important;
   color: #fca5a5 !important;
+}
+.sb-logout svg { color: currentColor; }
+
+/* Sidebar collapsed (recolhida) */
+.sb.collapsed { width: 64px !important; padding: 14px 8px 18px !important; }
+.sb.collapsed .nav-logo-text,
+.sb.collapsed .sb-badge,
+.sb.collapsed .sb-link > span:not(.tip):not(.sb-count),
+.sb.collapsed .sb-bottom a span,
+.sb.collapsed .sb-bottom button span,
+.sb.collapsed .sb-count { display: none !important; }
+.sb.collapsed .sb-link { justify-content: center; padding: 9px !important; }
+.sb.collapsed .sb-link .tip {
+  display: block !important;
+  position: absolute; left: calc(100% + 8px); top: 50%; transform: translateY(-50%);
+  background: var(--navy); color: #fff;
+  padding: 6px 12px; border-radius: 8px;
+  font-size: 12px; font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 100;
+}
+.sb.collapsed .sb-link:hover .tip { opacity: 1; }
+.sb.collapsed .sb-group + .sb-group::before { left: 8px; right: 8px; }
+
+@media (max-width: 768px) {
+  .sb { width: 100% !important; padding: 16px !important; }
 }
 
 /* === SECTION HEAD (mesma família das v7.2 / v7.4) === */
@@ -1243,19 +1369,19 @@ body.sb-collapsed .main { margin-left: 92px !important; }
     </button>
     <a href="index.html" class="sb-logo"><div class="nav-logo-icon" style="width:36px;height:36px"><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAAAAAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/wAALCABkAGQBAREA/8QAHAABAAEFAQEAAAAAAAAAAAAAAAcEBQYICQID/8QANhAAAQMDAwIDBQQLAAAAAAAAAQACAwQFEQYHEhMhCDFBFCJRYZEVgaGiCRYXGCNCRFViktL/2gAIAQEAAD8A3LRERERERERERERERERERERERERERERWDci51dl271JeLe8R1lBaaqpp3uaHBsjInOaSD2PcDsuff72O9WMfb9BnH9rg/wCVv/tbqE6r2407qR7mukuVtgqJeIwBI5gLxj5O5BZIiIiIiKDvG7fb1p7Y6a42G7V1qrBcqZgqKOodDJxJdkcmkHBx5LQmt3T3KraKeirNfanqKaojdFNFLdJnMkY4Yc1wLsEEEgheLppY0m01j1dxPK4Xetoyf8Yo6ct/F8n0W+vgSvhvHh4tdM54fJaqqooXH1wH9Ro/1kH0U6oiIiIixrcjQ+ndwNNO09qikkqre6ZkxjjmdEeTM8TlpB9Stf8Ae7w3bTaY2j1RqCz2KrhuFBbZZ6eR1wneGvaOx4l2D96jXczRwovARoetEZE8FxbcJXY/kqTMB+Dovosq/RqXwOoNYabe7HTlp66Jvx5B0bz+Vi3FRERERFBHjpudxtOxE1Xa7hV0FQLnStEtNM6N+CXZGWkHC591ms9XVtJLSVmqb5U08zSyWKW4SvY9p9C0uwR8ipJ1f4idV6l2kbtpWWPT0NnZSU1LHJDFKJmNgLCwgmQjPuDPb1Kv3gAvn2Xv7Fb3ScWXe21FLxJ7FzQJh9/8M/VdFERERERYNvftxRbo6GfpWvuNRb4XVMVR1oGNc7LCcDDu3fKg23+CjSNNX09RLq271McUrHvhfTRcZACCWn5EDH3qXtW7J7a1+lbvRUGgdM01ZU0U0UE0NsiY+KRzHBrmkNyCCQQQudexl6dpjefSl2kJjbS3aAT57YY54ZJ+Vzl1hHkiIiIiKOYd59EyvZEyprPaJGB8MJpzylDpHRtx3x3c0+ZGPN2FWVu62kaQROmqKrjLA+oDhTniI2GYOcSTj+nk7eZAyARnFVbtx9M3Cst1NRzVEwuEcckMzYT0wJOr0+Ts4HIQSkefZue2RmAp9vvDNXOdfBYr0faWitMjKipjA5slm7DmMYbDIcD1HEZOQNj9Gaotmp6WoltntHCleyKTrNDTyMbX/E57Pb38j6Ejur8iIiIiw2Xa3QUsPSl07TyARuiaXySFzGFwcWtcXZaMgYAIx6YXv9meieiIDYo3Qh3IROnlLAQZCPdLsYBlkLR5NLyRhfap290hUdHnaAzoxtjj6VRLHhrXPc0e64ZwZZMZ8g9w8iQqd21+hDT+zfq9Tim4BggEsgiawFzg0MDuIbye52AMcjy8wCr5YNPWixGodbKV0T6jpiWR8z5XvDGhjAXPJOGtGAM4Hf4lXVERERERERERERERERERERERERERERf/2Q==" alt="EA"></div><div class="nav-logo-text">EA<span>.</span></div></a>
     <div class="sb-badge">
-      <span class="sb-badge-icon">📊</span>
       <span class="sb-badge-text">Coordenação</span>
     </div>
     <nav class="sb-nav" role="menubar">
-      <button class="sb-link active" data-section="overview">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
-        <span>Visão Geral</span>
-        <span class="tip">Visão Geral</span>
-      </button>
+      <div class="sb-group">
+        <button class="sb-link active" data-section="overview">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+          <span>Visão Geral</span>
+          <span class="tip">Visão Geral</span>
+        </button>
+      </div>
 
       <!-- Gestão -->
       <div class="sb-group">
-        <div class="sb-group-title" onclick="toggleGroup(this)"><svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><path d="M3 2l4 3-4 3z"/></svg> GESTÃO</div>
         <div class="sb-group-items">
           <button class="sb-link" data-section="users">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
@@ -1284,7 +1410,6 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 
       <!-- Acadêmico -->
       <div class="sb-group">
-        <div class="sb-group-title" onclick="toggleGroup(this)"><svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><path d="M3 2l4 3-4 3z"/></svg> ACADÊMICO</div>
         <div class="sb-group-items">
           <button class="sb-link" data-section="schedules">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
@@ -1307,7 +1432,6 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 
       <!-- Ferramentas -->
       <div class="sb-group">
-        <div class="sb-group-title" onclick="toggleGroup(this)"><svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><path d="M3 2l4 3-4 3z"/></svg> FERRAMENTAS</div>
         <div class="sb-group-items">
           <button class="sb-link" data-section="testimonials">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>

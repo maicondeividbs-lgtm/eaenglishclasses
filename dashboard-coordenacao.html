@@ -686,6 +686,551 @@ body.sb-collapsed .main { margin-left: 92px !important; }
   .sb.shrunk .sb-count { opacity: 1; width: auto; pointer-events: auto; }
   body.sb-collapsed .main { margin-left: 0 !important; }
 }
+
+/* ════════════════════════════════════════════════════════
+   ✦ REFINAMENTO VISUAL — DASHBOARD COORDENAÇÃO (v7.5)
+   Sidebar premium + section-heads + cards refinados
+   Não altera lógica funcional — apenas aparência
+   ════════════════════════════════════════════════════════ */
+
+/* === SIDEBAR REFINADA === */
+.sb {
+  background: linear-gradient(180deg, var(--navy) 0%, #161f3f 100%) !important;
+  box-shadow: 4px 0 24px rgba(0,0,0,0.08) !important;
+}
+.sb-logo {
+  padding: 4px 8px 22px !important;
+  border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+  margin-bottom: 22px !important;
+  text-decoration: none !important;
+}
+.sb-logo .nav-logo-text {
+  letter-spacing: -0.02em;
+  font-size: 19px !important;
+}
+.sb-badge {
+  padding: 14px 16px !important;
+  background: linear-gradient(135deg, rgba(245,154,30,0.18), rgba(243,107,46,0.12)) !important;
+  border: 1px solid rgba(245,154,30,0.32) !important;
+  border-radius: 14px !important;
+  display: flex !important; align-items: center !important; gap: 12px !important;
+  margin-bottom: 22px !important;
+  position: relative; overflow: hidden;
+  transition: all 0.25s ease;
+}
+.sb-badge::before {
+  content: ''; position: absolute;
+  inset: -50% -50% auto auto;
+  width: 100px; height: 100px;
+  background: radial-gradient(circle, rgba(245,154,30,0.25), transparent 70%);
+  pointer-events: none;
+}
+.sb-badge-icon {
+  font-size: 16px !important;
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: rgba(245,154,30,0.20);
+  display: inline-flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.sb-badge-text {
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  color: var(--mango) !important;
+  letter-spacing: 0.02em;
+}
+.sb-nav { gap: 2px !important; }
+
+/* Grupos colapsáveis */
+.sb-group { margin-bottom: 8px !important; }
+.sb-group-title {
+  display: flex !important;
+  align-items: center; gap: 8px;
+  padding: 8px 10px !important;
+  font-size: 10.5px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  color: rgba(255,255,255,0.32) !important;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s;
+  user-select: none;
+}
+.sb-group-title:hover {
+  color: rgba(255,255,255,0.55) !important;
+  background: rgba(255,255,255,0.03);
+}
+.sb-group-title svg {
+  transition: transform 0.25s cubic-bezier(0.4,0,0.2,1);
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+.sb-group-title.collapsed svg { transform: rotate(-90deg); }
+.sb-group-items {
+  overflow: hidden;
+  transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease;
+  max-height: 500px;
+  display: flex; flex-direction: column; gap: 2px;
+  padding-top: 4px;
+}
+.sb-group-items.collapsed {
+  max-height: 0 !important;
+  opacity: 0;
+  padding-top: 0;
+}
+
+/* Links da sidebar */
+.sb-link {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 11px 14px !important;
+  min-height: 42px;
+  border-radius: 10px !important;
+  color: rgba(255,255,255,0.55) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4,0,0.2,1) !important;
+  border: none; background: none; width: 100%;
+  text-align: left; font-family: inherit;
+  position: relative; overflow: hidden;
+}
+.sb-link svg {
+  flex-shrink: 0;
+  opacity: 0.85;
+  transition: all 0.25s ease;
+}
+.sb-link::before {
+  content: ''; position: absolute;
+  left: 0; top: 50%; transform: translateY(-50%) scaleY(0);
+  width: 3px; height: 22px;
+  background: linear-gradient(180deg, var(--orange), var(--mango));
+  border-radius: 0 3px 3px 0;
+  transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+}
+.sb-link::after { display: none !important; }
+.sb-link:hover {
+  background: rgba(255,255,255,0.06) !important;
+  color: #fff !important;
+}
+.sb-link:hover svg { opacity: 1; }
+.sb-link:hover::before { transform: translateY(-50%) scaleY(0.6); }
+.sb-link.active {
+  background: linear-gradient(90deg, rgba(245,154,30,0.18), rgba(245,154,30,0.04)) !important;
+  color: var(--mango) !important;
+  font-weight: 700 !important;
+}
+.sb-link.active svg { color: var(--mango) !important; opacity: 1; }
+.sb-link.active::before { transform: translateY(-50%) scaleY(1); }
+
+/* Contadores ao lado dos links */
+.sb-count {
+  margin-left: auto;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--orange), var(--mango));
+  color: #fff;
+  font-size: 10.5px;
+  font-weight: 800;
+  display: inline-flex; align-items: center; justify-content: center;
+  box-shadow: 0 3px 8px rgba(243,107,46,0.35);
+  letter-spacing: 0;
+  animation: pulseBadge 2.4s ease-in-out infinite;
+}
+.sb-count.zero { display: none !important; }
+@keyframes pulseBadge {
+  0%, 100% { transform: scale(1); box-shadow: 0 3px 8px rgba(243,107,46,0.35); }
+  50% { transform: scale(1.08); box-shadow: 0 5px 14px rgba(243,107,46,0.55); }
+}
+
+/* Sidebar bottom (perfil + sair) */
+.sb-bottom {
+  border-top: 1px solid rgba(255,255,255,0.08) !important;
+  padding-top: 14px !important;
+  margin-top: 14px !important;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.sb-bottom .sb-link { padding: 10px 14px !important; }
+.sb-bottom a, .sb-logout {
+  display: flex; align-items: center; gap: 12px !important;
+  padding: 10px 14px !important;
+  border-radius: 10px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  text-decoration: none;
+  color: rgba(255,255,255,0.45) !important;
+  transition: all 0.2s !important;
+}
+.sb-bottom a:hover, .sb-logout:hover {
+  background: rgba(255,255,255,0.06) !important;
+  color: #fff !important;
+}
+.sb-logout {
+  color: rgba(239,68,68,0.75) !important;
+}
+.sb-logout:hover {
+  background: rgba(239,68,68,0.10) !important;
+  color: #fca5a5 !important;
+}
+
+/* === SECTION HEAD (mesma família das v7.2 / v7.4) === */
+.section-head {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 18px; margin-bottom: 24px;
+  padding-bottom: 18px; border-bottom: 1px solid var(--g100);
+}
+.section-head-text { flex: 1; min-width: 0; }
+.section-head h2 {
+  font-family: 'Fraunces', serif !important;
+  font-size: 28px !important; font-weight: 800 !important;
+  color: var(--navy) !important;
+  letter-spacing: -0.02em !important;
+  margin: 0 !important; padding: 0 !important;
+  line-height: 1.15;
+}
+.section-head h2::after { display: none; }
+.section-head .section-sub {
+  font-size: 13.5px; color: var(--g500);
+  margin-top: 6px; line-height: 1.5;
+}
+.section-head-icon {
+  width: 52px; height: 52px; min-width: 52px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--orange-soft), var(--mango-soft));
+  display: flex; align-items: center; justify-content: center;
+  color: var(--orange);
+  box-shadow: 0 6px 16px rgba(243,107,46,0.12);
+}
+.section-head-icon.blue { background: linear-gradient(135deg, var(--blue-soft), #dbeafe); color: var(--blue); box-shadow: 0 6px 16px rgba(37,60,150,0.12); }
+.section-head-icon.green { background: linear-gradient(135deg, #d1fae5, #bbf7d0); color: #059669; box-shadow: 0 6px 16px rgba(16,185,129,0.12); }
+.section-head-icon.purple { background: linear-gradient(135deg, #ede9fe, #ddd6fe); color: #7c3aed; box-shadow: 0 6px 16px rgba(124,58,237,0.12); }
+.section-head-icon.ocean { background: linear-gradient(135deg, var(--ocean-light), var(--ocean)); color: var(--blue); box-shadow: 0 6px 16px rgba(37,60,150,0.10); }
+.section-head-icon.pink { background: linear-gradient(135deg, #fce7f3, #fbcfe8); color: #db2777; box-shadow: 0 6px 16px rgba(219,39,119,0.12); }
+.section-head-icon.yellow { background: linear-gradient(135deg, #fef3c7, #fde68a); color: #d97706; box-shadow: 0 6px 16px rgba(217,119,6,0.12); }
+.section-head-icon svg { width: 26px; height: 26px; }
+
+/* === GREETING refinada === */
+.overview-greeting {
+  font-family: 'Fraunces', serif !important;
+  font-size: 30px !important; font-weight: 700 !important;
+  color: var(--navy) !important;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px !important;
+  line-height: 1.15;
+}
+.overview-greeting em {
+  color: var(--orange); font-style: italic;
+}
+.overview-subline {
+  font-size: 14px; color: var(--g500);
+  margin-bottom: 28px !important;
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+.overview-subline .pill {
+  padding: 4px 12px; border-radius: 999px;
+  background: var(--blue-soft); color: var(--blue);
+  font-size: 12px; font-weight: 700;
+}
+
+/* === STAT CARDS === */
+.stat-row { gap: 16px !important; }
+.stat-card {
+  padding: 20px !important;
+  border-radius: 16px !important;
+  transition: all 0.3s cubic-bezier(0.4,0,0.2,1) !important;
+  display: flex; flex-direction: column; gap: 0;
+  position: relative;
+}
+.stat-card::before {
+  height: 100% !important; width: 4px !important;
+  top: 0 !important; bottom: 0 !important; right: auto !important; left: 0 !important;
+  border-radius: 16px 0 0 16px !important;
+}
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(25,36,78,0.10);
+  border-color: transparent;
+}
+.stat-card.clickable { cursor: pointer; }
+.stat-card:nth-child(1)::before { background: linear-gradient(180deg, var(--orange), var(--mango)) !important; }
+.stat-card:nth-child(2)::before { background: linear-gradient(180deg, var(--blue), var(--blue-light)) !important; }
+.stat-card:nth-child(3)::before { background: linear-gradient(180deg, #8b5cf6, #a78bfa) !important; }
+.stat-card:nth-child(4)::before { background: linear-gradient(180deg, #10b981, #34d399) !important; }
+.stat-icon {
+  font-size: 22px !important; margin-bottom: 12px !important;
+  width: 40px; height: 40px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--g50); border-radius: 10px;
+}
+.stat-card:nth-child(1) .stat-icon { background: var(--mango-soft); }
+.stat-card:nth-child(2) .stat-icon { background: var(--blue-soft); }
+.stat-card:nth-child(3) .stat-icon { background: rgba(139,92,246,0.10); }
+.stat-card:nth-child(4) .stat-icon { background: rgba(16,185,129,0.10); }
+.stat-label {
+  font-size: 11.5px !important;
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+.stat-value {
+  font-size: 36px !important;
+  background: linear-gradient(135deg, var(--navy), #2d3a5e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* === PANEL === */
+.panel {
+  border-radius: 18px !important;
+  border-color: var(--g100) !important;
+  box-shadow: 0 2px 8px rgba(25,36,78,0.03);
+}
+.panel-head {
+  padding: 18px 26px !important;
+  background: linear-gradient(180deg, #fff, #fafbfd);
+}
+.panel-title {
+  font-size: 14.5px !important;
+  display: inline-flex; align-items: center; gap: 10px;
+  letter-spacing: -0.005em;
+}
+.panel-title .panel-icon {
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  background: var(--mango-soft);
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--orange);
+}
+.panel-title .panel-icon.blue { background: var(--blue-soft); color: var(--blue); }
+.panel-title .panel-icon.purple { background: rgba(139,92,246,0.10); color: #7c3aed; }
+.panel-title .panel-icon.green { background: rgba(16,185,129,0.10); color: #059669; }
+.panel-title .panel-icon svg { width: 16px; height: 16px; }
+
+/* === FORM CARD === */
+.form-card {
+  border-radius: 18px !important;
+  padding: 28px !important;
+  background: #fff !important;
+  border: 1px solid var(--g100) !important;
+  box-shadow: 0 2px 8px rgba(25,36,78,0.03) !important;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 20px !important;
+}
+.form-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--orange), var(--mango));
+}
+.form-card label {
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: var(--navy) !important;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  margin-bottom: 6px !important;
+}
+.form-card input,
+.form-card textarea,
+.form-card select {
+  width: 100%;
+  padding: 12px 14px !important;
+  border: 1.5px solid var(--g200) !important;
+  border-radius: 12px !important;
+  font-family: inherit !important;
+  font-size: 14px !important;
+  color: var(--navy) !important;
+  background: var(--off-white) !important;
+  outline: none;
+  transition: all 0.2s ease !important;
+}
+.form-card input:focus,
+.form-card textarea:focus,
+.form-card select:focus {
+  border-color: var(--orange) !important;
+  background: #fff !important;
+  box-shadow: 0 0 0 4px rgba(243,107,46,0.08);
+}
+.form-card textarea { resize: vertical; line-height: 1.6; }
+.form-card .btn-send {
+  margin-top: 8px;
+  padding: 13px 24px !important;
+  border-radius: 12px !important;
+  background: linear-gradient(135deg, var(--orange), var(--mango)) !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  border: none !important;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(243,107,46,0.25);
+  transition: all 0.25s ease !important;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.form-card .btn-send:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(243,107,46,0.35);
+}
+
+/* === Search/filter bar refinada === */
+.coord-search-bar {
+  display: flex; gap: 10px; flex-wrap: wrap;
+  align-items: center;
+  padding: 14px 16px;
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid var(--g100);
+  box-shadow: 0 2px 6px rgba(25,36,78,0.03);
+  margin-bottom: 20px;
+}
+.coord-search-bar input[type="text"],
+.coord-search-bar input[type="search"] {
+  flex: 1; min-width: 220px;
+  padding: 10px 14px;
+  border: 1.5px solid var(--g100);
+  border-radius: 10px;
+  font-family: inherit; font-size: 13px;
+  background: var(--off-white);
+  outline: none;
+  transition: all 0.2s;
+}
+.coord-search-bar input:focus {
+  border-color: var(--orange);
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(243,107,46,0.06);
+}
+.coord-search-bar .user-filter {
+  padding: 9px 16px !important;
+  border-radius: 10px !important;
+  border: 1.5px solid var(--g100) !important;
+  background: var(--off-white) !important;
+  color: var(--g600) !important;
+  font-size: 12.5px !important;
+  font-weight: 700 !important;
+  cursor: pointer;
+  font-family: inherit !important;
+  transition: all 0.2s !important;
+  display: inline-flex; align-items: center; gap: 5px;
+}
+.coord-search-bar .user-filter:hover {
+  background: #fff !important;
+  border-color: var(--mango) !important;
+  color: var(--navy) !important;
+}
+.coord-search-bar .user-filter.active {
+  background: linear-gradient(135deg, var(--navy), #253c96) !important;
+  color: #fff !important;
+  border-color: transparent !important;
+  box-shadow: 0 4px 10px rgba(25,36,78,0.20);
+}
+
+/* Tab bars internas (supervision, teach) */
+.coord-tab-bar {
+  display: flex; gap: 4px;
+  background: #fff;
+  padding: 6px;
+  border-radius: 14px;
+  border: 1px solid var(--g100);
+  margin-bottom: 20px;
+  overflow-x: auto;
+  box-shadow: 0 2px 6px rgba(25,36,78,0.03);
+}
+.coord-tab-bar button {
+  flex-shrink: 0;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--g500);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.coord-tab-bar button:hover {
+  background: var(--g50);
+  color: var(--navy);
+}
+.coord-tab-bar button.active {
+  background: linear-gradient(135deg, var(--navy), #253c96);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(25,36,78,0.20);
+}
+
+/* Empty state refinado */
+.empty-state {
+  padding: 64px 24px !important;
+  background: linear-gradient(135deg, var(--off-white) 0%, var(--cream) 100%);
+  border-radius: 16px;
+  border: 1px dashed var(--g200);
+  margin: 16px;
+}
+.empty-state .empty-icon {
+  font-size: 56px !important;
+  opacity: 0.6 !important;
+  margin-bottom: 16px !important;
+}
+
+/* Todo item refinado */
+.coord-todo-row {
+  display: flex; gap: 10px;
+  padding: 14px 16px;
+  background: var(--off-white);
+  border: 1px solid var(--g100);
+  border-radius: 12px;
+  margin-bottom: 14px;
+}
+.coord-todo-row input[type="text"] {
+  flex: 1;
+  padding: 11px 14px;
+  border: 1.5px solid var(--g100);
+  border-radius: 10px;
+  font-family: inherit; font-size: 13.5px;
+  background: #fff;
+  outline: none;
+  transition: all 0.2s;
+}
+.coord-todo-row input:focus {
+  border-color: var(--orange);
+  box-shadow: 0 0 0 4px rgba(243,107,46,0.06);
+}
+.coord-todo-row button {
+  padding: 11px 20px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--orange), var(--mango));
+  color: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(243,107,46,0.25);
+  transition: all 0.2s;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.coord-todo-row button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(243,107,46,0.35);
+}
+
+/* Mobile: section-head empilha */
+@media (max-width: 640px) {
+  .section-head { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .section-head h2 { font-size: 24px !important; }
+  .section-head-icon { width: 44px; height: 44px; min-width: 44px; }
+  .stat-row { grid-template-columns: repeat(2, 1fr) !important; }
+  .form-card { padding: 22px !important; }
+  .coord-search-bar { padding: 12px; }
+  .coord-tab-bar { padding: 4px; }
+}
 </style>
 </head>
 <body>
@@ -829,20 +1374,23 @@ body.sb-collapsed .main { margin-left: 92px !important; }
     <div class="content" role="main">
       <!-- ═══ OVERVIEW ═══ -->
       <div class="section active" id="sec-overview">
-        <h2 style="font-size:28px;font-weight:800;color:var(--navy);margin-bottom:6px;letter-spacing:-0.02em" id="greeting">Olá, Coordenador! 📊</h2>
-        <p style="font-size:14px;color:var(--g500);margin-bottom:24px">Visão geral de todas as atividades da escola.</p>
+        <h2 class="overview-greeting" id="greeting">Olá, <em>Coordenador</em>! 📊</h2>
+        <p class="overview-subline">Visão geral de todas as atividades da escola.</p>
         <div id="contractAlerts"></div>
 
-                <!-- To-Do List -->
+        <!-- To-Do List -->
         <div class="panel" style="margin-bottom:20px">
           <div class="panel-head">
-            <div class="panel-title">📋 Minhas Tarefas</div>
+            <div class="panel-title"><span class="panel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>Minhas Tarefas</div>
             <span class="badge badge-time" id="todoCount">0</span>
           </div>
-          <div style="padding:16px 20px">
-            <div style="display:flex;gap:8px;margin-bottom:14px">
-              <input type="text" id="todoInput" placeholder="Nova tarefa..." style="flex:1;padding:10px 14px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;outline:none" onkeydown="if(event.key==='Enter')addTodo()">
-              <button onclick="addTodo()" style="padding:10px 18px;border:none;border-radius:10px;background:var(--mango);color:#fff;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap">+ Adicionar</button>
+          <div style="padding:18px 22px">
+            <div class="coord-todo-row">
+              <input type="text" id="todoInput" placeholder="Nova tarefa..." onkeydown="if(event.key==='Enter')addTodo()">
+              <button onclick="addTodo()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Adicionar
+              </button>
             </div>
             <div id="todoList"></div>
           </div>
@@ -854,20 +1402,28 @@ body.sb-collapsed .main { margin-left: 92px !important; }
           <div class="stat-card clickable" data-goto="nivelamento"><div class="stat-icon">📅</div><div class="stat-label">Nivelamentos</div><div class="stat-value" id="statNivelamentos">-</div></div>
         </div>
         <div class="panel">
-          <div class="panel-head"><div class="panel-title">📋 Atividade Recente</div></div>
+          <div class="panel-head"><div class="panel-title"><span class="panel-icon purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>Atividade Recente</div></div>
           <div id="recentActivity"><div class="empty-state"><div class="empty-icon">📭</div><p>Carregando...</p></div></div>
         </div>
       </div>
 
       <!-- ═══ USERS ═══ -->
       <div class="section" id="sec-users">
-        <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:16px">👥 Gestão de Usuários</h2>
-        <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
-          <input type="text" id="userSearch" placeholder="Buscar por nome ou e-mail..." oninput="filterUsers()" style="flex:1;min-width:200px;padding:10px 14px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;outline:none">
-          <button onclick="filterUsersByRole('')" class="user-filter active" style="padding:8px 16px;border-radius:8px;border:1px solid var(--g200);background:var(--navy);color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">Todos</button>
-          <button onclick="filterUsersByRole('student')" class="user-filter" style="padding:8px 16px;border-radius:8px;border:1px solid var(--g200);background:#fff;color:var(--g700);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">🎓 Alunos</button>
-          <button onclick="filterUsersByRole('teacher')" class="user-filter" style="padding:8px 16px;border-radius:8px;border:1px solid var(--g200);background:#fff;color:var(--g700);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">👨‍🏫 Professores</button>
-          <button onclick="filterUsersByRole('coordinator')" class="user-filter" style="padding:8px 16px;border-radius:8px;border:1px solid var(--g200);background:#fff;color:var(--g700);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">📊 Coords</button>
+        <div class="section-head">
+          <div class="section-head-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="section-head-text">
+            <h2>Gestão de Usuários</h2>
+            <p class="section-sub">Crie, edite e gerencie alunos, professores e coordenadores.</p>
+          </div>
+        </div>
+        <div class="coord-search-bar">
+          <input type="text" id="userSearch" placeholder="🔍 Buscar por nome ou e-mail..." oninput="filterUsers()">
+          <button onclick="filterUsersByRole('')" class="user-filter active">Todos</button>
+          <button onclick="filterUsersByRole('student')" class="user-filter">🎓 Alunos</button>
+          <button onclick="filterUsersByRole('teacher')" class="user-filter">👨‍🏫 Professores</button>
+          <button onclick="filterUsersByRole('coordinator')" class="user-filter">📊 Coords</button>
         </div>
         <div class="panel">
           <div class="panel-head"><div class="panel-title">Todos os Usuários</div><div style="display:flex;gap:8px;align-items:center"><span class="badge badge-time" id="userCount">0</span><button onclick="openCreateModal()" style="padding:8px 16px;border:none;border-radius:8px;background:var(--mango);color:#fff;font-size:12px;font-weight:700;cursor:pointer">+ Novo Usuário</button></div></div>
@@ -925,8 +1481,15 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 
       <!-- ═══ SCHEDULES ═══ -->
       <div class="section" id="sec-schedules">
-        <h2 style="font-size:22px;font-weight:800;color:var(--navy);margin-bottom:8px">📅 Gestão de Schedules</h2>
-        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Arraste alunos para montar a grade. Clique em uma aula para ajustar ou registrar eventos. Clique em espaço vazio para eventos extraordinários.</p>
+        <div class="section-head">
+          <div class="section-head-icon ocean">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <div class="section-head-text">
+            <h2>Gestão de Schedules</h2>
+            <p class="section-sub">Arraste alunos para montar a grade. Clique em uma aula para ajustar ou registrar eventos extraordinários.</p>
+          </div>
+        </div>
 
         <div style="display:flex;gap:12px;align-items:center;margin-bottom:20px;flex-wrap:wrap;background:#fff;padding:16px 20px;border-radius:14px;border:1px solid var(--g100)">
           <span style="font-size:13px;font-weight:700;color:var(--navy)">Professor:</span>
@@ -966,21 +1529,35 @@ body.sb-collapsed .main { margin-left: 92px !important; }
       </div>
 
             <div class="section" id="sec-nivelamento">
-        <h2>📋 Agendamentos de Nivelamento</h2>
-        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Solicitações de aula experimental recebidas pelo site. Entre em contato e converta!</p>
+        <div class="section-head">
+          <div class="section-head-icon yellow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          </div>
+          <div class="section-head-text">
+            <h2>Agendamentos de Nivelamento</h2>
+            <p class="section-sub">Solicitações de aula experimental recebidas pelo site. Entre em contato e converta!</p>
+          </div>
+        </div>
         <div class="panel">
-          <div class="panel-head"><div class="panel-title">Solicitações Recebidas</div><span class="badge badge-time" id="nivCount2">0</span></div>
+          <div class="panel-head"><div class="panel-title"><span class="panel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>Solicitações Recebidas</div><span class="badge badge-time" id="nivCount2">0</span></div>
           <div id="nivelList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhum agendamento recebido.</p></div></div>
         </div>
       </div>
 
       <!-- ═══ HOMEWORKS ═══ -->
             <div class="section" id="sec-supervision">
-        <h2>👁️ Supervisão Acadêmica</h2>
-        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Acompanhe todas as atividades acadêmicas dos professores.</p>
+        <div class="section-head">
+          <div class="section-head-icon purple">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+          <div class="section-head-text">
+            <h2>Supervisão Acadêmica</h2>
+            <p class="section-sub">Acompanhe todas as atividades acadêmicas dos professores.</p>
+          </div>
+        </div>
 
         <!-- Tab bar -->
-        <div style="display:flex;gap:4px;background:#fff;padding:6px;border-radius:14px;border:1px solid var(--g100);margin-bottom:20px;overflow-x:auto">
+        <div class="coord-tab-bar">
           <button class="sup-tab active" data-sup="hw" onclick="switchSup('hw',this)">📝 Homeworks</button>
           <button class="sup-tab" data-sup="fb" onclick="switchSup('fb',this)">💬 Feedbacks</button>
           <button class="sup-tab" data-sup="wr" onclick="switchSup('wr',this)">✍️ Redações</button>
@@ -1030,8 +1607,15 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 
       <!-- ═══ MEU PERFIL ═══ -->
       <div class="section" id="sec-my-profile">
-        <h2>👤 Meu Perfil</h2>
-        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Edite suas informações pessoais.</p>
+        <div class="section-head">
+          <div class="section-head-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div class="section-head-text">
+            <h2>Meu Perfil</h2>
+            <p class="section-sub">Edite suas informações pessoais.</p>
+          </div>
+        </div>
         
         <div style="display:grid;grid-template-columns:200px 1fr;gap:24px;align-items:start">
           <!-- Avatar -->
@@ -1061,30 +1645,50 @@ body.sb-collapsed .main { margin-left: 92px !important; }
       <div class="section" id="sec-pronunciation-coord" style="display:none"></div>
 
       <div class="section" id="sec-announcements">
-        <h2>📢 Avisos</h2>
-        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Envie comunicados para alunos, professores ou todos.</p>
-        <div class="form-card" style="margin-bottom:16px">
+        <div class="section-head">
+          <div class="section-head-icon ocean">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
+          </div>
+          <div class="section-head-text">
+            <h2>Avisos</h2>
+            <p class="section-sub">Envie comunicados para alunos, professores ou todos.</p>
+          </div>
+        </div>
+        <div class="form-card">
           <div class="f-group"><label>Título</label><input type="text" id="annTitle" placeholder="Ex: Recesso de fim de ano"></div>
           <div class="f-group"><label>Conteúdo</label><textarea id="annContent" rows="3" placeholder="Escreva o aviso..."></textarea></div>
           <div class="f-group"><label>Destinatários</label><select id="annTarget"><option value="">Todos</option><option value="student">Apenas alunos</option><option value="teacher">Apenas professores</option></select></div>
-          <button class="btn-send" onclick="sendAnn()">Publicar Aviso</button>
+          <button class="btn-send" onclick="sendAnn()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            Publicar Aviso
+          </button>
         </div>
         <div class="panel">
-          <div class="panel-head"><div class="panel-title">Avisos Publicados</div></div>
+          <div class="panel-head"><div class="panel-title"><span class="panel-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-5v12L3 14v-3z"/></svg></span>Avisos Publicados</div></div>
           <div id="annList"><div class="empty-state"><div class="empty-icon">📢</div><p>Nenhum aviso.</p></div></div>
         </div>
       </div>
 
       <div class="section" id="sec-messages">
-        <h2>📩 Mensagem para Professor</h2>
-        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Envie mensagens diretas para professores específicos.</p>
-        <div class="form-card" style="margin-bottom:16px">
+        <div class="section-head">
+          <div class="section-head-icon pink">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div class="section-head-text">
+            <h2>Mensagens para Professores</h2>
+            <p class="section-sub">Envie mensagens diretas para professores específicos.</p>
+          </div>
+        </div>
+        <div class="form-card">
           <div class="f-group"><label>Professor</label><select id="msgTeacher"><option value="">Selecione o professor</option></select></div>
           <div class="f-group"><label>Mensagem</label><textarea id="msgContent" rows="3" placeholder="Escreva a mensagem..."></textarea></div>
-          <button class="btn-send" onclick="sendMsg()">Enviar Mensagem</button>
+          <button class="btn-send" onclick="sendMsg()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            Enviar Mensagem
+          </button>
         </div>
         <div class="panel">
-          <div class="panel-head"><div class="panel-title">Mensagens Enviadas</div></div>
+          <div class="panel-head"><div class="panel-title"><span class="panel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>Mensagens Enviadas</div></div>
           <div id="msgList"><div class="empty-state"><div class="empty-icon">📩</div><p>Nenhuma mensagem.</p></div></div>
         </div>
       </div>
@@ -1092,10 +1696,17 @@ body.sb-collapsed .main { margin-left: 92px !important; }
       
       <!-- ═══ TESTIMONIALS MANAGEMENT ═══ -->
       <div class="section" id="sec-testimonials">
-        <h2 style="font-size:22px;font-weight:800;color:var(--navy);margin-bottom:8px">⭐ Gestão de Depoimentos</h2>
-        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Depoimentos enviados pelos visitantes do site. Aprove para exibir na homepage.</p>
+        <div class="section-head">
+          <div class="section-head-icon yellow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <div class="section-head-text">
+            <h2>Gestão de Depoimentos</h2>
+            <p class="section-sub">Depoimentos enviados pelos visitantes do site. Aprove para exibir na homepage.</p>
+          </div>
+        </div>
         <div class="panel">
-          <div class="panel-head"><div class="panel-title">Todos os Depoimentos</div></div>
+          <div class="panel-head"><div class="panel-title"><span class="panel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>Todos os Depoimentos</div></div>
           <div id="testimonialsList"><div class="empty-state"><div class="empty-icon">⭐</div><p>Nenhum depoimento recebido.</p></div></div>
         </div>
       </div>
@@ -1103,11 +1714,18 @@ body.sb-collapsed .main { margin-left: 92px !important; }
       <!-- ═══ TOOL PLACEHOLDER ═══ -->
       <!-- ═══ COORDINATOR AS TEACHER ═══ -->
       <div class="section" id="sec-teach">
-        <h2>👨‍🏫 Área do Professor</h2>
-        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Envie tarefas, feedbacks, redações e pronúncias diretamente para seus alunos.</p>
+        <div class="section-head">
+          <div class="section-head-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.66 4 3 6 3s6-1.34 6-3v-5"/></svg>
+          </div>
+          <div class="section-head-text">
+            <h2>Área do Professor</h2>
+            <p class="section-sub">Envie tarefas, feedbacks, redações e pronúncias diretamente para seus alunos.</p>
+          </div>
+        </div>
 
         <!-- Sub-tabs -->
-        <div style="display:flex;gap:4px;background:#fff;padding:6px;border-radius:14px;border:1px solid var(--g100);margin-bottom:20px;overflow-x:auto">
+        <div class="coord-tab-bar">
           <button class="sup-tab active" data-teach="t-hw" onclick="switchTeach('t-hw',this)">📝 Homework</button>
           <button class="sup-tab" data-teach="t-fb" onclick="switchTeach('t-fb',this)">💬 Feedback</button>
           <button class="sup-tab" data-teach="t-wr" onclick="switchTeach('t-wr',this)">✍️ Redação</button>
@@ -1154,13 +1772,18 @@ body.sb-collapsed .main { margin-left: 92px !important; }
       </div>
 
             <div class="section" id="sec-tool">
-        <div style="margin-bottom:24px">
-          <h2 style="font-size:22px;font-weight:800;color:var(--navy);margin-bottom:6px">🧮 Contagem de Aulas e Salário</h2>
-          <p style="font-size:14px;color:var(--g500)">Faça upload das planilhas de assessment para calcular as horas e salário do professor.</p>
+        <div class="section-head">
+          <div class="section-head-icon green">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="16" y1="14" x2="16" y2="18"/><line x1="16" y1="10" x2="12" y2="10"/><line x1="12" y1="14" x2="8" y2="14"/><line x1="12" y1="18" x2="8" y2="18"/><line x1="8" y1="10" x2="8" y2="10"/></svg>
+          </div>
+          <div class="section-head-text">
+            <h2>Contagem de Aulas e Salário</h2>
+            <p class="section-sub">Faça upload das planilhas de assessment para calcular as horas e salário do professor.</p>
+          </div>
         </div>
 
         <div class="panel" style="margin-bottom:20px">
-          <div class="panel-head"><div class="panel-title">⚙️ Configuração</div></div>
+          <div class="panel-head"><div class="panel-title"><span class="panel-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>Configuração</div></div>
           <div style="padding:24px 28px">
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">
               <div class="f-group"><label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px">Professor</label><select id="toolProf" class="filter-select" style="width:100%"><option value="">Selecione</option></select></div>

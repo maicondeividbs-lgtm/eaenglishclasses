@@ -1274,8 +1274,8 @@
 
   .teachers-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 28px;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 22px;
     margin-bottom: 56px;
   }
 
@@ -1428,6 +1428,13 @@
     color: var(--navy);
   }
 
+  /* Laptop pequeno / tablet largo: 3 colunas */
+  @media (max-width: 1180px) {
+    .teachers-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+  }
   /* Tablet: 2 colunas */
   @media (max-width: 1024px) {
     .teachers-grid {
@@ -2400,6 +2407,25 @@
             <span class="teacher-skill">A1 → B2</span>
             <span class="teacher-skill">Conversação</span>
             <span class="teacher-skill">Writing</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Luiz -->
+      <article class="teacher-card">
+        <div class="teacher-photo-wrap">
+          <div class="teacher-photo-bg"></div>
+          <img src="img/teachers/luiz.jpg" alt="Luiz — Professor de Inglês" class="teacher-photo" loading="lazy">
+          <div class="teacher-badge">Professor</div>
+        </div>
+        <div class="teacher-content">
+          <h3 class="teacher-name">Luiz</h3>
+          <p class="teacher-role">Professor de Inglês</p>
+          <p class="teacher-bio">Treinado no método EA, conduz aulas com foco em desenvolver fluência, confiança e domínio gramatical em alunos de todos os níveis.</p>
+          <div class="teacher-skills">
+            <span class="teacher-skill">A1 → B2</span>
+            <span class="teacher-skill">Conversação</span>
+            <span class="teacher-skill">Grammar</span>
           </div>
         </div>
       </article>

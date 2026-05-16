@@ -486,6 +486,603 @@ body.sb-collapsed .main { margin-left: 92px !important; }
   .sb.collapsed .sb-bottom a span { opacity: 1; width: auto; pointer-events: auto; }
   body.sb-collapsed .main { margin-left: 0 !important; }
 }
+
+/* ════════════════════════════════════════════════════════
+   ✦ REFINAMENTO VISUAL — DASHBOARD PROFESSOR (v7.4)
+   Mesma estratégia do dashboard aluno (v7.2): CSS aditivo,
+   sem mexer em lógica funcional.
+   ════════════════════════════════════════════════════════ */
+
+/* === SECTION HEAD (novo) === */
+.section-head {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 18px; margin-bottom: 24px;
+  padding-bottom: 18px; border-bottom: 1px solid var(--g100);
+}
+.section-head-text { flex: 1; min-width: 0; }
+.section-head h2 {
+  font-family: 'Fraunces', serif !important;
+  font-size: 28px !important; font-weight: 800 !important;
+  color: var(--navy) !important;
+  letter-spacing: -0.02em !important;
+  margin: 0 !important; padding: 0 !important;
+  line-height: 1.15;
+}
+.section-head h2::after { display: none; }
+.section-head .section-sub {
+  font-size: 13.5px; color: var(--g500);
+  margin-top: 6px; line-height: 1.5;
+}
+.section-head-icon {
+  width: 52px; height: 52px; min-width: 52px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--orange-soft), var(--mango-soft));
+  display: flex; align-items: center; justify-content: center;
+  color: var(--orange);
+  box-shadow: 0 6px 16px rgba(243,107,46,0.12);
+}
+.section-head-icon.blue { background: linear-gradient(135deg, var(--blue-soft), #dbeafe); color: var(--blue); box-shadow: 0 6px 16px rgba(37,60,150,0.12); }
+.section-head-icon.green { background: linear-gradient(135deg, #d1fae5, #bbf7d0); color: #059669; box-shadow: 0 6px 16px rgba(16,185,129,0.12); }
+.section-head-icon.purple { background: linear-gradient(135deg, #ede9fe, #ddd6fe); color: #7c3aed; box-shadow: 0 6px 16px rgba(124,58,237,0.12); }
+.section-head-icon.ocean { background: linear-gradient(135deg, var(--ocean-light), var(--ocean)); color: var(--blue); box-shadow: 0 6px 16px rgba(37,60,150,0.10); }
+.section-head-icon.pink { background: linear-gradient(135deg, #fce7f3, #fbcfe8); color: #db2777; box-shadow: 0 6px 16px rgba(219,39,119,0.12); }
+.section-head-icon svg { width: 26px; height: 26px; }
+
+/* === GREETING + STAT CARDS (overview) === */
+.overview-greeting {
+  font-family: 'Fraunces', serif !important;
+  font-size: 30px !important; font-weight: 700 !important;
+  color: var(--navy) !important;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px !important;
+  line-height: 1.15;
+}
+.overview-greeting em {
+  color: var(--orange); font-style: italic;
+}
+.overview-subline {
+  font-size: 14px; color: var(--g500);
+  margin-bottom: 28px !important;
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+.overview-subline .pill {
+  padding: 4px 12px; border-radius: 999px;
+  background: var(--blue-soft); color: var(--blue);
+  font-size: 12px; font-weight: 700;
+}
+
+.stat-row { gap: 16px !important; }
+.stat-card {
+  padding: 20px !important;
+  border-radius: 16px !important;
+  transition: all 0.3s cubic-bezier(0.4,0,0.2,1) !important;
+  display: flex; flex-direction: column; gap: 0;
+  position: relative;
+}
+.stat-card::before {
+  height: 100% !important; width: 4px !important;
+  top: 0 !important; bottom: 0 !important; right: auto !important; left: 0 !important;
+  border-radius: 16px 0 0 16px !important;
+}
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(25,36,78,0.10);
+  border-color: transparent;
+}
+.stat-card.clickable { cursor: pointer; }
+.stat-card:nth-child(1)::before { background: linear-gradient(180deg, var(--orange), var(--mango)) !important; }
+.stat-card:nth-child(2)::before { background: linear-gradient(180deg, var(--blue), var(--blue-light)) !important; }
+.stat-card:nth-child(3)::before { background: linear-gradient(180deg, #8b5cf6, #a78bfa) !important; }
+.stat-card:nth-child(4)::before { background: linear-gradient(180deg, #10b981, #34d399) !important; }
+.stat-icon {
+  font-size: 22px !important; margin-bottom: 12px !important;
+  width: 40px; height: 40px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--g50); border-radius: 10px;
+}
+.stat-card:nth-child(1) .stat-icon { background: var(--mango-soft); }
+.stat-card:nth-child(2) .stat-icon { background: var(--blue-soft); }
+.stat-card:nth-child(3) .stat-icon { background: rgba(139,92,246,0.10); }
+.stat-card:nth-child(4) .stat-icon { background: rgba(16,185,129,0.10); }
+.stat-label {
+  font-size: 11.5px !important;
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+.stat-value {
+  font-size: 36px !important;
+  background: linear-gradient(135deg, var(--navy), #2d3a5e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* === PANEL refinement === */
+.panel {
+  border-radius: 18px !important;
+  border-color: var(--g100) !important;
+  box-shadow: 0 2px 8px rgba(25,36,78,0.03);
+}
+.panel-head {
+  padding: 18px 26px !important;
+  background: linear-gradient(180deg, #fff, #fafbfd);
+}
+.panel-title {
+  font-size: 14.5px !important;
+  display: inline-flex; align-items: center; gap: 10px;
+  letter-spacing: -0.005em;
+}
+.panel-title .panel-icon {
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  background: var(--mango-soft);
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--orange);
+}
+.panel-title .panel-icon.blue { background: var(--blue-soft); color: var(--blue); }
+.panel-title .panel-icon.purple { background: rgba(139,92,246,0.10); color: #7c3aed; }
+.panel-title .panel-icon.green { background: rgba(16,185,129,0.10); color: #059669; }
+.panel-title .panel-icon svg { width: 16px; height: 16px; }
+
+/* === FORM CARD refinement === */
+.form-card {
+  border-radius: 18px !important;
+  padding: 28px !important;
+  background: #fff !important;
+  border: 1px solid var(--g100) !important;
+  box-shadow: 0 2px 8px rgba(25,36,78,0.03) !important;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 24px !important;
+}
+.form-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--orange), var(--mango));
+}
+.form-card h3 {
+  font-family: 'Fraunces', serif !important;
+  font-size: 19px !important; font-weight: 800 !important;
+  color: var(--navy) !important;
+  letter-spacing: -0.01em;
+  margin-bottom: 4px !important;
+  display: inline-flex; align-items: center; gap: 10px;
+}
+.form-card .form-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--orange), var(--mango));
+  display: inline-flex; align-items: center; justify-content: center;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(243,107,46,0.20);
+}
+.form-card .form-icon svg { width: 18px; height: 18px; }
+.form-card .sub {
+  font-size: 13.5px !important;
+  color: var(--g500) !important;
+  margin-bottom: 20px !important;
+}
+.form-card label {
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: var(--navy) !important;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  margin-bottom: 6px !important;
+}
+.form-card input,
+.form-card textarea,
+.form-card select {
+  width: 100%;
+  padding: 12px 14px !important;
+  border: 1.5px solid var(--g200) !important;
+  border-radius: 12px !important;
+  font-family: inherit !important;
+  font-size: 14px !important;
+  color: var(--navy) !important;
+  background: var(--off-white) !important;
+  outline: none;
+  transition: all 0.2s ease !important;
+}
+.form-card input:focus,
+.form-card textarea:focus,
+.form-card select:focus {
+  border-color: var(--orange) !important;
+  background: #fff !important;
+  box-shadow: 0 0 0 4px rgba(243,107,46,0.08);
+}
+.form-card textarea { resize: vertical; line-height: 1.6; }
+.form-card .btn-send {
+  margin-top: 8px;
+  padding: 13px 24px !important;
+  border-radius: 12px !important;
+  background: linear-gradient(135deg, var(--orange), var(--mango)) !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  border: none !important;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(243,107,46,0.25);
+  transition: all 0.25s ease !important;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.form-card .btn-send:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(243,107,46,0.35);
+}
+.form-card .btn-send svg { width: 16px; height: 16px; }
+
+/* === SENT ITEM CARDS (homework/feedback/announcements enviados) === */
+.sent-card {
+  background: #fff;
+  border: 1px solid var(--g100);
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin: 0 16px 12px;
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+.sent-card::before {
+  content: ''; position: absolute;
+  left: 0; top: 0; bottom: 0; width: 4px;
+  background: linear-gradient(180deg, var(--orange), var(--mango));
+  border-radius: 14px 0 0 14px;
+}
+.sent-card.ann::before { background: linear-gradient(180deg, var(--blue), var(--blue-light)); }
+.sent-card.wr::before { background: linear-gradient(180deg, #8b5cf6, #a78bfa); }
+.sent-card.pr::before { background: linear-gradient(180deg, #10b981, #34d399); }
+.sent-card:hover {
+  transform: translateY(-2px);
+  border-color: transparent;
+  box-shadow: 0 8px 24px rgba(25,36,78,0.06);
+}
+.sent-head {
+  display: flex; align-items: flex-start;
+  gap: 12px; margin-bottom: 8px;
+}
+.sent-icon {
+  width: 38px; height: 38px; min-width: 38px;
+  border-radius: 10px;
+  background: var(--mango-soft);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--orange);
+}
+.sent-card.ann .sent-icon { background: var(--blue-soft); color: var(--blue); }
+.sent-card.wr .sent-icon { background: rgba(139,92,246,0.12); color: #7c3aed; }
+.sent-card.pr .sent-icon { background: rgba(16,185,129,0.12); color: #059669; }
+.sent-icon svg { width: 18px; height: 18px; }
+.sent-body { flex: 1; min-width: 0; }
+.sent-title {
+  font-size: 14.5px; font-weight: 700;
+  color: var(--navy); letter-spacing: -0.005em;
+  margin-bottom: 2px;
+}
+.sent-meta {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  font-size: 11.5px; color: var(--g500);
+  align-items: center;
+}
+.sent-meta-author { font-weight: 700; color: var(--g700); }
+.sent-meta-sep { opacity: 0.5; }
+.sent-status {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 10px; border-radius: 999px;
+  font-size: 10.5px; font-weight: 800;
+  letter-spacing: 0.04em; text-transform: uppercase;
+}
+.sent-status.pending { background: var(--mango-soft); color: var(--orange); }
+.sent-status.submitted { background: var(--blue-soft); color: var(--blue); }
+.sent-status.done, .sent-status.graded { background: rgba(16,185,129,0.12); color: #059669; }
+.sent-content {
+  font-size: 13.5px; color: var(--g700);
+  line-height: 1.6;
+  padding-left: 50px;
+}
+
+/* === STUDENT CARDS === */
+.student-card {
+  background: #fff;
+  border: 1px solid var(--g100);
+  border-radius: 14px;
+  padding: 16px;
+  display: flex; align-items: center; gap: 14px;
+  transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+.student-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--mango);
+  box-shadow: 0 8px 22px rgba(25,36,78,0.06);
+}
+.student-avatar {
+  width: 48px; height: 48px; min-width: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--orange), var(--mango));
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800; font-size: 18px;
+  box-shadow: 0 4px 10px rgba(243,107,46,0.20);
+}
+.student-info { flex: 1; min-width: 0; }
+.student-name {
+  font-size: 14.5px; font-weight: 700; color: var(--navy);
+  letter-spacing: -0.005em;
+  margin-bottom: 2px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.student-level {
+  font-size: 11.5px; color: var(--g500); font-weight: 600;
+  display: inline-flex; align-items: center; gap: 5px;
+}
+.student-level::before {
+  content: ''; width: 6px; height: 6px;
+  border-radius: 50%; background: var(--mango);
+  display: inline-block;
+}
+
+/* === HELP REQUESTS (perguntas alunos) === */
+.help-card {
+  background: #fff;
+  border: 1px solid var(--g100);
+  border-radius: 14px;
+  padding: 18px 22px;
+  margin: 0 16px 12px;
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+.help-card::before {
+  content: ''; position: absolute;
+  left: 0; top: 0; bottom: 0; width: 4px;
+  background: linear-gradient(180deg, #f59e0b, #fbbf24);
+  border-radius: 14px 0 0 14px;
+}
+.help-card.answered::before { background: linear-gradient(180deg, #10b981, #34d399); }
+.help-card:hover {
+  transform: translateY(-2px);
+  border-color: transparent;
+  box-shadow: 0 8px 22px rgba(25,36,78,0.07);
+}
+.help-head {
+  display: flex; align-items: flex-start; gap: 12px;
+  margin-bottom: 10px;
+}
+.help-avatar {
+  width: 38px; height: 38px; min-width: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 14px;
+}
+.help-card.answered .help-avatar { background: linear-gradient(135deg, #10b981, #34d399); }
+.help-head-text { flex: 1; min-width: 0; }
+.help-student-name {
+  font-size: 14px; font-weight: 700; color: var(--navy);
+  margin-bottom: 2px;
+}
+.help-meta {
+  font-size: 11.5px; color: var(--g500);
+  display: flex; gap: 8px; align-items: center;
+}
+.help-meta .sent-status { margin-left: auto; }
+.help-question {
+  font-size: 14px; color: var(--g700);
+  line-height: 1.65;
+  padding-left: 50px;
+  margin-bottom: 10px;
+}
+.help-answer {
+  margin-left: 50px;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, rgba(16,185,129,0.06), #fff);
+  border: 1px solid rgba(16,185,129,0.15);
+  border-radius: 12px;
+  font-size: 13.5px; color: var(--g700);
+  line-height: 1.6;
+  position: relative;
+}
+.help-answer::before {
+  content: 'Sua resposta';
+  display: block;
+  font-size: 10.5px; font-weight: 800;
+  color: #059669;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.help-reply-area {
+  margin-left: 50px;
+  margin-top: 8px;
+}
+.help-reply-area textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid var(--g200);
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 13.5px;
+  color: var(--navy);
+  background: var(--off-white);
+  outline: none;
+  resize: vertical;
+  min-height: 64px;
+  transition: all 0.2s;
+}
+.help-reply-area textarea:focus {
+  border-color: var(--orange);
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(243,107,46,0.08);
+}
+.help-reply-btn {
+  margin-top: 8px;
+  padding: 9px 16px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--orange), var(--mango));
+  color: #fff;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex; align-items: center; gap: 6px;
+  box-shadow: 0 4px 12px rgba(243,107,46,0.20);
+  transition: all 0.2s;
+}
+.help-reply-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(243,107,46,0.30);
+}
+.help-reply-btn svg { width: 14px; height: 14px; }
+
+/* === WRITING (Professor — corrigir) === */
+.prof-wr-card {
+  background: #fff;
+  border: 1px solid var(--g100);
+  border-radius: 16px;
+  margin: 0 16px 16px;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+.prof-wr-card:hover {
+  box-shadow: 0 10px 28px rgba(25,36,78,0.07);
+}
+.prof-wr-header {
+  padding: 18px 22px;
+  background: linear-gradient(135deg, var(--cream), var(--ocean-light));
+  border-bottom: 1px solid var(--g100);
+  display: flex; align-items: center; gap: 14px;
+}
+.prof-wr-header-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  color: #7c3aed;
+  box-shadow: 0 4px 10px rgba(124,58,237,0.15);
+}
+.prof-wr-header-info { flex: 1; min-width: 0; }
+.prof-wr-header-info h4 {
+  font-family: 'Fraunces', serif;
+  font-size: 17px !important; font-weight: 800;
+  color: var(--navy);
+  margin: 0 0 2px 0 !important;
+  letter-spacing: -0.01em;
+}
+.prof-wr-header-meta {
+  font-size: 12px; color: var(--g600);
+  display: inline-flex; align-items: center; gap: 6px;
+}
+
+/* === PRONUNCIATION (Professor list) === */
+.prof-pron-card {
+  background: #fff;
+  border: 1px solid var(--g100);
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin: 0 16px 12px;
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+  display: flex; gap: 14px; align-items: center;
+}
+.prof-pron-card::before {
+  content: ''; position: absolute;
+  left: 0; top: 0; bottom: 0; width: 4px;
+  background: linear-gradient(180deg, #10b981, #34d399);
+  border-radius: 14px 0 0 14px;
+}
+.prof-pron-card:hover {
+  transform: translateY(-2px);
+  border-color: transparent;
+  box-shadow: 0 8px 22px rgba(25,36,78,0.07);
+}
+.prof-pron-body { flex: 1; min-width: 0; }
+.prof-pron-word {
+  font-family: 'Fraunces', serif;
+  font-size: 19px; font-weight: 800;
+  color: var(--navy);
+  letter-spacing: -0.01em;
+  margin-bottom: 2px;
+}
+.prof-pron-phonetic {
+  font-family: 'Fraunces', serif;
+  font-size: 13px;
+  color: #059669;
+  font-style: italic;
+  margin-bottom: 4px;
+}
+.prof-pron-meta {
+  font-size: 11.5px; color: var(--g500);
+  font-weight: 600;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.prof-pron-meta .sent-status { margin-left: 0; }
+
+/* === MESSAGES === */
+.msg-card {
+  background: #fff;
+  border: 1px solid var(--g100);
+  border-radius: 14px;
+  padding: 18px 22px;
+  margin: 0 16px 12px;
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+.msg-card::before {
+  content: ''; position: absolute;
+  left: 0; top: 0; bottom: 0; width: 4px;
+  background: linear-gradient(180deg, var(--blue), var(--blue-light));
+  border-radius: 14px 0 0 14px;
+}
+.msg-card:hover {
+  transform: translateY(-2px);
+  border-color: transparent;
+  box-shadow: 0 8px 24px rgba(25,36,78,0.07);
+}
+
+/* === EMPTY STATE === */
+.empty-state {
+  padding: 64px 24px !important;
+  background: linear-gradient(135deg, var(--off-white) 0%, var(--cream) 100%);
+  border-radius: 16px;
+  border: 1px dashed var(--g200);
+  margin: 16px;
+}
+.empty-state .empty-icon {
+  font-size: 56px !important;
+  opacity: 0.6 !important;
+  margin-bottom: 16px !important;
+}
+.empty-state p {
+  font-size: 14px;
+  color: var(--g500);
+  font-weight: 500;
+}
+
+/* === Fade-in stagger === */
+@keyframes profCardIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.sent-card, .student-card, .help-card, .prof-wr-card, .prof-pron-card, .msg-card {
+  animation: profCardIn 0.35s cubic-bezier(0.4,0,0.2,1) backwards;
+}
+.sent-card:nth-child(1), .student-card:nth-child(1), .help-card:nth-child(1), .prof-wr-card:nth-child(1), .prof-pron-card:nth-child(1), .msg-card:nth-child(1) { animation-delay: 0.02s; }
+.sent-card:nth-child(2), .student-card:nth-child(2), .help-card:nth-child(2), .prof-wr-card:nth-child(2), .prof-pron-card:nth-child(2), .msg-card:nth-child(2) { animation-delay: 0.07s; }
+.sent-card:nth-child(3), .student-card:nth-child(3), .help-card:nth-child(3), .prof-wr-card:nth-child(3), .prof-pron-card:nth-child(3), .msg-card:nth-child(3) { animation-delay: 0.12s; }
+.sent-card:nth-child(4), .student-card:nth-child(4), .help-card:nth-child(4), .prof-wr-card:nth-child(4), .prof-pron-card:nth-child(4), .msg-card:nth-child(4) { animation-delay: 0.17s; }
+.sent-card:nth-child(n+5), .student-card:nth-child(n+5), .help-card:nth-child(n+5), .prof-wr-card:nth-child(n+5), .prof-pron-card:nth-child(n+5), .msg-card:nth-child(n+5) { animation-delay: 0.22s; }
+
+/* === Mobile === */
+@media (max-width: 640px) {
+  .section-head { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .section-head h2 { font-size: 24px !important; }
+  .section-head-icon { width: 44px; height: 44px; min-width: 44px; }
+  .stat-row { grid-template-columns: repeat(2, 1fr) !important; }
+  .form-card { padding: 22px !important; }
+  .sent-content, .help-question, .help-answer, .help-reply-area { padding-left: 0; margin-left: 0; }
+  .sent-card, .help-card, .prof-pron-card, .msg-card, .prof-wr-card { margin-left: 12px; margin-right: 12px; }
+}
 </style>
 </head>
 <body>
@@ -586,8 +1183,8 @@ body.sb-collapsed .main { margin-left: 92px !important; }
     <div class="content" role="main">
       <!-- ═══ OVERVIEW ═══ -->
       <div class="section active" id="sec-overview">
-        <h2 style="font-size:24px;font-weight:800;color:var(--navy);margin-bottom:4px" id="greeting">Olá, Professor! 👨‍🏫</h2>
-        <p style="font-size:14px;color:var(--g500);margin-bottom:24px">Aqui está o resumo da sua área.</p>
+        <h2 class="overview-greeting" id="greeting">Olá, <em>Professor</em>! 👨‍🏫</h2>
+        <p class="overview-subline">Aqui está o resumo da sua área.</p>
         <div class="stat-row">
           <div class="stat-card clickable" data-goto="students"><div class="stat-icon">👥</div><div class="stat-label">Meus Alunos</div><div class="stat-value" id="statStudentCount">-</div></div>
           <div class="stat-card clickable" data-goto="homework"><div class="stat-icon">📝</div><div class="stat-label">Homeworks Enviados</div><div class="stat-value" id="statTasks">-</div></div>
@@ -595,7 +1192,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
           <div class="stat-card clickable" data-goto="feedback"><div class="stat-icon">💬</div><div class="stat-label">Feedbacks</div><div class="stat-value" id="statFeedbacks">-</div></div>
         </div>
         <div class="panel">
-          <div class="panel-head"><div class="panel-title">📋 Atividade Recente</div></div>
+          <div class="panel-head"><div class="panel-title"><span class="panel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>Atividade Recente</div></div>
           <div id="recentActivity"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhuma atividade ainda. Comece enviando um homework!</p></div></div>
         </div>
       </div>
@@ -604,8 +1201,15 @@ body.sb-collapsed .main { margin-left: 92px !important; }
       
       <!-- ═══ SCHEDULE ═══ -->
       <div class="section" id="sec-schedule">
-        <h2>📅 Meu Schedule</h2>
-        <p style="font-size:14px;color:var(--g500);margin-bottom:20px">Arraste alunos para montar a grade. Clique em uma aula para ajustar ou registrar eventos. Clique em espaço vazio para eventos extraordinários.</p>
+        <div class="section-head">
+          <div class="section-head-icon ocean">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <div class="section-head-text">
+            <h2>Meu Schedule</h2>
+            <p class="section-sub">Arraste alunos para montar a grade. Clique em uma aula para ajustar ou registrar eventos. Clique em espaço vazio para eventos extraordinários.</p>
+          </div>
+        </div>
 
         <div style="display:flex;gap:12px;align-items:center;margin-bottom:20px;flex-wrap:wrap;background:#fff;padding:16px 20px;border-radius:14px;border:1px solid var(--g100)">
           <span style="font-size:13px;font-weight:700;color:var(--navy)">Mês:</span>
@@ -645,19 +1249,39 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 
       <!-- ═══ MEUS ALUNOS ═══ -->
       <div class="section" id="sec-students">
-        <h2 style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:20px">👥 Meus Alunos</h2>
+        <div class="section-head">
+          <div class="section-head-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="section-head-text">
+            <h2>Meus Alunos</h2>
+            <p class="section-sub">Lista dos alunos vinculados a você, com nível e informações de contato.</p>
+          </div>
+        </div>
         <div class="panel">
-          <div class="panel-head"><div class="panel-title">Alunos Vinculados</div><span class="badge badge-time" id="myStudentCount">0</span></div>
-          <div id="studentsList" style="padding:20px 24px;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px">
-            <div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">👥</div><p>Carregando...</p></div>
+          <div class="panel-head"><div class="panel-title"><span class="panel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="10"/></svg></span>Alunos Vinculados</div><span class="badge badge-time" id="myStudentCount">0</span></div>
+          <div id="studentsList" style="padding:20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px">
+            <div class="empty-state" style="grid-column:1/-1;margin:0"><div class="empty-icon">👥</div><p>Carregando...</p></div>
           </div>
         </div>
       </div>
 
       <!-- ═══ HOMEWORK ═══ -->
       <div class="section" id="sec-homework">
+        <div class="section-head">
+          <div class="section-head-icon blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </div>
+          <div class="section-head-text">
+            <h2>Homework</h2>
+            <p class="section-sub">Envie tarefas para seus alunos e acompanhe o que foi enviado.</p>
+          </div>
+        </div>
         <div class="form-card">
-          <h3>📝 Enviar Homework</h3>
+          <h3>
+            <span class="form-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></span>
+            Enviar Homework
+          </h3>
           <p class="sub">Crie uma tarefa e envie para seus alunos.</p>
           <div class="f-group"><label>Título da tarefa</label><input type="text" id="hwTitle" placeholder="Ex: Unit 7 — Grammar Exercises"></div>
           <div class="f-group"><label>Descrição / Instruções</label><textarea id="hwDesc" rows="3" placeholder="Descreva o que o aluno deve fazer..."></textarea></div>
@@ -665,38 +1289,66 @@ body.sb-collapsed .main { margin-left: 92px !important; }
             <div class="f-group"><label>Aluno</label><select id="hwStudent"><option value="">Carregando...</option></select></div>
             <div class="f-group"><label>Prazo (opcional)</label><input type="date" id="hwDue"></div>
           </div>
-          <button class="btn-send" id="hwSend" onclick="sendHomework()">Enviar Homework</button>
+          <button class="btn-send" id="hwSend" onclick="sendHomework()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            Enviar Homework
+          </button>
         </div>
         <div class="panel">
-          <div class="panel-head"><div class="panel-title">📚 Homeworks Enviados</div></div>
+          <div class="panel-head"><div class="panel-title"><span class="panel-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>Homeworks Enviados</div></div>
           <div id="hwList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhum homework enviado ainda.</p></div></div>
         </div>
       </div>
 
       <!-- ═══ FEEDBACKS ═══ -->
       <div class="section" id="sec-feedback">
+        <div class="section-head">
+          <div class="section-head-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div class="section-head-text">
+            <h2>Feedbacks</h2>
+            <p class="section-sub">Registre comentários sobre o desempenho dos seus alunos.</p>
+          </div>
+        </div>
         <div class="form-card">
-          <h3>💬 Enviar Feedback</h3>
+          <h3>
+            <span class="form-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+            Enviar Feedback
+          </h3>
           <p class="sub">Registre um feedback para seu aluno.</p>
           <div class="f-group"><label>Aluno</label><select id="fbStudent"><option value="">Carregando...</option></select></div>
           <div class="f-group"><label>Título</label><input type="text" id="fbTitle" placeholder="Ex: Progresso da semana"></div>
           <div class="f-group"><label>Conteúdo do feedback</label><textarea id="fbContent" rows="5" placeholder="Escreva o feedback detalhado..."></textarea></div>
-          <button class="btn-send" onclick="sendFeedback()">Enviar Feedback</button>
+          <button class="btn-send" onclick="sendFeedback()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            Enviar Feedback
+          </button>
         </div>
         <div class="panel">
-          <div class="panel-head"><div class="panel-title">💬 Feedbacks Enviados</div></div>
+          <div class="panel-head"><div class="panel-title"><span class="panel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>Feedbacks Enviados</div></div>
           <div id="fbList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhum feedback registrado ainda.</p></div></div>
         </div>
       </div>
 
       <!-- ═══ HELP REQUESTS (Perguntas dos Alunos) ═══ -->
       <div class="section" id="sec-help-requests">
+        <div class="section-head">
+          <div class="section-head-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/><circle cx="12" cy="12" r="10"/></svg>
+          </div>
+          <div class="section-head-text">
+            <h2>Perguntas dos Alunos</h2>
+            <p class="section-sub">Responda às dúvidas enviadas pelos alunos pelo botão "Pedir ajuda".</p>
+          </div>
+        </div>
         <div class="panel">
           <div class="panel-head">
-            <div class="panel-title">❓ Perguntas dos Alunos</div>
+            <div class="panel-title"><span class="panel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>Dúvidas recebidas</div>
           </div>
-          <div style="padding:16px 20px;background:var(--cream);font-size:13px;color:var(--g700);border-bottom:1px solid var(--g100)">
-            💡 Aqui aparecem as dúvidas que seus alunos enviaram pelo botão "Pedir ajuda". Responda com calma — eles serão notificados.
+          <div style="padding:16px 24px;background:var(--cream);font-size:13px;color:var(--g700);border-bottom:1px solid var(--g100);display:flex;gap:10px;align-items:flex-start">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--mango)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><path d="M9 11H1l8-8 8 8h-8v8z"/><circle cx="18" cy="6" r="3"/></svg>
+            <span>As dúvidas enviadas pelos alunos aparecem aqui. Responda com calma — eles serão notificados automaticamente.</span>
           </div>
           <div id="helpList"><div class="empty-state"><div class="empty-icon">💬</div><p>Nenhuma pergunta recebida ainda.</p></div></div>
         </div>
@@ -704,40 +1356,82 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 
       <!-- ═══ ANNOUNCEMENTS ═══ -->
       <div class="section" id="sec-announcements">
+        <div class="section-head">
+          <div class="section-head-icon ocean">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
+          </div>
+          <div class="section-head-text">
+            <h2>Avisos</h2>
+            <p class="section-sub">Publique comunicados que serão exibidos para seus alunos.</p>
+          </div>
+        </div>
         <div class="form-card">
-          <h3>📢 Publicar Aviso</h3>
+          <h3>
+            <span class="form-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg></span>
+            Publicar Aviso
+          </h3>
           <p class="sub">Envie um comunicado para seus alunos.</p>
           <div class="f-group"><label>Título do aviso</label><input type="text" id="annTitle" placeholder="Ex: Aula cancelada dia 20/04"></div>
           <div class="f-group"><label>Conteúdo</label><textarea id="annContent" rows="4" placeholder="Escreva o aviso..."></textarea></div>
-          <button class="btn-send" onclick="sendAnnouncement()">Publicar Aviso</button>
+          <button class="btn-send" onclick="sendAnnouncement()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            Publicar Aviso
+          </button>
         </div>
         <div class="panel">
-          <div class="panel-head"><div class="panel-title">📢 Avisos Publicados</div></div>
+          <div class="panel-head"><div class="panel-title"><span class="panel-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-5v12L3 14v-3z"/></svg></span>Avisos Publicados</div></div>
           <div id="annList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhum aviso publicado ainda.</p></div></div>
         </div>
       </div>
 
       <!-- ═══ WRITING ═══ -->
       <div class="section" id="sec-writing">
+        <div class="section-head">
+          <div class="section-head-icon purple">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg>
+          </div>
+          <div class="section-head-text">
+            <h2>Redação</h2>
+            <p class="section-sub">Proponha temas de escrita e corrija as redações enviadas.</p>
+          </div>
+        </div>
         <div class="form-card">
-          <h3>✍️ Enviar Tema de Redação</h3>
+          <h3>
+            <span class="form-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg></span>
+            Enviar Tema de Redação
+          </h3>
           <p class="sub">Proponha um tema de escrita para o aluno.</p>
           <div class="f-group"><label>Aluno</label><select id="wrStudent"><option value="">Carregando...</option></select></div>
           <div class="f-group"><label>Título</label><input type="text" id="wrTitle" placeholder="Ex: Describe your favorite place"></div>
           <div class="f-group"><label>Prompt / Instrução</label><textarea id="wrPrompt" rows="4" placeholder="Descreva o que o aluno deve escrever..."></textarea></div>
           <div class="f-group"><label>Prazo (opcional)</label><input type="date" id="wrDue"></div>
-          <button class="btn-send" onclick="sendWriting()">Enviar Tema</button>
+          <button class="btn-send" onclick="sendWriting()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            Enviar Tema
+          </button>
         </div>
         <div class="panel">
-          <div class="panel-head"><div class="panel-title">✍️ Redações</div></div>
+          <div class="panel-head"><div class="panel-title"><span class="panel-icon purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/></svg></span>Redações</div></div>
           <div id="wrList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhuma atividade de redação ainda.</p></div></div>
         </div>
       </div>
 
       <!-- ═══ PRONUNCIATION ═══ -->
       <div class="section" id="sec-pronunciation">
+        <div class="section-head">
+          <div class="section-head-icon green">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+          </div>
+          <div class="section-head-text">
+            <h2>Pronúncia</h2>
+            <p class="section-sub">Envie palavras ou frases para os alunos praticarem.</p>
+          </div>
+        </div>
         <div class="form-card">
-          <h3>🎙️ Enviar Prática de Pronúncia</h3>
+          <h3>
+            <span class="form-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg></span>
+            Enviar Prática de Pronúncia
+          </h3>
           <p class="sub">Envie palavras ou frases para o aluno praticar.</p>
           <div class="f-row">
             <div class="f-group"><label>Aluno</label><select id="prStudent"><option value="">Carregando...</option></select></div>
@@ -745,10 +1439,13 @@ body.sb-collapsed .main { margin-left: 92px !important; }
           </div>
           <div class="f-group"><label>Palavra ou frase</label><input type="text" id="prWord" placeholder="Ex: Pronunciation"></div>
           <div class="f-group"><label>Observações (opcional)</label><textarea id="prNotes" rows="2" placeholder="Dicas de pronúncia..."></textarea></div>
-          <button class="btn-send" onclick="sendPronunciation()">Enviar</button>
+          <button class="btn-send" onclick="sendPronunciation()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            Enviar
+          </button>
         </div>
         <div class="panel">
-          <div class="panel-head"><div class="panel-title">🎙️ Pronúncias Enviadas</div></div>
+          <div class="panel-head"><div class="panel-title"><span class="panel-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg></span>Pronúncias Enviadas</div></div>
           <div id="prList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhuma prática de pronúncia enviada.</p></div></div>
         </div>
       </div>
@@ -756,8 +1453,17 @@ body.sb-collapsed .main { margin-left: 92px !important; }
       
       <!-- ═══ MESSAGES ═══ -->
       <div class="section" id="sec-messages">
+        <div class="section-head">
+          <div class="section-head-icon pink">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div class="section-head-text">
+            <h2>Mensagens</h2>
+            <p class="section-sub">Comunicados e documentos enviados pela coordenação.</p>
+          </div>
+        </div>
         <div class="panel">
-          <div class="panel-head"><div class="panel-title">📩 Mensagens da Coordenação</div></div>
+          <div class="panel-head"><div class="panel-title"><span class="panel-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>Caixa de Entrada</div></div>
           <div id="msgList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhuma mensagem recebida.</p></div></div>
         </div>
       </div>
@@ -944,14 +1650,32 @@ async function sendHomework() {
 async function loadHomeworkList() {
   const tasks = await getTasksByTeacher(currentUser.id);
   const div = document.getElementById('hwList');
-  if (!tasks.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>Nenhum homework enviado ainda.</p></div>'; return; }
-  div.innerHTML = tasks.map(t => {
+  if (!tasks.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📝</div><p>Nenhum homework enviado ainda.</p></div>'; return; }
+  const hwIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/></svg>';
+  const calIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>';
+  div.innerHTML = '<div style="padding:12px 0 16px">' + tasks.map(t => {
     const subs = t.task_submissions || [];
     const pending = subs.filter(s => s.status === 'pending').length;
     const done = subs.filter(s => s.status !== 'pending').length;
-    const names = subs.map(s => s.student?.full_name || '').join(', ');
-    return '<div class="list-item"><div><div class="list-title">' + t.title + '</div><div class="list-sub">' + names + ' — ' + formatDate(t.due_date) + '</div></div><div style="display:flex;gap:6px"><span class="badge badge-done">' + done + ' feito(s)</span><span class="badge badge-pending">' + pending + ' pendente(s)</span></div></div>';
-  }).join('');
+    const names = subs.map(s => s.student?.full_name || '').filter(Boolean).join(', ') || 'Sem alunos vinculados';
+    const totalStudents = subs.length;
+    return '<div class="sent-card">' +
+      '<div class="sent-head">' +
+        '<div class="sent-icon">' + hwIcon + '</div>' +
+        '<div class="sent-body">' +
+          '<div class="sent-title">' + escapeHtml(t.title) + '</div>' +
+          '<div class="sent-meta">' +
+            '<span class="sent-meta-author">' + escapeHtml(names) + '</span>' +
+            (t.due_date ? '<span class="sent-meta-sep">•</span><span style="display:inline-flex;align-items:center;gap:4px">' + calIcon + 'Prazo: ' + formatDate(t.due_date) + '</span>' : '') +
+          '</div>' +
+          '<div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">' +
+            (done > 0 ? '<span class="sent-status done">✓ ' + done + ' de ' + totalStudents + ' feito(s)</span>' : '') +
+            (pending > 0 ? '<span class="sent-status pending">⏳ ' + pending + ' pendente(s)</span>' : '') +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('') + '</div>';
 }
 
 // ═══ SEND FEEDBACK ═══
@@ -982,8 +1706,25 @@ async function sendFeedback() {
 async function loadFeedbackList() {
   const fbs = await getFeedbacksByTeacher(currentUser.id);
   const div = document.getElementById('fbList');
-  if (!fbs.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>Nenhum feedback registrado.</p></div>'; return; }
-  div.innerHTML = fbs.map(f => '<div class="list-item"><div><div class="list-title">💬 ' + f.title + '</div><div class="list-sub">' + (f.student?.full_name||'') + ' — ' + formatDateTime(f.created_at) + '</div></div></div>').join('');
+  if (!fbs.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">💬</div><p>Nenhum feedback registrado.</p></div>'; return; }
+  const fbIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>';
+  div.innerHTML = '<div style="padding:12px 0 16px">' + fbs.map(f => {
+    const studentName = f.student?.full_name || 'Aluno';
+    return '<div class="sent-card">' +
+      '<div class="sent-head">' +
+        '<div class="sent-icon">' + fbIcon + '</div>' +
+        '<div class="sent-body">' +
+          '<div class="sent-title">' + f.title + '</div>' +
+          '<div class="sent-meta">' +
+            '<span class="sent-meta-author">Para: ' + studentName + '</span>' +
+            '<span class="sent-meta-sep">•</span>' +
+            '<span>' + formatDateTime(f.created_at) + '</span>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      (f.content ? '<div class="sent-content">' + escapeHtml(f.content) + '</div>' : '') +
+    '</div>';
+  }).join('') + '</div>';
 }
 
 // ═══ HELP REQUESTS (Perguntas dos Alunos) ═══
@@ -998,24 +1739,39 @@ async function loadHelpRequests() {
   const div = document.getElementById('helpList');
   if (!items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">💬</div><p>Nenhuma pergunta recebida ainda.</p></div>'; return; }
 
-  div.innerHTML = items.map(h => {
+  div.innerHTML = '<div style="padding:12px 0 16px">' + items.map(h => {
     const isAnswered = h.status === 'answered';
-    const subj = h.subject ? '<div style="font-size:11px;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">📌 ' + escHtml(h.subject) + '</div>' : '';
-    const studentLine = '<div style="font-size:12px;color:var(--g500);margin-bottom:8px">' + escHtml(h.student?.full_name || 'Aluno') + ' — ' + formatDateTime(h.created_at) + '</div>';
-    const messageBox = '<div style="background:var(--g50);padding:12px 14px;border-radius:10px;font-size:13px;color:var(--g700);line-height:1.6;margin-bottom:10px">' + escHtml(h.message) + '</div>';
+    const studentName = h.student?.full_name || 'Aluno';
+    const initial = studentName.charAt(0).toUpperCase();
+    const subjectTag = h.subject ? '<span class="sent-status pending" style="margin-left:8px">📌 ' + escHtml(h.subject) + '</span>' : '';
+    const statusBadge = isAnswered
+      ? '<span class="sent-status done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Respondida</span>'
+      : '<span class="sent-status pending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Aguardando</span>';
     const answerSection = isAnswered
-      ? '<div style="background:var(--blue-soft);padding:10px 14px;border-radius:10px;font-size:13px;color:var(--blue);line-height:1.6"><strong>✅ Sua resposta:</strong><br>' + escHtml(h.answer || '') + (h.answered_at ? '<div style="font-size:11px;color:var(--g500);margin-top:6px">Respondida em ' + formatDateTime(h.answered_at) + '</div>' : '') + '</div>'
-      : '<div style="display:flex;gap:8px;align-items:flex-end"><textarea id="helpAns-' + h.id + '" rows="3" placeholder="Sua resposta..." style="flex:1;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;color:var(--navy);outline:none;resize:vertical"></textarea><button onclick="submitHelpAnswer(' + h.id + ')" style="padding:11px 18px;border:none;border-radius:10px;background:var(--orange);color:#fff;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap">Responder</button></div>';
-    const badge = isAnswered
-      ? '<span class="badge badge-done">✅ Respondida</span>'
-      : '<span class="badge" style="background:#fef3c7;color:#92400e">⏳ Aguardando</span>';
+      ? '<div class="help-answer">' + escHtml(h.answer || '') + (h.answered_at ? '<div style="font-size:11px;color:var(--g500);margin-top:6px;font-style:italic">Respondida em ' + formatDateTime(h.answered_at) + '</div>' : '') + '</div>'
+      : '<div class="help-reply-area">' +
+          '<textarea id="helpAns-' + h.id + '" rows="3" placeholder="Sua resposta..."></textarea>' +
+          '<button onclick="submitHelpAnswer(' + h.id + ')" class="help-reply-btn">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>' +
+            'Responder' +
+          '</button>' +
+        '</div>';
 
-    return '<div style="padding:18px 20px;border-bottom:1px solid var(--g100)' + (isAnswered ? '' : ';border-left:4px solid var(--orange)') + '">' +
-      '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px"><div style="flex:1">' + subj + studentLine + '</div>' + badge + '</div>' +
-      messageBox +
+    return '<div class="help-card' + (isAnswered ? ' answered' : '') + '">' +
+      '<div class="help-head">' +
+        '<div class="help-avatar">' + escHtml(initial) + '</div>' +
+        '<div class="help-head-text">' +
+          '<div class="help-student-name">' + escHtml(studentName) + subjectTag + '</div>' +
+          '<div class="help-meta">' +
+            '<span>' + formatDateTime(h.created_at) + '</span>' +
+            statusBadge +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="help-question">' + escHtml(h.message) + '</div>' +
       answerSection +
     '</div>';
-  }).join('');
+  }).join('') + '</div>';
 }
 
 async function submitHelpAnswer(requestId) {
@@ -1129,8 +1885,26 @@ async function loadAnnouncementList() {
   const anns = await getAnnouncements();
   const div = document.getElementById('annList');
   const mine = anns.filter(a => a.author_id === currentUser.id);
-  if (!mine.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>Nenhum aviso publicado.</p></div>'; return; }
-  div.innerHTML = mine.map(a => '<div class="list-item"><div><div class="list-title">📢 ' + a.title + '</div><div class="list-sub">' + a.content.substring(0,80) + '... — ' + formatDateTime(a.created_at) + '</div></div></div>').join('');
+  if (!mine.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📢</div><p>Nenhum aviso publicado.</p></div>'; return; }
+  const annIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>';
+  div.innerHTML = '<div style="padding:12px 0 16px">' + mine.map(a => {
+    const fullContent = a.content || '';
+    const preview = fullContent.length > 140 ? fullContent.substring(0, 140) + '…' : fullContent;
+    return '<div class="sent-card ann">' +
+      '<div class="sent-head">' +
+        '<div class="sent-icon">' + annIcon + '</div>' +
+        '<div class="sent-body">' +
+          '<div class="sent-title">' + a.title + '</div>' +
+          '<div class="sent-meta">' +
+            '<span class="sent-meta-author">Publicado</span>' +
+            '<span class="sent-meta-sep">•</span>' +
+            '<span>' + formatDateTime(a.created_at) + '</span>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="sent-content">' + escapeHtml(preview) + '</div>' +
+    '</div>';
+  }).join('') + '</div>';
 }
 
 // ═══ SEND WRITING ═══
@@ -1156,38 +1930,60 @@ async function sendWriting() {
 async function loadWritingList() {
   const items = await getWritingByTeacher(currentUser.id);
   const div = document.getElementById('wrList');
-  if (!items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>Nenhuma atividade de redação.</p></div>'; return; }
+  if (!items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">✍️</div><p>Nenhuma atividade de redação.</p></div>'; return; }
 
-  div.innerHTML = items.map(w => {
+  div.innerHTML = '<div style="padding:12px 0 16px">' + items.map(w => {
     let cardHtml = '';
 
     if (w.status === 'pending') {
       // Student hasn't submitted yet
-      cardHtml = '<div style="padding:20px 24px;border-bottom:1px solid var(--g100)">' +
-        '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div><div class="list-title">✍️ ' + w.title + '</div><div class="list-sub">' + (w.student?.full_name||'') + ' — Prazo: ' + formatDate(w.due_date) + '</div></div><span class="badge badge-pending">⏳ Aguardando aluno</span></div>' +
-        '<div style="background:var(--g50);padding:12px;border-radius:8px;font-size:13px;color:var(--g700);font-style:italic;margin-top:8px"><strong>Tema:</strong> ' + w.prompt + '</div></div>';
+      const studentName = w.student?.full_name || 'Aluno';
+      cardHtml = '<div class="prof-wr-card">' +
+        '<div class="prof-wr-header">' +
+          '<div class="prof-wr-header-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg></div>' +
+          '<div class="prof-wr-header-info">' +
+            '<h4>' + escapeHtml(w.title) + '</h4>' +
+            '<div class="prof-wr-header-meta">' + escapeHtml(studentName) + ' · Prazo: ' + formatDate(w.due_date) + '</div>' +
+          '</div>' +
+          '<span class="sent-status pending">⏳ Aguardando aluno</span>' +
+        '</div>' +
+        '<div style="padding:18px 22px">' +
+          '<div style="background:var(--g50);padding:14px 16px;border-radius:10px;font-size:13.5px;color:var(--g700);font-style:italic;line-height:1.6"><strong style="font-style:normal">Tema:</strong> ' + escapeHtml(w.prompt) + '</div>' +
+        '</div>' +
+      '</div>';
 
     } else if (w.status === 'submitted') {
       // Student submitted — professor needs to grade with inline comments
       const responseText = (w.response||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-      cardHtml = '<div style="padding:20px 24px;border-bottom:1px solid var(--g100);border-left:4px solid var(--orange)" data-wr-id="' + w.id + '">' +
-        '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px"><div><div class="list-title">✍️ ' + w.title + '</div><div class="list-sub">' + (w.student?.full_name||'') + ' — Enviada em ' + formatDateTime(w.submitted_at) + '</div></div><span class="badge badge-done">📩 Corrigir agora</span></div>' +
-        '<div style="background:var(--g50);padding:12px;border-radius:8px;font-size:13px;color:var(--g700);font-style:italic;margin-bottom:10px"><strong>Tema:</strong> ' + w.prompt + '</div>' +
-
-        '<div class="wr-cat-legend">' +
-          '<span><i class="cat-swatch" style="background:#fecaca"></i>Gramática</span>' +
-          '<span><i class="cat-swatch" style="background:#bfdbfe"></i>Vocabulário</span>' +
-          '<span><i class="cat-swatch" style="background:#ddd6fe"></i>Estrutura</span>' +
-          '<span><i class="cat-swatch" style="background:#bbf7d0"></i>Elogio</span>' +
+      const studentName = w.student?.full_name || 'Aluno';
+      cardHtml = '<div class="prof-wr-card" data-wr-id="' + w.id + '">' +
+        '<div class="prof-wr-header">' +
+          '<div class="prof-wr-header-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg></div>' +
+          '<div class="prof-wr-header-info">' +
+            '<h4>' + escapeHtml(w.title) + '</h4>' +
+            '<div class="prof-wr-header-meta">' + escapeHtml(studentName) + ' · Enviada em ' + formatDateTime(w.submitted_at) + '</div>' +
+          '</div>' +
+          '<span class="sent-status submitted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Corrigir agora</span>' +
         '</div>' +
+        '<div style="padding:18px 22px">' +
+          '<div style="background:var(--g50);padding:14px 16px;border-radius:10px;font-size:13.5px;color:var(--g700);font-style:italic;line-height:1.6;margin-bottom:16px"><strong style="font-style:normal">Tema:</strong> ' + escapeHtml(w.prompt) + '</div>' +
 
-        '<div class="wr-essay-box" data-mode="select" data-wr-essay="' + w.id + '">' + responseText + '</div>' +
+          '<div class="wr-cat-legend">' +
+            '<span><i class="cat-swatch" style="background:#fecaca"></i>Gramática</span>' +
+            '<span><i class="cat-swatch" style="background:#bfdbfe"></i>Vocabulário</span>' +
+            '<span><i class="cat-swatch" style="background:#ddd6fe"></i>Estrutura</span>' +
+            '<span><i class="cat-swatch" style="background:#bbf7d0"></i>Elogio</span>' +
+          '</div>' +
 
-        '<div class="wr-comments-list" data-wr-comments="' + w.id + '"></div>' +
+          '<div class="wr-essay-box" data-mode="select" data-wr-essay="' + w.id + '">' + responseText + '</div>' +
 
-        '<div style="display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end;margin-top:14px"><div><label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px">Feedback geral (resumo)</label><textarea id="wrFb-' + w.id + '" rows="3" placeholder="Comentário geral sobre a redação (parabéns, pontos a melhorar, próximos passos...)" style="width:100%;padding:11px 14px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;color:var(--navy);outline:none;resize:vertical"></textarea></div><div><label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px">Nota</label><select id="wrGr-' + w.id + '" style="padding:11px 14px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;color:var(--navy)"><option value="A+">A+</option><option value="A">A</option><option value="A-">A-</option><option value="B+">B+</option><option value="B">B</option><option value="B-">B-</option><option value="C+">C+</option><option value="C">C</option><option value="D">D</option></select></div></div>' +
+          '<div class="wr-comments-list" data-wr-comments="' + w.id + '"></div>' +
 
-        '<button onclick="gradeWritingActivity(' + w.id + ')" style="margin-top:12px;padding:12px 24px;border:none;border-radius:10px;background:var(--orange);color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s">✅ Enviar Correção</button></div>';
+          '<div style="display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end;margin-top:14px"><div><label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px">Feedback geral (resumo)</label><textarea id="wrFb-' + w.id + '" rows="3" placeholder="Comentário geral sobre a redação (parabéns, pontos a melhorar, próximos passos...)" style="width:100%;padding:11px 14px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;color:var(--navy);outline:none;resize:vertical"></textarea></div><div><label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px">Nota</label><select id="wrGr-' + w.id + '" style="padding:11px 14px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;color:var(--navy)"><option value="A+">A+</option><option value="A">A</option><option value="A-">A-</option><option value="B+">B+</option><option value="B">B</option><option value="B-">B-</option><option value="C+">C+</option><option value="C">C</option><option value="D">D</option></select></div></div>' +
+
+          '<button onclick="gradeWritingActivity(' + w.id + ')" style="margin-top:14px;padding:12px 24px;border:none;border-radius:12px;background:linear-gradient(135deg,var(--orange),var(--mango));color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 6px 16px rgba(243,107,46,0.25);transition:all 0.25s;display:inline-flex;align-items:center;gap:8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Enviar Correção</button>' +
+        '</div>' +
+      '</div>';
 
     } else if (w.status === 'graded') {
       // Already graded — render highlighted text + comments
@@ -1198,18 +1994,29 @@ async function loadWritingList() {
       const commentsHtml = inline.length
         ? inline.map((c, i) => '<div class="wr-comment-item cat-' + (c.category||'grammar') + '"><div class="wr-comment-num">' + (i+1) + '</div><div class="wr-comment-body"><div class="wr-comment-quote">"' + escapeHtml(c.text||'') + '"</div><div class="wr-comment-text">' + escapeHtml(c.comment||'') + '</div></div></div>').join('')
         : '';
+      const studentName = w.student?.full_name || 'Aluno';
 
-      cardHtml = '<div style="padding:20px 24px;border-bottom:1px solid var(--g100)">' +
-        '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div><div class="list-title">✍️ ' + w.title + '</div><div class="list-sub">' + (w.student?.full_name||'') + ' — Corrigida em ' + formatDateTime(w.reviewed_at) + '</div></div><span class="badge badge-graded">✅ Nota: ' + (w.grade||'') + '</span></div>' +
-        '<div style="background:var(--g50);padding:10px;border-radius:8px;font-size:12px;color:var(--g500);margin-bottom:8px"><strong>Tema:</strong> ' + w.prompt + '</div>' +
-        (inline.length ? '<div class="wr-cat-legend"><span><i class="cat-swatch" style="background:#fecaca"></i>Gramática</span><span><i class="cat-swatch" style="background:#bfdbfe"></i>Vocabulário</span><span><i class="cat-swatch" style="background:#ddd6fe"></i>Estrutura</span><span><i class="cat-swatch" style="background:#bbf7d0"></i>Elogio</span></div>' : '') +
-        '<div class="wr-essay-box">' + highlightedHtml + '</div>' +
-        (commentsHtml ? '<div class="wr-comments-list">' + commentsHtml + '</div>' : '') +
-        '<div style="background:var(--blue-soft);padding:10px;border-radius:8px;font-size:13px;color:var(--blue);margin-top:12px"><strong>Feedback geral:</strong><br>' + escapeHtml(parsed.general||'') + '</div></div>';
+      cardHtml = '<div class="prof-wr-card">' +
+        '<div class="prof-wr-header">' +
+          '<div class="prof-wr-header-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>' +
+          '<div class="prof-wr-header-info">' +
+            '<h4>' + escapeHtml(w.title) + '</h4>' +
+            '<div class="prof-wr-header-meta">' + escapeHtml(studentName) + ' · Corrigida em ' + formatDateTime(w.reviewed_at) + '</div>' +
+          '</div>' +
+          '<span class="sent-status graded"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Nota: ' + (w.grade||'') + '</span>' +
+        '</div>' +
+        '<div style="padding:18px 22px">' +
+          '<div style="background:var(--g50);padding:14px 16px;border-radius:10px;font-size:13.5px;color:var(--g700);font-style:italic;line-height:1.6;margin-bottom:14px"><strong style="font-style:normal">Tema:</strong> ' + escapeHtml(w.prompt) + '</div>' +
+          (inline.length ? '<div class="wr-cat-legend"><span><i class="cat-swatch" style="background:#fecaca"></i>Gramática</span><span><i class="cat-swatch" style="background:#bfdbfe"></i>Vocabulário</span><span><i class="cat-swatch" style="background:#ddd6fe"></i>Estrutura</span><span><i class="cat-swatch" style="background:#bbf7d0"></i>Elogio</span></div>' : '') +
+          '<div class="wr-essay-box">' + highlightedHtml + '</div>' +
+          (commentsHtml ? '<div class="wr-comments-list">' + commentsHtml + '</div>' : '') +
+          '<div style="background:linear-gradient(135deg,var(--blue-soft),#fff);border:1px solid rgba(37,60,150,0.12);padding:14px 18px;border-radius:12px;font-size:13.5px;color:var(--g700);margin-top:14px;line-height:1.65"><strong style="display:block;font-size:11px;font-weight:800;color:var(--blue);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:6px">Feedback geral</strong>' + escapeHtml(parsed.general||'') + '</div>' +
+        '</div>' +
+      '</div>';
     }
 
     return cardHtml;
-  }).join('');
+  }).join('') + '</div>';
 
   // Wire up selection-based commenting for all submitted essays
   document.querySelectorAll('.wr-essay-box[data-mode="select"]').forEach(box => attachEssaySelection(box));
@@ -1383,8 +2190,26 @@ async function sendPronunciation() {
 async function loadPronunciationList() {
   const items = await getPronunciationByTeacher(currentUser.id);
   const div = document.getElementById('prList');
-  if (!items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>Nenhuma prática enviada.</p></div>'; return; }
-  div.innerHTML = items.map(p => '<div class="list-item"><div><div class="list-title">🎙️ ' + p.word + (p.phonetic ? ' <span style="color:var(--g400);font-weight:400">' + p.phonetic + '</span>' : '') + '</div><div class="list-sub">' + (p.student?.full_name||'') + ' — ' + (p.practiced ? '✅ Praticado' : '⏳ Pendente') + '</div></div><span class="badge ' + (p.practiced ? 'badge-done' : 'badge-pending') + '">' + (p.practiced ? 'Praticado' : 'Pendente') + '</span></div>').join('');
+  if (!items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">🎙️</div><p>Nenhuma prática enviada.</p></div>'; return; }
+  div.innerHTML = '<div style="padding:12px 0 16px">' + items.map(p => {
+    const studentName = p.student?.full_name || 'Aluno';
+    const statusClass = p.practiced ? 'done' : 'pending';
+    const statusLabel = p.practiced ? 'Praticado' : 'Pendente';
+    const statusIcon = p.practiced
+      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
+    return '<div class="prof-pron-card">' +
+      '<div class="prof-pron-body">' +
+        '<div class="prof-pron-word">' + escapeHtml(p.word || '') + '</div>' +
+        (p.phonetic ? '<div class="prof-pron-phonetic">' + escapeHtml(p.phonetic) + '</div>' : '') +
+        '<div class="prof-pron-meta">' +
+          '<span>Para: <strong style="color:var(--g700)">' + escapeHtml(studentName) + '</strong></span>' +
+          '<span class="sent-meta-sep">•</span>' +
+          '<span class="sent-status ' + statusClass + '">' + statusIcon + statusLabel + '</span>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('') + '</div>';
 }
 
 // ═══ LOAD MESSAGES ═══
@@ -1392,14 +2217,31 @@ async function loadMessages() {
   const msgs = await getCoordMessagesForTeacher(currentUser.id);
   const div = document.getElementById('msgList');
   if (!msgs.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>Nenhuma mensagem da coordenação.</p></div>'; return; }
-  div.innerHTML = msgs.map(m => {
+  const msgIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>';
+  div.innerHTML = '<div style="padding:12px 0 16px">' + msgs.map(m => {
     const isNew = !m.read;
-    const style = isNew ? 'background:var(--mango-soft);border-left:4px solid var(--mango)' : '';
-    const readBtn = isNew 
-      ? '<button onclick="markMsgRead(' + m.id + ',this)" style="padding:6px 14px;border-radius:8px;border:none;background:var(--mango);color:#fff;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;transition:all 0.2s">Marcar como lida</button>'
-      : '<span class="badge badge-time">✓ Lida</span>';
-    return '<div class="list-item" style="' + style + '"><div style="flex:1"><div class="list-title">📩 ' + m.title + '</div><div class="list-sub" style="margin-top:6px;line-height:1.6">' + m.content + '</div><div class="list-sub" style="margin-top:6px;font-style:italic">' + (m.author?.full_name||'Coordenação') + ' — ' + formatDateTime(m.created_at) + '</div></div>' + readBtn + '</div>';
-  }).join('');
+    const authorName = m.author?.full_name || 'Coordenação';
+    const readBtn = isNew
+      ? '<button onclick="markMsgRead(' + m.id + ',this)" class="help-reply-btn" style="margin-top:10px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Marcar como lida</button>'
+      : '<span class="sent-status done" style="margin-top:8px;display:inline-flex"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Lida</span>';
+    const newBadge = isNew ? '<span class="sent-status pending" style="margin-left:auto;display:inline-flex">Nova</span>' : '';
+    return '<div class="msg-card">' +
+      '<div class="sent-head" style="margin-bottom:0">' +
+        '<div class="sent-icon" style="background:var(--blue-soft);color:var(--blue)">' + msgIcon + '</div>' +
+        '<div class="sent-body">' +
+          '<div class="sent-title">' + m.title + '</div>' +
+          '<div class="sent-meta">' +
+            '<span class="sent-meta-author">' + escapeHtml(authorName) + '</span>' +
+            '<span class="sent-meta-sep">•</span>' +
+            '<span>' + formatDateTime(m.created_at) + '</span>' +
+            newBadge +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="sent-content" style="margin-top:10px">' + escapeHtml(m.content || '') + '</div>' +
+      '<div style="padding-left:50px">' + readBtn + '</div>' +
+    '</div>';
+  }).join('') + '</div>';
 }
 
 async function markMsgRead(msgId, btn) {
@@ -1652,18 +2494,21 @@ async function loadStudentsList() {
   document.getElementById('myStudentCount').textContent = students.length + ' aluno(s)';
   
   if (!students.length) {
-    div.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">👥</div><p>Nenhum aluno vinculado a você. A coordenação precisa criar as matrículas.</p></div>';
+    div.innerHTML = '<div class="empty-state" style="grid-column:1/-1;margin:0"><div class="empty-icon">👥</div><p>Nenhum aluno vinculado a você. A coordenação precisa criar as matrículas.</p></div>';
     return;
   }
   
   div.innerHTML = students.map(s => {
-    const initial = (s.full_name||'?')[0];
-    const courseTxt = (s.course_name||s.level||'') + (s.cefr ? ' • ' + s.cefr : '');
-    return '<div style="padding:16px;border-radius:12px;border:1px solid var(--g100);display:flex;align-items:center;gap:14px;transition:all 0.2s;cursor:default" onmouseover="this.style.borderColor=this.style.borderColor===\'var(--orange)\'?\'\':\'var(--orange)\';this.style.background=\'var(--cream)\'" onmouseout="this.style.borderColor=\'var(--g100)\';this.style.background=\'\'">' +
-      '<div style="width:42px;height:42px;min-width:42px;border-radius:50%;background:linear-gradient(135deg,var(--orange),var(--mango));display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:800">' + initial + '</div>' +
-      '<div><div style="font-size:14px;font-weight:700;color:var(--navy)">' + s.full_name + '</div>' +
-      '<div style="font-size:12px;font-weight:600;color:var(--orange)">' + courseTxt + '</div>' +
-      '<div style="font-size:11px;color:var(--g500);margin-top:2px">' + s.email + '</div></div></div>';
+    const initial = (s.full_name || '?').charAt(0).toUpperCase();
+    const courseTxt = (s.course_name || s.level || '') + (s.cefr ? ' • ' + s.cefr : '');
+    return '<div class="student-card">' +
+      '<div class="student-avatar">' + escapeHtml(initial) + '</div>' +
+      '<div class="student-info">' +
+        '<div class="student-name">' + escapeHtml(s.full_name) + '</div>' +
+        (courseTxt ? '<div class="student-level">' + escapeHtml(courseTxt) + '</div>' : '') +
+        (s.email ? '<div style="font-size:11px;color:var(--g500);margin-top:4px">' + escapeHtml(s.email) + '</div>' : '') +
+      '</div>' +
+    '</div>';
   }).join('');
 }
 

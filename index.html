@@ -1321,6 +1321,21 @@
     overflow: hidden;
     background: var(--ocean-light);
   }
+  .teacher-photo-wrap::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 55%;
+    height: 90px;
+    background: linear-gradient(225deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.18) 45%, rgba(0,0,0,0) 100%);
+    pointer-events: none;
+    z-index: 2;
+    transition: opacity 0.5s ease;
+  }
+  .teacher-card:hover .teacher-photo-wrap::after {
+    opacity: 0.85;
+  }
   .teacher-photo-bg {
     position: absolute;
     inset: 0;
@@ -1352,7 +1367,7 @@
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    z-index: 2;
+    z-index: 3;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   }
 
@@ -2275,7 +2290,7 @@
         </div>
         <div class="faq-a">
           <div class="faq-a-inner">
-            <p>As aulas acontecem ao vivo pelo Google Meet, em horários pré-agendados. Você precisa apenas de um computador ou celular com conexão à internet e o aplicativo instalado. O material didático é compartilhado digitalmente.</p>
+            <p>As aulas acontecem ao vivo pelo Google Meet, em horários pré-agendados. Você precisa apenas de um computador ou celular com conexão à internet e o aplicativo instalado. O material didático segue o currículo Cambridge.</p>
           </div>
         </div>
       </div>

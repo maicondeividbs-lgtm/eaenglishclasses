@@ -6,6 +6,8 @@
 <title>Biblioteca — EA English Classes</title>
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="stylesheet" href="style.css">
+<!-- html2canvas para gerar PNG dos cards de gramática (~150KB) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
 <style>
 /* ════════════════════════════════════════════════════════
    📚 BIBLIOTECA PEDAGÓGICA — Timeline Design (v7.3)
@@ -1020,6 +1022,62 @@
   transition: all 0.2s;
 }
 .modal-close:hover { background: rgba(255,255,255,0.35); transform: rotate(90deg); }
+
+/* Container de ações no header do modal */
+.modal-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* Botão de baixar PNG */
+.modal-download {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 18px;
+  border: 1.5px solid rgba(255,255,255,0.35);
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.modal-download:hover:not(:disabled) {
+  background: rgba(255,255,255,0.28);
+  border-color: rgba(255,255,255,0.55);
+  transform: translateY(-1px);
+}
+.modal-download:active:not(:disabled) { transform: translateY(0); }
+.modal-download:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+.modal-download.is-success {
+  background: rgba(52, 211, 153, 0.35);
+  border-color: rgba(110, 231, 183, 0.7);
+}
+.modal-download svg {
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+.modal-download.is-loading svg {
+  animation: dlSpin 0.9s linear infinite;
+}
+@keyframes dlSpin {
+  to { transform: rotate(360deg); }
+}
+@media (max-width: 540px) {
+  .modal-download-label { display: none; }
+  .modal-download { padding: 0; width: 36px; justify-content: center; gap: 0; }
+}
 .modal-meta {
   padding: 14px 26px;
   font-size: 12px; color: var(--g500);
@@ -1122,7 +1180,13 @@
   <div class="modal-box" onclick="event.stopPropagation()">
     <div class="modal-head" id="gramHead">
       <h3 id="gramTitle">Grammar</h3>
-      <button class="modal-close" id="gramCloseBtn" type="button" aria-label="Fechar">✕</button>
+      <div class="modal-actions">
+        <button class="modal-download" id="gramDownloadBtn" type="button" aria-label="Baixar como imagem" title="Baixar como imagem">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span class="modal-download-label">Baixar</span>
+        </button>
+        <button class="modal-close" id="gramCloseBtn" type="button" aria-label="Fechar">✕</button>
+      </div>
     </div>
     <div class="modal-meta" id="gramMeta"></div>
     <div class="modal-body" id="gramBody"></div>
@@ -1653,6 +1717,8 @@ function emptyState(icon, msg) {
 function openGram(idx) {
   const ex = window._filteredExamples[idx];
   if (!ex) return;
+  window._currentGramEx = ex;
+  window._currentGramLevel = currentLevel;
   const topic = (ex.topic || '').replace(/<[^>]+>/g, '');
   document.getElementById('gramTitle').textContent = topic;
   // Texto da meta: prefere ref ("Intro - pg. 3"), senão monta a partir do badge
@@ -1681,7 +1747,115 @@ function openGram(idx) {
   head.style.background = 'linear-gradient(135deg, ' + c2 + ' 0%, ' + c1 + ' 100%)';
   // Setar cor de destaque para subheads e bullets dentro do modal
   document.getElementById('gramBody').style.setProperty('--lvl-color-modal', c2);
+  // Resetar estado do botão de download
+  const dlBtn = document.getElementById('gramDownloadBtn');
+  if (dlBtn) {
+    dlBtn.disabled = false;
+    dlBtn.classList.remove('is-loading', 'is-success');
+    const lbl = dlBtn.querySelector('.modal-download-label');
+    if (lbl) lbl.textContent = 'Baixar';
+  }
   document.getElementById('gramModal').classList.add('open');
+}
+
+// Slugify para nome de arquivo: remove acentos/símbolos
+function slugify(s) {
+  return (s || 'card')
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 60);
+}
+
+// Baixa o card de gramática atual como imagem PNG
+async function downloadGramAsPNG() {
+  if (typeof html2canvas === 'undefined') {
+    showToast('Aguarde, carregando biblioteca...');
+    return;
+  }
+  const ex = window._currentGramEx;
+  if (!ex) return;
+
+  const dlBtn = document.getElementById('gramDownloadBtn');
+  const lbl = dlBtn.querySelector('.modal-download-label');
+  // Feedback: estado "gerando"
+  dlBtn.disabled = true;
+  dlBtn.classList.add('is-loading');
+  dlBtn.classList.remove('is-success');
+  if (lbl) lbl.textContent = 'Gerando…';
+
+  // Elemento a capturar: o modal-box inteiro
+  const modalBox = document.querySelector('#gramModal .modal-box');
+  const modalBody = document.getElementById('gramBody');
+
+  // Salvar estados a restaurar depois
+  const closeBtn = document.getElementById('gramCloseBtn');
+  const prevBodyMaxH = modalBody.style.maxHeight;
+  const prevBodyOverflow = modalBody.style.overflowY;
+  const prevBoxMaxH = modalBox.style.maxHeight;
+  const prevBoxHeight = modalBox.style.height;
+  const dlPrevDisplay = dlBtn.style.display;
+  const closePrevDisplay = closeBtn.style.display;
+
+  // Para a captura: esconder botões e expandir o corpo
+  dlBtn.style.display = 'none';
+  closeBtn.style.display = 'none';
+  modalBody.style.maxHeight = 'none';
+  modalBody.style.overflowY = 'visible';
+  modalBox.style.maxHeight = 'none';
+  modalBox.style.height = 'auto';
+
+  try {
+    // Pequena pausa para o layout reagir
+    await new Promise(r => setTimeout(r, 60));
+
+    const canvas = await html2canvas(modalBox, {
+      backgroundColor: '#ffffff',
+      scale: 2,            // 2x para alta resolução
+      useCORS: true,
+      logging: false,
+      windowWidth: modalBox.scrollWidth,
+      windowHeight: modalBox.scrollHeight
+    });
+
+    // Gerar nome de arquivo
+    const topic = (ex.topic || 'card').replace(/<[^>]+>/g, '');
+    const levelTag = window._currentGramLevel || '';
+    const filename = 'gramatica-' + slugify(topic) + (levelTag ? '-' + slugify(levelTag) : '') + '.png';
+
+    // Baixar
+    const link = document.createElement('a');
+    link.download = filename;
+    link.href = canvas.toDataURL('image/png');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // Feedback: sucesso
+    dlBtn.classList.remove('is-loading');
+    dlBtn.classList.add('is-success');
+    if (lbl) lbl.textContent = 'Baixado ✓';
+    setTimeout(() => {
+      dlBtn.classList.remove('is-success');
+      dlBtn.disabled = false;
+      if (lbl) lbl.textContent = 'Baixar';
+    }, 2200);
+  } catch (err) {
+    console.error('Erro ao gerar PNG:', err);
+    dlBtn.classList.remove('is-loading');
+    if (lbl) lbl.textContent = 'Erro — tentar de novo';
+    dlBtn.disabled = false;
+    showToast('Não foi possível gerar a imagem.');
+  } finally {
+    // Restaurar estados
+    dlBtn.style.display = dlPrevDisplay;
+    closeBtn.style.display = closePrevDisplay;
+    modalBody.style.maxHeight = prevBodyMaxH;
+    modalBody.style.overflowY = prevBodyOverflow;
+    modalBox.style.maxHeight = prevBoxMaxH;
+    modalBox.style.height = prevBoxHeight;
+  }
 }
 
 function showToast(msg) {
@@ -1727,6 +1901,11 @@ document.addEventListener('click', (e) => {
   // Gram card
   const gramCard = e.target.closest('[data-gram-idx]');
   if (gramCard) { openGram(parseInt(gramCard.dataset.gramIdx)); return; }
+  // Modal download (gerar PNG)
+  if (e.target.closest('#gramDownloadBtn')) {
+    downloadGramAsPNG();
+    return;
+  }
   // Modal close
   if (e.target.closest('#gramCloseBtn')) {
     document.getElementById('gramModal').classList.remove('open');

@@ -1068,7 +1068,7 @@
   /* Animated stats row */
   .coord-stats {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 18px;
     padding: 20px 24px;
     background: #fff;
@@ -1397,47 +1397,53 @@
     font-size: 13.5px;
     line-height: 1.65;
     color: var(--g500);
-    margin-bottom: 18px;
+    margin-bottom: 10px;
     flex: 1;
+  }
+  /* Sistema "Leia mais" para bios longas */
+  .teacher-bio-wrap {
+    flex: 1;
+    margin-bottom: 18px;
+    display: flex;
+    flex-direction: column;
+  }
+  .teacher-bio-text {
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: var(--g500);
+    margin: 0 0 8px;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    transition: max-height 0.3s ease;
+    transition: all 0.3s ease;
   }
-  .teacher-card.bio-expanded .teacher-bio {
+  .teacher-bio-wrap.is-expanded .teacher-bio-text {
     -webkit-line-clamp: unset;
-    display: block;
     overflow: visible;
+    display: block;
   }
-  .teacher-readmore {
+  .teacher-bio-toggle {
     background: none;
     border: none;
-    color: var(--orange);
-    font-family: inherit;
-    font-size: 12.5px;
-    font-weight: 700;
+    padding: 4px 0 0;
     cursor: pointer;
-    padding: 0 0 14px;
-    margin-top: -8px;
-    text-align: left;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--orange);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
     align-self: flex-start;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    transition: color 0.2s;
+    transition: color 0.2s ease;
+    font-family: inherit;
   }
-  .teacher-readmore:hover {
+  .teacher-bio-toggle:hover {
     color: var(--mango);
   }
-  .teacher-readmore::after {
-    content: '↓';
-    display: inline-block;
-    transition: transform 0.2s;
-    font-size: 14px;
-  }
-  .teacher-card.bio-expanded .teacher-readmore::after {
-    transform: rotate(180deg);
+  .teacher-bio-toggle:focus-visible {
+    outline: 2px solid var(--orange);
+    outline-offset: 2px;
+    border-radius: 4px;
   }
   .teacher-skills {
     display: flex;
@@ -2208,7 +2214,7 @@
       <div class="coord-content">
         <div class="section-label">Coordenação Pedagógica</div>
         <h2 class="coord-title">Ensino que <em>transforma</em></h2>
-        <p class="coord-lead">Sou formado em Letras e, ao longo da minha trajetória, venho me dedicando intensamente ao ensino de idiomas. Possuo algumas certificações internacionais e tive a oportunidade de atuar em renomadas escolas como <strong>Lexical, Wise Up e Centro Britânico</strong>. A paixão por ensinar sempre foi uma constante na minha vida, e acredito que a educação pode ser transformadora quando feita com propósito e personalização. Em <strong>2016, fundei a EA English Classes</strong> com o objetivo de oferecer um ensino de inglês mais individualizado e focado nas necessidades reais de cada aluno, algo que ainda é pouco comum nas escolas tradicionais de idiomas. A proposta sempre foi criar uma experiência de aprendizado mais humana, prática e adaptada ao cotidiano dos estudantes. Além da sala de aula, também compartilho outro lado da minha paixão: a música. Tenho um canal no YouTube chamado <strong>Vinil Beer</strong>, onde exploro curiosidades do universo musical, conectando conhecimento e entretenimento de uma forma leve e acessível. Acredito que ensinar vai muito além de transmitir conteúdo, é também sobre inspirar, conectar e transformar.</p>
+        <p class="coord-lead">A EA English Classes é liderada por <strong>Ed</strong>, coordenador pedagógico com mais de uma década de experiência no ensino de inglês. Nosso método integra conversação, gramática e as quatro habilidades linguísticas, com acompanhamento individualizado para cada aluno.</p>
 
         <div class="coord-stats">
           <div class="coord-stat">
@@ -2433,7 +2439,10 @@
         <div class="teacher-content">
           <h3 class="teacher-name">Ed</h3>
           <p class="teacher-role">Coordenador Pedagógico &amp; Professor</p>
-          <p class="teacher-bio">Mais de uma década dedicada ao ensino de inglês. Lidera a coordenação pedagógica da EA e atua diretamente em sala, garantindo a consistência do método em todas as turmas.</p>
+          <div class="teacher-bio-wrap">
+            <p class="teacher-bio-text">Sou formado em Letras e, ao longo da minha trajetória, venho me dedicando intensamente ao ensino de idiomas. Possuo algumas certificações internacionais e tive a oportunidade de atuar em renomadas escolas como Lexical, Wise Up e Centro Britânico. A paixão por ensinar sempre foi uma constante na minha vida, e acredito que a educação pode ser transformadora quando feita com propósito e personalização. Em 2016, fundei a EA English Classes com o objetivo de oferecer um ensino de inglês mais individualizado e focado nas necessidades reais de cada aluno, algo que ainda é pouco comum nas escolas tradicionais de idiomas. A proposta sempre foi criar uma experiência de aprendizado mais humana, prática e adaptada ao cotidiano dos estudantes. Além da sala de aula, também compartilho outro lado da minha paixão: a música. Tenho um canal no YouTube chamado Vinil Beer, onde exploro curiosidades do universo musical, conectando conhecimento e entretenimento de uma forma leve e acessível. Acredito que ensinar vai muito além de transmitir conteúdo, é também sobre inspirar, conectar e transformar.</p>
+            <button type="button" class="teacher-bio-toggle" data-bio-toggle aria-expanded="false">Leia mais</button>
+          </div>
           <div class="teacher-skills">
             <span class="teacher-skill">A1 → C1</span>
             <span class="teacher-skill">Conversação</span>
@@ -2452,8 +2461,10 @@
         <div class="teacher-content">
           <h3 class="teacher-name">Maicon</h3>
           <p class="teacher-role">Professor de Inglês</p>
-          <p class="teacher-bio">Olá, me chamo Maicon e fico muito feliz em te conhecer. Minha jornada com a língua inglesa começou bem cedo — aos 12 anos eu já era apaixonado pelo idioma e o estudava diariamente. Acredito que para alcançar a fluência são necessários alguns fatores importantes: <strong>imersão, estudo constante e paixão por aprender</strong>. Sou graduando em História e apaixonado pela Educação e Ciências Humanas como um todo. Tenho experiência de ensino focada em Educação Especial e adaptação curricular, além de dois anos de EA English Classes. Para mim, uma boa aula de inglês deve ser produtiva, descontraída e o conteúdo, por mais complexo que seja, apresentado de maneira a facilitar o entendimento. Esteja certo(a) que, trabalhando juntos, a fluência já é uma realidade.</p>
-          <button type="button" class="teacher-readmore" data-action="toggle-bio" aria-expanded="false">Ler mais</button>
+          <div class="teacher-bio-wrap">
+            <p class="teacher-bio-text">Olá, me chamo Maicon e fico muito feliz em te conhecer. Minha jornada com a língua inglesa começou bem cedo, aos 12 anos eu já era apaixonado pelo idioma e o estudava diariamente. Acredito que para alcançar a fluência são necessários alguns fatores importantes: imersão, estudo constante e paixão por aprender. Sou graduando em História e apaixonado pela Educação e Ciências Humanas como um todo. Tenho experiência de ensino focada em Educação Especial e adaptação curricular, para além de dois anos de EA English Classes. Para mim, uma boa aula de inglês deve ser produtiva, descontraída e o conteúdo, por mais complexo que seja, apresentado de maneira a facilitar o entendimento. Esteja certo(a) que, trabalhando juntos, a fluência já é uma realidade.</p>
+            <button type="button" class="teacher-bio-toggle" data-bio-toggle aria-expanded="false">Leia mais</button>
+          </div>
           <div class="teacher-skills">
             <span class="teacher-skill">A1 → B2</span>
             <span class="teacher-skill">Conversação</span>
@@ -2466,14 +2477,16 @@
       <article class="teacher-card">
         <div class="teacher-photo-wrap">
           <div class="teacher-photo-bg"></div>
-          <img src="img/teachers/luiz.jpg" alt="Luiz — Professor de Inglês" class="teacher-photo" loading="lazy">
+          <img src="img/teachers/luiz.jpg" alt="Luiz Bergara — Professor de Inglês" class="teacher-photo" loading="lazy">
           <div class="teacher-badge">Professor</div>
         </div>
         <div class="teacher-content">
-          <h3 class="teacher-name">Luiz</h3>
+          <h3 class="teacher-name">Luiz Bergara</h3>
           <p class="teacher-role">Professor de Inglês</p>
-          <p class="teacher-bio">Prazer, eu sou <strong>Luiz Bergara</strong>. Tenho 32 anos, sou casado, pai de dois filhos e professor desde 2014. Minha trajetória acadêmica passou por Relações Internacionais na Universidade Estácio de Sá e pelo bacharelado em Filosofia na Universidade Federal Rural do Rio de Janeiro — experiências que contribuíram para a minha construção profissional na metodologia da EA English, aplicada hoje em minhas aulas. Ao longo de <strong>12 anos de experiência</strong> em colégios, cursos e projetos educacionais, tive a alegria de participar da história de mais de <strong>600 alunos</strong>, ajudando pessoas a desenvolverem confiança para se comunicar em inglês de forma natural, leve e prática, sempre respeitando o ritmo e os objetivos de cada aluno.</p>
-          <button type="button" class="teacher-readmore" data-action="toggle-bio" aria-expanded="false">Ler mais</button>
+          <div class="teacher-bio-wrap">
+            <p class="teacher-bio-text">Prazer, eu sou Luiz Bergara. Tenho 32 anos, sou casado, pai de dois filhos e professor desde 2014. Minha trajetória acadêmica passou por Relações Internacionais na Universidade Estácio de Sá e pelo bacharelado em Filosofia na Universidade Federal Rural do Rio de Janeiro, experiências que contribuíram para a minha construção profissional na metodologia da EA English, aplicada hoje em minhas aulas. Ao longo de 12 anos de experiência em colégios, cursos e projetos educacionais, tive a alegria de participar da história de mais de 600 alunos, ajudando pessoas a desenvolverem confiança para se comunicar em inglês de forma natural, leve e prática, sempre respeitando o ritmo e os objetivos de cada aluno.</p>
+            <button type="button" class="teacher-bio-toggle" data-bio-toggle aria-expanded="false">Leia mais</button>
+          </div>
           <div class="teacher-skills">
             <span class="teacher-skill">A1 → B2</span>
             <span class="teacher-skill">Conversação</span>
@@ -2482,18 +2495,20 @@
         </div>
       </article>
 
-      <!-- Matheus -->
+      <!-- João Matheus -->
       <article class="teacher-card">
         <div class="teacher-photo-wrap">
           <div class="teacher-photo-bg"></div>
-          <img src="img/teachers/matheus.jpg" alt="Matheus — Professor de Inglês" class="teacher-photo" loading="lazy">
+          <img src="img/teachers/joao.jpg" alt="João Matheus — Professor de Inglês" class="teacher-photo" loading="lazy">
           <div class="teacher-badge">Professor</div>
         </div>
         <div class="teacher-content">
-          <h3 class="teacher-name">Matheus</h3>
+          <h3 class="teacher-name">João Matheus</h3>
           <p class="teacher-role">Professor de Inglês</p>
-          <p class="teacher-bio">Apaixonado por inglês desde cedo, desenvolvi meu interesse pela língua através da escola e principalmente dos videogames. Estudei na <strong>Wizard by Pearson</strong> e no <strong>CNA</strong>, e iniciei minha trajetória profissional como professor de inglês em 2023, na Times Idiomas, lecionando para adultos, adolescentes e idosos. Posteriormente, passei a atuar com aulas particulares, aprofundando meus conhecimentos em metodologias como <strong>Flipped Classroom</strong> e <strong>método Callahan</strong>, além de desenvolver ainda mais minha comunicação e didática como teacher. Minha última experiência antes da EA English Classes foi dando aulas para crianças. Sou extrovertido, comunicativo, apaixonado por conversar e jogar videogame, além de ser casado e pai de três crianças lindas.</p>
-          <button type="button" class="teacher-readmore" data-action="toggle-bio" aria-expanded="false">Ler mais</button>
+          <div class="teacher-bio-wrap">
+            <p class="teacher-bio-text">Sou apaixonado por inglês desde cedo, tendo desenvolvido meu interesse pela língua através da escola e principalmente dos videogames. Estudei na Wizard by Pearson e no CNA, e iniciei minha trajetória profissional como professor de inglês em 2023, na Times Idiomas, lecionando para adultos, adolescentes e idosos. Posteriormente, passei a atuar com aulas particulares, aprofundando meus conhecimentos em metodologias como Flipped Classroom e método Callahan, além de desenvolver ainda mais minha comunicação e didática como teacher. Minha última experiência antes da EA English Classes foi dando aulas para crianças. Sou extrovertido, comunicativo, apaixonado por conversar e jogar videogame, além de ser casado e pai de três crianças lindas.</p>
+            <button type="button" class="teacher-bio-toggle" data-bio-toggle aria-expanded="false">Leia mais</button>
+          </div>
           <div class="teacher-skills">
             <span class="teacher-skill">A1 → B2</span>
             <span class="teacher-skill">Speaking</span>
@@ -2512,8 +2527,10 @@
         <div class="teacher-content">
           <h3 class="teacher-name">Gustavo</h3>
           <p class="teacher-role">Professor de Inglês</p>
-          <p class="teacher-bio">Muito prazer, eu sou o <strong>Gustavo</strong>! Por aqui na EA English Classes, comando as turmas de nível introdutório, intermediário e avançado com as aulas dinâmicas do método Interchange. Desde que iniciei os meus estudos de inglês, aos 12 anos, me apaixonei pela língua ao ver a influência desse conhecimento nas coisas que amo fazer no meu dia a dia. Ampliei minha bagagem com a missão de transmitir esse mesmo sentimento aos alunos, garantindo que a sala de aula seja, acima de tudo, um <strong>ambiente leve, descontraído e livre de barreiras</strong> para você destravar o seu inglês com total confiança!</p>
-          <button type="button" class="teacher-readmore" data-action="toggle-bio" aria-expanded="false">Ler mais</button>
+          <div class="teacher-bio-wrap">
+            <p class="teacher-bio-text">Muito prazer, eu sou o Gustavo! Por aqui na EA English Classes, comando as turmas de nível introdutório, intermediário e avançado com as aulas dinâmicas do método Interchange. Desde que iniciei os meus estudos de inglês, aos 12 anos, me apaixonei pela língua ao ver a influência desse conhecimento nas coisas que amo fazer no meu dia a dia. Ampliei minha bagagem com a missão de transmitir esse mesmo sentimento aos alunos, garantindo que a sala de aula seja, acima de tudo, um ambiente leve, descontraído e livre de barreiras para você destravar o seu inglês com total confiança!</p>
+            <button type="button" class="teacher-bio-toggle" data-bio-toggle aria-expanded="false">Leia mais</button>
+          </div>
           <div class="teacher-skills">
             <span class="teacher-skill">A1 → B2</span>
             <span class="teacher-skill">Conversação</span>
@@ -2673,17 +2690,6 @@ document.addEventListener('DOMContentLoaded',()=>{
   counters.forEach(c=>countObs.observe(c));
   document.querySelectorAll('.faq-item').forEach(item=>{item.addEventListener('click',()=>item.classList.toggle('open'));});
 
-  // Toggle "Ler mais" nos cards de professores (event delegation, sem onclick inline)
-  document.addEventListener('click', (e) => {
-    const btn = e.target.closest('[data-action="toggle-bio"]');
-    if (!btn) return;
-    const card = btn.closest('.teacher-card');
-    if (!card) return;
-    const expanded = card.classList.toggle('bio-expanded');
-    btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
-    btn.firstChild.textContent = expanded ? 'Ler menos' : 'Ler mais';
-  });
-
   // Subtle parallax on coordinator photo
   const coordPhoto = document.getElementById('coordPhoto');
   const coordSection = document.getElementById('equipe');
@@ -2707,6 +2713,23 @@ document.addEventListener('DOMContentLoaded',()=>{
     }, { passive: true });
     updateParallax();
   }
+
+  // Bios dos professores: toggle "Leia mais" / "Ler menos"
+  document.querySelectorAll('.teacher-bio-toggle').forEach(btn => {
+    const wrap = btn.closest('.teacher-bio-wrap');
+    const text = wrap ? wrap.querySelector('.teacher-bio-text') : null;
+    // Esconde o botão se o texto cabe sem truncar
+    if (text && text.scrollHeight <= text.clientHeight + 2) {
+      btn.style.display = 'none';
+      return;
+    }
+    btn.addEventListener('click', () => {
+      if (!wrap) return;
+      const expanded = wrap.classList.toggle('is-expanded');
+      btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+      btn.textContent = expanded ? 'Ler menos' : 'Leia mais';
+    });
+  });
 });
 </script>
 

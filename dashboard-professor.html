@@ -421,6 +421,17 @@ body { background: var(--g50); margin: 0; }
   .content { padding: 16px 12px !important; }
   .f-row { grid-template-columns: 1fr !important; }
 }
+
+/* ═══ TOPBAR — versão enxuta no mobile ═══ */
+@media (max-width: 768px) {
+  .topbar { padding: 0 12px !important; gap: 8px; }
+  .mobile-menu-btn { order: -1; }
+  .topbar-title { font-size: 14px; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .topbar-user { gap: 8px; }
+  .topbar-name { font-size: 12px; max-width: 90px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .topbar-avatar { width: 34px !important; height: 34px !important; }
+  .notif-bell-btn { width: 34px !important; height: 34px !important; font-size: 15px; margin-right: 0 !important; }
+}
 @media (max-width: 480px) {
   .stat-card { padding: 12px !important; }
   .stat-value { font-size: 24px !important; }

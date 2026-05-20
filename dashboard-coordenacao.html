@@ -606,6 +606,22 @@ body { background: var(--g50); margin: 0; }
   .f-row { grid-template-columns: 1fr !important; }
   .form-card { padding: 16px !important; }
 }
+
+/* ═══ TOPBAR — versão enxuta no mobile ═══ */
+.date-short { display: none; }
+@media (max-width: 768px) {
+  .topbar { padding: 0 12px !important; gap: 8px; }
+  .mobile-menu-btn { order: -1; }                 /* menu vai pra ponta esquerda */
+  .topbar > div:first-child { min-width: 0; flex: 1; }
+  .topbar-title { font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .date-long { display: none; }
+  .date-short { display: block; }
+  .topbar-date { font-size: 11px; }
+  .topbar-user { gap: 8px; }
+  .topbar-name { font-size: 12px; max-width: 90px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .topbar-avatar { width: 34px !important; height: 34px !important; }
+  .notif-bell-btn { width: 34px !important; height: 34px !important; font-size: 15px; margin-right: 0 !important; }
+}
 @media (max-width: 480px) {
   .stat-card { padding: 12px !important; }
   .stat-value { font-size: 24px !important; }
@@ -2178,9 +2194,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   const greetText = hour < 12 ? 'Bom dia' : hour < 18 ? 'Boa tarde' : 'Boa noite';
   document.getElementById('greeting').textContent = greetText + ', ' + (currentUser.full_name || 'Coordenador') + '! 📊';
   
-  // Show current date
-  const dateStr = new Date().toLocaleDateString('pt-BR', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
-  document.getElementById('topbarDate').textContent = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+  // Show current date — versão longa (desktop) + curta (mobile)
+  const now = new Date();
+  const dateLong = now.toLocaleDateString('pt-BR', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+  const dateShort = now.toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit', year:'numeric'});
+  document.getElementById('topbarDate').innerHTML =
+    '<span class="date-long">' + dateLong.charAt(0).toUpperCase() + dateLong.slice(1) + '</span>' +
+    '<span class="date-short">' + dateShort + '</span>';
 
   // Sidebar nav
   document.querySelectorAll('.sb-link').forEach(btn => {

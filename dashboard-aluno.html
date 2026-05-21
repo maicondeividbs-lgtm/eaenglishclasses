@@ -1838,6 +1838,36 @@ body.sb-collapsed .main { margin-left: 92px !important; }
   .topbar-avatar { width: 34px !important; height: 34px !important; }
   .notif-bell-btn { width: 34px !important; height: 34px !important; font-size: 15px; margin-right: 0 !important; }
 }
+
+/* ═══ Minhas aulas da semana ═══ */
+.class-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--g100);
+  border-radius: 10px;
+  margin-bottom: 8px;
+  background: #fff;
+}
+.class-item:last-child { margin-bottom: 0; }
+.class-day {
+  width: 44px; height: 44px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--blue), var(--blue-light, #4f6cdd));
+  color: #fff;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  font-weight: 800;
+}
+.class-day-abbr { font-size: 12px; line-height: 1; }
+.class-info-day {
+  font-size: 14px; font-weight: 700; color: var(--navy);
+}
+.class-info-time {
+  font-size: 12px; color: var(--g500); margin-top: 2px;
+}
 </style>
 </head>
 <body>
@@ -2074,6 +2104,16 @@ body.sb-collapsed .main { margin-left: 92px !important; }
                 <div class="profile-card-title">👨‍🏫 Meu professor</div>
               </div>
               <div class="profile-card-body" id="profTeacherBody"></div>
+            </div>
+
+            <!-- My classes card -->
+            <div class="profile-card">
+              <div class="profile-card-head">
+                <div class="profile-card-title">📅 Minhas aulas da semana</div>
+              </div>
+              <div class="profile-card-body" id="profClassesBody">
+                <p class="profile-help" style="margin:0">Carregando suas aulas...</p>
+              </div>
             </div>
 
             <!-- Password change card -->
@@ -2835,6 +2875,60 @@ async function loadProfile() {
       card.style.display = '';
     }
   } catch(e) { console.error('Teacher card:', e); }
+
+  // My classes card — read from the schedule grid
+  loadMyClasses();
+}
+
+// Show the student's weekly classes (read-only, from schedule_slots)
+async function loadMyClasses() {
+  const body = document.getElementById('profClassesBody');
+  if (!body) return;
+  const dayNames = ['Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+  const dayAbbr = ['Seg','Ter','Qua','Qui','Sex','Sáb'];
+  try {
+    // Find the student's main teacher
+    const info = await getStudentMainTeacher(currentUser.id);
+    if (!info || !info.teacher_id) {
+      body.innerHTML = '<p class="profile-help" style="margin:0">Nenhuma aula agendada ainda. Assim que a coordenação definir sua turma, seus horários aparecem aqui.</p>';
+      return;
+    }
+    // Read the teacher's schedule grid
+    const slots = await getScheduleSlots(info.teacher_id);
+    const myName = (currentUser.full_name || '').trim().toLowerCase();
+    const mine = (slots || []).filter(s =>
+      s.student_name && s.student_name.trim().toLowerCase() === myName
+    );
+    if (mine.length === 0) {
+      body.innerHTML = '<p class="profile-help" style="margin:0">Nenhuma aula agendada ainda. Assim que a coordenação definir sua turma, seus horários aparecem aqui.</p>';
+      return;
+    }
+    // Sort by day, then time
+    mine.sort((a, b) => {
+      if (a.day_of_week !== b.day_of_week) return a.day_of_week - b.day_of_week;
+      return (a.time_slot || '').localeCompare(b.time_slot || '');
+    });
+    let html = '';
+    mine.forEach(s => {
+      const di = s.day_of_week;
+      const dayFull = (di >= 0 && di < dayNames.length) ? dayNames[di] : 'Dia';
+      const abbr = (di >= 0 && di < dayAbbr.length) ? dayAbbr[di] : '?';
+      const time = s.time_slot || '';
+      const dur = s.duration_minutes ? (' · ' + s.duration_minutes + ' min') : '';
+      html +=
+        '<div class="class-item">' +
+          '<div class="class-day"><span class="class-day-abbr">' + abbr + '</span></div>' +
+          '<div>' +
+            '<div class="class-info-day">' + dayFull + '</div>' +
+            '<div class="class-info-time">🕐 ' + wrEscapeHtml(time) + dur + '</div>' +
+          '</div>' +
+        '</div>';
+    });
+    body.innerHTML = html;
+  } catch(e) {
+    console.error('My classes:', e);
+    body.innerHTML = '<p class="profile-help" style="margin:0">Não foi possível carregar suas aulas no momento.</p>';
+  }
 }
 
 async function saveProfile() {

@@ -192,13 +192,10 @@
       <div class="form-group"><label>E-mail</label><input type="email" id="loginEmail" placeholder="seu@email.com" required></div>
       <div class="form-group"><label>Senha</label><input type="password" id="loginPassword" placeholder="••••••••" required></div>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;font-size:13px">
-        <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" style="width:auto"> Lembrar-me</label>
-        <a href="#" style="color:var(--orange);font-weight:600">Esqueci a senha</a>
+        <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" id="rememberMe" style="width:auto"> Lembrar-me</label>
+        <a href="#" id="forgotLink" style="color:var(--orange);font-weight:600">Esqueci a senha</a>
       </div>
       <button type="submit" id="loginBtn" class="btn btn-primary btn-full btn-lg" style="display:flex;align-items:center;justify-content:center;gap:10px"><span id="loginText">Entrar</span><div class="login-spinner" id="loginSpinner"></div></button>
-        <div style="text-align:center;margin-top:14px">
-          <a href="#" id="forgotLink" style="font-size:13px;color:var(--blue);font-weight:600;text-decoration:none">Esqueci minha senha</a>
-        </div>
       </form>
       
       
@@ -212,32 +209,6 @@
 </div>
 
 <script>
-
-// Forgot password
-document.getElementById('forgotLink')?.addEventListener('click', async function(e) {
-  e.preventDefault();
-  var email = document.getElementById('email').value.trim();
-  if (!email) { 
-    document.getElementById('errorMsg').textContent = 'Digite seu e-mail primeiro.';
-    document.getElementById('errorMsg').style.display = 'block';
-    return;
-  }
-  try {
-    var { error } = await db.auth.resetPasswordForEmail(email, {
-      redirectTo: window.location.origin + '/login.html'
-    });
-    if (error) throw error;
-    document.getElementById('errorMsg').style.display = 'none';
-    var msg = document.createElement('div');
-    msg.style.cssText = 'background:#d1fae5;border:1px solid #6ee7b7;border-radius:12px;padding:16px;text-align:center;color:#065f46;font-size:14px;font-weight:600;margin-bottom:16px';
-    msg.textContent = '✅ E-mail de recuperação enviado! Verifique sua caixa de entrada.';
-    document.querySelector('form').prepend(msg);
-  } catch(err) {
-    document.getElementById('errorMsg').textContent = 'Erro: ' + err.message;
-    document.getElementById('errorMsg').style.display = 'block';
-  }
-});
-
 document.addEventListener('DOMContentLoaded',()=>{
   const reveals=document.querySelectorAll('.reveal');
   const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible')})},{threshold:0.08,rootMargin:'0px 0px -50px 0px'});
@@ -254,25 +225,31 @@ document.addEventListener('DOMContentLoaded',()=>{
 // Forgot password
 document.getElementById('forgotLink')?.addEventListener('click', async function(e) {
   e.preventDefault();
-  var email = document.getElementById('email').value.trim();
-  if (!email) { 
-    document.getElementById('errorMsg').textContent = 'Digite seu e-mail primeiro.';
-    document.getElementById('errorMsg').style.display = 'block';
+  var emailInput = document.getElementById('loginEmail');
+  var errorBox = document.getElementById('loginError');
+  var email = emailInput.value.trim();
+  if (!email) {
+    errorBox.textContent = 'Digite seu e-mail primeiro para receber o link de recuperação.';
+    errorBox.style.display = 'block';
+    emailInput.focus();
     return;
   }
+  errorBox.style.display = 'none';
+  // Remove any previous success message
+  document.getElementById('resetSuccess')?.remove();
   try {
     var { error } = await db.auth.resetPasswordForEmail(email, {
       redirectTo: window.location.origin + '/login.html'
     });
     if (error) throw error;
-    document.getElementById('errorMsg').style.display = 'none';
     var msg = document.createElement('div');
-    msg.style.cssText = 'background:#d1fae5;border:1px solid #6ee7b7;border-radius:12px;padding:16px;text-align:center;color:#065f46;font-size:14px;font-weight:600;margin-bottom:16px';
-    msg.textContent = '✅ E-mail de recuperação enviado! Verifique sua caixa de entrada.';
-    document.querySelector('form').prepend(msg);
+    msg.id = 'resetSuccess';
+    msg.style.cssText = 'padding:12px;background:#d1fae5;border:2px solid #6ee7b7;border-radius:10px;color:#065f46;font-size:13px;font-weight:600;text-align:center;margin-bottom:16px';
+    msg.textContent = 'E-mail de recuperação enviado! Verifique sua caixa de entrada.';
+    errorBox.insertAdjacentElement('afterend', msg);
   } catch(err) {
-    document.getElementById('errorMsg').textContent = 'Erro: ' + err.message;
-    document.getElementById('errorMsg').style.display = 'block';
+    errorBox.textContent = 'Não foi possível enviar o e-mail: ' + err.message;
+    errorBox.style.display = 'block';
   }
 });
 
@@ -280,6 +257,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const loginForm = document.getElementById('loginForm');
   const loginBtn = document.getElementById('loginBtn');
   const loginError = document.getElementById('loginError');
+  const rememberMe = document.getElementById('rememberMe');
+
+  // Pré-preencher e-mail se "Lembrar-me" foi usado antes
+  try {
+    const savedEmail = localStorage.getItem('ea_remembered_email');
+    if (savedEmail) {
+      document.getElementById('loginEmail').value = savedEmail;
+      if (rememberMe) rememberMe.checked = true;
+      document.getElementById('loginPassword')?.focus();
+    }
+  } catch(e) { /* localStorage indisponível */ }
 
   // Check if already logged in
   (async () => {
@@ -300,6 +288,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const email = document.getElementById('loginEmail').value.trim();
       const password = document.getElementById('loginPassword').value;
+
+      // Salvar ou limpar e-mail conforme "Lembrar-me"
+      try {
+        if (rememberMe && rememberMe.checked) {
+          localStorage.setItem('ea_remembered_email', email);
+        } else {
+          localStorage.removeItem('ea_remembered_email');
+        }
+      } catch(e) { /* localStorage indisponível */ }
 
       try {
         const data = await signIn(email, password);

@@ -815,8 +815,25 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 .book-card.theme-level1   { background: linear-gradient(135deg, #ef4444, #f87171); }
 .book-card.theme-level2   { background: linear-gradient(135deg, #3b82f6, #60a5fa); }
 .book-card.theme-level3   { background: linear-gradient(135deg, #10b981, #34d399); }
-.book-card.theme-passages { background: linear-gradient(135deg, #8b5cf6, #a78bfa); }
 .book-card.theme-evolve   { background: linear-gradient(135deg, #06b6d4, #22d3ee); }
+.book-cover-img {
+  position: relative;
+  width: 92px;
+  min-width: 92px;
+  height: 122px;
+  border-radius: 4px 8px 8px 4px;
+  overflow: hidden;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.28), inset 4px 0 0 rgba(0,0,0,0.18);
+  animation: bookFloat 4s ease-in-out infinite;
+  flex-shrink: 0;
+  background: rgba(255,255,255,0.9);
+}
+.book-cover-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
 .book-cover {
   position: relative;
   width: 88px;
@@ -927,9 +944,141 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 @media (max-width: 900px) {
   .progress-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
 }
+
+/* ════════════════════════════════════════════════════════
+   ✦ JORNADA DO ALUNO — progresso estilo game
+   ════════════════════════════════════════════════════════ */
+.journey-track {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  overflow-x: auto;
+  padding: 6px 2px 14px;
+}
+.journey-node {
+  position: relative;
+  flex: 1;
+  min-width: 96px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+/* Linha de conexão entre os nós */
+.journey-node::before {
+  content: '';
+  position: absolute;
+  top: 33px;
+  left: -50%;
+  width: 100%;
+  height: 4px;
+  background: var(--g200);
+  z-index: 0;
+}
+.journey-node:first-child::before { display: none; }
+.journey-node.done::before,
+.journey-node.current::before {
+  background: linear-gradient(90deg, #10b981, #34d399);
+}
+.journey-medal {
+  position: relative;
+  z-index: 1;
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  margin-bottom: 10px;
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+/* Concluído — desbloqueado/aberto */
+.journey-node.done .journey-medal {
+  background: linear-gradient(135deg, #10b981, #34d399);
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(16,185,129,0.35);
+}
+/* Atual — destacado */
+.journey-node.current .journey-medal {
+  background: linear-gradient(135deg, var(--orange), var(--mango));
+  color: #fff;
+  box-shadow: 0 0 0 6px rgba(243,107,46,0.18), 0 10px 24px rgba(243,107,46,0.4);
+  animation: journeyPulse 2.2s ease-in-out infinite;
+}
+@keyframes journeyPulse {
+  0%, 100% { box-shadow: 0 0 0 6px rgba(243,107,46,0.18), 0 10px 24px rgba(243,107,46,0.4); }
+  50% { box-shadow: 0 0 0 11px rgba(243,107,46,0.06), 0 10px 24px rgba(243,107,46,0.45); }
+}
+/* Bloqueado — próximos livros */
+.journey-node.locked .journey-medal {
+  background: var(--g100);
+  color: var(--g400);
+  border: 2px dashed var(--g200);
+}
+.journey-node.done:hover .journey-medal,
+.journey-node.current:hover .journey-medal { transform: scale(1.1) translateY(-2px); }
+
+.journey-label {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--navy);
+  line-height: 1.2;
+}
+.journey-node.locked .journey-label { color: var(--g400); }
+.journey-cefr {
+  font-size: 10px;
+  font-weight: 700;
+  margin-top: 3px;
+  letter-spacing: 0.4px;
+}
+.journey-node.done .journey-cefr { color: #059669; }
+.journey-node.current .journey-cefr { color: var(--orange); }
+.journey-node.locked .journey-cefr { color: var(--g300); }
+.journey-status {
+  margin-top: 5px;
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 3px 8px;
+  border-radius: 99px;
+}
+.journey-node.done .journey-status { background: rgba(16,185,129,0.12); color: #059669; }
+.journey-node.current .journey-status { background: var(--orange-soft); color: var(--orange); }
+.journey-node.locked .journey-status { background: var(--g100); color: var(--g400); }
+
+.journey-progress-bar {
+  margin-top: 18px;
+  background: var(--g100);
+  border-radius: 99px;
+  height: 10px;
+  overflow: hidden;
+}
+.journey-progress-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #10b981, #34d399);
+  width: 0;
+  transition: width 1s cubic-bezier(0.4,0,0.2,1);
+}
+.journey-progress-caption {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--g500);
+  font-weight: 600;
+  text-align: center;
+}
+.journey-progress-caption strong { color: var(--navy); }
+@media (max-width: 560px) {
+  .journey-medal { width: 54px; height: 54px; font-size: 21px; }
+  .journey-node { min-width: 84px; }
+  .journey-node::before { top: 27px; }
+}
 @media (max-width: 480px) {
   .book-card { flex-direction: column; align-items: flex-start; min-height: auto; padding: 20px; }
   .book-cover { width: 80px; height: 106px; }
+  .book-cover-img { width: 84px; height: 112px; }
 }
 
 /* ════════════════════════════════════════════════════════
@@ -1318,6 +1467,52 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 .wr-status-badge.graded { background: rgba(16,185,129,0.12); color: #059669; }
 
 .wr-body { padding: 24px 26px; }
+
+/* ── Redação corrigida: minimizar / expandir ── */
+.wr-card.is-graded.collapsed .wr-body { display: none; }
+.wr-card.is-graded .wr-header { cursor: pointer; }
+.wr-collapse-summary {
+  display: none;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--g200);
+  font-size: 12px;
+  color: var(--g600);
+  font-weight: 600;
+  flex-wrap: wrap;
+}
+.wr-card.is-graded.collapsed .wr-collapse-summary { display: flex; }
+.wr-collapse-summary .wr-cs-item {
+  display: inline-flex; align-items: center; gap: 5px;
+}
+.wr-collapse-summary .wr-cs-item svg { width: 13px; height: 13px; opacity: 0.8; }
+.wr-collapse-summary .wr-cs-grade {
+  background: rgba(16,185,129,0.12); color: #059669;
+  padding: 3px 10px; border-radius: 99px; font-weight: 800;
+}
+.wr-collapse-summary .wr-cs-corrected {
+  display: inline-flex; align-items: center; gap: 5px;
+  color: #059669; font-weight: 800;
+}
+.wr-collapse-summary .wr-cs-corrected svg { width: 14px; height: 14px; opacity: 1; }
+.wr-toggle-btn {
+  margin-left: auto;
+  background: var(--g50);
+  border: 1px solid var(--g200);
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--g500);
+  transition: all 0.25s ease;
+  flex-shrink: 0;
+}
+.wr-toggle-btn svg { width: 16px; height: 16px; transition: transform 0.3s ease; }
+.wr-toggle-btn:hover { background: var(--orange-soft); color: var(--orange); }
+.wr-card.is-graded.collapsed .wr-toggle-btn svg { transform: rotate(0deg); }
+.wr-card.is-graded:not(.collapsed) .wr-toggle-btn svg { transform: rotate(180deg); }
 
 /* Prompt como blockquote elegante */
 .wr-prompt {
@@ -1887,6 +2082,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
       <button class="sb-link" data-section="pronunciation" data-tip="Pronúncia"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-2.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg><span>Pronúncia</span></button>
     </nav>
     <div class="sb-bottom">
+      <button class="sb-link" data-section="manual" data-tip="Manual do Aluno" style="color:rgba(255,255,255,0.5)"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-6 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm6 13H6v-1c0-2 4-3.1 6-3.1s6 1.1 6 3.1v1z"/></svg><span>Manual do Aluno</span></button>
       <a href="https://www.cambridgeone.org/" target="_blank" class="sb-link" data-tip="Cambridge One" style="color:rgba(255,255,255,0.5)">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
         <span>Cambridge One</span>
@@ -1935,21 +2131,14 @@ body.sb-collapsed .main { margin-left: 92px !important; }
           <div class="stat-card"><div class="stat-icon">💬</div><div class="stat-label">Feedbacks</div><div class="stat-value" id="sFeedbacks">-</div></div>
         </div>
         
-        <!-- Progress + Current Book -->
+        <!-- Progress journey + Current Book -->
         <div class="panel" style="margin-bottom:20px">
           <div class="panel-head"><div class="panel-title"><span class="panel-icon purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>Meu Progresso</div></div>
-          <div style="padding:20px 24px">
-            <div style="display:grid;grid-template-columns:1fr 1.1fr;gap:24px;align-items:stretch" class="progress-grid">
-              <div>
-                <div style="font-size:12px;font-weight:700;color:var(--g500);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px">Atividade Mensal</div>
-                <div id="studentChart" style="display:flex;align-items:end;gap:6px;height:100px"></div>
-                <div id="studentChartLabels" style="display:flex;gap:6px;margin-top:6px"></div>
-              </div>
-              <div>
-                <div style="font-size:12px;font-weight:700;color:var(--g500);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px">Meu Livro Atual</div>
-                <div id="currentBookCard"><div class="skel-line" style="height:160px"></div></div>
-              </div>
-            </div>
+          <div style="padding:22px 24px">
+            <div style="font-size:12px;font-weight:700;color:var(--g500);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:14px">Minha Jornada</div>
+            <div id="journeyTrack" class="journey-track"><div class="skel-line" style="height:130px"></div></div>
+            <div style="font-size:12px;font-weight:700;color:var(--g500);text-transform:uppercase;letter-spacing:0.5px;margin:24px 0 12px">Meu Livro Atual</div>
+            <div id="currentBookCard"><div class="skel-line" style="height:160px"></div></div>
           </div>
         </div>
 
@@ -2139,6 +2328,54 @@ body.sb-collapsed .main { margin-left: 92px !important; }
           </div>
         </div>
       </div>
+
+      <!-- MANUAL DO ALUNO -->
+      <div class="section" id="sec-manual">
+        <div class="section-head">
+          <div class="section-head-icon blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          </div>
+          <div class="section-head-text">
+            <h2>Manual do Aluno</h2>
+            <p class="section-sub">Tudo o que você precisa saber para aproveitar ao máximo sua jornada na EA English Classes.</p>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-bottom:18px">
+          <div class="panel-head"><div class="panel-title"><span class="panel-icon blue">🎯</span>Como funcionam as aulas</div></div>
+          <div style="padding:20px 24px;font-size:14px;color:var(--g700);line-height:1.75">
+            As aulas acontecem <strong>ao vivo pelo Google Meet</strong>, em horários combinados com a coordenação. Tenha sempre por perto seu material Cambridge e um caderno para anotações. Chegue alguns minutos antes para testar áudio e câmera.
+          </div>
+        </div>
+
+        <div class="panel" style="margin-bottom:18px">
+          <div class="panel-head"><div class="panel-title"><span class="panel-icon purple">🗺️</span>Sua jornada de aprendizado</div></div>
+          <div style="padding:20px 24px;font-size:14px;color:var(--g700);line-height:1.75">
+            Você avança pelos livros da trilha EA — do Interchange Intro ao Evolve 6 — <strong>no seu próprio ritmo</strong>. O progresso depende da sua dedicação, frequência e absorção do conteúdo. Acompanhe sua evolução na aba <strong>Visão Geral</strong>, na seção "Meu Progresso".
+          </div>
+        </div>
+
+        <div class="panel" style="margin-bottom:18px">
+          <div class="panel-head"><div class="panel-title"><span class="panel-icon orange">📝</span>Homework e redações</div></div>
+          <div style="padding:20px 24px;font-size:14px;color:var(--g700);line-height:1.75">
+            Na aba <strong>Homework</strong> você acompanha as tarefas atribuídas e marca como concluídas. Na aba <strong>Redação</strong>, você escreve seus textos e recebe correções detalhadas dos professores. Capriche na gramática e no vocabulário — a prática constante é o caminho para a fluência.
+          </div>
+        </div>
+
+        <div class="panel" style="margin-bottom:18px">
+          <div class="panel-head"><div class="panel-title"><span class="panel-icon ocean">🔄</span>Cancelamento e reposição</div></div>
+          <div style="padding:20px 24px;font-size:14px;color:var(--g700);line-height:1.75">
+            Aulas canceladas <strong>com pelo menos 24 horas de antecedência</strong> podem ser repostas em outro horário combinado com o professor. Cancelamentos sem 24 horas de antecedência são contabilizados como aula dada e não dão direito a reposição.
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title"><span class="panel-icon blue">🎓</span>Certificado de conclusão</div></div>
+          <div style="padding:20px 24px;font-size:14px;color:var(--g700);line-height:1.75">
+            O certificado digital da EA English Classes é emitido <strong>ao final do curso completo</strong>, ou seja, somente após você concluir <strong>todos os livros e níveis</strong> da jornada. Ele atesta a conclusão integral do programa.
+          </div>
+        </div>
+      </div>
     </div>
   </main>
 </div>
@@ -2147,7 +2384,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 <script src="supabase.js"></script>
 <script>
 let currentUser = null;
-const sections = {"overview":"Visão Geral","homework":"Homework","feedback":"Feedbacks","announcements":"Avisos","writing":"Redação","pronunciation":"Pronúncia","profile":"Meu Perfil"};
+const sections = {"overview":"Visão Geral","homework":"Homework","feedback":"Feedbacks","announcements":"Avisos","writing":"Redação","pronunciation":"Pronúncia","manual":"Manual do Aluno","profile":"Meu Perfil"};
 
 // Init collapsible sidebar immediately (independent of auth)
 document.addEventListener('DOMContentLoaded', () => { initCollapsibleSidebar(); });
@@ -2238,37 +2475,90 @@ async function loadOverview() {
     }
   } catch(e) { console.error('Overview:', e); }
   
-  // Progress chart
+  // Jornada do aluno (estilo game) — livros concluídos / atual / bloqueados
   try {
-    var months=['Jan','Fev','Mar','Abr','Mai','Jun'];
-    var now=new Date();
-    var monthData=[];var maxVal=1;
-    for(var m=5;m>=0;m--){
-      var d=new Date(now.getFullYear(),now.getMonth()-m,1);
-      var mStr=d.toISOString().slice(0,7);
-      var nStr=new Date(d.getFullYear(),d.getMonth()+1,1).toISOString().slice(0,7);
-      var r1=await db.from('task_submissions').select('id').eq('student_id',currentUser.id).gte('submitted_at',mStr+'-01').lt('submitted_at',nStr+'-01');
-      var r2=await db.from('feedbacks').select('id').eq('student_id',currentUser.id).gte('created_at',mStr+'-01').lt('created_at',nStr+'-01');
-      var c=(r1.data?.length||0)+(r2.data?.length||0);
-      monthData.push({label:months[d.getMonth()%12]||'?',value:c,cur:m===0});
-      if(c>maxVal)maxVal=c;
+    const enr = await db.from('enrollments')
+      .select('course:courses(id, name, cefr_level, description, series, sort_order)')
+      .eq('student_id', currentUser.id)
+      .eq('active', true)
+      .order('created_at', { ascending: false })
+      .limit(1);
+    const course = enr.data?.[0]?.course;
+    renderJourney(course);
+    renderCurrentBook(course);
+  } catch(e) { console.error('Journey:', e); renderJourney(null); renderCurrentBook(null); }
+}
+
+// Trilha fixa de livros da EA — define a ordem da jornada
+const EA_JOURNEY = [
+  { key: 'intro',         label: 'Interchange Intro', short: 'Intro',  cefr: 'A1' },
+  { key: 'interchange 1', label: 'Interchange 1',     short: 'Inter 1', cefr: 'A2' },
+  { key: 'interchange 2', label: 'Interchange 2',     short: 'Inter 2', cefr: 'B1' },
+  { key: 'interchange 3', label: 'Interchange 3',     short: 'Inter 3', cefr: 'B2' },
+  { key: 'evolve 5',      label: 'Evolve 5',          short: 'Evolve 5', cefr: 'B2+' },
+  { key: 'evolve 6',      label: 'Evolve 6',          short: 'Evolve 6', cefr: 'C1' }
+];
+
+// Descobre o índice do livro atual a partir do nome do curso
+function journeyIndexFor(courseName) {
+  const n = (courseName || '').toLowerCase();
+  if (n.includes('intro')) return 0;
+  if (n.match(/interchange\s*1\b/)) return 1;
+  if (n.match(/interchange\s*2\b/)) return 2;
+  if (n.match(/interchange\s*3\b/)) return 3;
+  if (n.includes('evolve 5')) return 4;
+  if (n.includes('evolve 6')) return 5;
+  return -1;
+}
+
+// Renderiza a jornada visual: concluídos (abertos), atual (destacado), próximos (bloqueados)
+function renderJourney(course) {
+  const el = document.getElementById('journeyTrack');
+  if (!el) return;
+  const currentIdx = course ? journeyIndexFor(course.name) : -1;
+
+  let html = '';
+  EA_JOURNEY.forEach((b, i) => {
+    let state, icon, status;
+    if (currentIdx < 0) {
+      state = 'locked'; icon = '🔒'; status = 'A definir';
+    } else if (i < currentIdx) {
+      state = 'done'; icon = '📖'; status = 'Concluído';
+    } else if (i === currentIdx) {
+      state = 'current'; icon = '⭐'; status = 'Você está aqui';
+    } else {
+      state = 'locked'; icon = '🔒'; status = 'Bloqueado';
     }
-    var ce=document.getElementById('studentChart'),le=document.getElementById('studentChartLabels');
-    if(ce){ce.innerHTML=monthData.map(function(d){var h=Math.max(6,(d.value/maxVal)*90);return'<div style="flex:1;background:'+(d.cur?'var(--orange)':'var(--blue-soft)')+';height:'+h+'px;border-radius:4px 4px 0 0;position:relative"><div style="position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:700;color:var(--navy)">'+d.value+'</div></div>';}).join('');}
-    if(le){le.innerHTML=monthData.map(function(d){return'<div style="flex:1;text-align:center;font-size:10px;font-weight:'+(d.cur?'800':'500')+';color:'+(d.cur?'var(--orange)':'var(--g400)')+'">'+d.label+'</div>';}).join('');}
-    
-    // Current book card
-    try {
-      const enr = await db.from('enrollments')
-        .select('course:courses(id, name, cefr_level, description, series)')
-        .eq('student_id', currentUser.id)
-        .eq('active', true)
-        .order('created_at', { ascending: false })
-        .limit(1);
-      const course = enr.data?.[0]?.course;
-      renderCurrentBook(course);
-    } catch(e) { console.error('Current book:', e); renderCurrentBook(null); }
-  } catch(e) { console.error('Chart:', e); }
+    html += '<div class="journey-node ' + state + '" title="' + b.label + '">' +
+      '<div class="journey-medal">' + icon + '</div>' +
+      '<div class="journey-label">' + b.short + '</div>' +
+      '<div class="journey-cefr">' + b.cefr + '</div>' +
+      '<div class="journey-status">' + status + '</div>' +
+    '</div>';
+  });
+  el.innerHTML = html;
+
+  // Barra de progresso geral da jornada
+  const pct = currentIdx >= 0
+    ? Math.round(((currentIdx) / (EA_JOURNEY.length - 1)) * 100)
+    : 0;
+  const caption = currentIdx < 0
+    ? 'Sua jornada começa assim que a coordenação atribuir seu primeiro livro.'
+    : currentIdx >= EA_JOURNEY.length - 1
+      ? '<strong>Último nível!</strong> Você está na reta final da sua jornada rumo à fluência. 🎉'
+      : '<strong>' + currentIdx + ' de ' + (EA_JOURNEY.length - 1) + '</strong> etapas concluídas — continue avançando!';
+  const bar = document.createElement('div');
+  bar.className = 'journey-progress-bar';
+  bar.innerHTML = '<div class="journey-progress-fill"></div>';
+  const cap = document.createElement('div');
+  cap.className = 'journey-progress-caption';
+  cap.innerHTML = caption;
+  el.appendChild(bar);
+  el.appendChild(cap);
+  // Anima o preenchimento
+  requestAnimationFrame(() => {
+    setTimeout(() => { bar.querySelector('.journey-progress-fill').style.width = pct + '%'; }, 150);
+  });
 }
 
 // Render the student's current book card based on the course they are enrolled in
@@ -2279,34 +2569,27 @@ function renderCurrentBook(course) {
     el.innerHTML = '<div class="book-empty"><div style="font-size:32px;margin-bottom:8px;opacity:0.5">📚</div><strong style="color:var(--navy)">Nenhum livro vinculado</strong><div style="margin-top:6px">Aguarde a coordenação atribuir seu curso.</div></div>';
     return;
   }
-  // Map course name to theme + cover data
+  // Map course name to theme + real book cover image
   const name = (course.name || '').toLowerCase();
-  let theme = 'theme-intro', series = 'Cambridge', num = '', display = course.name, sub = course.description || '';
-  if (name.includes('intro')) { theme = 'theme-intro'; series = 'Interchange'; num = 'intro'; display = 'Interchange Intro'; }
-  else if (name.match(/interchange\s*1\b/) || name === 'interchange 1') { theme = 'theme-level1'; series = 'Interchange'; num = '1'; display = 'Interchange 1'; }
-  else if (name.match(/interchange\s*2\b/)) { theme = 'theme-level2'; series = 'Interchange'; num = '2'; display = 'Interchange 2'; }
-  else if (name.match(/interchange\s*3\b/)) { theme = 'theme-level3'; series = 'Interchange'; num = '3'; display = 'Interchange 3'; }
-  else if (name.includes('passages 1')) { theme = 'theme-passages'; series = 'Passages'; num = '1'; display = 'Passages 1'; }
-  else if (name.includes('passages 2')) { theme = 'theme-passages'; series = 'Passages'; num = '2'; display = 'Passages 2'; }
-  else if (name.includes('evolve 5')) { theme = 'theme-evolve'; series = 'Evolve'; num = '5'; display = 'Evolve 5'; }
-  else if (name.includes('evolve 6')) { theme = 'theme-evolve'; series = 'Evolve'; num = '6'; display = 'Evolve 6'; }
+  let theme = 'theme-intro', series = 'Cambridge', display = course.name, sub = course.description || '';
+  let img = 'img/books/interchange-intro.jpg';
+  if (name.includes('intro')) { theme = 'theme-intro'; series = 'Interchange'; display = 'Interchange Intro'; img = 'img/books/interchange-intro.jpg'; }
+  else if (name.match(/interchange\s*1\b/) || name === 'interchange 1') { theme = 'theme-level1'; series = 'Interchange'; display = 'Interchange 1'; img = 'img/books/interchange-1.jpg'; }
+  else if (name.match(/interchange\s*2\b/)) { theme = 'theme-level2'; series = 'Interchange'; display = 'Interchange 2'; img = 'img/books/interchange-2.jpg'; }
+  else if (name.match(/interchange\s*3\b/)) { theme = 'theme-level3'; series = 'Interchange'; display = 'Interchange 3'; img = 'img/books/interchange-3.jpg'; }
+  else if (name.includes('evolve 5')) { theme = 'theme-evolve'; series = 'Evolve'; display = 'Evolve 5'; img = 'img/books/evolve-5.jpg'; }
+  else if (name.includes('evolve 6')) { theme = 'theme-evolve'; series = 'Evolve'; display = 'Evolve 6'; img = 'img/books/evolve-6.jpg'; }
   // Subtitle by CEFR if no description
   const cefr = course.cefr_level || '';
   if (!sub) {
     const subs = { 'A1':'Iniciantes — primeiros passos no inglês.', 'A2':'Pré-intermediário — construindo bases.', 'B1':'Intermediário — comunicação confiante.', 'B2':'Intermediário-avançado — fluência prática.', 'C1':'Avançado — domínio do idioma.' };
     sub = subs[cefr] || 'Seu material de estudo atual.';
   }
-  // Build cover HTML — CSS-rendered, no base64
-  const coverNumHtml = num === 'intro'
-    ? '<div class="book-cover-title" style="font-size:18px">intro</div>'
-    : '<div class="book-cover-num">' + num + '</div>';
-  const coverSeriesHtml = '<div class="book-cover-title">' + (series === 'Interchange' ? 'interchange' : series === 'Passages' ? 'passages' : 'evolve') + '</div>';
+  // Real cover image — preserves the existing floating animation via .book-cover-img
   el.innerHTML = '' +
     '<div class="book-card ' + theme + '">' +
-      '<div class="book-cover">' +
-        '<div class="book-cover-brand">CAMBRIDGE</div>' +
-        '<div>' + coverSeriesHtml + '<div class="book-cover-edition">Fifth Edition</div></div>' +
-        coverNumHtml +
+      '<div class="book-cover-img">' +
+        '<img src="' + img + '" alt="Capa — ' + display + '" loading="lazy">' +
       '</div>' +
       '<div class="book-info">' +
         (cefr ? '<div class="b-cefr">CEFR ' + cefr + '</div>' : '') +
@@ -2497,8 +2780,24 @@ async function loadWriting() {
     const dueIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>';
     const teacherIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
 
-    return '<div class="wr-card">' +
-      '<div class="wr-header">' +
+    const isGraded = w.status === 'graded';
+    // Para redações corrigidas: data de correção, tema, nota e ícone "corrigido"
+    let collapseSummary = '';
+    let toggleBtn = '';
+    if (isGraded) {
+      const correctedDate = formatDate(w.reviewed_at || w.created_at);
+      collapseSummary =
+        '<div class="wr-collapse-summary">' +
+          '<span class="wr-cs-item">' + dueIcon + correctedDate + '</span>' +
+          '<span class="wr-cs-item">📝 ' + (w.title || 'Redação') + '</span>' +
+          '<span class="wr-cs-grade">Nota: ' + (w.grade || '—') + '</span>' +
+          '<span class="wr-cs-corrected"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>Corrigido</span>' +
+        '</div>';
+      toggleBtn = '<button type="button" class="wr-toggle-btn" aria-label="Expandir ou minimizar redação"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>';
+    }
+
+    return '<div class="wr-card' + (isGraded ? ' is-graded collapsed' : '') + '">' +
+      '<div class="wr-header"' + (isGraded ? ' data-wr-toggle' : '') + '>' +
         '<div class="wr-header-row">' +
           '<div class="wr-header-icon">' +
             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg>' +
@@ -2511,7 +2810,9 @@ async function loadWriting() {
             '</div>' +
           '</div>' +
           statusBadge +
+          toggleBtn +
         '</div>' +
+        collapseSummary +
       '</div>' +
       '<div class="wr-body">' +
         '<div class="wr-prompt">' + w.prompt + '</div>' +
@@ -2519,6 +2820,14 @@ async function loadWriting() {
       '</div>' +
     '</div>';
   }).join('');
+
+  // Ativa minimizar/expandir nas redações corrigidas
+  div.querySelectorAll('.wr-card.is-graded').forEach(card => {
+    const header = card.querySelector('[data-wr-toggle]');
+    if (header) {
+      header.addEventListener('click', () => card.classList.toggle('collapsed'));
+    }
+  });
 }
 
 // Atualizador do contador de caracteres

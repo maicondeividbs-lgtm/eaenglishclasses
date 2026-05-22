@@ -73,6 +73,32 @@ async function getAllProfiles() {
   return data || [];
 }
 
+// ═══ ACCESS LOGS (Registro de acessos de alunos) ═══
+// Registra um acesso do aluno ao site. Chamado no momento do login.
+async function logStudentAccess(userId, fullName, role) {
+  try {
+    if (!userId || role !== 'student') return; // só registramos alunos
+    await db.from('access_logs').insert([{
+      user_id: userId,
+      full_name: fullName || null,
+      role: role
+    }]);
+  } catch (e) {
+    // Falha no registro não deve bloquear o login
+    console.error('logStudentAccess error:', e);
+  }
+}
+
+// Busca os registros de acesso (uso do coordenador). Mais recentes primeiro.
+async function getAccessLogs(limit) {
+  const { data } = await db
+    .from('access_logs')
+    .select('*')
+    .order('accessed_at', { ascending: false })
+    .limit(limit || 300);
+  return data || [];
+}
+
 // ═══ TASKS (HOMEWORK) ═══
 async function createTask(title, description, teacherId, studentIds, dueDate) {
   const { data, error } = await db.from('tasks').insert([{

@@ -273,6 +273,8 @@ document.addEventListener('DOMContentLoaded', () => {
   (async () => {
     const profile = await getUserProfile();
     if (profile) {
+      console.log('[access_logs] Sessão já ativa, registrando acesso...');
+      await logStudentAccess(profile.id, profile.full_name, profile.role);
       redirectByRole(profile.role);
     }
   })();
@@ -310,6 +312,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (profile && profile.role) {
           console.log('Redirecting by role:', profile.role);
+          // Registra o acesso do aluno para a coordenação
+          await logStudentAccess(profile.id, profile.full_name, profile.role);
           redirectByRole(profile.role);
         } else {
           // Fallback: try fetching directly
@@ -317,11 +321,12 @@ document.addEventListener('DOMContentLoaded', () => {
           if (session) {
             const { data: p2 } = await db
               .from('profiles')
-              .select('role')
+              .select('id, role, full_name')
               .eq('id', session.user.id)
               .maybeSingle();
             console.log('Fallback profile:', p2);
             if (p2 && p2.role) {
+              await logStudentAccess(p2.id, p2.full_name, p2.role);
               redirectByRole(p2.role);
             } else {
               window.location.href = 'dashboard-aluno.html';

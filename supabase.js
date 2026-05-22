@@ -78,14 +78,20 @@ async function getAllProfiles() {
 async function logStudentAccess(userId, fullName, role) {
   try {
     if (!userId || role !== 'student') return; // só registramos alunos
-    await db.from('access_logs').insert([{
+    const { error } = await db.from('access_logs').insert([{
       user_id: userId,
       full_name: fullName || null,
       role: role
     }]);
+    if (error) {
+      // Não bloqueia o login, mas deixa o erro claro no console para diagnóstico.
+      console.error('[access_logs] Falha ao registrar acesso:', error.message, error);
+    } else {
+      console.log('[access_logs] Acesso registrado com sucesso.');
+    }
   } catch (e) {
     // Falha no registro não deve bloquear o login
-    console.error('logStudentAccess error:', e);
+    console.error('[access_logs] Exceção ao registrar acesso:', e);
   }
 }
 

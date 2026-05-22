@@ -968,7 +968,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 .journey-node::before {
   content: '';
   position: absolute;
-  top: 33px;
+  top: 56px;
   left: -50%;
   width: 100%;
   height: 4px;
@@ -980,44 +980,111 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 .journey-node.current::before {
   background: linear-gradient(90deg, #10b981, #34d399);
 }
-.journey-medal {
+
+/* ── Capa de livro real, flutuante ── */
+.journey-book {
   position: relative;
   z-index: 1;
-  width: 66px;
-  height: 66px;
+  margin-bottom: 14px;
+  padding-top: 4px;
+}
+.journey-book-cover {
+  width: 80px;
+  height: 106px;
+  border-radius: 3px 7px 7px 3px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 10px 22px rgba(15,23,42,0.22),
+              inset 5px 0 8px -4px rgba(0,0,0,0.35),
+              inset 1px 0 0 rgba(255,255,255,0.25);
+  transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1),
+              box-shadow 0.35s ease, filter 0.35s ease;
+}
+.journey-book-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Concluído — capa aberta, flutuação suave e contínua */
+.journey-node.done .journey-book-cover {
+  animation: journeyFloat 4.6s ease-in-out infinite;
+}
+.journey-node.done:nth-child(2) .journey-book-cover { animation-delay: -0.6s; }
+.journey-node.done:nth-child(3) .journey-book-cover { animation-delay: -1.2s; }
+.journey-node.done:nth-child(4) .journey-book-cover { animation-delay: -1.8s; }
+.journey-node.done:nth-child(5) .journey-book-cover { animation-delay: -2.4s; }
+
+/* Atual — destacado: flutua mais alto, com brilho e leve escala */
+.journey-node.current .journey-book {
+  transform: scale(1.12);
+}
+.journey-node.current .journey-book-cover {
+  box-shadow: 0 16px 32px rgba(243,107,46,0.38),
+              0 0 0 3px rgba(243,107,46,0.22),
+              inset 5px 0 8px -4px rgba(0,0,0,0.35);
+  animation: journeyFloatHi 3.4s ease-in-out infinite;
+}
+
+/* Bloqueado — capa esmaecida e em escala de cinza */
+.journey-node.locked .journey-book-cover {
+  filter: grayscale(1) brightness(1.08) opacity(0.55);
+  box-shadow: 0 6px 14px rgba(15,23,42,0.12);
+}
+
+.journey-node.done:hover .journey-book-cover,
+.journey-node.current:hover .journey-book-cover {
+  transform: translateY(-6px) scale(1.05);
+  box-shadow: 0 20px 36px rgba(15,23,42,0.28);
+}
+.journey-node.locked:hover .journey-book-cover {
+  filter: grayscale(0.55) opacity(0.8);
+}
+
+/* Flutuação dos livros concluídos */
+@keyframes journeyFloat {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50%      { transform: translateY(-9px) rotate(1deg); }
+}
+/* Flutuação mais ampla do livro atual */
+@keyframes journeyFloatHi {
+  0%, 100% { transform: translateY(0) rotate(-1.5deg); }
+  50%      { transform: translateY(-13px) rotate(1.5deg); }
+}
+
+/* Selo de status sobre a capa */
+.journey-book-badge {
+  position: absolute;
+  bottom: -8px;
+  right: -8px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 26px;
-  margin-bottom: 10px;
-  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  font-size: 13px;
+  font-weight: 800;
+  color: #fff;
+  border: 2.5px solid #fff;
+  box-shadow: 0 4px 10px rgba(15,23,42,0.25);
 }
-/* Concluído — desbloqueado/aberto */
-.journey-node.done .journey-medal {
+.journey-node.done .journey-book-badge {
   background: linear-gradient(135deg, #10b981, #34d399);
-  color: #fff;
-  box-shadow: 0 8px 20px rgba(16,185,129,0.35);
 }
-/* Atual — destacado */
-.journey-node.current .journey-medal {
+.journey-node.current .journey-book-badge {
   background: linear-gradient(135deg, var(--orange), var(--mango));
-  color: #fff;
-  box-shadow: 0 0 0 6px rgba(243,107,46,0.18), 0 10px 24px rgba(243,107,46,0.4);
-  animation: journeyPulse 2.2s ease-in-out infinite;
+  animation: journeyBadgePulse 2.2s ease-in-out infinite;
 }
-@keyframes journeyPulse {
-  0%, 100% { box-shadow: 0 0 0 6px rgba(243,107,46,0.18), 0 10px 24px rgba(243,107,46,0.4); }
-  50% { box-shadow: 0 0 0 11px rgba(243,107,46,0.06), 0 10px 24px rgba(243,107,46,0.45); }
+.journey-node.locked .journey-book-badge {
+  background: var(--g300);
+  font-size: 11px;
 }
-/* Bloqueado — próximos livros */
-.journey-node.locked .journey-medal {
-  background: var(--g100);
-  color: var(--g400);
-  border: 2px dashed var(--g200);
+@keyframes journeyBadgePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(243,107,46,0.45), 0 4px 10px rgba(15,23,42,0.25); }
+  50%      { box-shadow: 0 0 0 7px rgba(243,107,46,0), 0 4px 10px rgba(15,23,42,0.25); }
 }
-.journey-node.done:hover .journey-medal,
-.journey-node.current:hover .journey-medal { transform: scale(1.1) translateY(-2px); }
 
 .journey-label {
   font-size: 12px;
@@ -1071,9 +1138,10 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 }
 .journey-progress-caption strong { color: var(--navy); }
 @media (max-width: 560px) {
-  .journey-medal { width: 54px; height: 54px; font-size: 21px; }
-  .journey-node { min-width: 84px; }
-  .journey-node::before { top: 27px; }
+  .journey-book-cover { width: 62px; height: 82px; }
+  .journey-book-badge { width: 24px; height: 24px; font-size: 11px; }
+  .journey-node { min-width: 78px; }
+  .journey-node::before { top: 46px; }
 }
 @media (max-width: 480px) {
   .book-card { flex-direction: column; align-items: flex-start; min-height: auto; padding: 20px; }
@@ -2491,12 +2559,12 @@ async function loadOverview() {
 
 // Trilha fixa de livros da EA — define a ordem da jornada
 const EA_JOURNEY = [
-  { key: 'intro',         label: 'Interchange Intro', short: 'Intro',  cefr: 'A1' },
-  { key: 'interchange 1', label: 'Interchange 1',     short: 'Inter 1', cefr: 'A2' },
-  { key: 'interchange 2', label: 'Interchange 2',     short: 'Inter 2', cefr: 'B1' },
-  { key: 'interchange 3', label: 'Interchange 3',     short: 'Inter 3', cefr: 'B2' },
-  { key: 'evolve 5',      label: 'Evolve 5',          short: 'Evolve 5', cefr: 'B2+' },
-  { key: 'evolve 6',      label: 'Evolve 6',          short: 'Evolve 6', cefr: 'C1' }
+  { key: 'intro',         label: 'Interchange Intro', short: 'Intro',  cefr: 'A1',  img: 'img/books/interchange-intro.jpg' },
+  { key: 'interchange 1', label: 'Interchange 1',     short: 'Inter 1', cefr: 'A2', img: 'img/books/interchange-1.jpg' },
+  { key: 'interchange 2', label: 'Interchange 2',     short: 'Inter 2', cefr: 'B1', img: 'img/books/interchange-2.jpg' },
+  { key: 'interchange 3', label: 'Interchange 3',     short: 'Inter 3', cefr: 'B2', img: 'img/books/interchange-3.jpg' },
+  { key: 'evolve 5',      label: 'Evolve 5',          short: 'Evolve 5', cefr: 'B2+', img: 'img/books/evolve-5.jpg' },
+  { key: 'evolve 6',      label: 'Evolve 6',          short: 'Evolve 6', cefr: 'C1', img: 'img/books/evolve-6.jpg' }
 ];
 
 // Descobre o índice do livro atual a partir do nome do curso
@@ -2519,18 +2587,23 @@ function renderJourney(course) {
 
   let html = '';
   EA_JOURNEY.forEach((b, i) => {
-    let state, icon, status;
+    let state, badge, status;
     if (currentIdx < 0) {
-      state = 'locked'; icon = '🔒'; status = 'A definir';
+      state = 'locked'; badge = '🔒'; status = 'A definir';
     } else if (i < currentIdx) {
-      state = 'done'; icon = '📖'; status = 'Concluído';
+      state = 'done'; badge = '✓'; status = 'Concluído';
     } else if (i === currentIdx) {
-      state = 'current'; icon = '⭐'; status = 'Você está aqui';
+      state = 'current'; badge = '★'; status = 'Você está aqui';
     } else {
-      state = 'locked'; icon = '🔒'; status = 'Bloqueado';
+      state = 'locked'; badge = '🔒'; status = 'Bloqueado';
     }
     html += '<div class="journey-node ' + state + '" title="' + b.label + '">' +
-      '<div class="journey-medal">' + icon + '</div>' +
+      '<div class="journey-book">' +
+        '<div class="journey-book-cover">' +
+          '<img src="' + b.img + '" alt="Capa — ' + b.label + '" loading="lazy">' +
+        '</div>' +
+        '<span class="journey-book-badge">' + badge + '</span>' +
+      '</div>' +
       '<div class="journey-label">' + b.short + '</div>' +
       '<div class="journey-cefr">' + b.cefr + '</div>' +
       '<div class="journey-status">' + status + '</div>' +

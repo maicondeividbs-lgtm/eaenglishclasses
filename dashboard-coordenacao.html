@@ -631,6 +631,116 @@ body { background: var(--g50); margin: 0; }
 
 /* ═══ SCHEDULE — agenda mobile (lista por dia) ═══ */
 .sched-mobile { display: none; }
+
+/* ═══ PRÉVIA SALARIAL ESTIMADA ═══ */
+.salary-card {
+  margin-top: 20px;
+  background: #fff;
+  border: 1px solid var(--g100);
+  border-radius: 16px;
+  overflow: hidden;
+  border-top: 4px solid var(--mango);
+  box-shadow: 0 8px 24px rgba(25,36,78,0.06);
+}
+.salary-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 18px 22px;
+  background: linear-gradient(135deg, var(--cream, #fff7ec), #fff);
+  border-bottom: 1px solid var(--g100);
+  flex-wrap: wrap;
+}
+.salary-card-title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.salary-card-icon {
+  width: 46px; height: 46px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--orange), var(--mango));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+  box-shadow: 0 6px 14px rgba(243,107,46,0.28);
+}
+.salary-card-title h3 {
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--navy);
+  letter-spacing: -0.01em;
+}
+.salary-card-title p {
+  font-size: 12.5px;
+  color: var(--g500);
+  font-weight: 600;
+  margin-top: 2px;
+}
+.salary-estimate-tag {
+  background: var(--mango-soft, #fff3d6);
+  color: var(--orange);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 7px 14px;
+  border-radius: 99px;
+  border: 1px dashed var(--mango);
+}
+.salary-card-body { padding: 22px; }
+.salary-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.salary-metric {
+  background: var(--off-white, #f8f9fb);
+  border: 1px solid var(--g100);
+  border-radius: 14px;
+  padding: 20px 16px;
+  text-align: center;
+  transition: transform 0.25s ease;
+}
+.salary-metric:hover { transform: translateY(-3px); }
+.salary-metric-num {
+  font-family: 'Fraunces', serif;
+  font-size: 30px;
+  font-weight: 900;
+  color: var(--orange);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+.salary-metric-lbl {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--g500);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+.salary-disclaimer {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #fff3e0;
+  border: 1px solid #ffcc80;
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: 12.5px;
+  color: #92400e;
+  line-height: 1.6;
+}
+.salary-disclaimer svg { color: #e67e22; flex-shrink: 0; margin-top: 1px; }
+.salary-disclaimer strong { color: #7c2d12; }
+@media (max-width: 640px) {
+  .salary-metrics { grid-template-columns: 1fr; }
+  .salary-card-head { flex-direction: column; align-items: flex-start; }
+}
+
 @media (max-width: 768px) {
   .sched-desktop-grid { display: none !important; }
   .sched-mobile { display: block; }
@@ -1685,7 +1795,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
               <div class="f-group"><label>📋 Fim do Contrato</label><input type="date" id="editContractEnd"></div>
             </div>
             <div class="f-group"><label>Professor responsável</label><select id="editTeacher"><option value="">Selecione</option></select></div>
-            <div class="f-group"><label>Curso</label><select id="editCourse"><option value="">Selecione o curso</option><option value="1">Interchange Intro</option><option value="2">Interchange 1</option><option value="3">Interchange 2</option><option value="4">Interchange 3</option><option value="5">Passages 1</option><option value="6">Passages 2</option><option value="7">Evolve 5</option><option value="8">Evolve 6</option></select></div>
+            <div class="f-group"><label>Curso</label><select id="editCourse"><option value="">Selecione o curso</option><option value="1">Interchange Intro</option><option value="2">Interchange 1</option><option value="3">Interchange 2</option><option value="4">Interchange 3</option><option value="7">Evolve 5</option><option value="8">Evolve 6</option></select></div>
             <div style="display:flex;gap:10px;margin-top:16px">
               <button class="btn-send" style="background:var(--mango);flex:1" onclick="saveUserEdit()">Salvar Alterações</button>
               <button onclick="confirmDeleteUser()" style="padding:13px 20px;border:2px solid #ef4444;border-radius:10px;background:#fff;color:#ef4444;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer">🗑️ Excluir</button>
@@ -1743,6 +1853,40 @@ body.sb-collapsed .main { margin-left: 92px !important; }
           <div id="cPopContent"></div>
         </div>
         <div id="cSchedOverlay" style="display:none;position:fixed;inset:0;z-index:998;background:rgba(0,0,0,0.4);backdrop-filter:blur(3px)" onclick="closeCPop()"></div>
+
+        <!-- ═══ PRÉVIA SALARIAL ESTIMADA ═══ -->
+        <div class="salary-card" id="salaryCard" style="display:none">
+          <div class="salary-card-head">
+            <div class="salary-card-title">
+              <span class="salary-card-icon">💰</span>
+              <div>
+                <h3>Prévia Salarial Estimada</h3>
+                <p id="salaryCardSub">—</p>
+              </div>
+            </div>
+            <span class="salary-estimate-tag">⚠️ Apenas estimativa</span>
+          </div>
+          <div class="salary-card-body">
+            <div class="salary-metrics">
+              <div class="salary-metric">
+                <div class="salary-metric-num" id="salWeekdays">—</div>
+                <div class="salary-metric-lbl">Dias úteis no mês</div>
+              </div>
+              <div class="salary-metric">
+                <div class="salary-metric-num" id="salClasses">—</div>
+                <div class="salary-metric-lbl">Aulas previstas no mês</div>
+              </div>
+              <div class="salary-metric">
+                <div class="salary-metric-num" id="salHours">—</div>
+                <div class="salary-metric-lbl">Carga horária prevista</div>
+              </div>
+            </div>
+            <div class="salary-disclaimer">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <span>Este valor é <strong>apenas uma estimativa</strong>, calculada considerando <strong>aulas de 30 minutos</strong> e a recorrência semanal da grade ao longo do mês. O valor final pode variar conforme cancelamentos, reposições, feriados e ajustes da coordenação.</span>
+            </div>
+          </div>
+        </div>
 
         <div class="panel" style="margin-top:20px">
           <div class="panel-head"><div class="panel-title">📋 Eventos do Mês</div><span class="badge badge-time" id="coordSchedEventCount">0</span></div>
@@ -3191,7 +3335,65 @@ async function loadCoordSchedule(){
     }rows+='<tr><td class="sched-hour">'+hour+'</td>'+cells+'</tr>';}
   tbody.innerHTML=rows;
   renderCoordSchedMobile(slots,evts);
+  renderSalaryEstimate(slots, mi);
   loadCoordScheduleEvents();
+}
+
+// ═══ PRÉVIA SALARIAL ESTIMADA ═══
+// Conta quantas vezes cada dia da semana ocorre no mês informado (YYYY-MM).
+// C_DAYS usa índice 0=Seg ... 5=Sáb. getDay(): 0=Dom,1=Seg,...,6=Sáb.
+function countWeekdaysInMonth(year, month1) {
+  // month1 é 1-12
+  const counts = [0,0,0,0,0,0]; // Seg..Sáb
+  const daysInMonth = new Date(year, month1, 0).getDate();
+  for (let d = 1; d <= daysInMonth; d++) {
+    const jsDay = new Date(year, month1 - 1, d).getDay(); // 0=Dom..6=Sáb
+    if (jsDay >= 1 && jsDay <= 6) counts[jsDay - 1]++; // mapeia Seg(1)->0 ... Sáb(6)->5
+  }
+  return counts;
+}
+
+function renderSalaryEstimate(slots, monthInput) {
+  const card = document.getElementById('salaryCard');
+  if (!card) return;
+  if (!cTeacherId || !monthInput || !slots || !slots.length) {
+    card.style.display = 'none';
+    return;
+  }
+  const parts = monthInput.split('-');
+  const year = parseInt(parts[0]);
+  const month1 = parseInt(parts[1]);
+  const weekdayCounts = countWeekdaysInMonth(year, month1);
+  const totalWeekdays = weekdayCounts.reduce((a, b) => a + b, 0);
+
+  let totalClasses = 0;     // nº de aulas previstas no mês (recorrência semanal)
+  let totalMinutes = 0;     // soma de minutos previstos no mês
+  for (let i = 0; i < slots.length; i++) {
+    const s = slots[i];
+    const dow = s.day_of_week;            // 0=Seg..5=Sáb
+    if (dow < 0 || dow > 5) continue;
+    const occurrences = weekdayCounts[dow] || 0;
+    const dur = s.duration_minutes || 60;
+    totalClasses += occurrences;
+    totalMinutes += occurrences * dur;
+  }
+
+  // Cálculo baseado em aulas de 30 minutos
+  const thirtyMinUnits = Math.round(totalMinutes / 30);
+  const totalHours = (totalMinutes / 60);
+  const hoursLabel = Number.isInteger(totalHours)
+    ? totalHours + 'h'
+    : totalHours.toFixed(1).replace('.', ',') + 'h';
+
+  const monthName = (MONTHS[month1] || '') + ' de ' + year;
+  document.getElementById('salaryCardSub').textContent =
+    'Referente a ' + monthName + ' · base de aulas de 30 min';
+  document.getElementById('salWeekdays').textContent = totalWeekdays;
+  document.getElementById('salClasses').textContent = totalClasses;
+  document.getElementById('salHours').innerHTML =
+    hoursLabel + '<span style="font-size:13px;font-weight:700;color:var(--g400);display:block;margin-top:3px">' +
+    thirtyMinUnits + ' aulas de 30 min</span>';
+  card.style.display = '';
 }
 
 // ═══ SCHEDULE — agenda mobile (lista por dia) ═══

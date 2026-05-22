@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAAAAABWESUoAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAACYktHRAD/h4/MvwAAAAd0SU1FB+oEGBUhLL+MU28AAAF3SURBVDjLvVM7LwRRFP7OzF02xmMFJSEa2dAQQRREo6EWfoN/IH6BUiV6hV7hJ+hokIgQsiHezGLNzD2fwu7s7EvH192bc7/HOecK8Tsc/HmBSR4ojADHpZTvpNokhZBERYKBoHO35X5MLKokXxShVBvyEC5maZUxYpMCiMB1HJz5SeemrP269Nrsa9dj7nJE3VoJy7t2iGClDTsMtVaihJlWHDXogzvw0vz8NNV5c4QGKT59bnucw8AntV4KSaeBfvQhdwmtlyK/8Z7Zn0QWwfEQy72sSOFgem0eWGcQayQK7nvcdAqAi0VGcUFyFl/WIusVTu1JmGKdmGbcZ2Y3E2TPr68Gaz2QqiQ14gKwx7AqJkGlWmtpMQwcgGCFhADOD6vBcgvGEE+ruFGUIOdpUxi2RmF7ZN4LvaWtMqU23W4+tGUL5z295iJvgu7VjmqGt4NUXrv87vSVSWnojXpFhvLSVu5q9SwoVABC+XEvIjUMDfAPf/MbvRIRVjKrblQAAAAASUVORK5CYII=">
+<meta name="description" content="EA English Classes — Escola de inglês online com mais de 10 anos em Osasco, SP. Aulas ao vivo pelo Google Meet do nível A1 ao C1.">
+<meta property="og:title" content="EA English Classes">
+<meta property="og:description" content="Escola de inglês online — aulas ao vivo com foco em conversação e gramática. Do zero à fluência.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta name="theme-color" content="#19244e">
+<title>Entrar — EA English Classes</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a href="#main-content" class="skip-link" style="position:absolute;top:-40px;left:0;background:var(--navy);color:#fff;padding:8px 16px;z-index:10000;transition:top 0.3s;font-size:14px;font-weight:700;border-radius:0 0 8px 0" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">Pular para o conteúdo</a>
+<style>
+  .login-wrap {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--navy), var(--blue));
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .login-wrap::before {
+    content: '';
+    position: absolute;
+    top: -200px;
+    right: -200px;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(243,107,46,0.2), transparent 60%);
+    border-radius: 50%;
+  }
+  .login-wrap::after {
+    content: '';
+    position: absolute;
+    bottom: -200px;
+    left: -200px;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(245,154,30,0.15), transparent 60%);
+    border-radius: 50%;
+  }
+  .login-box {
+    max-width: 440px;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+  }
+  .login-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .login-logo .nav-logo-text { color: var(--white); font-size: 24px; }
+  .login-logo .nav-logo-text span { color: var(--orange); }
+  .login-card {
+    background: var(--white);
+    border-radius: var(--r-xl);
+    padding: 40px;
+    box-shadow: var(--shadow-xl);
+  }
+  .login-card h2 {
+    font-size: 28px;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+  .login-card h2 em { color: var(--orange); font-style: italic; font-weight: 900; }
+  .login-card > p {
+    font-size: 14px;
+    color: var(--g500);
+    margin-bottom: 28px;
+  }
+  .login-footer {
+    text-align: center;
+    font-size: 13px;
+    color: var(--g500);
+    margin-top: 20px;
+  }
+  .login-footer a {
+    color: var(--orange);
+    font-weight: 700;
+  }
+  .portal-demo {
+    margin-top: 28px;
+    padding-top: 28px;
+    border-top: 2px dashed var(--g200);
+    text-align: center;
+  }
+  .portal-demo p {
+    font-size: 13px;
+    color: var(--g500);
+    margin-bottom: 14px;
+  }
+  .portal-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .portal-btn {
+    padding: 10px 16px;
+    border-radius: var(--r-full);
+    font-size: 13px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+  }
+  .portal-btn.student { background: var(--blue-soft); color: var(--blue); }
+  .portal-btn.student:hover { background: var(--blue); color: var(--white); transform: translateY(-2px); }
+  .portal-btn.teacher { background: var(--orange-soft); color: var(--orange); }
+  .portal-btn.teacher:hover { background: var(--orange); color: var(--white); transform: translateY(-2px); }
+  .portal-btn.coord { background: var(--mango-soft); color: var(--mango); }
+  .portal-btn.coord:hover { background: var(--mango); color: var(--white); transform: translateY(-2px); }
+  .back-home {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 24px;
+    color: rgba(255,255,255,0.7);
+    font-size: 13px;
+    transition: color 0.2s;
+  }
+  .back-home:hover { color: var(--white); }
+  .protopip {
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .login-box { animation: fadeUp 0.6s cubic-bezier(0.4,0,0.2,1); }
+  .login-card { animation: fadeUp 0.6s cubic-bezier(0.4,0,0.2,1) 0.1s backwards; }
+  .form-group { animation: fadeUp 0.5s cubic-bezier(0.4,0,0.2,1) backwards; }
+  .form-group:nth-child(1) { animation-delay: 0.15s; }
+  .form-group:nth-child(2) { animation-delay: 0.25s; }
+  .login-spinner {
+    display: none;
+    width: 18px; height: 18px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+  }
+  .login-card .form-group input:valid {
+    border-color: #10b981;
+  }
+  .login-card .form-group input:focus {
+    border-color: var(--orange);
+    box-shadow: 0 0 0 4px rgba(243,107,46,0.1);
+  }
+  .login-welcome {
+    text-align: center;
+    padding: 16px;
+    margin-bottom: 20px;
+    background: rgba(245,154,30,0.08);
+    border-radius: 12px;
+    font-size: 13px;
+    color: var(--g700);
+    line-height: 1.6;
+  }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    .login-wrap { padding: 16px; }
+    .login-card { padding: 28px 22px; }
+    .login-card h2 { font-size: 24px; }
+    .login-logo { margin-bottom: 24px; }
+    .login-logo .nav-logo-text { font-size: 21px; }
+    .portal-buttons { flex-direction: column; }
+    .portal-btn { justify-content: center; }
+  }
+</style>
+
+<div class="login-wrap">
+  <div class="login-box">
+    <a href="index.html" class="login-logo">
+      <div class="nav-logo-icon" style="width:48px;height:48px"><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAAAAAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/wAALCABkAGQBAREA/8QAHAABAAEFAQEAAAAAAAAAAAAAAAcEBQYICQID/8QANhAAAQMDAwIDBQQLAAAAAAAAAQACAwQFEQYHEhMhCDFBFCJRYZEVgaGiCRYXGCNCRFViktL/2gAIAQEAAD8A3LRERERERERERERERERERERERERERERWDci51dl271JeLe8R1lBaaqpp3uaHBsjInOaSD2PcDsuff72O9WMfb9BnH9rg/wCVv/tbqE6r2407qR7mukuVtgqJeIwBI5gLxj5O5BZIiIiIiKDvG7fb1p7Y6a42G7V1qrBcqZgqKOodDJxJdkcmkHBx5LQmt3T3KraKeirNfanqKaojdFNFLdJnMkY4Yc1wLsEEEgheLppY0m01j1dxPK4Xetoyf8Yo6ct/F8n0W+vgSvhvHh4tdM54fJaqqooXH1wH9Ro/1kH0U6oiIiIixrcjQ+ndwNNO09qikkqre6ZkxjjmdEeTM8TlpB9Stf8Ae7w3bTaY2j1RqCz2KrhuFBbZZ6eR1wneGvaOx4l2D96jXczRwovARoetEZE8FxbcJXY/kqTMB+Dovosq/RqXwOoNYabe7HTlp66Jvx5B0bz+Vi3FRERERFBHjpudxtOxE1Xa7hV0FQLnStEtNM6N+CXZGWkHC591ms9XVtJLSVmqb5U08zSyWKW4SvY9p9C0uwR8ipJ1f4idV6l2kbtpWWPT0NnZSU1LHJDFKJmNgLCwgmQjPuDPb1Kv3gAvn2Xv7Fb3ScWXe21FLxJ7FzQJh9/8M/VdFERERERYNvftxRbo6GfpWvuNRb4XVMVR1oGNc7LCcDDu3fKg23+CjSNNX09RLq271McUrHvhfTRcZACCWn5EDH3qXtW7J7a1+lbvRUGgdM01ZU0U0UE0NsiY+KRzHBrmkNyCCQQQudexl6dpjefSl2kJjbS3aAT57YY54ZJ+Vzl1hHkiIiIiKOYd59EyvZEyprPaJGB8MJpzylDpHRtx3x3c0+ZGPN2FWVu62kaQROmqKrjLA+oDhTniI2GYOcSTj+nk7eZAyARnFVbtx9M3Cst1NRzVEwuEcckMzYT0wJOr0+Ts4HIQSkefZue2RmAp9vvDNXOdfBYr0faWitMjKipjA5slm7DmMYbDIcD1HEZOQNj9Gaotmp6WoltntHCleyKTrNDTyMbX/E57Pb38j6Ejur8iIiIiw2Xa3QUsPSl07TyARuiaXySFzGFwcWtcXZaMgYAIx6YXv9meieiIDYo3Qh3IROnlLAQZCPdLsYBlkLR5NLyRhfap290hUdHnaAzoxtjj6VRLHhrXPc0e64ZwZZMZ8g9w8iQqd21+hDT+zfq9Tim4BggEsgiawFzg0MDuIbye52AMcjy8wCr5YNPWixGodbKV0T6jpiWR8z5XvDGhjAXPJOGtGAM4Hf4lXVERERERERERERERERERERERERERERf/2Q==" alt="EA"></div>
+      <div class="nav-logo-text" style="font-size:24px;color:#fff">EA<span>.</span></div>
+    </a>
+    <div class="login-card">
+      <h2>Bem-<em>vindo</em> de volta!</h2>
+      <p>Acesse sua área restrita para continuar.</p>
+      <div class="login-welcome">🎓 Bem-vindo à plataforma da EA English Classes.<br>Acesse sua área com e-mail e senha.</div>
+      <div id="loginError" style="display:none;padding:12px;background:#fee2e2;border:2px solid #ef4444;border-radius:10px;color:#991b1b;font-size:13px;font-weight:600;text-align:center;margin-bottom:16px"></div>
+      <form id="loginForm">
+      <div class="form-group"><label>E-mail</label><input type="email" id="loginEmail" placeholder="seu@email.com" required></div>
+      <div class="form-group"><label>Senha</label><input type="password" id="loginPassword" placeholder="••••••••" required></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;font-size:13px">
+        <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" id="rememberMe" style="width:auto"> Lembrar-me</label>
+        <a href="#" id="forgotLink" style="color:var(--orange);font-weight:600">Esqueci a senha</a>
+      </div>
+      <button type="submit" id="loginBtn" class="btn btn-primary btn-full btn-lg" style="display:flex;align-items:center;justify-content:center;gap:10px"><span id="loginText">Entrar</span><div class="login-spinner" id="loginSpinner"></div></button>
+      </form>
+      
+      
+    </div>
+    <a href="index.html" class="back-home">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      Voltar para o site
+    </a>
+    
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  const reveals=document.querySelectorAll('.reveal');
+  const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible')})},{threshold:0.08,rootMargin:'0px 0px -50px 0px'});
+  reveals.forEach(el=>obs.observe(el));
+  window.addEventListener('scroll',()=>{document.getElementById('nav')?.classList.toggle('scrolled',window.scrollY>50)},{passive:true});
+});
+</script>
+
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<script>
+
+// Forgot password
+document.getElementById('forgotLink')?.addEventListener('click', async function(e) {
+  e.preventDefault();
+  var emailInput = document.getElementById('loginEmail');
+  var errorBox = document.getElementById('loginError');
+  var email = emailInput.value.trim();
+  if (!email) {
+    errorBox.textContent = 'Digite seu e-mail primeiro para receber o link de recuperação.';
+    errorBox.style.display = 'block';
+    emailInput.focus();
+    return;
+  }
+  errorBox.style.display = 'none';
+  // Remove any previous success message
+  document.getElementById('resetSuccess')?.remove();
+  try {
+    var { error } = await db.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + '/login.html'
+    });
+    if (error) throw error;
+    var msg = document.createElement('div');
+    msg.id = 'resetSuccess';
+    msg.style.cssText = 'padding:12px;background:#d1fae5;border:2px solid #6ee7b7;border-radius:10px;color:#065f46;font-size:13px;font-weight:600;text-align:center;margin-bottom:16px';
+    msg.textContent = 'E-mail de recuperação enviado! Verifique sua caixa de entrada.';
+    errorBox.insertAdjacentElement('afterend', msg);
+  } catch(err) {
+    errorBox.textContent = 'Não foi possível enviar o e-mail: ' + err.message;
+    errorBox.style.display = 'block';
+  }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const loginForm = document.getElementById('loginForm');
+  const loginBtn = document.getElementById('loginBtn');
+  const loginError = document.getElementById('loginError');
+  const rememberMe = document.getElementById('rememberMe');
+
+  // Pré-preencher e-mail se "Lembrar-me" foi usado antes
+  try {
+    const savedEmail = localStorage.getItem('ea_remembered_email');
+    if (savedEmail) {
+      document.getElementById('loginEmail').value = savedEmail;
+      if (rememberMe) rememberMe.checked = true;
+      document.getElementById('loginPassword')?.focus();
+    }
+  } catch(e) { /* localStorage indisponível */ }
+
+  // Check if already logged in
+  (async () => {
+    const profile = await getUserProfile();
+    if (profile) {
+      console.log('[access_logs] Sessão já ativa, registrando acesso...');
+      await logStudentAccess(profile.id, profile.full_name, profile.role);
+      redirectByRole(profile.role);
+    }
+  })();
+
+  if (loginForm) {
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      loginBtn.disabled = true;
+      document.getElementById('loginText').textContent = 'Entrando...';
+      document.getElementById('loginSpinner').style.display = 'block';
+      loginError.style.display = 'none';
+
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+
+      // Salvar ou limpar e-mail conforme "Lembrar-me"
+      try {
+        if (rememberMe && rememberMe.checked) {
+          localStorage.setItem('ea_remembered_email', email);
+        } else {
+          localStorage.removeItem('ea_remembered_email');
+        }
+      } catch(e) { /* localStorage indisponível */ }
+
+      try {
+        const data = await signIn(email, password);
+        
+        // Wait a moment for session to settle
+        await new Promise(r => setTimeout(r, 500));
+        
+        // Get user profile to determine role
+        const profile = await getUserProfile();
+        console.log('Profile loaded:', profile);
+        
+        if (profile && profile.role) {
+          console.log('Redirecting by role:', profile.role);
+          // Registra o acesso do aluno para a coordenação
+          await logStudentAccess(profile.id, profile.full_name, profile.role);
+          redirectByRole(profile.role);
+        } else {
+          // Fallback: try fetching directly
+          const session = await getSession();
+          if (session) {
+            const { data: p2 } = await db
+              .from('profiles')
+              .select('id, role, full_name')
+              .eq('id', session.user.id)
+              .maybeSingle();
+            console.log('Fallback profile:', p2);
+            if (p2 && p2.role) {
+              await logStudentAccess(p2.id, p2.full_name, p2.role);
+              redirectByRole(p2.role);
+            } else {
+              window.location.href = 'dashboard-aluno.html';
+            }
+          }
+        }
+        
+      } catch (err) {
+        console.error('Login error:', err);
+        let msg = 'E-mail ou senha incorretos.';
+        if (err.message?.includes('Invalid login')) {
+          msg = 'E-mail ou senha incorretos. Verifique e tente novamente.';
+        } else if (err.message?.includes('Email not confirmed')) {
+          msg = 'Confirme seu e-mail antes de fazer login. Verifique sua caixa de entrada.';
+        }
+        loginError.textContent = msg;
+        loginError.style.display = 'block';
+      } finally {
+        loginBtn.disabled = false;
+        document.getElementById('loginText').textContent = 'Entrar';
+        document.getElementById('loginSpinner').style.display = 'none';
+      }
+    });
+  }
+});
+</script>
+</body></html>

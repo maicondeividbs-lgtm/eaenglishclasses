@@ -2454,12 +2454,34 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 let currentUser = null;
 const sections = {"overview":"Visão Geral","homework":"Homework","feedback":"Feedbacks","announcements":"Avisos","writing":"Redação","pronunciation":"Pronúncia","manual":"Manual do Aluno","profile":"Meu Perfil"};
 
+// Registra o acesso do aluno para a coordenação.
+// Chamado após a autenticação confirmar que é um aluno.
+async function registerStudentAccess(user) {
+  try {
+    if (!user || user.role !== 'student') return;
+    // Trava de 30 min para não duplicar registros a cada recarga de página.
+    const last = parseInt(sessionStorage.getItem('ea_access_logged') || '0', 10);
+    if (Date.now() - last <= 30 * 60 * 1000) {
+      console.log('[access_logs] Acesso já registrado nos últimos 30 min — ignorado.');
+      return;
+    }
+    await logStudentAccess(user.id, user.full_name, user.role);
+    // Só marca como registrado APÓS a tentativa (logStudentAccess já loga sucesso/erro).
+    sessionStorage.setItem('ea_access_logged', String(Date.now()));
+  } catch (e) {
+    console.error('[access_logs] Erro ao registrar no dashboard:', e);
+  }
+}
+
 // Init collapsible sidebar immediately (independent of auth)
 document.addEventListener('DOMContentLoaded', () => { initCollapsibleSidebar(); });
 
-document.addEventListener('DOMContentLoaded', async () => {
+async function initStudentDashboard() {
   currentUser = await requireAuth(['student']);
   if (!currentUser) return;
+
+  // Registra o acesso assim que a identidade do aluno é confirmada.
+  await registerStudentAccess(currentUser);
 
   document.getElementById('userName').textContent = currentUser.full_name || 'Aluno';
   document.getElementById('userAvatar').textContent = (currentUser.full_name || 'A')[0];
@@ -2494,7 +2516,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   initHelpRequest();
   // Load avatar if exists
   if (currentUser.avatar_url) setAvatarEverywhere(currentUser.avatar_url);
-});
+}
+
+// Dispara a inicialização — funciona mesmo que o DOM já tenha carregado.
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initStudentDashboard);
+} else {
+  initStudentDashboard();
+}
 
 // ═══ COLLAPSIBLE SIDEBAR ═══
 function initCollapsibleSidebar() {

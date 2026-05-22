@@ -741,6 +741,377 @@ body { background: var(--g50); margin: 0; }
   .salary-card-head { flex-direction: column; align-items: flex-start; }
 }
 
+/* ════════════════════════════════════════════════════════
+   ✦ NIVELAMENTOS & LEADS — seção reformulada
+   ════════════════════════════════════════════════════════ */
+.niv-funnel {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr 1fr;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.niv-funnel-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #fff;
+  border: 1px solid var(--g100);
+  border-radius: 16px;
+  padding: 18px 20px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+.niv-funnel-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 4px; height: 100%;
+}
+.niv-fc-total::before    { background: var(--blue, #253c96); }
+.niv-fc-pending::before  { background: var(--mango, #f59a1e); }
+.niv-fc-contacted::before{ background: #10b981; }
+.niv-fc-rate::before     { background: var(--orange, #f36b2e); }
+.niv-funnel-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(25,36,78,0.08);
+}
+.niv-funnel-icon {
+  width: 46px; height: 46px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+.niv-fc-total .niv-funnel-icon    { background: rgba(37,60,150,0.10); }
+.niv-fc-pending .niv-funnel-icon  { background: rgba(245,154,30,0.12); }
+.niv-fc-contacted .niv-funnel-icon{ background: rgba(16,185,129,0.12); }
+.niv-fc-rate .niv-funnel-icon     { background: rgba(243,107,46,0.12); }
+.niv-funnel-num {
+  font-family: 'Fraunces', serif;
+  font-size: 26px;
+  font-weight: 900;
+  color: var(--navy);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.niv-funnel-lbl {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--g500);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-top: 4px;
+}
+.niv-funnel-arrow {
+  font-size: 20px;
+  color: var(--g300, #cbd2dd);
+  font-weight: 900;
+  text-align: center;
+}
+@media (max-width: 1024px) {
+  .niv-funnel { grid-template-columns: 1fr 1fr; }
+  .niv-funnel-arrow { display: none; }
+}
+@media (max-width: 560px) {
+  .niv-funnel { grid-template-columns: 1fr; }
+}
+
+/* Toolbar: tabs + busca */
+.niv-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+.niv-tabs {
+  display: inline-flex;
+  background: #fff;
+  border: 1px solid var(--g100);
+  border-radius: 12px;
+  padding: 4px;
+  gap: 2px;
+}
+.niv-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: none;
+  background: none;
+  padding: 9px 16px;
+  border-radius: 9px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--g500);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.niv-tab:hover { color: var(--navy); background: var(--g50, #f8f9fb); }
+.niv-tab.active { background: var(--navy); color: #fff; }
+.niv-tab-count {
+  background: rgba(0,0,0,0.08);
+  color: inherit;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 1px 8px;
+  border-radius: 99px;
+  min-width: 20px;
+  text-align: center;
+}
+.niv-tab.active .niv-tab-count { background: rgba(255,255,255,0.22); }
+.niv-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border: 1.5px solid var(--g200);
+  border-radius: 12px;
+  padding: 10px 14px;
+  flex: 1;
+  min-width: 220px;
+  max-width: 380px;
+  transition: border-color 0.2s ease;
+}
+.niv-search:focus-within { border-color: var(--mango); }
+.niv-search svg { color: var(--g400); flex-shrink: 0; }
+.niv-search input {
+  border: none;
+  outline: none;
+  background: none;
+  font-family: inherit;
+  font-size: 13.5px;
+  color: var(--navy);
+  width: 100%;
+}
+.niv-search input::placeholder { color: var(--g400); }
+
+/* Card de lead */
+.niv-lead {
+  background: #fff;
+  border: 1px solid var(--g100);
+  border-radius: 16px;
+  margin-bottom: 14px;
+  overflow: hidden;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+  position: relative;
+}
+.niv-lead::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 5px; height: 100%;
+}
+.niv-lead.is-pending::before   { background: linear-gradient(180deg, var(--mango), #f7c668); }
+.niv-lead.is-contacted::before { background: linear-gradient(180deg, #10b981, #34d399); }
+.niv-lead:hover {
+  box-shadow: 0 12px 30px rgba(25,36,78,0.09);
+  transform: translateY(-2px);
+}
+.niv-lead-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px 20px 18px 24px;
+  flex-wrap: wrap;
+}
+.niv-lead-avatar {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  font-size: 20px;
+  color: #fff;
+  flex-shrink: 0;
+}
+.niv-lead.is-pending .niv-lead-avatar   { background: linear-gradient(135deg, var(--mango), var(--orange)); }
+.niv-lead.is-contacted .niv-lead-avatar { background: linear-gradient(135deg, #10b981, #34d399); }
+.niv-lead-main { flex: 1; min-width: 200px; }
+.niv-lead-name-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.niv-lead-name {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--navy);
+  letter-spacing: -0.01em;
+}
+.niv-lead-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  padding: 4px 11px;
+  border-radius: 99px;
+}
+.niv-lead-status.st-pending   { background: rgba(245,154,30,0.13); color: #b7791f; }
+.niv-lead-status.st-contacted { background: rgba(16,185,129,0.13); color: #059669; }
+.niv-lead-status svg { width: 11px; height: 11px; }
+.niv-lead-time {
+  font-size: 11.5px;
+  color: var(--g400);
+  font-weight: 600;
+}
+.niv-lead-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-bottom: 10px;
+}
+.niv-lead-info-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--g600);
+  font-weight: 600;
+}
+.niv-lead-info-item svg { width: 14px; height: 14px; color: var(--g400); flex-shrink: 0; }
+.niv-lead-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 4px;
+}
+.niv-lead-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: var(--g50, #f3f4f8);
+  color: var(--g700, #3f4759);
+}
+.niv-lead-chip.chip-level { background: rgba(37,60,150,0.09); color: var(--blue, #253c96); }
+.niv-lead-chip.chip-date  { background: rgba(243,107,46,0.10); color: var(--orange); }
+.niv-lead-msg {
+  margin-top: 10px;
+  background: var(--g50, #f8f9fb);
+  border-left: 3px solid var(--g200);
+  border-radius: 0 8px 8px 0;
+  padding: 9px 14px;
+  font-size: 12.5px;
+  color: var(--g700, #3f4759);
+  font-style: italic;
+  line-height: 1.55;
+}
+.niv-lead-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  flex-shrink: 0;
+  min-width: 150px;
+}
+.niv-act-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+.niv-act-btn svg { width: 14px; height: 14px; }
+.niv-act-wpp   { background: #25D366; color: #fff; }
+.niv-act-wpp:hover { background: #1eb858; }
+.niv-act-email { background: var(--navy); color: #fff; }
+.niv-act-email:hover { background: #0f1838; }
+.niv-act-contact {
+  background: var(--mango); color: #fff;
+  box-shadow: 0 4px 12px rgba(245,154,30,0.3);
+}
+.niv-act-contact:hover { background: var(--orange); transform: translateY(-1px); }
+.niv-act-revert {
+  background: #fff; color: var(--g500);
+  border: 1.5px solid var(--g200);
+}
+.niv-act-revert:hover { border-color: var(--mango); color: var(--mango); }
+.niv-act-done {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #059669;
+  background: rgba(16,185,129,0.10);
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+.niv-act-done svg { width: 14px; height: 14px; }
+
+/* Skeleton de carregamento */
+.niv-skeleton-wrap { display: flex; flex-direction: column; gap: 14px; }
+.niv-skeleton {
+  height: 104px;
+  border-radius: 16px;
+  background: linear-gradient(90deg, #f0f1f5 25%, #f7f8fa 50%, #f0f1f5 75%);
+  background-size: 400px 100%;
+  animation: nivSkel 1.4s ease infinite;
+}
+@keyframes nivSkel {
+  0% { background-position: -200px 0; }
+  100% { background-position: calc(200px + 100%) 0; }
+}
+
+/* Estado vazio refinado */
+.niv-empty {
+  text-align: center;
+  padding: 56px 28px;
+  background: #fff;
+  border: 1px dashed var(--g200);
+  border-radius: 16px;
+}
+.niv-empty-icon {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(245,154,30,0.12), rgba(243,107,46,0.10));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px;
+  margin: 0 auto 16px;
+}
+.niv-empty h4 {
+  font-family: 'Fraunces', serif;
+  font-size: 19px;
+  color: var(--navy);
+  margin-bottom: 6px;
+}
+.niv-empty p {
+  font-size: 13.5px;
+  color: var(--g500);
+  max-width: 380px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+@media (max-width: 680px) {
+  .niv-lead-body { flex-direction: column; }
+  .niv-lead-actions { width: 100%; flex-direction: row; flex-wrap: wrap; }
+  .niv-lead-actions .niv-act-btn,
+  .niv-lead-actions .niv-act-done { flex: 1; min-width: 120px; }
+  .niv-toolbar { flex-direction: column; align-items: stretch; }
+  .niv-search { max-width: none; }
+}
+
 @media (max-width: 768px) {
   .sched-desktop-grid { display: none !important; }
   .sched-mobile { display: block; }
@@ -1897,16 +2268,68 @@ body.sb-collapsed .main { margin-left: 92px !important; }
             <div class="section" id="sec-nivelamento">
         <div class="section-head">
           <div class="section-head-icon yellow">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
           </div>
           <div class="section-head-text">
-            <h2>Agendamentos de Nivelamento</h2>
-            <p class="section-sub">Solicitações de aula experimental recebidas pelo site. Entre em contato e converta!</p>
+            <h2>Nivelamentos &amp; Leads</h2>
+            <p class="section-sub">Funil de captação: solicitações de aula experimental recebidas pelo site. Acompanhe, contate e converta.</p>
           </div>
         </div>
-        <div class="panel">
-          <div class="panel-head"><div class="panel-title"><span class="panel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>Solicitações Recebidas</div><span class="badge badge-time" id="nivCount2">0</span></div>
-          <div id="nivelList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhum agendamento recebido.</p></div></div>
+
+        <!-- Resumo do funil -->
+        <div class="niv-funnel" id="nivFunnel">
+          <div class="niv-funnel-card niv-fc-total">
+            <div class="niv-funnel-icon">📥</div>
+            <div class="niv-funnel-meta">
+              <div class="niv-funnel-num" id="nivStatTotal">0</div>
+              <div class="niv-funnel-lbl">Leads recebidos</div>
+            </div>
+          </div>
+          <div class="niv-funnel-arrow">→</div>
+          <div class="niv-funnel-card niv-fc-pending">
+            <div class="niv-funnel-icon">⏳</div>
+            <div class="niv-funnel-meta">
+              <div class="niv-funnel-num" id="nivStatPending">0</div>
+              <div class="niv-funnel-lbl">Aguardando contato</div>
+            </div>
+          </div>
+          <div class="niv-funnel-arrow">→</div>
+          <div class="niv-funnel-card niv-fc-contacted">
+            <div class="niv-funnel-icon">✅</div>
+            <div class="niv-funnel-meta">
+              <div class="niv-funnel-num" id="nivStatContacted">0</div>
+              <div class="niv-funnel-lbl">Já contatados</div>
+            </div>
+          </div>
+          <div class="niv-funnel-card niv-fc-rate">
+            <div class="niv-funnel-icon">📊</div>
+            <div class="niv-funnel-meta">
+              <div class="niv-funnel-num" id="nivStatRate">0%</div>
+              <div class="niv-funnel-lbl">Taxa de atendimento</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Barra de controle: filtros + busca -->
+        <div class="niv-toolbar">
+          <div class="niv-tabs" id="nivTabs">
+            <button class="niv-tab active" data-niv-filter="all">Todos <span class="niv-tab-count" id="nivTabAll">0</span></button>
+            <button class="niv-tab" data-niv-filter="pending">Pendentes <span class="niv-tab-count" id="nivTabPending">0</span></button>
+            <button class="niv-tab" data-niv-filter="contacted">Contatados <span class="niv-tab-count" id="nivTabContacted">0</span></button>
+          </div>
+          <div class="niv-search">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="nivSearch" placeholder="Buscar por nome, e-mail ou telefone...">
+          </div>
+        </div>
+
+        <!-- Lista de leads -->
+        <div id="nivelList">
+          <div class="niv-skeleton-wrap">
+            <div class="niv-skeleton"></div>
+            <div class="niv-skeleton"></div>
+            <div class="niv-skeleton"></div>
+          </div>
         </div>
       </div>
 
@@ -2755,34 +3178,197 @@ async function loadOverview() {
 // ═══ USERS ═══
 
 // ═══ NIVELAMENTOS ═══
+// ═══ NIVELAMENTOS & LEADS ═══
+let _nivItems = [];
+let _nivFilter = 'all';
+let _nivSearch = '';
+
 async function loadNivelamentos() {
-  showSkeleton('nivelList', 3);
-  const items = await getPlacementTests();
   const div = document.getElementById('nivelList');
-  if (!items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📅</div><p>Nenhum agendamento recebido. Quando alguém preencher o formulário do site, aparecerá aqui.</p></div>'; return; }
-  document.getElementById('nivCount2').textContent = items.filter(function(p){return p.status==='pending';}).length;
-  div.innerHTML = items.map(p => {
-    const isPending = p.status === 'pending';
-    const bgColor = isPending ? '#eff6ff' : '#f0fdf4';
-    const borderColor = isPending ? '#93c5fd' : '#86efac';
-    const statusLabel = isPending ? '⏳ Pendente' : '✅ Contatado';
-    const phone = (p.phone||'').replace(/\D/g,'');
-    const wppUrl = 'https://wa.me/55' + phone;
-    const emailUrl = 'mailto:' + (p.email||'');
-    return '<div style="background:'+bgColor+';border:1px solid '+borderColor+';border-radius:14px;padding:18px;margin-bottom:12px">' +
-      '<div style="display:flex;justify-content:space-between;align-items:start;flex-wrap:wrap;gap:12px">' +
-      '<div style="flex:1;min-width:200px">' +
-      '<div style="font-size:15px;font-weight:800;color:var(--navy);margin-bottom:4px">' + p.full_name + '</div>' +
-      '<div style="font-size:12px;color:var(--g500);margin-bottom:2px">📧 ' + (p.email||'—') + ' • 📱 ' + (p.phone||'—') + '</div>' +
-      '<div style="font-size:12px;color:var(--g500);margin-bottom:2px">📊 Nível: ' + (p.current_level||'?') + (p.preferred_date ? ' • 📅 ' + formatDate(p.preferred_date) : '') + (p.preferred_time ? ' ' + p.preferred_time : '') + '</div>' +
-      (p.message ? '<div style="font-size:12px;color:var(--g700);font-style:italic;margin-top:4px">"' + p.message.substring(0,80) + '"</div>' : '') +
+  div.innerHTML = '<div class="niv-skeleton-wrap"><div class="niv-skeleton"></div><div class="niv-skeleton"></div><div class="niv-skeleton"></div></div>';
+  try {
+    _nivItems = await getPlacementTests() || [];
+  } catch(e) {
+    _nivItems = [];
+  }
+  nivUpdateStats();
+  nivWireControls();
+  renderNivList();
+}
+
+// Atualiza o funil de resumo e os contadores das abas
+function nivUpdateStats() {
+  const total = _nivItems.length;
+  const pending = _nivItems.filter(p => p.status === 'pending').length;
+  const contacted = total - pending;
+  const rate = total ? Math.round((contacted / total) * 100) : 0;
+
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  set('nivStatTotal', total);
+  set('nivStatPending', pending);
+  set('nivStatContacted', contacted);
+  set('nivStatRate', rate + '%');
+  set('nivTabAll', total);
+  set('nivTabPending', pending);
+  set('nivTabContacted', contacted);
+  set('nivCount2', pending);
+  const badge = document.getElementById('nivCount');
+  if (badge) {
+    badge.textContent = pending;
+    badge.classList.toggle('zero', pending === 0);
+  }
+}
+
+// Liga as abas de filtro e o campo de busca (apenas uma vez)
+let _nivControlsWired = false;
+function nivWireControls() {
+  if (_nivControlsWired) return;
+  _nivControlsWired = true;
+  document.querySelectorAll('#nivTabs .niv-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('#nivTabs .niv-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      _nivFilter = tab.dataset.nivFilter;
+      renderNivList();
+    });
+  });
+  const search = document.getElementById('nivSearch');
+  if (search) {
+    search.addEventListener('input', () => {
+      _nivSearch = search.value.trim().toLowerCase();
+      renderNivList();
+    });
+  }
+}
+
+function nivEsc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+}
+
+// Renderiza a lista aplicando filtro de status + busca textual
+function renderNivList() {
+  const div = document.getElementById('nivelList');
+  if (!div) return;
+
+  let items = _nivItems.slice();
+  // Filtro por status
+  if (_nivFilter === 'pending') items = items.filter(p => p.status === 'pending');
+  else if (_nivFilter === 'contacted') items = items.filter(p => p.status !== 'pending');
+  // Filtro por busca
+  if (_nivSearch) {
+    items = items.filter(p => {
+      const hay = ((p.full_name||'') + ' ' + (p.email||'') + ' ' + (p.phone||'')).toLowerCase();
+      return hay.indexOf(_nivSearch) !== -1;
+    });
+  }
+  // Pendentes primeiro, depois por data mais recente
+  items.sort((a, b) => {
+    const ap = a.status === 'pending' ? 0 : 1;
+    const bp = b.status === 'pending' ? 0 : 1;
+    if (ap !== bp) return ap - bp;
+    return new Date(b.created_at || 0) - new Date(a.created_at || 0);
+  });
+
+  if (!items.length) {
+    let msg, icon, title;
+    if (_nivSearch) {
+      icon = '🔍'; title = 'Nenhum lead encontrado';
+      msg = 'Nenhuma solicitação corresponde à sua busca. Tente outro termo.';
+    } else if (_nivFilter === 'pending') {
+      icon = '🎉'; title = 'Tudo em dia!';
+      msg = 'Não há leads aguardando contato. Todos os agendamentos já foram atendidos.';
+    } else if (_nivFilter === 'contacted') {
+      icon = '📭'; title = 'Nenhum lead contatado ainda';
+      msg = 'Os leads que você marcar como contatados aparecerão aqui.';
+    } else {
+      icon = '📥'; title = 'Nenhum lead recebido';
+      msg = 'Quando alguém preencher o formulário de nivelamento no site, a solicitação aparecerá aqui automaticamente.';
+    }
+    div.innerHTML = '<div class="niv-empty"><div class="niv-empty-icon">' + icon + '</div>' +
+      '<h4>' + title + '</h4><p>' + msg + '</p></div>';
+    return;
+  }
+
+  div.innerHTML = items.map(p => nivCardHtml(p)).join('');
+}
+
+// Monta o HTML de um card de lead
+function nivCardHtml(p) {
+  const isPending = p.status === 'pending';
+  const name = p.full_name || 'Sem nome';
+  const initial = name.charAt(0).toUpperCase();
+  const phoneRaw = (p.phone || '').replace(/\D/g, '');
+  const wppUrl = phoneRaw ? 'https://wa.me/55' + phoneRaw : '';
+  const emailUrl = 'mailto:' + (p.email || '');
+  const when = p.created_at ? timeAgo(p.created_at) : '';
+  const safeName = name.replace(/'/g, "\\'");
+  const safeEmail = (p.email || '').replace(/'/g, "\\'");
+
+  // SVG icons
+  const icoMail = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>';
+  const icoPhone = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>';
+  const icoCal = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>';
+  const icoLevel = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>';
+
+  // Status badge
+  const statusBadge = isPending
+    ? '<span class="niv-lead-status st-pending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Aguardando contato</span>'
+    : '<span class="niv-lead-status st-contacted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Contatado</span>';
+
+  // Info row (e-mail + telefone)
+  let infoRow = '<div class="niv-lead-info">' +
+    '<span class="niv-lead-info-item">' + icoMail + nivEsc(p.email || '—') + '</span>' +
+    '<span class="niv-lead-info-item">' + icoPhone + nivEsc(p.phone || '—') + '</span>' +
+  '</div>';
+
+  // Chips (nível atual + preferência de data/horário)
+  let chips = '';
+  if (p.current_level) {
+    chips += '<span class="niv-lead-chip chip-level">' + icoLevel + nivEsc(p.current_level) + '</span>';
+  }
+  if (p.preferred_date || p.preferred_time) {
+    const pref = [p.preferred_date ? formatDate(p.preferred_date) : '', p.preferred_time || ''].filter(Boolean).join(' · ');
+    chips += '<span class="niv-lead-chip chip-date">' + icoCal + 'Prefere: ' + nivEsc(pref) + '</span>';
+  }
+  const chipsRow = chips ? '<div class="niv-lead-chips">' + chips + '</div>' : '';
+
+  // Mensagem
+  const msgRow = p.message
+    ? '<div class="niv-lead-msg">“' + nivEsc(p.message) + '”</div>'
+    : '';
+
+  // Ações
+  let actions = '';
+  if (wppUrl) {
+    actions += '<a href="' + wppUrl + '" target="_blank" rel="noopener" class="niv-act-btn niv-act-wpp">' +
+      '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8.9-.9 1.1-.2.2-.3.2-.6.1-1.8-.9-3-1.6-4.2-3.6-.3-.5.3-.5.9-1.6.1-.2 0-.4 0-.5s-.7-1.6-.9-2.2c-.2-.6-.5-.5-.7-.5H8c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3 1.8.8 2.5.8 3.4.7.5-.1 1.8-.7 2-1.5.3-.8.3-1.4.2-1.5zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.2-1.3c1.4.7 3 1.1 4.8 1.1 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>WhatsApp</a>';
+  }
+  actions += '<a href="' + emailUrl + '" class="niv-act-btn niv-act-email">' + icoMail + 'E-mail</a>';
+  if (isPending) {
+    actions += '<button type="button" class="niv-act-btn niv-act-contact" onclick="markContacted(' + p.id + ",'" + safeEmail + "','" + safeName + '\')">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Marcar contatado</button>';
+  } else {
+    actions += '<div class="niv-act-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>Atendido</div>';
+    actions += '<button type="button" class="niv-act-btn niv-act-revert" onclick="revertContacted(' + p.id + ')">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>Reabrir</button>';
+  }
+
+  return '<div class="niv-lead ' + (isPending ? 'is-pending' : 'is-contacted') + '">' +
+    '<div class="niv-lead-body">' +
+      '<div class="niv-lead-avatar">' + nivEsc(initial) + '</div>' +
+      '<div class="niv-lead-main">' +
+        '<div class="niv-lead-name-row">' +
+          '<span class="niv-lead-name">' + nivEsc(name) + '</span>' +
+          statusBadge +
+          (when ? '<span class="niv-lead-time">• recebido ' + when + '</span>' : '') +
+        '</div>' +
+        infoRow +
+        chipsRow +
+        msgRow +
       '</div>' +
-      '<div style="display:flex;gap:6px;align-items:center">' +
-      (phone ? '<a href="'+wppUrl+'" target="_blank" style="padding:8px 14px;border:none;border-radius:8px;background:#25D366;color:#fff;font-size:11px;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:4px">📱 WhatsApp</a>' : '') +
-      '<a href="'+emailUrl+'" style="padding:8px 14px;border:none;border-radius:8px;background:var(--navy);color:#fff;font-size:11px;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:4px">📧 Email</a>' +
-      (isPending ? '<button onclick="markContacted('+p.id+',\''+p.email+'\',\''+p.full_name.replace(/'/g,'')+'\')\" style="padding:8px 14px;border:2px solid var(--mango);border-radius:8px;background:var(--mango);color:#fff;font-family:inherit;font-size:11px;font-weight:700;cursor:pointer">✉️ Contatar</button>' : '<span style="padding:8px 14px;font-size:11px;font-weight:700;color:#16a34a">'+statusLabel+'</span>') +
-      '</div></div></div>';
-  }).join('');
+      '<div class="niv-lead-actions">' + actions + '</div>' +
+    '</div>' +
+  '</div>';
 }
 
 // ═══ HOMEWORKS SUPERVISION ═══
@@ -2818,16 +3404,31 @@ async function loadFeedbacks() {
 
 // ═══ NIVELAMENTO ACTIONS ═══
 async function markContacted(id, email, name) {
-  // Open Gmail compose in new tab
+  // Abre o Gmail com mensagem pré-preenchida
   var subject = encodeURIComponent('EA English Classes — Agendamento de Nivelamento');
   var body = encodeURIComponent('Olá ' + name + ',\n\nObrigado pelo seu interesse na EA English Classes!\n\nGostaríamos de agendar sua aula experimental. Temos horários disponíveis durante a semana.\n\nQual seria o melhor dia e horário para você?\n\nAtenciosamente,\nEA English Classes');
   window.open('https://mail.google.com/mail/?view=cm&to=' + encodeURIComponent(email) + '&su=' + subject + '&body=' + body, '_blank');
-  
-  // Mark as contacted and remove from list
+
+  // Marca como contatado e atualiza a lista preservando o filtro atual
   try {
     await db.from('placement_tests').update({status:'contacted'}).eq('id',id);
-    showToast('Nivelamento marcado! Gmail aberto.');
-    loadNivelamentos();
+    const item = _nivItems.find(p => p.id === id);
+    if (item) item.status = 'contacted';
+    showToast('Lead marcado como contatado! Gmail aberto.');
+    nivUpdateStats();
+    renderNivList();
+  } catch(e) { showToast('Erro: ' + e.message,'error'); }
+}
+
+// Reabre um lead (volta para "aguardando contato")
+async function revertContacted(id) {
+  try {
+    await db.from('placement_tests').update({status:'pending'}).eq('id',id);
+    const item = _nivItems.find(p => p.id === id);
+    if (item) item.status = 'pending';
+    showToast('Lead reaberto como pendente.');
+    nivUpdateStats();
+    renderNivList();
   } catch(e) { showToast('Erro: ' + e.message,'error'); }
 }
 

@@ -1956,6 +1956,11 @@ body.sb-collapsed .main { margin-left: 92px !important; }
             <span>Usuários</span>
             <span class="tip">Usuários</span>
           </button>
+          <button class="sb-link" data-section="access">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/></svg>
+            <span>Acessos</span>
+            <span class="tip">Acessos de alunos</span>
+          </button>
           <button class="sb-link" data-section="nivelamento">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
             <span>Nivelamentos</span>
@@ -2173,6 +2178,49 @@ body.sb-collapsed .main { margin-left: 92px !important; }
             </div>
           </div>
         </div>
+        </div>
+      </div>
+
+      <!-- ═══ ACESSOS DE ALUNOS ═══ -->
+      <div class="section" id="sec-access">
+        <div class="section-head">
+          <div class="section-head-icon green">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+          </div>
+          <div class="section-head-text">
+            <h2>Acessos de Alunos</h2>
+            <p class="section-sub">Registro automático de cada vez que um aluno entra na plataforma. Acompanhe a frequência de uso do portal.</p>
+          </div>
+        </div>
+
+        <!-- Resumo -->
+        <div class="stat-row" id="accessStats">
+          <div class="stat-card"><div class="stat-icon">📲</div><div class="stat-label">Acessos hoje</div><div class="stat-value" id="accStatToday">-</div></div>
+          <div class="stat-card"><div class="stat-icon">📆</div><div class="stat-label">Últimos 7 dias</div><div class="stat-value" id="accStatWeek">-</div></div>
+          <div class="stat-card"><div class="stat-icon">👥</div><div class="stat-label">Alunos ativos (7 dias)</div><div class="stat-value" id="accStatUnique">-</div></div>
+          <div class="stat-card"><div class="stat-icon">🗂️</div><div class="stat-label">Total registrado</div><div class="stat-value" id="accStatTotal">-</div></div>
+        </div>
+
+        <!-- Busca + período -->
+        <div class="coord-search-bar">
+          <input type="text" id="accessSearch" placeholder="🔍 Buscar aluno pelo nome..." oninput="filterAccessLogs()">
+          <button onclick="filterAccessByPeriod('all',this)" class="user-filter active">Todos</button>
+          <button onclick="filterAccessByPeriod('today',this)" class="user-filter">Hoje</button>
+          <button onclick="filterAccessByPeriod('week',this)" class="user-filter">7 dias</button>
+          <button onclick="filterAccessByPeriod('month',this)" class="user-filter">30 dias</button>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title">Histórico de Acessos</div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <span class="badge badge-time" id="accessCount">0</span>
+              <button onclick="loadAccessLogs()" style="padding:8px 16px;border:none;border-radius:8px;background:var(--mango);color:#fff;font-size:12px;font-weight:700;cursor:pointer">↻ Atualizar</button>
+            </div>
+          </div>
+          <div id="accessList">
+            <div class="empty-state"><div class="empty-icon">⏳</div><p>Carregando registros de acesso...</p></div>
+          </div>
         </div>
       </div>
 
@@ -2717,7 +2765,7 @@ async function initToolProfessors() {
 <script src="supabase.js"></script>
 <script>
 let currentUser = null;
-const sections = {"overview":"Visão Geral","users":"Usuários","schedules":"Schedules","nivelamento":"Nivelamentos","supervision":"Supervisão","homework":"Homeworks","feedbacks":"Feedbacks","announcements":"Avisos","messages":"Msg → Professor","writing":"Redações","pronunciation-coord":"Pronúncias","testimonials":"Depoimentos","teach":"Área do Professor","tool":"Ferramenta","my-profile":"Meu Perfil"};
+const sections = {"overview":"Visão Geral","users":"Usuários","access":"Acessos de Alunos","schedules":"Schedules","nivelamento":"Nivelamentos","supervision":"Supervisão","homework":"Homeworks","feedbacks":"Feedbacks","announcements":"Avisos","messages":"Msg → Professor","writing":"Redações","pronunciation-coord":"Pronúncias","testimonials":"Depoimentos","teach":"Área do Professor","tool":"Ferramenta","my-profile":"Meu Perfil"};
 
 // ═══ INIT ═══
 // ═══ COLLAPSIBLE SIDEBAR ═══
@@ -4242,6 +4290,102 @@ function applyUserFilters() {
   }).join('');
 }
 
+// ═══ ACESSOS DE ALUNOS ═══
+let allAccessCache = [];
+let accessPeriodFilter = 'all';
+
+function startOfToday() {
+  const d = new Date();
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+async function loadAccessLogs() {
+  const list = document.getElementById('accessList');
+  if (list) list.innerHTML = '<div class="empty-state"><div class="empty-icon">⏳</div><p>Carregando registros de acesso...</p></div>';
+  try {
+    allAccessCache = await getAccessLogs(300);
+  } catch (e) {
+    console.error('loadAccessLogs error:', e);
+    if (list) list.innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><p>Não foi possível carregar os acessos.</p></div>';
+    return;
+  }
+  renderAccessStats();
+  applyAccessFilters();
+}
+
+function renderAccessStats() {
+  const today0 = startOfToday().getTime();
+  const week0 = today0 - 6 * 24 * 60 * 60 * 1000;
+  let today = 0, week = 0;
+  const uniqueWeek = new Set();
+  allAccessCache.forEach(a => {
+    const t = new Date(a.accessed_at).getTime();
+    if (t >= today0) today++;
+    if (t >= week0) { week++; if (a.user_id) uniqueWeek.add(a.user_id); }
+  });
+  const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  set('accStatToday', today);
+  set('accStatWeek', week);
+  set('accStatUnique', uniqueWeek.size);
+  set('accStatTotal', allAccessCache.length);
+}
+
+function filterAccessByPeriod(period, btn) {
+  accessPeriodFilter = period;
+  document.querySelectorAll('#sec-access .user-filter').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  applyAccessFilters();
+}
+
+function filterAccessLogs() { applyAccessFilters(); }
+
+function applyAccessFilters() {
+  const search = (document.getElementById('accessSearch')?.value || '').toLowerCase();
+  let filtered = allAccessCache.slice();
+
+  if (accessPeriodFilter !== 'all') {
+    const today0 = startOfToday().getTime();
+    let cutoff = today0;
+    if (accessPeriodFilter === 'week') cutoff = today0 - 6 * 24 * 60 * 60 * 1000;
+    if (accessPeriodFilter === 'month') cutoff = today0 - 29 * 24 * 60 * 60 * 1000;
+    filtered = filtered.filter(a => new Date(a.accessed_at).getTime() >= cutoff);
+  }
+  if (search) {
+    filtered = filtered.filter(a => (a.full_name || '').toLowerCase().includes(search));
+  }
+
+  const countEl = document.getElementById('accessCount');
+  if (countEl) countEl.textContent = filtered.length + ' de ' + allAccessCache.length;
+
+  const div = document.getElementById('accessList');
+  if (!div) return;
+  if (!filtered.length) {
+    div.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>Nenhum acesso encontrado neste período.</p></div>';
+    return;
+  }
+
+  div.innerHTML = filtered.map(a => {
+    const name = a.full_name || 'Aluno';
+    const initial = name[0] ? name[0].toUpperCase() : '?';
+    const d = new Date(a.accessed_at);
+    const dateStr = d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    const timeStr = d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    const ago = (typeof timeAgo === 'function') ? timeAgo(a.accessed_at) : '';
+    return '<div class="list-item" style="display:flex;align-items:center;gap:14px;padding:14px 24px">' +
+      '<div style="width:40px;height:40px;border-radius:50%;flex-shrink:0;background:var(--blue-soft);color:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px">' + initial + '</div>' +
+      '<div style="flex:1;min-width:0">' +
+        '<div style="font-weight:700;color:var(--navy);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + name + '</div>' +
+        '<div style="font-size:12px;color:var(--g500)">🎓 Aluno</div>' +
+      '</div>' +
+      '<div style="text-align:right;flex-shrink:0">' +
+        '<div style="font-size:13px;font-weight:700;color:var(--navy)">' + dateStr + ' • ' + timeStr + '</div>' +
+        (ago ? '<div style="font-size:11px;color:var(--g400)">há ' + ago + '</div>' : '') +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
 // ═══ SIDEBAR NAV HOOKS ═══
 document.addEventListener('DOMContentLoaded', () => {
   const observer = new MutationObserver(() => {
@@ -4252,6 +4396,7 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'schedules': initCoordSchedule(); break;
       case 'supervision': initSupFilter(); loadCurrentSup(); break;
       case 'users': loadUsers(); break;
+      case 'access': loadAccessLogs(); break;
       case 'nivelamento': loadNivelamentos(); break;
       case 'homework': loadHomeworks(); break;
       case 'feedbacks': loadFeedbacks(); break;

@@ -1059,6 +1059,49 @@ body.sb-collapsed .main { margin-left: 92px !important; }
   display: inline-flex; align-items: center; gap: 6px;
 }
 
+/* ── Redação corrigida: minimizar / expandir (professor) ── */
+.prof-wr-card.is-graded .prof-wr-header { cursor: pointer; flex-wrap: wrap; }
+.prof-wr-card.is-graded.collapsed .prof-wr-body { display: none; }
+.prof-wr-collapse-summary {
+  display: none;
+  width: 100%;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--g200);
+  font-size: 12px;
+  color: var(--g600);
+  font-weight: 600;
+  flex-wrap: wrap;
+}
+.prof-wr-card.is-graded.collapsed .prof-wr-collapse-summary { display: flex; }
+.prof-wr-collapse-summary .pwr-cs-item { display: inline-flex; align-items: center; gap: 5px; }
+.prof-wr-collapse-summary .pwr-cs-grade {
+  background: rgba(16,185,129,0.12); color: #059669;
+  padding: 3px 10px; border-radius: 99px; font-weight: 800;
+}
+.prof-wr-collapse-summary .pwr-cs-corrected {
+  display: inline-flex; align-items: center; gap: 5px;
+  color: #059669; font-weight: 800;
+}
+.prof-wr-collapse-summary .pwr-cs-corrected svg { width: 14px; height: 14px; }
+.prof-wr-toggle-btn {
+  margin-left: auto;
+  background: var(--g50);
+  border: 1px solid var(--g200);
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--g500);
+  transition: all 0.25s ease;
+  flex-shrink: 0;
+}
+.prof-wr-toggle-btn svg { width: 15px; height: 15px; transition: transform 0.3s ease; }
+.prof-wr-toggle-btn:hover { background: var(--orange-soft, #fff0e8); color: var(--orange); }
+.prof-wr-card.is-graded:not(.collapsed) .prof-wr-toggle-btn svg { transform: rotate(180deg); }
+
 /* === PRONUNCIATION (Professor list) === */
 .prof-pron-card {
   background: #fff;
@@ -1607,6 +1650,10 @@ body.sb-collapsed .main { margin-left: 92px !important; }
       </button>
     </nav>
     <div class="sb-bottom">
+      <button class="sb-link" data-section="manual" data-tip="Manual do Professor" style="color:rgba(255,255,255,0.5)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-6 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm6 13H6v-1c0-2 4-3.1 6-3.1s6 1.1 6 3.1v1z"/></svg>
+        <span>Manual do Professor</span>
+      </button>
       <a href="#" class="sb-logout" data-tip="Sair" onclick="signOut();return false;">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
         <span>Sair</span>
@@ -2000,6 +2047,54 @@ body.sb-collapsed .main { margin-left: 92px !important; }
         </div>
       </div>
 
+      <!-- MANUAL DO PROFESSOR -->
+      <div class="section" id="sec-manual">
+        <div class="section-head">
+          <div class="section-head-icon blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          </div>
+          <div class="section-head-text">
+            <h2>Manual do Professor</h2>
+            <p class="section-sub">Diretrizes da metodologia EA e do uso da plataforma para professores.</p>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-bottom:18px">
+          <div class="panel-head"><div class="panel-title"><span class="panel-icon blue">🎯</span>Metodologia EA</div></div>
+          <div style="padding:20px 24px;font-size:14px;color:var(--g700);line-height:1.75">
+            Todas as aulas seguem o <strong>método EA English Classes</strong>, integrando conversação, gramática e as quatro habilidades linguísticas. Cada professor e coordenador possui o mesmo padrão e capacidade pedagógica — garantimos uma experiência consistente para o aluno em qualquer turma. Conduza as aulas com base no material Cambridge correspondente ao nível do aluno.
+          </div>
+        </div>
+
+        <div class="panel" style="margin-bottom:18px">
+          <div class="panel-head"><div class="panel-title"><span class="panel-icon ocean">📅</span>Schedule e registro de eventos</div></div>
+          <div style="padding:20px 24px;font-size:14px;color:var(--g700);line-height:1.75">
+            Na aba <strong>Meu Schedule</strong> você acompanha sua grade de aulas. Registre cancelamentos e reposições assim que ocorrerem. Lembre-se: cancelamentos <strong>com 24h de antecedência</strong> dão direito a reposição; <strong>sem 24h</strong>, a aula é contabilizada como dada.
+          </div>
+        </div>
+
+        <div class="panel" style="margin-bottom:18px">
+          <div class="panel-head"><div class="panel-title"><span class="panel-icon orange">✍️</span>Correção de redações</div></div>
+          <div style="padding:20px 24px;font-size:14px;color:var(--g700);line-height:1.75">
+            Na aba <strong>Redação</strong>, selecione trechos do texto do aluno para inserir comentários categorizados (gramática, vocabulário, estrutura, elogio). Finalize com um feedback geral e uma nota. Redações já corrigidas ficam minimizadas — clique para expandir e revisar.
+          </div>
+        </div>
+
+        <div class="panel" style="margin-bottom:18px">
+          <div class="panel-head"><div class="panel-title"><span class="panel-icon purple">📝</span>Homework e feedbacks</div></div>
+          <div style="padding:20px 24px;font-size:14px;color:var(--g700);line-height:1.75">
+            Atribua tarefas pela aba <strong>Homework</strong> e acompanhe as entregas dos alunos. Use a aba <strong>Feedbacks</strong> para registrar observações sobre o desempenho de cada aluno — um acompanhamento constante é parte essencial da metodologia EA.
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title"><span class="panel-icon blue">💬</span>Comunicação</div></div>
+          <div style="padding:20px 24px;font-size:14px;color:var(--g700);line-height:1.75">
+            Mensagens da coordenação chegam pela aba <strong>Mensagens</strong>. As dúvidas enviadas pelos alunos aparecem em <strong>Perguntas dos Alunos</strong> — responda com agilidade para manter o aluno engajado.
+          </div>
+        </div>
+      </div>
+
     </div>
   </main>
 </div>
@@ -2009,7 +2104,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 <script src="supabase.js"></script>
 <script>
 let currentUser = null;
-const sections = {"overview":"Visão Geral","schedule":"Meu Schedule","students":"Meus Alunos","homework":"Homework","feedback":"Feedbacks","help-requests":"Perguntas dos Alunos","announcements":"Avisos","writing":"Redação","pronunciation":"Pronúncia","messages":"Mensagens","profile":"Meu Perfil"};
+const sections = {"overview":"Visão Geral","schedule":"Meu Schedule","students":"Meus Alunos","homework":"Homework","feedback":"Feedbacks","help-requests":"Perguntas dos Alunos","announcements":"Avisos","writing":"Redação","pronunciation":"Pronúncia","messages":"Mensagens","manual":"Manual do Professor","profile":"Meu Perfil"};
 
 // ═══ INIT ═══
 // Init collapsible sidebar immediately (independent of auth)
@@ -2528,22 +2623,29 @@ async function loadWritingList() {
         : '';
       const studentName = w.student?.full_name || 'Aluno';
 
-      cardHtml = '<div class="prof-wr-card">' +
-        '<div class="prof-wr-header">' +
+      cardHtml = '<div class="prof-wr-card is-graded collapsed">' +
+        '<div class="prof-wr-header" data-pwr-toggle>' +
           '<div class="prof-wr-header-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>' +
           '<div class="prof-wr-header-info">' +
             '<h4>' + escapeHtml(w.title) + '</h4>' +
             '<div class="prof-wr-header-meta">' + escapeHtml(studentName) + ' · Corrigida em ' + formatDateTime(w.reviewed_at) + '</div>' +
           '</div>' +
           '<span class="sent-status graded"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Nota: ' + (w.grade||'') + '</span>' +
+          '<button type="button" class="prof-wr-toggle-btn" aria-label="Expandir ou minimizar redação"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>' +
+          '<div class="prof-wr-collapse-summary">' +
+            '<span class="pwr-cs-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' + formatDate(w.reviewed_at) + '</span>' +
+            '<span class="pwr-cs-item">📝 ' + escapeHtml(w.title) + '</span>' +
+            '<span class="pwr-cs-grade">Nota: ' + (w.grade||'—') + '</span>' +
+            '<span class="pwr-cs-corrected"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>Corrigido</span>' +
+          '</div>' +
         '</div>' +
-        '<div style="padding:18px 22px">' +
+        '<div class="prof-wr-body"><div style="padding:18px 22px">' +
           '<div style="background:var(--g50);padding:14px 16px;border-radius:10px;font-size:13.5px;color:var(--g700);font-style:italic;line-height:1.6;margin-bottom:14px"><strong style="font-style:normal">Tema:</strong> ' + escapeHtml(w.prompt) + '</div>' +
           (inline.length ? '<div class="wr-cat-legend"><span><i class="cat-swatch" style="background:#fecaca"></i>Gramática</span><span><i class="cat-swatch" style="background:#bfdbfe"></i>Vocabulário</span><span><i class="cat-swatch" style="background:#ddd6fe"></i>Estrutura</span><span><i class="cat-swatch" style="background:#bbf7d0"></i>Elogio</span></div>' : '') +
           '<div class="wr-essay-box">' + highlightedHtml + '</div>' +
           (commentsHtml ? '<div class="wr-comments-list">' + commentsHtml + '</div>' : '') +
           '<div style="background:linear-gradient(135deg,var(--blue-soft),#fff);border:1px solid rgba(37,60,150,0.12);padding:14px 18px;border-radius:12px;font-size:13.5px;color:var(--g700);margin-top:14px;line-height:1.65"><strong style="display:block;font-size:11px;font-weight:800;color:var(--blue);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:6px">Feedback geral</strong>' + escapeHtml(parsed.general||'') + '</div>' +
-        '</div>' +
+        '</div></div>' +
       '</div>';
     }
 
@@ -2552,6 +2654,12 @@ async function loadWritingList() {
 
   // Wire up selection-based commenting for all submitted essays
   document.querySelectorAll('.wr-essay-box[data-mode="select"]').forEach(box => attachEssaySelection(box));
+
+  // Minimizar / expandir redações corrigidas
+  document.querySelectorAll('.prof-wr-card.is-graded').forEach(card => {
+    const header = card.querySelector('[data-pwr-toggle]');
+    if (header) header.addEventListener('click', () => card.classList.toggle('collapsed'));
+  });
 }
 
 // In-memory store: { activityId: [{ text, start, end, comment, category }] }

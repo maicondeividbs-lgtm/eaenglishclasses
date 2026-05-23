@@ -389,13 +389,13 @@ body { background: var(--g50); margin: 0; }
 .sb-logout:hover { color: #ef4444 !important; background: rgba(239,68,68,0.1) !important; }
 
 /* Main */
-.main { margin-left: 280px !important; flex: 1; overflow-x: hidden; min-width: 0; border-left: 1px solid var(--g100); }
+.main { margin-left: 260px !important; flex: 1; overflow-x: hidden; min-width: 0; border-left: 1px solid var(--g100); }
 .topbar { height: 72px; background: rgba(247,248,250,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--g100); display: flex; align-items: center; justify-content: space-between; padding: 0 48px !important; position: sticky; top: 0; z-index: 50; }
 .topbar-title { font-size: 15px; font-weight: 700; color: var(--navy); }
 .topbar-user { display: flex; align-items: center; gap: 12px; }
 .topbar-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--mango), var(--orange)); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; font-weight: 800; }
 .topbar-name { font-size: 13px; font-weight: 600; color: var(--navy); }
-.content { padding: 24px 48px 48px 48px !important; overflow-x: hidden; }
+.content { padding: 28px 48px 48px 48px !important; overflow-x: hidden; }
 
 /* Sections */
 .section { display: none; }
@@ -479,7 +479,7 @@ body { background: var(--g50); margin: 0; }
 
 @media(max-width:1024px) {
   .sb { transform: translateX(-100%); }
-  .main { margin-left: 0; }
+  .main { margin-left: 0; border-left: none; }
   .stat-row { grid-template-columns: repeat(2,1fr); }
 }
 
@@ -594,15 +594,15 @@ body { background: var(--g50); margin: 0; }
 @media (max-width: 1024px) {
   .sb { transform: translateX(-100%); transition: transform 0.3s; }
   .sb.open { transform: translateX(0); }
-  .main { margin-left: 0 !important; }
-  .topbar { padding: 0 16px !important; }
-  .content { padding: 20px 16px !important; }
+  .main { margin-left: 0 !important; border-left: none; }
+  .topbar { padding: 0 20px !important; }
+  .content { padding: 24px 20px 40px 20px !important; }
   .stat-row { grid-template-columns: repeat(2,1fr) !important; }
   .user-grid { grid-template-columns: 1fr !important; }
 }
 @media (max-width: 768px) {
   .stat-row { grid-template-columns: 1fr !important; }
-  .content { padding: 16px 12px !important; }
+  .content { padding: 20px 16px 36px 16px !important; }
   .f-row { grid-template-columns: 1fr !important; }
   .form-card { padding: 16px !important; }
   .salary-metrics { grid-template-columns: 1fr; }
@@ -740,9 +740,112 @@ body { background: var(--g50); margin: 0; }
 }
 .salary-disclaimer svg { color: #e67e22; flex-shrink: 0; margin-top: 1px; }
 .salary-disclaimer strong { color: #7c2d12; }
+
+/* Valor hora-aula base */
+.salary-rate-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  background: var(--off-white, #f8f9fb);
+  border: 1px solid var(--g100);
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.salary-rate-field { display: flex; flex-direction: column; gap: 6px; flex: 0 0 auto; }
+.salary-rate-field label {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--g500);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+.salary-rate-input-wrap {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border: 2px solid var(--g200);
+  border-radius: 12px;
+  padding: 0 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.salary-rate-input-wrap:focus-within {
+  border-color: var(--mango);
+  box-shadow: 0 0 0 4px rgba(245,154,30,0.10);
+}
+.salary-rate-prefix {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--g500);
+  margin-right: 6px;
+}
+.salary-rate-input-wrap input {
+  border: none;
+  outline: none;
+  background: none;
+  font-family: 'Fraunces', serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--navy);
+  width: 130px;
+  padding: 11px 0;
+}
+.salary-rate-input-wrap input::-webkit-outer-spin-button,
+.salary-rate-input-wrap input::-webkit-inner-spin-button { margin-left: 4px; }
+.salary-rate-note {
+  flex: 1;
+  min-width: 200px;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--g500);
+}
+.salary-rate-note strong { color: var(--navy); }
+
+/* Total salarial estimado */
+.salary-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: linear-gradient(135deg, var(--navy), #253c96);
+  border-radius: 14px;
+  padding: 18px 22px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.salary-total-left { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.salary-total-lbl {
+  font-size: 11px;
+  font-weight: 800;
+  color: rgba(255,255,255,0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+.salary-total-formula {
+  font-size: 12px;
+  color: rgba(255,255,255,0.78);
+  font-weight: 600;
+}
+.salary-total-value {
+  font-family: 'Fraunces', serif;
+  font-size: 34px;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  white-space: nowrap;
+}
+.salary-total-value.is-empty { color: rgba(255,255,255,0.4); }
+
 @media (max-width: 640px) {
   .salary-metrics { grid-template-columns: 1fr; }
   .salary-card-head { flex-direction: column; align-items: flex-start; }
+  .salary-rate-row { flex-direction: column; align-items: stretch; }
+  .salary-rate-field { width: 100%; }
+  .salary-rate-input-wrap input { width: 100%; }
+  .salary-total { flex-direction: column; align-items: flex-start; }
+  .salary-total-value { font-size: 30px; }
 }
 
 /* ════════════════════════════════════════════════════════
@@ -1862,6 +1965,93 @@ body.sb-collapsed .main { margin-left: 92px !important; }
   box-shadow: 0 4px 10px rgba(25,36,78,0.20);
 }
 
+/* ═══ SWIPE / ARRASTAR LATERALMENTE — barras roláveis ═══ */
+/* Container que recebe rolagem horizontal por toque/arraste */
+.swipe-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  scrollbar-width: none;            /* Firefox */
+  cursor: grab;
+}
+.swipe-scroll::-webkit-scrollbar { height: 0; display: none; }  /* Chrome/Safari */
+.swipe-scroll.dragging { cursor: grabbing; scroll-behavior: auto; }
+.swipe-scroll.dragging * { pointer-events: none; }
+
+/* Wrapper que mostra as setas de "tem mais conteúdo pro lado" */
+.swipe-wrap { position: relative; }
+.swipe-wrap::before,
+.swipe-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 32px;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.swipe-wrap::before {
+  left: 0;
+  background: linear-gradient(90deg, var(--g50, #f7f8fa), rgba(247,248,250,0));
+}
+.swipe-wrap::after {
+  right: 0;
+  background: linear-gradient(270deg, var(--g50, #f7f8fa), rgba(247,248,250,0));
+}
+.swipe-wrap.can-left::before  { opacity: 1; }
+.swipe-wrap.can-right::after  { opacity: 1; }
+
+/* Setas indicativas (aparecem só quando há overflow) */
+.swipe-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid var(--g200);
+  box-shadow: 0 3px 10px rgba(25,36,78,0.14);
+  display: none;
+  align-items: center; justify-content: center;
+  color: var(--navy);
+  cursor: pointer;
+  z-index: 4;
+  padding: 0;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+.swipe-arrow:hover { background: var(--navy); color: #fff; }
+.swipe-arrow:active { transform: translateY(-50%) scale(0.9); }
+.swipe-arrow svg { width: 15px; height: 15px; }
+.swipe-arrow-left  { left: 2px; }
+.swipe-arrow-right { right: 2px; }
+.swipe-wrap.can-left  .swipe-arrow-left  { display: flex; }
+.swipe-wrap.can-right .swipe-arrow-right { display: flex; }
+
+/* Dica "arraste para o lado" — só no mobile e quando há overflow */
+.swipe-hint {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--g400);
+  margin: -8px 2px 14px;
+  user-select: none;
+}
+.swipe-hint svg { width: 13px; height: 13px; }
+@keyframes swipeNudge {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(5px); }
+}
+.swipe-hint .swipe-hint-icon { animation: swipeNudge 1.4s ease-in-out infinite; display: inline-flex; }
+@media (max-width: 768px) {
+  .swipe-wrap.has-overflow .swipe-hint { display: flex; }
+}
+/* Snap suave nos botões de aba ao rolar */
+.coord-tab-bar.swipe-scroll { scroll-snap-type: x proximity; }
+.coord-tab-bar.swipe-scroll > button { scroll-snap-align: start; }
+
 /* Empty state refinado */
 .empty-state {
   padding: 64px 24px !important;
@@ -2303,6 +2493,20 @@ body.sb-collapsed .main { margin-left: 92px !important; }
             <span class="salary-estimate-tag">⚠️ Apenas estimativa</span>
           </div>
           <div class="salary-card-body">
+            <!-- Valor hora-aula base definido pela coordenação -->
+            <div class="salary-rate-row">
+              <div class="salary-rate-field">
+                <label for="salaryRateInput">Valor da hora-aula base (aula de 1h)</label>
+                <div class="salary-rate-input-wrap">
+                  <span class="salary-rate-prefix">R$</span>
+                  <input type="number" id="salaryRateInput" min="0" step="0.01" inputmode="decimal" placeholder="0,00" oninput="onSalaryRateChange()">
+                </div>
+              </div>
+              <div class="salary-rate-note">
+                Aulas de <strong>1h</strong> contam como <strong>1 aula</strong>; aulas de <strong>30&nbsp;min</strong> contam como <strong>meia aula</strong>. O valor é salvo neste navegador por professor.
+              </div>
+            </div>
+
             <div class="salary-metrics">
               <div class="salary-metric">
                 <div class="salary-metric-num" id="salWeekdays">—</div>
@@ -2317,9 +2521,19 @@ body.sb-collapsed .main { margin-left: 92px !important; }
                 <div class="salary-metric-lbl">Carga horária prevista</div>
               </div>
             </div>
+
+            <!-- Total salarial estimado -->
+            <div class="salary-total" id="salaryTotalBox">
+              <div class="salary-total-left">
+                <span class="salary-total-lbl">Salário estimado do mês</span>
+                <span class="salary-total-formula" id="salaryFormula">Informe o valor da hora-aula acima para calcular.</span>
+              </div>
+              <div class="salary-total-value" id="salaryTotalValue">R$ —</div>
+            </div>
+
             <div class="salary-disclaimer">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-              <span>Este valor é <strong>apenas uma estimativa</strong>, calculada considerando <strong>aulas de 30 minutos</strong> e a recorrência semanal da grade ao longo do mês. O valor final pode variar conforme cancelamentos, reposições, feriados e ajustes da coordenação.</span>
+              <span>Este valor é <strong>apenas uma estimativa</strong>, calculada a partir do valor da hora-aula informado e da recorrência semanal da grade ao longo do mês — considerando aulas de 1h como aula cheia e aulas de 30 min como meia aula. O valor final pode variar conforme cancelamentos, reposições, feriados e ajustes da coordenação.</span>
             </div>
           </div>
         </div>
@@ -2377,7 +2591,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 
         <!-- Barra de controle: filtros + busca -->
         <div class="niv-toolbar">
-          <div class="niv-tabs" id="nivTabs">
+          <div class="niv-tabs swipe-scroll" id="nivTabs">
             <button class="niv-tab active" data-niv-filter="all">Todos <span class="niv-tab-count" id="nivTabAll">0</span></button>
             <button class="niv-tab" data-niv-filter="pending">Pendentes <span class="niv-tab-count" id="nivTabPending">0</span></button>
             <button class="niv-tab" data-niv-filter="contacted">Contatados <span class="niv-tab-count" id="nivTabContacted">0</span></button>
@@ -2411,11 +2625,16 @@ body.sb-collapsed .main { margin-left: 92px !important; }
         </div>
 
         <!-- Tab bar -->
-        <div class="coord-tab-bar">
-          <button class="sup-tab active" data-sup="hw" onclick="switchSup('hw',this)">📝 Homeworks</button>
-          <button class="sup-tab" data-sup="fb" onclick="switchSup('fb',this)">💬 Feedbacks</button>
-          <button class="sup-tab" data-sup="wr" onclick="switchSup('wr',this)">✍️ Redações</button>
-          <button class="sup-tab" data-sup="pr" onclick="switchSup('pr',this)">🎙️ Pronúncias</button>
+        <div class="swipe-wrap">
+          <div class="swipe-hint"><span class="swipe-hint-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span> Arraste para o lado para ver mais</div>
+          <button type="button" class="swipe-arrow swipe-arrow-left" aria-label="Anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+          <button type="button" class="swipe-arrow swipe-arrow-right" aria-label="Próximo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+          <div class="coord-tab-bar swipe-scroll">
+            <button class="sup-tab active" data-sup="hw" onclick="switchSup('hw',this)">📝 Homeworks</button>
+            <button class="sup-tab" data-sup="fb" onclick="switchSup('fb',this)">💬 Feedbacks</button>
+            <button class="sup-tab" data-sup="wr" onclick="switchSup('wr',this)">✍️ Redações</button>
+            <button class="sup-tab" data-sup="pr" onclick="switchSup('pr',this)">🎙️ Pronúncias</button>
+          </div>
         </div>
 
         <!-- Shared filter -->
@@ -2579,11 +2798,16 @@ body.sb-collapsed .main { margin-left: 92px !important; }
         </div>
 
         <!-- Sub-tabs -->
-        <div class="coord-tab-bar">
-          <button class="sup-tab active" data-teach="t-hw" onclick="switchTeach('t-hw',this)">📝 Homework</button>
-          <button class="sup-tab" data-teach="t-fb" onclick="switchTeach('t-fb',this)">💬 Feedback</button>
-          <button class="sup-tab" data-teach="t-wr" onclick="switchTeach('t-wr',this)">✍️ Redação</button>
-          <button class="sup-tab" data-teach="t-pr" onclick="switchTeach('t-pr',this)">🎙️ Pronúncia</button>
+        <div class="swipe-wrap">
+          <div class="swipe-hint"><span class="swipe-hint-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span> Arraste para o lado para ver mais</div>
+          <button type="button" class="swipe-arrow swipe-arrow-left" aria-label="Anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+          <button type="button" class="swipe-arrow swipe-arrow-right" aria-label="Próximo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+          <div class="coord-tab-bar swipe-scroll">
+            <button class="sup-tab active" data-teach="t-hw" onclick="switchTeach('t-hw',this)">📝 Homework</button>
+            <button class="sup-tab" data-teach="t-fb" onclick="switchTeach('t-fb',this)">💬 Feedback</button>
+            <button class="sup-tab" data-teach="t-wr" onclick="switchTeach('t-wr',this)">✍️ Redação</button>
+            <button class="sup-tab" data-teach="t-pr" onclick="switchTeach('t-pr',this)">🎙️ Pronúncia</button>
+          </div>
         </div>
 
         <!-- HW pane -->
@@ -4019,11 +4243,71 @@ function countWeekdaysInMonth(year, month1) {
   return counts;
 }
 
+// Guarda o último cálculo para recomputar quando o valor da hora-aula mudar
+let _salaryCtx = null;
+
+// Formata número em Real brasileiro
+function fmtBRL(v) {
+  return 'R$ ' + (Number(v) || 0).toLocaleString('pt-BR', {
+    minimumFractionDigits: 2, maximumFractionDigits: 2
+  });
+}
+
+// Chave de armazenamento do valor hora-aula por professor
+function salaryRateKey() {
+  return 'ea_coord_hourrate_' + (cTeacherId || 'default');
+}
+
+// Disparado quando a coordenação digita o valor da hora-aula base
+function onSalaryRateChange() {
+  const input = document.getElementById('salaryRateInput');
+  if (!input) return;
+  const rate = parseFloat(input.value);
+  try {
+    if (cTeacherId && !isNaN(rate) && rate >= 0) {
+      localStorage.setItem(salaryRateKey(), String(rate));
+    }
+  } catch (e) { /* localStorage indisponível — segue sem persistir */ }
+  recomputeSalaryTotal();
+}
+
+// Recalcula apenas o total salarial a partir do contexto + valor da hora-aula
+function recomputeSalaryTotal() {
+  if (!_salaryCtx) return;
+  const input = document.getElementById('salaryRateInput');
+  const valEl = document.getElementById('salaryTotalValue');
+  const formulaEl = document.getElementById('salaryFormula');
+  if (!input || !valEl || !formulaEl) return;
+
+  const rate = parseFloat(input.value);
+  // billableUnits = aulas de 1h contam 1, aulas de 30 min contam 0,5
+  const units = _salaryCtx.billableUnits;
+
+  if (isNaN(rate) || rate < 0) {
+    valEl.textContent = 'R$ —';
+    valEl.classList.add('is-empty');
+    formulaEl.textContent = 'Informe o valor da hora-aula acima para calcular.';
+    return;
+  }
+
+  const total = rate * units;
+  valEl.textContent = fmtBRL(total);
+  valEl.classList.remove('is-empty');
+
+  const unitsTxt = Number.isInteger(units)
+    ? units
+    : units.toFixed(1).replace('.', ',');
+  formulaEl.textContent =
+    fmtBRL(rate) + ' × ' + unitsTxt + ' aula-base ' +
+    '(' + _salaryCtx.fullClasses + ' de 1h + ' + _salaryCtx.halfClasses + ' de 30 min)';
+}
+
 function renderSalaryEstimate(slots, monthInput) {
   const card = document.getElementById('salaryCard');
   if (!card) return;
   if (!cTeacherId || !monthInput || !slots || !slots.length) {
     card.style.display = 'none';
+    _salaryCtx = null;
     return;
   }
   const parts = monthInput.split('-');
@@ -4034,6 +4318,10 @@ function renderSalaryEstimate(slots, monthInput) {
 
   let totalClasses = 0;     // nº de aulas previstas no mês (recorrência semanal)
   let totalMinutes = 0;     // soma de minutos previstos no mês
+  let fullClasses = 0;      // ocorrências de aulas de 1h (ou mais) no mês
+  let halfClasses = 0;      // ocorrências de aulas de 30 min no mês
+  let billableUnits = 0;    // aula-base: 1h = 1 unidade, 30 min = 0,5 unidade
+
   for (let i = 0; i < slots.length; i++) {
     const s = slots[i];
     const dow = s.day_of_week;            // 0=Seg..5=Sáb
@@ -4042,10 +4330,17 @@ function renderSalaryEstimate(slots, monthInput) {
     const dur = s.duration_minutes || 60;
     totalClasses += occurrences;
     totalMinutes += occurrences * dur;
+
+    // Peso da aula: 30 min = meia aula (0,5); demais durações = dur/60 aula-base
+    if (dur <= 30) {
+      halfClasses += occurrences;
+      billableUnits += occurrences * 0.5;
+    } else {
+      fullClasses += occurrences;
+      billableUnits += occurrences * (dur / 60);
+    }
   }
 
-  // Cálculo baseado em aulas de 30 minutos
-  const thirtyMinUnits = Math.round(totalMinutes / 30);
   const totalHours = (totalMinutes / 60);
   const hoursLabel = Number.isInteger(totalHours)
     ? totalHours + 'h'
@@ -4053,13 +4348,28 @@ function renderSalaryEstimate(slots, monthInput) {
 
   const monthName = (MONTHS[month1] || '') + ' de ' + year;
   document.getElementById('salaryCardSub').textContent =
-    'Referente a ' + monthName + ' · base de aulas de 30 min';
+    'Referente a ' + monthName + ' · 1h = 1 aula · 30 min = meia aula';
   document.getElementById('salWeekdays').textContent = totalWeekdays;
   document.getElementById('salClasses').textContent = totalClasses;
   document.getElementById('salHours').innerHTML =
     hoursLabel + '<span style="font-size:13px;font-weight:700;color:var(--g400);display:block;margin-top:3px">' +
-    thirtyMinUnits + ' aulas de 30 min</span>';
+    (Number.isInteger(billableUnits) ? billableUnits : billableUnits.toFixed(1).replace('.', ',')) +
+    ' aula-base</span>';
+
+  // Guarda contexto para o recálculo do total
+  _salaryCtx = { billableUnits: billableUnits, fullClasses: fullClasses, halfClasses: halfClasses };
+
+  // Restaura o valor da hora-aula salvo para este professor (se houver)
+  const rateInput = document.getElementById('salaryRateInput');
+  if (rateInput) {
+    let saved = '';
+    try { saved = localStorage.getItem(salaryRateKey()) || ''; } catch (e) { saved = ''; }
+    rateInput.value = saved;
+  }
+
   card.style.display = '';
+  recomputeSalaryTotal();
+  if (window.refreshSwipeScroll) setTimeout(window.refreshSwipeScroll, 60);
 }
 
 // ═══ SCHEDULE — agenda mobile (lista por dia) ═══
@@ -4430,6 +4740,104 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   document.querySelectorAll('.section').forEach(s => observer.observe(s, {attributes:true, attributeFilter:['class']}));
 });
+
+/* ═══════════════════════════════════════════════════════════
+   SWIPE / ARRASTAR LATERALMENTE — barras roláveis
+   Habilita arraste com mouse/toque, setas e dicas visuais de
+   "tem mais conteúdo para o lado".
+   ═══════════════════════════════════════════════════════════ */
+(function initSwipeScroll(){
+  function refreshCues(scroller){
+    var wrap = scroller.closest('.swipe-wrap');
+    var max = scroller.scrollWidth - scroller.clientWidth;
+    var hasOverflow = max > 4;
+    var atLeft  = scroller.scrollLeft > 4;
+    var atRight = scroller.scrollLeft < max - 4;
+    if(wrap){
+      wrap.classList.toggle('has-overflow', hasOverflow);
+      wrap.classList.toggle('can-left',  hasOverflow && atLeft);
+      wrap.classList.toggle('can-right', hasOverflow && atRight);
+    }
+  }
+
+  function enableDragScroll(scroller){
+    var isDown = false, startX = 0, startScroll = 0, moved = false;
+
+    scroller.addEventListener('pointerdown', function(e){
+      // ignora botão direito
+      if(e.button && e.button !== 0) return;
+      isDown = true; moved = false;
+      startX = e.clientX;
+      startScroll = scroller.scrollLeft;
+      scroller.classList.add('dragging');
+    });
+    window.addEventListener('pointermove', function(e){
+      if(!isDown) return;
+      var dx = e.clientX - startX;
+      if(Math.abs(dx) > 4) moved = true;
+      scroller.scrollLeft = startScroll - dx;
+    });
+    function endDrag(){
+      if(!isDown) return;
+      isDown = false;
+      scroller.classList.remove('dragging');
+    }
+    window.addEventListener('pointerup', endDrag);
+    window.addEventListener('pointercancel', endDrag);
+
+    // evita que o clique dispare logo após um arraste real
+    scroller.addEventListener('click', function(e){
+      if(moved){ e.preventDefault(); e.stopPropagation(); moved = false; }
+    }, true);
+
+    // rolagem vertical do mouse vira rolagem horizontal
+    scroller.addEventListener('wheel', function(e){
+      if(e.deltaY === 0) return;
+      var max = scroller.scrollWidth - scroller.clientWidth;
+      if(max <= 0) return;
+      scroller.scrollLeft += e.deltaY;
+      e.preventDefault();
+    }, {passive:false});
+
+    scroller.addEventListener('scroll', function(){ refreshCues(scroller); });
+  }
+
+  function setupWrap(wrap){
+    var scroller = wrap.querySelector('.swipe-scroll');
+    if(!scroller || scroller.dataset.swipeReady) return;
+    scroller.dataset.swipeReady = '1';
+    enableDragScroll(scroller);
+
+    // setas de navegação
+    var left  = wrap.querySelector('.swipe-arrow-left');
+    var right = wrap.querySelector('.swipe-arrow-right');
+    var step  = function(){ return Math.max(120, scroller.clientWidth * 0.7); };
+    if(left)  left.addEventListener('click',  function(){ scroller.scrollBy({left:-step(), behavior:'smooth'}); });
+    if(right) right.addEventListener('click', function(){ scroller.scrollBy({left: step(), behavior:'smooth'}); });
+
+    refreshCues(scroller);
+  }
+
+  function refreshAll(){
+    document.querySelectorAll('.swipe-wrap').forEach(setupWrap);
+    document.querySelectorAll('.swipe-scroll').forEach(refreshCues);
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', refreshAll);
+  } else {
+    refreshAll();
+  }
+  window.addEventListener('resize', function(){
+    document.querySelectorAll('.swipe-scroll').forEach(refreshCues);
+  });
+  // reavalia ao trocar de seção (conteúdo pode ter mudado de tamanho)
+  document.querySelectorAll('.sb-link').forEach(function(l){
+    l.addEventListener('click', function(){ setTimeout(refreshAll, 60); });
+  });
+  // expõe para reuso após renderizações dinâmicas
+  window.refreshSwipeScroll = refreshAll;
+})();
 </script>
 </body>
 </html>

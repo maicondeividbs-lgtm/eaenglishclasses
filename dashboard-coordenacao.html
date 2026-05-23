@@ -1990,7 +1990,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 }
 .swipe-scroll::-webkit-scrollbar { height: 0; display: none; }  /* Chrome/Safari */
 .swipe-scroll.dragging { cursor: grabbing; scroll-behavior: auto; }
-.swipe-scroll.dragging * { pointer-events: none; }
+.swipe-scroll.is-moving * { pointer-events: none; }
 
 /* Wrapper que mostra as setas de "tem mais conteúdo pro lado" */
 .swipe-wrap { position: relative; }
@@ -4781,19 +4781,25 @@ document.addEventListener('DOMContentLoaded', () => {
       startScroll = scroller.scrollLeft;
       scroller.classList.add('dragging');
     });
-    window.addEventListener('pointermove', function(e){
+    scroller.addEventListener('pointermove', function(e){
       if(!isDown) return;
       var dx = e.clientX - startX;
-      if(Math.abs(dx) > 4) moved = true;
-      scroller.scrollLeft = startScroll - dx;
+      if(Math.abs(dx) > 6){
+        // só agora é um arraste real: congela cliques e segue o ponteiro
+        moved = true;
+        scroller.classList.add('is-moving');
+        scroller.scrollLeft = startScroll - dx;
+      }
     });
     function endDrag(){
-      if(!isDown) return;
       isDown = false;
       scroller.classList.remove('dragging');
+      // remove o congelamento um instante depois, já com o clique tratado
+      setTimeout(function(){ scroller.classList.remove('is-moving'); }, 0);
     }
-    window.addEventListener('pointerup', endDrag);
-    window.addEventListener('pointercancel', endDrag);
+    scroller.addEventListener('pointerup', endDrag);
+    scroller.addEventListener('pointercancel', endDrag);
+    scroller.addEventListener('pointerleave', function(){ if(isDown) endDrag(); });
 
     // evita que o clique dispare logo após um arraste real
     scroller.addEventListener('click', function(e){

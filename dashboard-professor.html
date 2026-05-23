@@ -35,14 +35,14 @@ body { background: var(--g50); margin: 0; }
 .sb-logout:hover { color: #ef4444 !important; background: rgba(239,68,68,0.1) !important; }
 
 /* Main */
-.main { margin-left: 280px !important; flex: 1; }
+.main { margin-left: 280px !important; flex: 1; min-width: 0; overflow-x: hidden; }
 .topbar { height: 72px; background: rgba(247,248,250,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--g100); display: flex; align-items: center; justify-content: space-between; padding: 0 48px !important; position: sticky; top: 0; z-index: 50; }
 .topbar-title { font-size: 15px; font-weight: 700; color: var(--navy); }
 .topbar-user { display: flex; align-items: center; gap: 12px; }
 .topbar-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--orange), var(--mango)); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; font-weight: 800; }
 .topbar-name { font-size: 13px; font-weight: 600; color: var(--navy); }
 
-.content { padding: 24px 48px 48px 48px !important; }
+.content { padding: 24px 48px 48px 48px !important; overflow-x: hidden; }
 
 /* Section panels */
 

@@ -39,7 +39,9 @@ body { background: var(--g50); margin: 0; }
 .topbar { height: 72px; background: rgba(247,248,250,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--g100); display: flex; align-items: center; justify-content: space-between; padding: 0 48px !important; position: sticky; top: 0; z-index: 50; }
 .topbar-title { font-size: 15px; font-weight: 700; color: var(--navy); }
 .topbar-user { display: flex; align-items: center; gap: 12px; }
-.topbar-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--orange), var(--mango)); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; font-weight: 800; }
+.topbar-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--orange), var(--mango)); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; font-weight: 800; cursor: pointer; transition: transform 0.18s ease, box-shadow 0.18s ease; }
+.topbar-avatar:hover { transform: scale(1.08); box-shadow: 0 4px 12px rgba(25,36,78,0.18); }
+.topbar-avatar:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
 .topbar-name { font-size: 13px; font-weight: 600; color: var(--navy); }
 
 .content { padding: 24px 48px 48px 48px !important; overflow-x: hidden; }
@@ -1695,7 +1697,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
           </div>
         </div>
         <span class="topbar-name" id="userName">Professor</span>
-        <div class="topbar-avatar" id="userAvatar">P</div>
+        <div class="topbar-avatar" id="userAvatar" role="button" tabindex="0" title="Meu Perfil" aria-label="Ir para Meu Perfil">P</div>
       </div>
     </div>
 
@@ -2098,6 +2100,20 @@ document.addEventListener('DOMContentLoaded', async () => {
       document.getElementById('topbarTitle').textContent = sections[sec] || sec;
     });
   });
+
+  // Avatar da topbar abre a seção "Meu Perfil"
+  (function(){
+    const av = document.getElementById('userAvatar');
+    if (!av) return;
+    const goProfile = () => {
+      const btn = document.querySelector('.sb-link[data-section="profile"]');
+      if (btn) btn.click();
+    };
+    av.addEventListener('click', goProfile);
+    av.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goProfile(); }
+    });
+  })();
 
   // Stat cards click → navigate to section
   document.querySelectorAll('.stat-card.clickable').forEach(card => {

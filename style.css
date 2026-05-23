@@ -279,29 +279,34 @@ a { text-decoration: none; color: inherit; }
 /* ═══ MOBILE TOGGLE ═══ */
 .mobile-toggle {
   display: none;
+  /* flex-direction column é aplicado só dentro da media query,
+     junto de align-items stretch para as barras não colapsarem */
   width: 44px;
   height: 44px;
   background: var(--ocean);
   border: none;
   border-radius: var(--r-sm);
   cursor: pointer;
-  padding: 10px;
+  padding: 12px 10px;
 }
+.mobile-toggle:hover { background: var(--ocean-light); }
+.mobile-toggle:active { transform: scale(0.94); }
 .mobile-toggle span {
   display: block;
   width: 100%;
-  height: 2px;
+  height: 2.5px;
   background: var(--navy);
-  margin: 4px 0;
-  border-radius: 1px;
+  border-radius: 2px;
   transition: 0.3s;
 }
+.mobile-toggle span + span { margin-top: 5px; }
 
 .mobile-menu {
   display: none;
   position: fixed;
   inset: 0;
-  z-index: 999;
+  /* acima do botão flutuante de WhatsApp (z-index:999) */
+  z-index: 1100;
   background: var(--navy);
   flex-direction: column;
   align-items: center;
@@ -309,6 +314,9 @@ a { text-decoration: none; color: inherit; }
   gap: 8px;
 }
 .mobile-menu.open { display: flex; }
+/* Quando o menu mobile está aberto, esconde o botão flutuante de WhatsApp
+   para que ele não fique por cima do menu */
+body.menu-open .wa-float { display: none !important; }
 .mobile-menu a {
   font-family: 'Fraunces', serif;
   font-size: 28px;
@@ -318,19 +326,28 @@ a { text-decoration: none; color: inherit; }
   transition: color 0.2s;
 }
 .mobile-menu a:hover { color: var(--orange); }
+.mobile-menu > a.active { color: var(--mango); }
+/* Trava o scroll da página enquanto o menu mobile está aberto */
+body.menu-open { overflow: hidden; }
 .mobile-close {
   position: absolute;
-  top: 24px;
-  right: 24px;
-  width: 44px;
-  height: 44px;
+  top: 20px;
+  right: 20px;
+  width: 48px;
+  height: 48px;
   border: none;
-  background: rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.12);
   border-radius: 50%;
-  font-size: 20px;
+  font-size: 22px;
   cursor: pointer;
   color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
+.mobile-close:hover { background: rgba(255,255,255,0.22); }
+.mobile-close:active { transform: scale(0.92); }
 
 /* ═══ FOOTER ═══ */
 .footer {
@@ -352,7 +369,7 @@ a { text-decoration: none; color: inherit; }
 }
 .footer-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
+  grid-template-columns: 2fr 1fr 1fr;
   gap: 48px;
   margin-bottom: 40px;
   position: relative;
@@ -523,8 +540,16 @@ a { text-decoration: none; color: inherit; }
 @media (max-width: 1024px) {
   .nav-links { display: none; }
   .nav-cta .btn-outline { display: none; }
-  .mobile-toggle { display: flex; align-items: center; justify-content: center; flex-direction: column; }
+  /* align-items: stretch garante que as 3 barras ocupem 100% da largura */
+  .mobile-toggle {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+  }
   .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+  /* A coluna da logo ocupa a linha inteira; as duas colunas de links ficam lado a lado */
+  .footer-grid > div:first-child { grid-column: 1 / -1; }
 }
 @media (max-width: 768px) {
   .container { padding: 0 20px; }
@@ -563,6 +588,14 @@ a { text-decoration: none; color: inherit; }
   .form-group input,
   .form-group select,
   .form-group textarea { font-size: 16px; }
+  /* Botão flutuante de WhatsApp menor e mais discreto no celular */
+  .wa-float {
+    width: 52px !important;
+    height: 52px !important;
+    bottom: 16px !important;
+    right: 16px !important;
+  }
+  .wa-float svg { width: 26px; height: 26px; }
 }
 
 /* ═══ DASHBOARD MOBILE RESPONSIVE ═══ */

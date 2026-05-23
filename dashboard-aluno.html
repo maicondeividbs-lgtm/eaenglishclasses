@@ -34,7 +34,9 @@ body { background: var(--g50); margin: 0; }
 .topbar { height: 72px; background: rgba(247,248,250,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--g100); display: flex; align-items: center; justify-content: space-between; padding: 0 48px !important; position: sticky; top: 0; z-index: 50; }
 .topbar-title { font-size: 15px; font-weight: 700; color: var(--navy); }
 .topbar-user { display: flex; align-items: center; gap: 12px; }
-.topbar-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--blue), var(--blue-light)); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; font-weight: 800; }
+.topbar-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--blue), var(--blue-light)); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; font-weight: 800; cursor: pointer; transition: transform 0.18s ease, box-shadow 0.18s ease; }
+.topbar-avatar:hover { transform: scale(1.08); box-shadow: 0 4px 12px rgba(25,36,78,0.18); }
+.topbar-avatar:focus-visible { outline: 2px solid var(--blue-light); outline-offset: 2px; }
 .topbar-name { font-size: 13px; font-weight: 600; color: var(--navy); }
 .content { padding: 24px 48px 48px 48px !important; overflow-x: hidden; }
 
@@ -2056,10 +2058,48 @@ body.sb-collapsed .main { margin-left: 92px !important; }
   .hw-card { padding: 16px; gap: 12px; }
   .hw-card .hw-action { width: 100%; margin-top: 10px; }
   .hw-card { flex-wrap: wrap; }
-  .wr-body { padding: 20px; }
-  .wr-header { padding: 18px 20px; }
   .pron-card { padding: 16px; }
   .pron-word { font-size: 22px !important; }
+
+  /* ── Cards de redação no celular ── */
+  .wr-card { border-radius: 16px; margin-bottom: 16px; }
+  .wr-header { padding: 16px 18px; }
+  .wr-header-row { gap: 11px; }
+  .wr-header-icon { width: 40px; height: 40px; min-width: 40px; }
+  .wr-header-info h4 { font-size: 17px !important; }
+  .wr-body { padding: 18px; }
+  /* O selo de status quebra para a linha de baixo, evitando aperto no topo */
+  .wr-status-badge { font-size: 10.5px; padding: 5px 11px; }
+  /* Prompt: menos recuo à esquerda, aspa menor */
+  .wr-prompt {
+    padding: 16px 16px 16px 40px;
+    font-size: 13.5px;
+    margin-bottom: 18px;
+  }
+  .wr-prompt::before { font-size: 44px; left: 10px; }
+  /* Medalha de nota um pouco menor */
+  .wr-grade-wrap { gap: 13px; padding: 16px 18px; }
+  .wr-grade-medal { width: 48px; height: 48px; min-width: 48px; }
+  .wr-grade-medal .wr-grade-num { font-size: 16px; }
+  /* Textarea com toque confortável */
+  .wr-card textarea { font-size: 16px !important; min-height: 150px; }
+  .wr-submit-btn { width: 100%; justify-content: center; }
+  /* Legenda de categorias quebra melhor */
+  .wr-cat-legend { gap: 10px 14px !important; padding: 10px 14px; }
+  .wr-comments-list { padding: 14px; }
+  .wr-comment-item { padding: 11px 13px !important; }
+  /* Resumo da redação corrigida (estado minimizado) */
+  .wr-collapse-summary { gap: 8px 10px; font-size: 11px; }
+}
+@media (max-width: 420px) {
+  .wr-header { padding: 14px 14px; }
+  .wr-header-row { flex-wrap: wrap; }
+  /* Em telas bem estreitas, o selo e o botão de expandir vão para a 2ª linha */
+  .wr-status-badge { order: 3; }
+  .wr-toggle-btn { order: 4; }
+  .wr-body { padding: 14px; }
+  .wr-grade-text strong { font-size: 14px; }
+  .wr-grade-text span { font-size: 12px; }
 }
 
 /* ════════════════════════════════════════════════════════
@@ -2305,7 +2345,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
           </div>
         </div>
         <span class="topbar-name" id="userName">Aluno</span>
-        <div class="topbar-avatar" id="userAvatar">A</div>
+        <div class="topbar-avatar" id="userAvatar" role="button" tabindex="0" title="Meu Perfil" aria-label="Ir para Meu Perfil">A</div>
       </div>
     </div>
     <div class="content" role="main">
@@ -2624,6 +2664,20 @@ async function initStudentDashboard() {
       document.getElementById('topbarTitle').textContent = sections[sec] || sec;
     });
   });
+
+  // Avatar da topbar abre a seção "Meu Perfil"
+  (function(){
+    const av = document.getElementById('userAvatar');
+    if (!av) return;
+    const goProfile = () => {
+      const btn = document.querySelector('.sb-link[data-section="profile"]');
+      if (btn) btn.click();
+    };
+    av.addEventListener('click', goProfile);
+    av.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goProfile(); }
+    });
+  })();
 
   await loadOverview();
   // Load notifications

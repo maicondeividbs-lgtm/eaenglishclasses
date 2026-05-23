@@ -122,7 +122,7 @@ body { background: var(--g50); margin: 0; }
 
 
 /* Supervision tab slide */
-.sup-tab {
+.sup-tab, .teach-tab {
   padding: 10px 18px !important;
   border: none !important;
   border-radius: 10px !important;
@@ -135,8 +135,8 @@ body { background: var(--g50); margin: 0; }
   transition: all 0.25s !important;
   white-space: nowrap !important;
 }
-.sup-tab:hover { background: var(--g50) !important; color: var(--navy) !important; }
-.sup-tab.active { background: var(--navy) !important; color: #fff !important; box-shadow: 0 2px 8px rgba(25,36,78,0.2) !important; }
+.sup-tab:hover, .teach-tab:hover { background: var(--g50) !important; color: var(--navy) !important; }
+.sup-tab.active, .teach-tab.active { background: var(--navy) !important; color: #fff !important; box-shadow: 0 2px 8px rgba(25,36,78,0.2) !important; }
 .sup-pane {
   animation: supSlideIn 0.35s cubic-bezier(0.4,0,0.2,1);
 }
@@ -2813,10 +2813,10 @@ body.sb-collapsed .main { margin-left: 92px !important; }
           <button type="button" class="swipe-arrow swipe-arrow-left" aria-label="Anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
           <button type="button" class="swipe-arrow swipe-arrow-right" aria-label="Próximo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
           <div class="coord-tab-bar swipe-scroll">
-            <button class="sup-tab active" data-teach="t-hw" onclick="switchTeach('t-hw',this)">📝 Homework</button>
-            <button class="sup-tab" data-teach="t-fb" onclick="switchTeach('t-fb',this)">💬 Feedback</button>
-            <button class="sup-tab" data-teach="t-wr" onclick="switchTeach('t-wr',this)">✍️ Redação</button>
-            <button class="sup-tab" data-teach="t-pr" onclick="switchTeach('t-pr',this)">🎙️ Pronúncia</button>
+            <button class="teach-tab active" data-teach="t-hw" onclick="switchTeach('t-hw',this)">📝 Homework</button>
+            <button class="teach-tab" data-teach="t-fb" onclick="switchTeach('t-fb',this)">💬 Feedback</button>
+            <button class="teach-tab" data-teach="t-wr" onclick="switchTeach('t-wr',this)">✍️ Redação</button>
+            <button class="teach-tab" data-teach="t-pr" onclick="switchTeach('t-pr',this)">🎙️ Pronúncia</button>
           </div>
         </div>
 
@@ -3199,7 +3199,7 @@ async function loadTeachersDropdown() {
 // ═══ COORDINATOR AS TEACHER ═══
 function switchTeach(key, btn) {
   document.querySelectorAll('.teach-pane').forEach(function(p){p.style.display='none';});
-  document.querySelectorAll('[data-teach]').forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.teach-tab').forEach(function(b){b.classList.remove('active');});
   var pane = document.getElementById(key);
   if(pane) pane.style.display='';
   if(btn) btn.classList.add('active');
@@ -4460,7 +4460,7 @@ var currentSup = 'hw';
 
 function switchSup(tab, btn) {
   currentSup = tab;
-  document.querySelectorAll('.sup-tab').forEach(function(t){ t.classList.remove('active'); });
+  document.querySelectorAll('.sup-tab[data-sup]').forEach(function(t){ t.classList.remove('active'); });
   btn.classList.add('active');
   document.querySelectorAll('.sup-pane').forEach(function(p){ p.style.display = 'none'; });
   var pane = document.getElementById('sup-' + tab);

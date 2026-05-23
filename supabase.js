@@ -302,20 +302,19 @@ async function deleteTestimonial(id) {
 }
 
 // ═══ USER MANAGEMENT (Coord) ═══
+// A criação de usuários é feita por uma Edge Function ('create-user'),
+// que roda no servidor com a service role key. Isso cria a conta SEM
+// trocar a sessão da coordenação (o bug do antigo signUp) e mantém a
+// service role key fora do navegador.
 async function createNewUser(email, password, fullName, role) {
-  // This requires the service role key - we use the admin endpoint
-  // For frontend, we create via supabase auth and update profile
-  const { data, error } = await db.auth.signUp({
-    email: email,
-    password: password,
-    options: { data: { full_name: fullName, role: role } }
+  const { data: { session } } = await db.auth.getSession();
+  if (!session) throw new Error('Sessão expirada. Faça login novamente.');
+
+  const { data, error } = await db.functions.invoke('create-user', {
+    body: { email: email, password: password, full_name: fullName, role: role }
   });
   if (error) throw error;
-  // Wait for trigger then update profile
-  await new Promise(r => setTimeout(r, 500));
-  if (data.user) {
-    await db.from('profiles').update({ full_name: fullName, role: role }).eq('id', data.user.id);
-  }
+  if (data && data.error) throw new Error(data.error);
   return data;
 }
 

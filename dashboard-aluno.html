@@ -458,8 +458,18 @@ body { background: var(--g50); margin: 0; }
   text-align: center;
   flex-shrink: 0;
 }
-@media (max-width: 480px) {
-  .notif-dropdown { width: calc(100vw - 24px); right: -8px; max-height: 70vh; }
+@media (max-width: 640px) {
+  /* Ancorado à viewport para nunca sair da tela no mobile */
+  .notif-dropdown {
+    position: fixed;
+    top: 78px;
+    left: 12px;
+    right: 12px;
+    width: auto;
+    max-height: calc(100vh - 110px);
+    max-height: calc(100dvh - 110px);
+  }
+  .notif-dropdown::before { display: none; }
 }
 
 /* ═══ PROFILE PAGE (aluno) ═══ */
@@ -958,18 +968,75 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 .journey-rail-wrap {
   position: relative;
 }
-/* Dica visual de scroll na borda direita (some quando chega ao fim) */
+/* Dica visual de scroll — gradientes nas duas bordas */
+.journey-rail-wrap::before,
 .journey-rail-wrap::after {
   content: '';
   position: absolute;
-  top: 0; right: 0; bottom: 14px;
-  width: 36px;
-  background: linear-gradient(90deg, transparent, #fff 78%);
+  top: 0; bottom: 14px;
+  width: 40px;
   pointer-events: none;
+  z-index: 2;
   opacity: 0;
   transition: opacity 0.25s ease;
 }
-.journey-rail-wrap.can-scroll::after { opacity: 1; }
+.journey-rail-wrap::before {
+  left: 0;
+  background: linear-gradient(90deg, #fff 18%, transparent);
+}
+.journey-rail-wrap::after {
+  right: 0;
+  background: linear-gradient(270deg, #fff 18%, transparent);
+}
+.journey-rail-wrap.can-left::before  { opacity: 1; }
+.journey-rail-wrap.can-right::after  { opacity: 1; }
+
+/* Setas de navegação — aparecem só quando há conteúdo escondido */
+.journey-arrow {
+  position: absolute;
+  top: 52px;
+  transform: translateY(-50%);
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid var(--g200);
+  box-shadow: 0 4px 12px rgba(15,23,42,0.16);
+  display: none;
+  align-items: center; justify-content: center;
+  color: var(--navy);
+  cursor: pointer;
+  z-index: 3;
+  padding: 0;
+  transition: transform 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+.journey-arrow:hover { background: var(--navy); color: #fff; }
+.journey-arrow:active { transform: translateY(-50%) scale(0.88); }
+.journey-arrow svg { width: 16px; height: 16px; }
+.journey-arrow-left  { left: -4px; }
+.journey-arrow-right { right: -4px; }
+.journey-rail-wrap.can-left  .journey-arrow-left  { display: flex; }
+.journey-rail-wrap.can-right .journey-arrow-right { display: flex; }
+
+/* Dica "arraste para o lado" — só quando há overflow */
+.journey-swipe-hint {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--g400);
+  margin: 2px 0 -2px;
+  user-select: none;
+}
+.journey-swipe-hint svg { width: 14px; height: 14px; }
+@keyframes journeySwipeNudge {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(5px); }
+}
+.journey-swipe-hint .journey-swipe-icon { animation: journeySwipeNudge 1.4s ease-in-out infinite; display: inline-flex; }
+.journey-rail-wrap.has-overflow + .journey-swipe-hint { display: flex; }
+
 .journey-rail {
   display: flex;
   align-items: stretch;
@@ -977,17 +1044,27 @@ body.sb-collapsed .main { margin-left: 92px !important; }
   overflow-x: auto;
   overflow-y: hidden;
   padding: 6px 2px 14px;
-  scrollbar-width: thin;
+  scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  cursor: grab;
+  scroll-snap-type: x proximity;
 }
+.journey-rail::-webkit-scrollbar { height: 0; display: none; }
+.journey-rail.dragging {
+  cursor: grabbing;
+  scroll-behavior: auto;
+}
+.journey-rail.dragging .journey-node { pointer-events: none; }
 .journey-node {
   position: relative;
-  flex: 1;
-  min-width: 96px;
+  flex: 1 0 auto;
+  min-width: 104px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
+  scroll-snap-align: center;
 }
 /* Linha de conexão entre os nós */
 .journey-node::before {
@@ -1163,10 +1240,12 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 }
 .journey-progress-caption strong { color: var(--navy); }
 @media (max-width: 560px) {
-  .journey-book-cover { width: 60px; height: 80px; }
+  .journey-book-cover { width: 64px; height: 86px; }
   .journey-book-badge { width: 22px; height: 22px; font-size: 10px; bottom: -6px; right: -6px; }
-  .journey-node { min-width: 84px; }
-  .journey-node::before { top: 44px; }
+  .journey-node { min-width: 92px; }
+  .journey-node::before { top: 48px; }
+  .journey-arrow { top: 48px; width: 30px; height: 30px; }
+  .journey-arrow svg { width: 14px; height: 14px; }
   .journey-label { font-size: 11px; }
   .journey-cefr { font-size: 9px; }
   .journey-status { font-size: 8px; padding: 3px 6px; }
@@ -2681,17 +2760,85 @@ function renderJourney(course) {
       '<div class="journey-status">' + status + '</div>' +
     '</div>';
   });
-  el.innerHTML = '<div class="journey-rail-wrap"><div class="journey-rail">' + html + '</div></div>';
-  // Mostra a dica de scroll só quando há conteúdo cortado
+  el.innerHTML =
+    '<div class="journey-rail-wrap">' +
+      '<button type="button" class="journey-arrow journey-arrow-left" aria-label="Voltar">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>' +
+      '</button>' +
+      '<button type="button" class="journey-arrow journey-arrow-right" aria-label="Avançar">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>' +
+      '</button>' +
+      '<div class="journey-rail">' + html + '</div>' +
+    '</div>' +
+    '<div class="journey-swipe-hint">' +
+      '<span class="journey-swipe-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>' +
+      'Arraste para o lado para ver toda a trilha' +
+    '</div>';
+
   const railWrap = el.querySelector('.journey-rail-wrap');
   const rail = el.querySelector('.journey-rail');
+
+  // Mostra as dicas de scroll (esquerda/direita) conforme a posição
   const updateScrollHint = () => {
-    const more = rail.scrollWidth - rail.clientWidth - rail.scrollLeft;
-    railWrap.classList.toggle('can-scroll', more > 4);
+    const max = rail.scrollWidth - rail.clientWidth;
+    const hasOverflow = max > 4;
+    railWrap.classList.toggle('has-overflow', hasOverflow);
+    railWrap.classList.toggle('can-left', hasOverflow && rail.scrollLeft > 4);
+    railWrap.classList.toggle('can-right', hasOverflow && rail.scrollLeft < max - 4);
   };
   rail.addEventListener('scroll', updateScrollHint, { passive: true });
-  requestAnimationFrame(updateScrollHint);
   window.addEventListener('resize', updateScrollHint);
+
+  // Setas de navegação
+  const step = () => Math.max(140, rail.clientWidth * 0.7);
+  el.querySelector('.journey-arrow-left')
+    .addEventListener('click', () => rail.scrollBy({ left: -step(), behavior: 'smooth' }));
+  el.querySelector('.journey-arrow-right')
+    .addEventListener('click', () => rail.scrollBy({ left: step(), behavior: 'smooth' }));
+
+  // Arrastar para o lado com mouse / toque (pointer events)
+  let isDown = false, startX = 0, startScroll = 0, moved = false;
+  rail.addEventListener('pointerdown', (e) => {
+    if (e.button && e.button !== 0) return;
+    isDown = true; moved = false;
+    startX = e.clientX;
+    startScroll = rail.scrollLeft;
+    rail.classList.add('dragging');
+  });
+  window.addEventListener('pointermove', (e) => {
+    if (!isDown) return;
+    const dx = e.clientX - startX;
+    if (Math.abs(dx) > 4) moved = true;
+    rail.scrollLeft = startScroll - dx;
+  });
+  const endDrag = () => {
+    if (!isDown) return;
+    isDown = false;
+    rail.classList.remove('dragging');
+  };
+  window.addEventListener('pointerup', endDrag);
+  window.addEventListener('pointercancel', endDrag);
+  // Evita que o arraste dispare cliques nos nós
+  rail.addEventListener('click', (e) => {
+    if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; }
+  }, true);
+  // Rolagem vertical do mouse vira rolagem horizontal
+  rail.addEventListener('wheel', (e) => {
+    if (e.deltaY === 0) return;
+    if (rail.scrollWidth - rail.clientWidth <= 0) return;
+    rail.scrollLeft += e.deltaY;
+    e.preventDefault();
+  }, { passive: false });
+
+  // Centraliza o livro atual na primeira renderização
+  requestAnimationFrame(() => {
+    const cur = rail.querySelector('.journey-node.current');
+    if (cur) {
+      const target = cur.offsetLeft - (rail.clientWidth - cur.offsetWidth) / 2;
+      rail.scrollLeft = Math.max(0, target);
+    }
+    updateScrollHint();
+  });
 
   // Barra de progresso geral da jornada
   const pct = currentIdx >= 0

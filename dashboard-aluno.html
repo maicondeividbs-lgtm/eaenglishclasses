@@ -30,13 +30,13 @@ body { background: var(--g50); margin: 0; }
 .sb-bottom a:hover { background: rgba(255,255,255,0.05); color: #fff; }
 .sb-logout { color: rgba(239,68,68,0.7) !important; }
 .sb-logout:hover { color: #ef4444 !important; background: rgba(239,68,68,0.1) !important; }
-.main { margin-left: 280px !important; flex: 1; }
+.main { margin-left: 280px !important; flex: 1; min-width: 0; overflow-x: hidden; }
 .topbar { height: 72px; background: rgba(247,248,250,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--g100); display: flex; align-items: center; justify-content: space-between; padding: 0 48px !important; position: sticky; top: 0; z-index: 50; }
 .topbar-title { font-size: 15px; font-weight: 700; color: var(--navy); }
 .topbar-user { display: flex; align-items: center; gap: 12px; }
 .topbar-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--blue), var(--blue-light)); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; font-weight: 800; }
 .topbar-name { font-size: 13px; font-weight: 600; color: var(--navy); }
-.content { padding: 24px 48px 48px 48px !important; }
+.content { padding: 24px 48px 48px 48px !important; overflow-x: hidden; }
 
 /* Section title animation */
 .section h2 {
@@ -683,15 +683,16 @@ body { background: var(--g50); margin: 0; }
   .profile-row-2 { grid-template-columns: 1fr; }
 }
 @media (max-width: 480px) {
+  .profile-hero { padding: 22px 18px; }
+  .profile-avatar-wrap,
+  .profile-avatar { width: 96px; height: 96px; }
+  .profile-avatar { font-size: 38px; }
+  .profile-avatar-edit { width: 30px; height: 30px; bottom: 2px; right: 2px; }
+  .profile-hero-name { font-size: 18px; }
+  .profile-card-body { padding: 16px; }
   .profile-stats { grid-template-columns: 1fr 1fr; gap: 8px; }
   .profile-stat { padding: 12px; }
   .profile-stat-num { font-size: 24px; }
-}
-
-@media(max-width:1024px) {
-  .sb { transform: translateX(-100%); }
-  .main { margin-left: 0; }
-  .stat-row { grid-template-columns: repeat(2,1fr); }
 }
 
 @media (max-width: 1024px) {
@@ -700,13 +701,15 @@ body { background: var(--g50); margin: 0; }
   .main { margin-left: 0 !important; }
   .content { padding: 20px 16px !important; }
   .topbar { padding: 0 16px !important; }
+  .stat-row { grid-template-columns: repeat(2,1fr); }
 }
 @media (max-width: 768px) {
-  .stat-row { grid-template-columns: 1fr !important; }
   .content { padding: 16px 12px !important; }
+  .panel-head { padding: 16px 16px; }
 }
 @media (max-width: 480px) {
-  .stat-card { padding: 12px !important; }
+  .stat-row { grid-template-columns: 1fr 1fr !important; gap: 10px; }
+  .stat-card { padding: 14px !important; }
   .stat-value { font-size: 24px !important; }
   .list-item { flex-direction: column; align-items: flex-start !important; gap: 8px; }
 }
@@ -950,10 +953,32 @@ body.sb-collapsed .main { margin-left: 92px !important; }
    ════════════════════════════════════════════════════════ */
 .journey-track {
   display: flex;
+  flex-direction: column;
+}
+.journey-rail-wrap {
+  position: relative;
+}
+/* Dica visual de scroll na borda direita (some quando chega ao fim) */
+.journey-rail-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 14px;
+  width: 36px;
+  background: linear-gradient(90deg, transparent, #fff 78%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.journey-rail-wrap.can-scroll::after { opacity: 1; }
+.journey-rail {
+  display: flex;
   align-items: stretch;
   gap: 0;
   overflow-x: auto;
+  overflow-y: hidden;
   padding: 6px 2px 14px;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
 }
 .journey-node {
   position: relative;
@@ -1138,15 +1163,33 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 }
 .journey-progress-caption strong { color: var(--navy); }
 @media (max-width: 560px) {
-  .journey-book-cover { width: 62px; height: 82px; }
-  .journey-book-badge { width: 24px; height: 24px; font-size: 11px; }
-  .journey-node { min-width: 78px; }
-  .journey-node::before { top: 46px; }
+  .journey-book-cover { width: 60px; height: 80px; }
+  .journey-book-badge { width: 22px; height: 22px; font-size: 10px; bottom: -6px; right: -6px; }
+  .journey-node { min-width: 84px; }
+  .journey-node::before { top: 44px; }
+  .journey-label { font-size: 11px; }
+  .journey-cefr { font-size: 9px; }
+  .journey-status { font-size: 8px; padding: 3px 6px; }
+  .journey-rail { padding-bottom: 10px; }
+  .journey-progress-caption { font-size: 11px; }
 }
 @media (max-width: 480px) {
-  .book-card { flex-direction: column; align-items: flex-start; min-height: auto; padding: 20px; }
-  .book-cover { width: 80px; height: 106px; }
-  .book-cover-img { width: 84px; height: 112px; }
+  .book-card {
+    gap: 14px;
+    padding: 16px;
+    min-height: 0;
+    align-items: center;
+  }
+  .book-cover-img { width: 78px; min-width: 78px; height: 104px; }
+  .book-cover { width: 76px; min-width: 76px; height: 100px; }
+  .book-info { width: auto; }
+  .book-info .b-name { font-size: 18px; }
+  .book-info .b-sub { font-size: 11.5px; }
+  .book-empty { min-height: 0; padding: 28px 20px; }
+}
+@media (max-width: 340px) {
+  .book-card { flex-direction: column; align-items: stretch; }
+  .book-cover-img, .book-cover { align-self: flex-start; }
 }
 
 /* ════════════════════════════════════════════════════════
@@ -1750,7 +1793,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
   background: linear-gradient(180deg, #fff, var(--off-white)) !important;
   border: 1.5px solid var(--ocean) !important;
   border-radius: 14px !important;
-  padding: 22px 24px !important;
+  padding:18px clamp(14px,4.5vw,24px) !important;
   font-size: 14.5px !important; color: var(--g700) !important;
   line-height: 1.85 !important;
   position: relative;
@@ -2202,7 +2245,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
         <!-- Progress journey + Current Book -->
         <div class="panel" style="margin-bottom:20px">
           <div class="panel-head"><div class="panel-title"><span class="panel-icon purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>Meu Progresso</div></div>
-          <div style="padding:22px 24px">
+          <div style="padding:18px clamp(14px,4.5vw,24px)">
             <div style="font-size:12px;font-weight:700;color:var(--g500);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:14px">Minha Jornada</div>
             <div id="journeyTrack" class="journey-track"><div class="skel-line" style="height:130px"></div></div>
             <div style="font-size:12px;font-weight:700;color:var(--g500);text-transform:uppercase;letter-spacing:0.5px;margin:24px 0 12px">Meu Livro Atual</div>
@@ -2411,35 +2454,35 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 
         <div class="panel" style="margin-bottom:18px">
           <div class="panel-head"><div class="panel-title"><span class="panel-icon blue">🎯</span>Como funcionam as aulas</div></div>
-          <div style="padding:20px 24px;font-size:14px;color:var(--g700);line-height:1.75">
+          <div style="padding:18px clamp(14px,4.5vw,24px);font-size:14px;color:var(--g700);line-height:1.75">
             As aulas acontecem <strong>ao vivo pelo Google Meet</strong>, em horários combinados com a coordenação. Tenha sempre por perto seu material Cambridge e um caderno para anotações. Chegue alguns minutos antes para testar áudio e câmera.
           </div>
         </div>
 
         <div class="panel" style="margin-bottom:18px">
           <div class="panel-head"><div class="panel-title"><span class="panel-icon purple">🗺️</span>Sua jornada de aprendizado</div></div>
-          <div style="padding:20px 24px;font-size:14px;color:var(--g700);line-height:1.75">
+          <div style="padding:18px clamp(14px,4.5vw,24px);font-size:14px;color:var(--g700);line-height:1.75">
             Você avança pelos livros da trilha EA — do Interchange Intro ao Evolve 6 — <strong>no seu próprio ritmo</strong>. O progresso depende da sua dedicação, frequência e absorção do conteúdo. Acompanhe sua evolução na aba <strong>Visão Geral</strong>, na seção "Meu Progresso".
           </div>
         </div>
 
         <div class="panel" style="margin-bottom:18px">
           <div class="panel-head"><div class="panel-title"><span class="panel-icon orange">📝</span>Homework e redações</div></div>
-          <div style="padding:20px 24px;font-size:14px;color:var(--g700);line-height:1.75">
+          <div style="padding:18px clamp(14px,4.5vw,24px);font-size:14px;color:var(--g700);line-height:1.75">
             Na aba <strong>Homework</strong> você acompanha as tarefas atribuídas e marca como concluídas. Na aba <strong>Redação</strong>, você escreve seus textos e recebe correções detalhadas dos professores. Capriche na gramática e no vocabulário — a prática constante é o caminho para a fluência.
           </div>
         </div>
 
         <div class="panel" style="margin-bottom:18px">
           <div class="panel-head"><div class="panel-title"><span class="panel-icon ocean">🔄</span>Cancelamento e reposição</div></div>
-          <div style="padding:20px 24px;font-size:14px;color:var(--g700);line-height:1.75">
+          <div style="padding:18px clamp(14px,4.5vw,24px);font-size:14px;color:var(--g700);line-height:1.75">
             Aulas canceladas <strong>com pelo menos 24 horas de antecedência</strong> podem ser repostas em outro horário combinado com o professor. Cancelamentos sem 24 horas de antecedência são contabilizados como aula dada e não dão direito a reposição.
           </div>
         </div>
 
         <div class="panel">
           <div class="panel-head"><div class="panel-title"><span class="panel-icon blue">🎓</span>Certificado de conclusão</div></div>
-          <div style="padding:20px 24px;font-size:14px;color:var(--g700);line-height:1.75">
+          <div style="padding:18px clamp(14px,4.5vw,24px);font-size:14px;color:var(--g700);line-height:1.75">
             O certificado digital da EA English Classes é emitido <strong>ao final do curso completo</strong>, ou seja, somente após você concluir <strong>todos os livros e níveis</strong> da jornada. Ele atesta a conclusão integral do programa.
           </div>
         </div>
@@ -2638,7 +2681,17 @@ function renderJourney(course) {
       '<div class="journey-status">' + status + '</div>' +
     '</div>';
   });
-  el.innerHTML = html;
+  el.innerHTML = '<div class="journey-rail-wrap"><div class="journey-rail">' + html + '</div></div>';
+  // Mostra a dica de scroll só quando há conteúdo cortado
+  const railWrap = el.querySelector('.journey-rail-wrap');
+  const rail = el.querySelector('.journey-rail');
+  const updateScrollHint = () => {
+    const more = rail.scrollWidth - rail.clientWidth - rail.scrollLeft;
+    railWrap.classList.toggle('can-scroll', more > 4);
+  };
+  rail.addEventListener('scroll', updateScrollHint, { passive: true });
+  requestAnimationFrame(updateScrollHint);
+  window.addEventListener('resize', updateScrollHint);
 
   // Barra de progresso geral da jornada
   const pct = currentIdx >= 0

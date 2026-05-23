@@ -1929,6 +1929,8 @@ body.sb-collapsed .main { margin-left: 92px !important; }
   .form-card { padding: 22px !important; }
   .coord-search-bar { padding: 12px; }
   .coord-tab-bar { padding: 4px; }
+  .coord-filter-row { padding: 14px 16px; }
+  .coord-filter-field { flex: 1 1 100%; min-width: 0; }
 }
 @media (max-width: 440px) {
   .coord-todo-row { flex-direction: column; }
@@ -2247,11 +2249,15 @@ body.sb-collapsed .main { margin-left: 92px !important; }
           </div>
         </div>
 
-        <div style="display:flex;gap:12px;align-items:center;margin-bottom:20px;flex-wrap:wrap;background:#fff;padding:16px 20px;border-radius:14px;border:1px solid var(--g100)">
-          <span style="font-size:13px;font-weight:700;color:var(--navy)">Professor:</span>
-          <select id="schedProfSelect" onchange="loadCoordSchedule()" class="filter-select" style="flex:1;min-width:200px"><option value="">Selecione o professor</option></select>
-          <span style="font-size:13px;font-weight:700;color:var(--navy);margin-left:8px">Mês:</span>
-          <input type="month" id="schedCoordMonth" onchange="loadCoordScheduleEvents()" style="padding:8px 12px;border:2px solid var(--g200);border-radius:8px;font-family:inherit;font-size:13px;outline:none">
+        <div class="coord-filter-row" style="display:flex;gap:12px;align-items:center;margin-bottom:20px;flex-wrap:wrap;background:#fff;padding:16px 20px;border-radius:14px;border:1px solid var(--g100)">
+          <div class="coord-filter-field" style="display:flex;align-items:center;gap:8px;flex:1;min-width:220px">
+            <span style="font-size:13px;font-weight:700;color:var(--navy);white-space:nowrap">Professor:</span>
+            <select id="schedProfSelect" onchange="loadCoordSchedule()" class="filter-select" style="flex:1;min-width:0"><option value="">Selecione o professor</option></select>
+          </div>
+          <div class="coord-filter-field" style="display:flex;align-items:center;gap:8px">
+            <span style="font-size:13px;font-weight:700;color:var(--navy);white-space:nowrap">Mês:</span>
+            <input type="month" id="schedCoordMonth" onchange="loadCoordScheduleEvents()" style="flex:1;min-width:0;padding:9px 12px;border:2px solid var(--g200);border-radius:8px;font-family:inherit;font-size:13px;outline:none">
+          </div>
         </div>
 
         <div class="sched-desktop-grid" style="display:grid;grid-template-columns:220px 1fr;gap:20px;align-items:start">
@@ -2413,9 +2419,9 @@ body.sb-collapsed .main { margin-left: 92px !important; }
         </div>
 
         <!-- Shared filter -->
-        <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;align-items:center;background:#fff;padding:16px 20px;border-radius:14px;border:1px solid var(--g100)" id="supFilterBar">
+        <div class="coord-filter-row" style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;align-items:center;background:#fff;padding:16px 20px;border-radius:14px;border:1px solid var(--g100)" id="supFilterBar">
           <span style="font-size:13px;font-weight:700;color:var(--navy)">Filtrar por professor:</span>
-          <select id="supFilter" onchange="loadCurrentSup()" class="filter-select" style="flex:1;min-width:200px">
+          <select id="supFilter" onchange="loadCurrentSup()" class="filter-select" style="flex:1;min-width:160px">
             <option value="">Todos os professores</option>
           </select>
         </div>

@@ -2142,6 +2142,129 @@ body.sb-collapsed .main { margin-left: 92px !important; }
   .coord-todo-row button { width: 100%; }
   .coord-todo-row button { justify-content: center; }
 }
+/* ═══ DOCUMENTOS DOS ALUNOS ═══ */
+.doc-student-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: 14px; padding: 24px; }
+.doc-student-card {
+  display: flex; align-items: center; gap: 14px; padding: 16px; border-radius: 14px;
+  border: 1px solid var(--g100); background: #fff; cursor: pointer; transition: all 0.2s; text-align: left;
+}
+.doc-student-card:hover { border-color: var(--mango); box-shadow: 0 8px 24px rgba(245,154,30,0.12); transform: translateY(-2px); }
+.doc-student-card .dsc-avatar {
+  width: 46px; height: 46px; min-width: 46px; border-radius: 50%; overflow: hidden;
+  display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800; color: #fff;
+  background: linear-gradient(135deg, var(--blue), var(--blue-light));
+}
+.doc-student-card .dsc-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.doc-student-card .dsc-name { font-size: 14px; font-weight: 700; color: var(--navy); }
+.doc-student-card .dsc-meta { font-size: 12px; color: var(--g500); margin-top: 2px; }
+.doc-student-card .dsc-count {
+  margin-left: auto; min-width: 26px; height: 26px; padding: 0 8px; border-radius: 99px;
+  background: var(--mango-soft); color: var(--mango); font-size: 12px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+}
+.doc-student-card .dsc-count.zero { background: var(--g100); color: var(--g400); }
+
+.doc-back-btn {
+  display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; margin-bottom: 18px;
+  border: 1px solid var(--g200); border-radius: 10px; background: #fff; color: var(--navy);
+  font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+}
+.doc-back-btn:hover { border-color: var(--mango); color: var(--mango); }
+
+.doc-student-banner {
+  display: flex; align-items: center; gap: 18px; padding: 22px 26px; margin-bottom: 18px;
+  background: linear-gradient(135deg, var(--navy), var(--navy-light)); border-radius: 16px; color: #fff;
+}
+.doc-banner-avatar {
+  width: 58px; height: 58px; min-width: 58px; border-radius: 50%; overflow: hidden;
+  display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800;
+  background: linear-gradient(135deg, var(--mango), var(--orange)); color: #fff;
+}
+.doc-banner-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.doc-banner-info h3 { font-size: 19px; font-weight: 800; }
+.doc-banner-info p { font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 2px; }
+.doc-banner-stats { margin-left: auto; display: flex; gap: 28px; }
+.doc-banner-stats > div { text-align: center; }
+.doc-stat-num { display: block; font-family: 'Fraunces',serif; font-size: 26px; font-weight: 900; line-height: 1; }
+.doc-stat-lbl { display: block; font-size: 11px; color: rgba(255,255,255,0.65); margin-top: 4px; }
+
+.doc-actions { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+.doc-action-btn {
+  display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px;
+  border: 2px solid var(--g200); border-radius: 12px; background: #fff; color: var(--navy);
+  font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+}
+.doc-action-btn:hover { border-color: var(--mango); color: var(--mango); }
+.doc-action-btn.primary { background: var(--mango); border-color: var(--mango); color: #fff; }
+.doc-action-btn.primary:hover { background: var(--mango-light); border-color: var(--mango-light); color: #fff; box-shadow: 0 6px 20px rgba(245,154,30,0.3); }
+
+.doc-cat-tabs { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+.doc-cat-tab {
+  padding: 8px 14px; border: 1px solid var(--g200); border-radius: 99px; background: #fff;
+  color: var(--g500); font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+}
+.doc-cat-tab:hover { border-color: var(--mango); color: var(--navy); }
+.doc-cat-tab.active { background: var(--navy); border-color: var(--navy); color: #fff; }
+
+.doc-grade-row, .doc-file-row {
+  display: flex; align-items: center; gap: 14px; padding: 14px 24px; border-bottom: 1px solid var(--g100);
+}
+.doc-grade-row:last-child, .doc-file-row:last-child { border-bottom: none; }
+.doc-grade-pill {
+  min-width: 56px; height: 56px; border-radius: 12px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; font-weight: 900; flex-shrink: 0;
+}
+.doc-grade-pill .gp-val { font-family: 'Fraunces',serif; font-size: 19px; line-height: 1; }
+.doc-grade-pill .gp-max { font-size: 10px; font-weight: 700; opacity: 0.7; }
+.doc-grade-pill.good { background: rgba(16,185,129,0.12); color: #10b981; }
+.doc-grade-pill.mid  { background: rgba(245,154,30,0.14); color: var(--mango); }
+.doc-grade-pill.low  { background: rgba(239,68,68,0.12); color: #ef4444; }
+.doc-row-main { flex: 1; min-width: 0; }
+.doc-row-title { font-size: 14px; font-weight: 700; color: var(--navy); }
+.doc-row-sub { font-size: 12px; color: var(--g500); margin-top: 2px; }
+
+.doc-file-icon {
+  width: 46px; height: 46px; min-width: 46px; border-radius: 11px; display: flex;
+  align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;
+}
+.doc-file-icon.assessment { background: var(--blue-soft); }
+.doc-file-icon.prova { background: var(--mango-soft); }
+.doc-file-icon.registro { background: var(--ocean-light); }
+.doc-file-icon.contrato { background: var(--orange-soft); }
+.doc-file-icon.outro { background: var(--g100); }
+.doc-cat-label {
+  display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 10px;
+  font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; margin-top: 4px;
+}
+.doc-cat-label.assessment { background: var(--blue-soft); color: var(--blue); }
+.doc-cat-label.prova { background: var(--mango-soft); color: var(--mango); }
+.doc-cat-label.registro { background: var(--ocean-light); color: #1d8a85; }
+.doc-cat-label.contrato { background: var(--orange-soft); color: var(--orange); }
+.doc-cat-label.outro { background: var(--g100); color: var(--g500); }
+.doc-row-actions { display: flex; gap: 8px; flex-shrink: 0; }
+.doc-icon-btn {
+  width: 36px; height: 36px; border-radius: 9px; border: 1px solid var(--g200); background: #fff;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; color: var(--navy);
+}
+.doc-icon-btn:hover { border-color: var(--mango); color: var(--mango); }
+.doc-icon-btn.danger:hover { border-color: #ef4444; color: #ef4444; }
+
+.doc-dropzone {
+  border: 2px dashed var(--g200); border-radius: 12px; padding: 24px; text-align: center;
+  cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 8px;
+  color: var(--g500);
+}
+.doc-dropzone:hover { border-color: var(--mango); background: var(--mango-soft); color: var(--navy); }
+.doc-dropzone.has-file { border-color: #10b981; background: rgba(16,185,129,0.06); color: #10b981; }
+.doc-dropzone small { font-size: 11px; color: var(--g400); }
+.doc-dropzone span { font-size: 13px; font-weight: 700; }
+
+@media (max-width: 640px) {
+  .doc-student-banner { flex-wrap: wrap; }
+  .doc-banner-stats { margin-left: 0; width: 100%; justify-content: space-around; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.12); }
+  .doc-grade-row, .doc-file-row { flex-wrap: wrap; }
+  .doc-row-actions { margin-left: auto; }
+}
 </style>
 </head>
 <body>
@@ -2211,6 +2334,11 @@ body.sb-collapsed .main { margin-left: 92px !important; }
             <span>Supervisão</span>
             <span id="supCount" class="sb-count zero">0</span>
             <span class="tip">Supervisão</span>
+          </button>
+          <button class="sb-link" data-section="documents">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+            <span>Documentos</span>
+            <span class="tip">Documentos dos Alunos</span>
           </button>
           <button class="sb-link" data-section="teach">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
@@ -2688,6 +2816,147 @@ body.sb-collapsed .main { margin-left: 92px !important; }
         </div>
       </div>
 
+      <!-- ═══ DOCUMENTOS DOS ALUNOS ═══ -->
+      <div class="section" id="sec-documents">
+        <div class="section-head">
+          <div class="section-head-icon ocean">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          </div>
+          <div class="section-head-text">
+            <h2>Documentos dos Alunos</h2>
+            <p class="section-sub">Registre notas de provas e organize os documentos de cada aluno — assessments, provas, registros e contratos.</p>
+          </div>
+        </div>
+
+        <!-- Visão A: lista de alunos -->
+        <div id="docStudentView">
+          <div class="coord-search-bar">
+            <input type="text" id="docStudentSearch" placeholder="🔍 Buscar aluno pelo nome..." oninput="filterDocStudents()">
+          </div>
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title">Selecione um aluno</div>
+              <span class="badge badge-time" id="docStudentCount">0</span>
+            </div>
+            <div id="docStudentList" class="doc-student-grid">
+              <div class="empty-state"><div class="empty-icon">⏳</div><p>Carregando alunos...</p></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visão B: documentos de um aluno -->
+        <div id="docDetailView" style="display:none">
+          <button class="doc-back-btn" onclick="closeDocDetail()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg>
+            Voltar para a lista de alunos
+          </button>
+
+          <!-- Cartão do aluno selecionado -->
+          <div class="doc-student-banner">
+            <div class="doc-banner-avatar" id="docBannerAvatar">A</div>
+            <div class="doc-banner-info">
+              <h3 id="docBannerName">Aluno</h3>
+              <p id="docBannerMeta">—</p>
+            </div>
+            <div class="doc-banner-stats">
+              <div><span class="doc-stat-num" id="docStatGrade">—</span><span class="doc-stat-lbl">Média de provas</span></div>
+              <div><span class="doc-stat-num" id="docStatFiles">0</span><span class="doc-stat-lbl">Documentos</span></div>
+            </div>
+          </div>
+
+          <!-- Ações: registrar nota / enviar documento -->
+          <div class="doc-actions">
+            <button class="doc-action-btn" onclick="openGradeModal()">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg>
+              Registrar nota de prova
+            </button>
+            <button class="doc-action-btn primary" onclick="openUploadModal()">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+              Enviar documento
+            </button>
+          </div>
+
+          <!-- Notas de provas -->
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title">📊 Notas de Provas</div>
+              <span class="badge badge-time" id="docGradeCount">0</span>
+            </div>
+            <div id="docGradeList">
+              <div class="empty-state"><div class="empty-icon">📊</div><p>Nenhuma nota registrada.</p></div>
+            </div>
+          </div>
+
+          <!-- Documentos por categoria -->
+          <div class="doc-cat-tabs" id="docCatTabs">
+            <button class="doc-cat-tab active" data-cat="all" onclick="filterDocCategory('all',this)">Todos</button>
+            <button class="doc-cat-tab" data-cat="assessment" onclick="filterDocCategory('assessment',this)">📋 Assessments</button>
+            <button class="doc-cat-tab" data-cat="prova" onclick="filterDocCategory('prova',this)">📝 Provas</button>
+            <button class="doc-cat-tab" data-cat="registro" onclick="filterDocCategory('registro',this)">🗒️ Registros de Provas</button>
+            <button class="doc-cat-tab" data-cat="contrato" onclick="filterDocCategory('contrato',this)">📄 Contratos</button>
+            <button class="doc-cat-tab" data-cat="outro" onclick="filterDocCategory('outro',this)">📎 Outros</button>
+          </div>
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title">Documentos enviados</div>
+              <span class="badge badge-time" id="docFileCount">0</span>
+            </div>
+            <div id="docFileList">
+              <div class="empty-state"><div class="empty-icon">📁</div><p>Nenhum documento enviado.</p></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal: registrar nota -->
+        <div id="gradeModal" role="dialog" aria-modal="true" aria-label="Registrar nota" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.5);align-items:center;justify-content:center">
+          <div style="background:#fff;border-radius:20px;padding:32px;max-width:460px;width:90%;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,0.2)">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+              <h3 style="font-size:20px;font-weight:800;color:var(--navy)">📊 Registrar Nota</h3>
+              <button onclick="closeGradeModal()" style="border:none;background:var(--g100);width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:16px">✕</button>
+            </div>
+            <div class="f-group"><label>Nome da prova / avaliação</label><input type="text" id="gradeExamName" placeholder="Ex: Prova bimestral — Unit 5"></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <div class="f-group"><label>Nota obtida</label><input type="number" id="gradeValue" step="0.1" min="0" placeholder="Ex: 8.5"></div>
+              <div class="f-group"><label>Nota máxima</label><input type="number" id="gradeMax" step="0.1" min="1" value="10"></div>
+            </div>
+            <div class="f-group"><label>Data da prova</label><input type="date" id="gradeDate"></div>
+            <div class="f-group"><label>Observações (opcional)</label><textarea id="gradeNotes" rows="2" placeholder="Comentários sobre o desempenho..."></textarea></div>
+            <button class="btn-send" style="background:var(--mango)" onclick="submitGrade()">Salvar Nota</button>
+          </div>
+        </div>
+
+        <!-- Modal: enviar documento -->
+        <div id="uploadModal" role="dialog" aria-modal="true" aria-label="Enviar documento" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.5);align-items:center;justify-content:center">
+          <div style="background:#fff;border-radius:20px;padding:32px;max-width:460px;width:90%;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,0.2)">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+              <h3 style="font-size:20px;font-weight:800;color:var(--navy)">📤 Enviar Documento</h3>
+              <button onclick="closeUploadModal()" style="border:none;background:var(--g100);width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:16px">✕</button>
+            </div>
+            <div class="f-group">
+              <label>Categoria</label>
+              <select id="uploadCategory">
+                <option value="assessment">📋 Assessment</option>
+                <option value="prova">📝 Prova</option>
+                <option value="registro">🗒️ Registro de Prova</option>
+                <option value="contrato">📄 Contrato</option>
+                <option value="outro">📎 Outro</option>
+              </select>
+            </div>
+            <div class="f-group"><label>Título do documento</label><input type="text" id="uploadTitle" placeholder="Ex: Assessment — Maio 2026"></div>
+            <div class="f-group">
+              <label>Arquivo</label>
+              <div class="doc-dropzone" id="docDropzone" onclick="document.getElementById('uploadFile').click()">
+                <input type="file" id="uploadFile" style="display:none" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.xls,.xlsx" onchange="onDocFilePicked()">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <span id="docDropzoneText">Clique para escolher um arquivo</span>
+                <small>PDF, Word, Excel ou imagem — até 25 MB</small>
+              </div>
+            </div>
+            <button class="btn-send" style="background:var(--mango)" onclick="submitDocument()">Enviar Documento</button>
+          </div>
+        </div>
+      </div>
+
       <!-- ═══ MEU PERFIL ═══ -->
       <div class="section" id="sec-my-profile">
         <div class="section-head">
@@ -3016,7 +3285,7 @@ async function initToolProfessors() {
 <script src="supabase.js"></script>
 <script>
 let currentUser = null;
-const sections = {"overview":"Visão Geral","users":"Usuários","access":"Acessos de Alunos","schedules":"Schedules","nivelamento":"Nivelamentos","supervision":"Supervisão","homework":"Homeworks","feedbacks":"Feedbacks","announcements":"Avisos","messages":"Msg → Professor","writing":"Redações","pronunciation-coord":"Pronúncias","testimonials":"Depoimentos","teach":"Área do Professor","tool":"Ferramenta","my-profile":"Meu Perfil"};
+const sections = {"overview":"Visão Geral","users":"Usuários","access":"Acessos de Alunos","schedules":"Schedules","nivelamento":"Nivelamentos","supervision":"Supervisão","homework":"Homeworks","feedbacks":"Feedbacks","announcements":"Avisos","messages":"Msg → Professor","writing":"Redações","pronunciation-coord":"Pronúncias","documents":"Documentos dos Alunos","testimonials":"Depoimentos","teach":"Área do Professor","tool":"Ferramenta","my-profile":"Meu Perfil"};
 
 // ═══ INIT ═══
 // ═══ COLLAPSIBLE SIDEBAR ═══
@@ -4742,6 +5011,7 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'messages': loadMsgList(); break;
       case 'writing': loadWritingCoord(); break;
       case 'pronunciation-coord': loadPronunciationCoord(); break;
+      case 'documents': loadDocStudents(); break;
       case 'testimonials': loadTestimonials(); break;
       case 'teach': loadTeachStudents(); break;
       case 'tool': initToolProfessors(); break;
@@ -4854,6 +5124,365 @@ document.addEventListener('DOMContentLoaded', () => {
   // expõe para reuso após renderizações dinâmicas
   window.refreshSwipeScroll = refreshAll;
 })();
+
+// ═══════════════════════════════════════════════════════
+// DOCUMENTOS DOS ALUNOS — lógica da seção
+// ═══════════════════════════════════════════════════════
+let docStudentsCache = [];
+let docCountsCache = {};
+let docCurrentStudent = null;
+let docFilesCache = [];
+let docCatFilter = 'all';
+
+function docEsc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Visão A: lista de alunos ──
+async function loadDocStudents() {
+  const list = document.getElementById('docStudentList');
+  if (!list) return;
+  list.innerHTML = '<div class="empty-state"><div class="empty-icon">⏳</div><p>Carregando alunos...</p></div>';
+  try {
+    const [students, counts] = await Promise.all([
+      getAllStudents(),
+      getDocumentCounts()
+    ]);
+    docStudentsCache = students;
+    docCountsCache = counts;
+    renderDocStudents(docStudentsCache);
+  } catch (e) {
+    console.error('loadDocStudents error:', e);
+    list.innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><p>Erro ao carregar alunos.</p></div>';
+  }
+}
+
+function renderDocStudents(students) {
+  const list = document.getElementById('docStudentList');
+  const countEl = document.getElementById('docStudentCount');
+  if (countEl) countEl.textContent = students.length;
+  if (!students.length) {
+    list.innerHTML = '<div class="empty-state"><div class="empty-icon">🎓</div><p>Nenhum aluno encontrado.</p></div>';
+    return;
+  }
+  list.innerHTML = students.map(s => {
+    const n = docCountsCache[s.id] || 0;
+    const initial = (s.full_name || 'A').trim()[0].toUpperCase();
+    const avatar = s.avatar_url
+      ? '<img src="' + docEsc(s.avatar_url) + '" alt="">'
+      : initial;
+    return '<button class="doc-student-card" onclick="openDocDetail(\'' + s.id + '\')">' +
+        '<div class="dsc-avatar">' + avatar + '</div>' +
+        '<div style="min-width:0;flex:1">' +
+          '<div class="dsc-name">' + docEsc(s.full_name || 'Aluno') + '</div>' +
+          '<div class="dsc-meta">' + docEsc(s.level || s.email || '—') + '</div>' +
+        '</div>' +
+        '<span class="dsc-count' + (n ? '' : ' zero') + '">' + n + '</span>' +
+      '</button>';
+  }).join('');
+}
+
+function filterDocStudents() {
+  const q = (document.getElementById('docStudentSearch').value || '').toLowerCase().trim();
+  if (!q) { renderDocStudents(docStudentsCache); return; }
+  renderDocStudents(docStudentsCache.filter(s =>
+    (s.full_name || '').toLowerCase().includes(q) ||
+    (s.email || '').toLowerCase().includes(q)
+  ));
+}
+
+// ── Visão B: documentos de um aluno ──
+async function openDocDetail(studentId) {
+  const student = docStudentsCache.find(s => s.id === studentId);
+  if (!student) return;
+  docCurrentStudent = student;
+  docCatFilter = 'all';
+
+  document.getElementById('docStudentView').style.display = 'none';
+  document.getElementById('docDetailView').style.display = '';
+
+  // Banner
+  const initial = (student.full_name || 'A').trim()[0].toUpperCase();
+  const av = document.getElementById('docBannerAvatar');
+  av.innerHTML = student.avatar_url
+    ? '<img src="' + docEsc(student.avatar_url) + '" alt="">'
+    : initial;
+  document.getElementById('docBannerName').textContent = student.full_name || 'Aluno';
+  document.getElementById('docBannerMeta').textContent = student.level || student.email || '—';
+
+  // Reset categoria de tabs
+  document.querySelectorAll('#docCatTabs .doc-cat-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.cat === 'all');
+  });
+
+  await Promise.all([ loadDocGrades(studentId), loadDocFiles(studentId) ]);
+}
+
+function closeDocDetail() {
+  document.getElementById('docDetailView').style.display = 'none';
+  document.getElementById('docStudentView').style.display = '';
+  docCurrentStudent = null;
+  // Atualiza contagens ao voltar
+  getDocumentCounts().then(c => { docCountsCache = c; renderDocStudents(docStudentsCache); }).catch(()=>{});
+}
+
+// ── Notas de provas ──
+async function loadDocGrades(studentId) {
+  const list = document.getElementById('docGradeList');
+  list.innerHTML = '<div class="empty-state"><div class="empty-icon">⏳</div><p>Carregando notas...</p></div>';
+  try {
+    const grades = await getExamGrades(studentId);
+    document.getElementById('docGradeCount').textContent = grades.length;
+
+    // Média geral (normalizada para escala 0-10)
+    if (grades.length) {
+      const sum = grades.reduce((acc, g) => acc + (Number(g.grade) / (Number(g.max_grade) || 10)) * 10, 0);
+      document.getElementById('docStatGrade').textContent = (sum / grades.length).toFixed(1);
+    } else {
+      document.getElementById('docStatGrade').textContent = '—';
+    }
+
+    if (!grades.length) {
+      list.innerHTML = '<div class="empty-state"><div class="empty-icon">📊</div><p>Nenhuma nota registrada ainda.</p></div>';
+      return;
+    }
+    list.innerHTML = grades.map(g => {
+      const max = Number(g.max_grade) || 10;
+      const pct = (Number(g.grade) / max) * 100;
+      const cls = pct >= 70 ? 'good' : pct >= 50 ? 'mid' : 'low';
+      const sub = [
+        g.exam_date ? '📅 ' + formatDate(g.exam_date) : null,
+        g.registrant && g.registrant.full_name ? 'por ' + docEsc(g.registrant.full_name) : null,
+        g.notes ? docEsc(g.notes) : null
+      ].filter(Boolean).join(' • ');
+      return '<div class="doc-grade-row">' +
+          '<div class="doc-grade-pill ' + cls + '">' +
+            '<span class="gp-val">' + docEsc(g.grade) + '</span>' +
+            '<span class="gp-max">/ ' + docEsc(max) + '</span>' +
+          '</div>' +
+          '<div class="doc-row-main">' +
+            '<div class="doc-row-title">' + docEsc(g.exam_name || 'Avaliação') + '</div>' +
+            '<div class="doc-row-sub">' + (sub || '—') + '</div>' +
+          '</div>' +
+          '<div class="doc-row-actions">' +
+            '<button class="doc-icon-btn danger" title="Excluir nota" onclick="removeDocGrade(\'' + g.id + '\')">' +
+              '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>' +
+            '</button>' +
+          '</div>' +
+        '</div>';
+    }).join('');
+  } catch (e) {
+    console.error('loadDocGrades error:', e);
+    list.innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><p>Erro ao carregar notas.</p></div>';
+  }
+}
+
+async function removeDocGrade(gradeId) {
+  if (!confirm('Excluir esta nota? Esta ação não pode ser desfeita.')) return;
+  try {
+    await deleteExamGrade(gradeId);
+    showToast('Nota excluída.');
+    if (docCurrentStudent) loadDocGrades(docCurrentStudent.id);
+  } catch (e) {
+    console.error(e);
+    showToast('Erro ao excluir nota.', 'error');
+  }
+}
+
+// ── Documentos (arquivos) ──
+const DOC_CAT_INFO = {
+  assessment: { icon: '📋', label: 'Assessment' },
+  prova:      { icon: '📝', label: 'Prova' },
+  registro:   { icon: '🗒️', label: 'Registro de Prova' },
+  contrato:   { icon: '📄', label: 'Contrato' },
+  outro:      { icon: '📎', label: 'Outro' }
+};
+
+async function loadDocFiles(studentId) {
+  const list = document.getElementById('docFileList');
+  list.innerHTML = '<div class="empty-state"><div class="empty-icon">⏳</div><p>Carregando documentos...</p></div>';
+  try {
+    docFilesCache = await getStudentDocuments(studentId);
+    document.getElementById('docStatFiles').textContent = docFilesCache.length;
+    renderDocFiles();
+  } catch (e) {
+    console.error('loadDocFiles error:', e);
+    list.innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><p>Erro ao carregar documentos.</p></div>';
+  }
+}
+
+function filterDocCategory(cat, btn) {
+  docCatFilter = cat;
+  document.querySelectorAll('#docCatTabs .doc-cat-tab').forEach(t => t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderDocFiles();
+}
+
+function fmtFileSize(bytes) {
+  if (!bytes) return '';
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1048576) return (bytes / 1024).toFixed(0) + ' KB';
+  return (bytes / 1048576).toFixed(1) + ' MB';
+}
+
+function renderDocFiles() {
+  const list = document.getElementById('docFileList');
+  const filtered = docCatFilter === 'all'
+    ? docFilesCache
+    : docFilesCache.filter(d => d.category === docCatFilter);
+  document.getElementById('docFileCount').textContent = filtered.length;
+
+  if (!filtered.length) {
+    list.innerHTML = '<div class="empty-state"><div class="empty-icon">📁</div><p>Nenhum documento nesta categoria.</p></div>';
+    return;
+  }
+  list.innerHTML = filtered.map(d => {
+    const info = DOC_CAT_INFO[d.category] || DOC_CAT_INFO.outro;
+    const sub = [
+      d.created_at ? formatDate(d.created_at) : null,
+      fmtFileSize(d.file_size),
+      d.uploader && d.uploader.full_name ? 'por ' + docEsc(d.uploader.full_name) : null
+    ].filter(Boolean).join(' • ');
+    return '<div class="doc-file-row">' +
+        '<div class="doc-file-icon ' + d.category + '">' + info.icon + '</div>' +
+        '<div class="doc-row-main">' +
+          '<div class="doc-row-title">' + docEsc(d.title || d.file_name) + '</div>' +
+          '<div class="doc-row-sub">' + (sub || '—') + '</div>' +
+          '<span class="doc-cat-label ' + d.category + '">' + info.label + '</span>' +
+        '</div>' +
+        '<div class="doc-row-actions">' +
+          '<a class="doc-icon-btn" title="Abrir / visualizar" href="' + docEsc(d.file_url) + '" target="_blank" rel="noopener">' +
+            '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg>' +
+          '</a>' +
+          '<a class="doc-icon-btn" title="Baixar" href="' + docEsc(d.file_url) + '" download="' + docEsc(d.file_name) + '" target="_blank" rel="noopener">' +
+            '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>' +
+          '</a>' +
+          '<button class="doc-icon-btn danger" title="Excluir documento" onclick="removeDocFile(\'' + d.id + '\',\'' + docEsc(d.file_path) + '\')">' +
+            '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>' +
+          '</button>' +
+        '</div>' +
+      '</div>';
+  }).join('');
+}
+
+async function removeDocFile(docId, filePath) {
+  if (!confirm('Excluir este documento? O arquivo será removido permanentemente.')) return;
+  try {
+    await deleteStudentDocument(docId, filePath);
+    showToast('Documento excluído.');
+    if (docCurrentStudent) loadDocFiles(docCurrentStudent.id);
+  } catch (e) {
+    console.error(e);
+    showToast('Erro ao excluir documento.', 'error');
+  }
+}
+
+// ── Modal: nota ──
+function openGradeModal() {
+  if (!docCurrentStudent) return;
+  document.getElementById('gradeExamName').value = '';
+  document.getElementById('gradeValue').value = '';
+  document.getElementById('gradeMax').value = '10';
+  document.getElementById('gradeDate').value = new Date().toISOString().slice(0,10);
+  document.getElementById('gradeNotes').value = '';
+  document.getElementById('gradeModal').style.display = 'flex';
+}
+function closeGradeModal() {
+  document.getElementById('gradeModal').style.display = 'none';
+}
+
+async function submitGrade() {
+  if (!docCurrentStudent) return;
+  const name = document.getElementById('gradeExamName').value.trim();
+  const grade = parseFloat(document.getElementById('gradeValue').value);
+  const max = parseFloat(document.getElementById('gradeMax').value) || 10;
+  const date = document.getElementById('gradeDate').value || null;
+  const notes = document.getElementById('gradeNotes').value.trim();
+
+  if (!name) { showToast('Informe o nome da prova.', 'error'); return; }
+  if (isNaN(grade)) { showToast('Informe a nota obtida.', 'error'); return; }
+  if (grade < 0 || grade > max) { showToast('A nota deve estar entre 0 e ' + max + '.', 'error'); return; }
+
+  const btn = document.querySelector('#gradeModal .btn-send');
+  btn.classList.add('loading'); btn.disabled = true;
+  try {
+    await saveExamGrade(currentUser.id, docCurrentStudent.id, name, grade, max, date, notes);
+    showToast('Nota registrada com sucesso!');
+    closeGradeModal();
+    await loadDocGrades(docCurrentStudent.id);
+  } catch (e) {
+    console.error('submitGrade error:', e);
+    showToast('Erro ao registrar nota.', 'error');
+  } finally {
+    btn.classList.remove('loading'); btn.disabled = false;
+  }
+}
+
+// ── Modal: upload ──
+function openUploadModal() {
+  if (!docCurrentStudent) return;
+  document.getElementById('uploadCategory').value = 'assessment';
+  document.getElementById('uploadTitle').value = '';
+  document.getElementById('uploadFile').value = '';
+  const dz = document.getElementById('docDropzone');
+  dz.classList.remove('has-file');
+  document.getElementById('docDropzoneText').textContent = 'Clique para escolher um arquivo';
+  document.getElementById('uploadModal').style.display = 'flex';
+}
+function closeUploadModal() {
+  document.getElementById('uploadModal').style.display = 'none';
+}
+
+function onDocFilePicked() {
+  const input = document.getElementById('uploadFile');
+  const dz = document.getElementById('docDropzone');
+  const txt = document.getElementById('docDropzoneText');
+  if (input.files && input.files[0]) {
+    const f = input.files[0];
+    dz.classList.add('has-file');
+    txt.textContent = '✓ ' + f.name + ' (' + fmtFileSize(f.size) + ')';
+    // Pré-preenche o título se estiver vazio
+    const titleEl = document.getElementById('uploadTitle');
+    if (!titleEl.value.trim()) {
+      titleEl.value = f.name.replace(/\.[^.]+$/, '');
+    }
+  } else {
+    dz.classList.remove('has-file');
+    txt.textContent = 'Clique para escolher um arquivo';
+  }
+}
+
+async function submitDocument() {
+  if (!docCurrentStudent) return;
+  const category = document.getElementById('uploadCategory').value;
+  const title = document.getElementById('uploadTitle').value.trim();
+  const input = document.getElementById('uploadFile');
+  const file = input.files && input.files[0];
+
+  if (!file) { showToast('Escolha um arquivo para enviar.', 'error'); return; }
+  if (file.size > 25 * 1024 * 1024) { showToast('Arquivo muito grande (máx. 25 MB).', 'error'); return; }
+
+  const btn = document.querySelector('#uploadModal .btn-send');
+  btn.classList.add('loading'); btn.disabled = true;
+  try {
+    await uploadStudentDocument(currentUser.id, docCurrentStudent.id, category, title || file.name, file);
+    showToast('Documento enviado com sucesso!');
+    closeUploadModal();
+    await loadDocFiles(docCurrentStudent.id);
+  } catch (e) {
+    console.error('submitDocument error:', e);
+    showToast('Erro ao enviar documento.', 'error');
+  } finally {
+    btn.classList.remove('loading'); btn.disabled = false;
+  }
+}
+
+// Fecha modais ao clicar no fundo escuro
+['gradeModal','uploadModal'].forEach(function(id){
+  const m = document.getElementById(id);
+  if (m) m.addEventListener('click', function(e){ if (e.target === m) m.style.display = 'none'; });
+});
 </script>
 </body>
 </html>

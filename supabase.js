@@ -590,6 +590,111 @@ async function getAssessmentsForStudent(studentId) {
 
 
 
+// ═══════════════════════════════════════════════════════
+// DOCUMENTOS DOS ALUNOS (Coordenação)
+// Bucket de storage: 'student-documents'
+// Tabelas: 'student_documents' (arquivos) e 'exam_grades' (notas)
+// ═══════════════════════════════════════════════════════
+
+// Remove acentos/caracteres inválidos de nomes de arquivo para storage
+function sanitizeFileName(name) {
+  return String(name || 'arquivo')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z0-9._-]/g, '_')
+    .replace(/_+/g, '_');
+}
+
+// Faz upload de um documento de um aluno e salva o metadado.
+// category: 'assessment' | 'prova' | 'registro' | 'contrato' | 'outro'
+async function uploadStudentDocument(coordinatorId, studentId, category, title, file) {
+  const ts = Date.now();
+  const cleanName = sanitizeFileName(file.name);
+  const path = `${studentId}/${category}/${ts}-${cleanName}`;
+  // Upload do arquivo
+  const { error: upErr } = await db.storage
+    .from('student-documents')
+    .upload(path, file, { upsert: false, cacheControl: '3600' });
+  if (upErr) throw upErr;
+  // URL pública
+  const { data: urlData } = db.storage.from('student-documents').getPublicUrl(path);
+  // Salva metadado
+  const { data, error: dbErr } = await db.from('student_documents').insert([{
+    student_id: studentId,
+    uploaded_by: coordinatorId,
+    category: category,
+    title: title || file.name,
+    file_name: file.name,
+    file_path: path,
+    file_url: urlData.publicUrl,
+    file_size: file.size || null,
+    file_type: file.type || null
+  }]).select();
+  if (dbErr) {
+    // Se falhar ao salvar metadado, remove o arquivo órfão
+    await db.storage.from('student-documents').remove([path]);
+    throw dbErr;
+  }
+  return data && data[0];
+}
+
+// Lista todos os documentos de um aluno (mais recentes primeiro)
+async function getStudentDocuments(studentId) {
+  const { data } = await db.from('student_documents')
+    .select('*, uploader:profiles!student_documents_uploaded_by_fkey(full_name)')
+    .eq('student_id', studentId)
+    .order('created_at', { ascending: false });
+  return data || [];
+}
+
+// Contagem de documentos por aluno — usada para os badges da lista
+async function getDocumentCounts() {
+  const { data } = await db.from('student_documents').select('student_id');
+  const counts = {};
+  (data || []).forEach(d => { counts[d.student_id] = (counts[d.student_id] || 0) + 1; });
+  return counts;
+}
+
+// Exclui um documento (remove arquivo do storage + metadado)
+async function deleteStudentDocument(docId, filePath) {
+  if (filePath) {
+    await db.storage.from('student-documents').remove([filePath]);
+  }
+  const { error } = await db.from('student_documents').delete().eq('id', docId);
+  if (error) throw error;
+}
+
+// ═══ NOTAS DE PROVAS ═══
+// Registra (ou atualiza) a nota de uma prova de um aluno.
+async function saveExamGrade(coordinatorId, studentId, examName, grade, maxGrade, examDate, notes) {
+  const { data, error } = await db.from('exam_grades').insert([{
+    student_id: studentId,
+    registered_by: coordinatorId,
+    exam_name: examName,
+    grade: grade,
+    max_grade: maxGrade || 10,
+    exam_date: examDate || null,
+    notes: notes || null
+  }]).select();
+  if (error) throw error;
+  return data && data[0];
+}
+
+// Lista as notas de provas de um aluno (mais recentes primeiro)
+async function getExamGrades(studentId) {
+  const { data } = await db.from('exam_grades')
+    .select('*, registrant:profiles!exam_grades_registered_by_fkey(full_name)')
+    .eq('student_id', studentId)
+    .order('exam_date', { ascending: false, nullsFirst: false })
+    .order('created_at', { ascending: false });
+  return data || [];
+}
+
+// Exclui uma nota de prova
+async function deleteExamGrade(gradeId) {
+  const { error } = await db.from('exam_grades').delete().eq('id', gradeId);
+  if (error) throw error;
+}
+
 // ═══ LAST UPDATE INDICATOR ═══
 function showLastUpdate() {
   const el = document.getElementById('lastUpdate');

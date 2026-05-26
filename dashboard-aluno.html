@@ -3410,7 +3410,8 @@ function escapeGrade(s) {
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-
+// ═══ ANNOUNCEMENTS ═══
+async function loadAnnouncements() {
   const anns = await getAnnouncements();
   const div = document.getElementById('annList');
   if (!anns.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📢</div><p>Nenhum aviso.</p></div>'; return; }

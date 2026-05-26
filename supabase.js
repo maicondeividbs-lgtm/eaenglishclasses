@@ -591,107 +591,69 @@ async function getAssessmentsForStudent(studentId) {
 
 
 // ═══════════════════════════════════════════════════════
-// DOCUMENTOS DOS ALUNOS (Coordenação)
-// Bucket de storage: 'student-documents'
-// Tabelas: 'student_documents' (arquivos) e 'exam_grades' (notas)
+// REGISTRO DE NOTAS DE AVALIAÇÕES (Coordenação)
+// Tabela: 'assessment_grades'
+// Cada avaliação tem 3 notas (0-100): oral / written / assessment.
+// A média é (oral + written + assessment) / 3.
+// São 2 avaliações por livro:
+//   Interchange → período "1-8" e "9-16"
+//   Evolve      → período "1-6" e "7-12"
 // ═══════════════════════════════════════════════════════
 
-// Remove acentos/caracteres inválidos de nomes de arquivo para storage
-function sanitizeFileName(name) {
-  return String(name || 'arquivo')
-    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-zA-Z0-9._-]/g, '_')
-    .replace(/_+/g, '_');
-}
-
-// Faz upload de um documento de um aluno e salva o metadado.
-// category: 'assessment' | 'prova' | 'registro' | 'contrato' | 'outro'
-async function uploadStudentDocument(coordinatorId, studentId, category, title, file) {
-  const ts = Date.now();
-  const cleanName = sanitizeFileName(file.name);
-  const path = `${studentId}/${category}/${ts}-${cleanName}`;
-  // Upload do arquivo
-  const { error: upErr } = await db.storage
-    .from('student-documents')
-    .upload(path, file, { upsert: false, cacheControl: '3600' });
-  if (upErr) throw upErr;
-  // URL pública
-  const { data: urlData } = db.storage.from('student-documents').getPublicUrl(path);
-  // Salva metadado
-  const { data, error: dbErr } = await db.from('student_documents').insert([{
-    student_id: studentId,
-    uploaded_by: coordinatorId,
-    category: category,
-    title: title || file.name,
-    file_name: file.name,
-    file_path: path,
-    file_url: urlData.publicUrl,
-    file_size: file.size || null,
-    file_type: file.type || null
-  }]).select();
-  if (dbErr) {
-    // Se falhar ao salvar metadado, remove o arquivo órfão
-    await db.storage.from('student-documents').remove([path]);
-    throw dbErr;
-  }
-  return data && data[0];
-}
-
-// Lista todos os documentos de um aluno (mais recentes primeiro)
-async function getStudentDocuments(studentId) {
-  const { data } = await db.from('student_documents')
-    .select('*, uploader:profiles!student_documents_uploaded_by_fkey(full_name)')
-    .eq('student_id', studentId)
-    .order('created_at', { ascending: false });
-  return data || [];
-}
-
-// Contagem de documentos por aluno — usada para os badges da lista
-async function getDocumentCounts() {
-  const { data } = await db.from('student_documents').select('student_id');
-  const counts = {};
-  (data || []).forEach(d => { counts[d.student_id] = (counts[d.student_id] || 0) + 1; });
-  return counts;
-}
-
-// Exclui um documento (remove arquivo do storage + metadado)
-async function deleteStudentDocument(docId, filePath) {
-  if (filePath) {
-    await db.storage.from('student-documents').remove([filePath]);
-  }
-  const { error } = await db.from('student_documents').delete().eq('id', docId);
-  if (error) throw error;
-}
-
-// ═══ NOTAS DE PROVAS ═══
-// Registra (ou atualiza) a nota de uma prova de um aluno.
-async function saveExamGrade(coordinatorId, studentId, examName, grade, maxGrade, examDate, notes) {
-  const { data, error } = await db.from('exam_grades').insert([{
-    student_id: studentId,
+// Registra uma nova avaliação de um aluno.
+async function saveAssessmentGrade(coordinatorId, data) {
+  const { data: row, error } = await db.from('assessment_grades').insert([{
+    student_id:    data.studentId,
     registered_by: coordinatorId,
-    exam_name: examName,
-    grade: grade,
-    max_grade: maxGrade || 10,
-    exam_date: examDate || null,
-    notes: notes || null
+    book:          data.book,
+    period:        data.period,
+    exam_date:     data.examDate || null,
+    oral_score:    data.oralScore,
+    written_score: data.writtenScore,
+    assessment_score: data.assessmentScore,
+    final_average: data.finalAverage,
+    notes:         data.notes || null
   }]).select();
   if (error) throw error;
-  return data && data[0];
+  return row && row[0];
 }
 
-// Lista as notas de provas de um aluno (mais recentes primeiro)
-async function getExamGrades(studentId) {
-  const { data } = await db.from('exam_grades')
-    .select('*, registrant:profiles!exam_grades_registered_by_fkey(full_name)')
+// Atualiza uma avaliação existente.
+async function updateAssessmentGrade(gradeId, data) {
+  const { error } = await db.from('assessment_grades').update({
+    book:          data.book,
+    period:        data.period,
+    exam_date:     data.examDate || null,
+    oral_score:    data.oralScore,
+    written_score: data.writtenScore,
+    assessment_score: data.assessmentScore,
+    final_average: data.finalAverage,
+    notes:         data.notes || null
+  }).eq('id', gradeId);
+  if (error) throw error;
+}
+
+// Lista as avaliações de um aluno (mais recentes primeiro).
+async function getAssessmentGrades(studentId) {
+  const { data } = await db.from('assessment_grades')
+    .select('*, registrant:profiles!assessment_grades_registered_by_fkey(full_name)')
     .eq('student_id', studentId)
     .order('exam_date', { ascending: false, nullsFirst: false })
     .order('created_at', { ascending: false });
   return data || [];
 }
 
-// Exclui uma nota de prova
-async function deleteExamGrade(gradeId) {
-  const { error } = await db.from('exam_grades').delete().eq('id', gradeId);
+// Contagem de avaliações por aluno — usada para os badges da lista.
+async function getAssessmentCounts() {
+  const { data } = await db.from('assessment_grades').select('student_id');
+  const counts = {};
+  (data || []).forEach(g => { counts[g.student_id] = (counts[g.student_id] || 0) + 1; });
+  return counts;
+}
+
+// Exclui uma avaliação.
+async function deleteAssessmentGrade(gradeId) {
+  const { error } = await db.from('assessment_grades').delete().eq('id', gradeId);
   if (error) throw error;
 }
 

@@ -2293,6 +2293,162 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 .class-info-time {
   font-size: 12px; color: var(--g500); margin-top: 2px;
 }
+/* ═══ MINHAS NOTAS (gamificado) ═══ */
+@keyframes gradeRise {
+  0% { opacity: 0; transform: translateY(20px) scale(0.96); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes gradeFillBar {
+  from { width: 0; }
+}
+@keyframes gradePop {
+  0% { transform: scale(0); }
+  60% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+@keyframes gradeShine {
+  0% { transform: translateX(-120%) skewX(-20deg); }
+  100% { transform: translateX(220%) skewX(-20deg); }
+}
+@keyframes gradeCount {
+  from { opacity: 0.3; }
+  to { opacity: 1; }
+}
+
+/* — Hero de nível / XP — */
+.grades-hero {
+  position: relative; overflow: hidden;
+  background: linear-gradient(135deg, var(--navy), var(--blue));
+  border-radius: 20px; padding: 26px clamp(18px,5vw,32px); color: #fff;
+  margin-bottom: 20px; animation: gradeRise 0.55s cubic-bezier(0.4,0,0.2,1) backwards;
+}
+.grades-hero::after {
+  content: ''; position: absolute; top: 0; left: 0; width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.13), transparent);
+  animation: gradeShine 4.5s ease-in-out infinite; animation-delay: 1s;
+}
+.grades-hero-top { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.grades-rank-medal {
+  width: 76px; height: 76px; min-width: 76px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; font-size: 38px;
+  background: rgba(255,255,255,0.12); border: 2px solid rgba(255,255,255,0.25);
+  animation: gradePop 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.3s backwards;
+}
+.grades-hero-info { flex: 1; min-width: 180px; }
+.grades-rank-name { font-family: 'Fraunces',serif; font-size: clamp(22px,5vw,28px); font-weight: 900; line-height: 1.1; }
+.grades-rank-sub { font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 3px; }
+.grades-avg-big {
+  text-align: center; padding-left: 18px;
+}
+.grades-avg-big .gab-num {
+  font-family: 'Fraunces',serif; font-size: clamp(38px,9vw,52px); font-weight: 900; line-height: 1;
+  animation: gradeCount 0.8s ease 0.4s backwards;
+}
+.grades-avg-big .gab-lbl { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: rgba(255,255,255,0.6); }
+
+/* — Barra de progresso até o próximo nível — */
+.grades-xp { margin-top: 20px; }
+.grades-xp-head { display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 7px; }
+.grades-xp-head .xp-next { color: rgba(255,255,255,0.65); }
+.grades-xp-track { height: 12px; border-radius: 99px; background: rgba(255,255,255,0.14); overflow: hidden; }
+.grades-xp-fill {
+  height: 100%; border-radius: 99px;
+  background: linear-gradient(90deg, var(--mango), var(--orange-light));
+  box-shadow: 0 0 12px rgba(245,154,30,0.6);
+  animation: gradeFillBar 1.1s cubic-bezier(0.4,0,0.2,1) 0.5s backwards;
+}
+
+/* — Faixa de estatísticas — */
+.grades-stat-strip { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 22px; }
+.grades-stat {
+  background: #fff; border: 1px solid var(--g100); border-radius: 14px; padding: 16px 14px; text-align: center;
+  animation: gradeRise 0.5s cubic-bezier(0.4,0,0.2,1) backwards;
+}
+.grades-stat:nth-child(1) { animation-delay: 0.1s; }
+.grades-stat:nth-child(2) { animation-delay: 0.18s; }
+.grades-stat:nth-child(3) { animation-delay: 0.26s; }
+.grades-stat-icon { font-size: 24px; }
+.grades-stat-num { font-family: 'Fraunces',serif; font-size: 26px; font-weight: 900; color: var(--navy); line-height: 1; margin-top: 4px; }
+.grades-stat-lbl { font-size: 11px; font-weight: 700; color: var(--g500); text-transform: uppercase; letter-spacing: 0.4px; margin-top: 4px; }
+
+/* — Conquistas / badges — */
+.grades-section-label {
+  font-size: 12px; font-weight: 800; color: var(--g500); text-transform: uppercase;
+  letter-spacing: 0.6px; margin: 4px 0 12px;
+}
+.grades-badges { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+.grade-badge {
+  display: flex; align-items: center; gap: 9px; padding: 9px 14px; border-radius: 99px;
+  font-size: 12px; font-weight: 700; border: 1.5px solid var(--g200); background: #fff; color: var(--g400);
+  transition: transform 0.2s;
+}
+.grade-badge.earned {
+  border-color: var(--mango); background: var(--mango-soft); color: var(--navy);
+  animation: gradePop 0.5s cubic-bezier(0.34,1.56,0.64,1) backwards;
+}
+.grade-badge.earned:hover { transform: translateY(-3px) scale(1.04); }
+.grade-badge .gb-emoji { font-size: 17px; filter: grayscale(1) opacity(0.5); }
+.grade-badge.earned .gb-emoji { filter: none; }
+
+/* — Card de livro com avaliações — */
+.grade-book-card {
+  display: flex; gap: clamp(14px,4vw,22px); background: #fff; border: 1px solid var(--g100);
+  border-radius: 18px; padding: clamp(16px,4vw,22px); margin-bottom: 16px;
+  animation: gradeRise 0.55s cubic-bezier(0.4,0,0.2,1) backwards;
+}
+.grade-book-cover {
+  width: 92px; min-width: 92px; height: 124px; border-radius: 10px; overflow: hidden;
+  box-shadow: 0 8px 22px rgba(25,36,78,0.22); position: relative;
+}
+.grade-book-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.grade-book-cover::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.35) 50%, transparent 60%);
+  animation: gradeShine 5s ease-in-out infinite; animation-delay: 1.5s;
+}
+.grade-book-body { flex: 1; min-width: 0; }
+.grade-book-title { font-family: 'Plus Jakarta Sans',sans-serif; font-size: 17px; font-weight: 800; color: var(--navy); }
+.grade-book-cefr {
+  display: inline-block; margin-top: 4px; padding: 2px 9px; border-radius: 6px;
+  font-size: 11px; font-weight: 800; background: var(--blue-soft); color: var(--blue);
+}
+.grade-exam-list { margin-top: 14px; display: flex; flex-direction: column; gap: 10px; }
+.grade-exam {
+  border: 1px solid var(--g100); border-radius: 12px; padding: 12px 14px; background: var(--g50);
+}
+.grade-exam-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.grade-exam-period { font-size: 13px; font-weight: 700; color: var(--navy); }
+.grade-exam-date { font-size: 11px; color: var(--g400); font-weight: 600; }
+.grade-exam-score {
+  font-family: 'Fraunces',serif; font-size: 22px; font-weight: 900; min-width: 54px; text-align: right;
+}
+.grade-exam-score.good { color: #10b981; }
+.grade-exam-score.mid  { color: var(--mango); }
+.grade-exam-score.low  { color: #ef4444; }
+.grade-exam-bar { height: 8px; border-radius: 99px; background: var(--g200); overflow: hidden; margin-top: 9px; }
+.grade-exam-bar-fill { height: 100%; border-radius: 99px; animation: gradeFillBar 1s cubic-bezier(0.4,0,0.2,1) 0.3s backwards; }
+.grade-exam-bar-fill.good { background: linear-gradient(90deg,#10b981,#34d399); }
+.grade-exam-bar-fill.mid  { background: linear-gradient(90deg,var(--mango),var(--mango-light)); }
+.grade-exam-bar-fill.low  { background: linear-gradient(90deg,#ef4444,#f87171); }
+.grade-exam-detail { display: flex; gap: 7px; margin-top: 9px; flex-wrap: wrap; }
+.grade-exam-chip {
+  display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 99px;
+  font-size: 11px; font-weight: 700; background: #fff; border: 1px solid var(--g200); color: var(--g700);
+}
+.grade-exam-chip b { color: var(--navy); }
+.grade-exam-pending {
+  font-size: 12px; font-weight: 600; color: var(--g400); font-style: italic;
+  padding: 4px 0;
+}
+.grade-exam-pending::before { content: '🔒 '; font-style: normal; }
+
+@media (max-width: 560px) {
+  .grades-stat-strip { grid-template-columns: 1fr; }
+  .grades-avg-big { padding-left: 0; width: 100%; border-top: 1px solid rgba(255,255,255,0.12); padding-top: 12px; margin-top: 4px; }
+  .grade-book-card { flex-direction: column; align-items: center; text-align: center; }
+  .grade-book-body { width: 100%; }
+  .grade-exam-head { flex-wrap: wrap; }
+}
 </style>
 </head>
 <body>
@@ -2307,6 +2463,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
       <button class="sb-link active" data-section="overview" data-tip="Visão Geral"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>Visão Geral</span></button>
       <button class="sb-link" data-section="homework" data-tip="Homework"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg><span>Homework</span></button>
       <button class="sb-link" data-section="feedback" data-tip="Feedbacks"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg><span>Feedbacks</span></button>
+      <button class="sb-link" data-section="grades" data-tip="Minhas Notas"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm-2 14l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg><span>Minhas Notas</span></button>
       <button class="sb-link" data-section="announcements" data-tip="Avisos"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg><span>Avisos</span></button>
       <button class="sb-link" data-section="writing" data-tip="Redação"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.996.996 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg><span>Redação</span></button>
       <button class="sb-link" data-section="pronunciation" data-tip="Pronúncia"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-2.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg><span>Pronúncia</span></button>
@@ -2401,6 +2558,22 @@ body.sb-collapsed .main { margin-left: 92px !important; }
           </div>
         </div>
         <div id="fbList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhum feedback recebido.</p></div></div>
+      </div>
+
+      <!-- MINHAS NOTAS -->
+      <div class="section" id="sec-grades">
+        <div class="section-head">
+          <div class="section-head-icon green">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div class="section-head-text">
+            <h2>Minhas Notas</h2>
+            <p class="section-sub">Acompanhe seu desempenho nas avaliações de cada livro. Bons estudos! 🚀</p>
+          </div>
+        </div>
+        <div id="gradesContent">
+          <div class="skel-line" style="height:200px;border-radius:20px"></div>
+        </div>
       </div>
 
       <!-- ANNOUNCEMENTS -->
@@ -2614,7 +2787,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 <script src="supabase.js"></script>
 <script>
 let currentUser = null;
-const sections = {"overview":"Visão Geral","homework":"Homework","feedback":"Feedbacks","announcements":"Avisos","writing":"Redação","pronunciation":"Pronúncia","manual":"Manual do Aluno","profile":"Meu Perfil"};
+const sections = {"overview":"Visão Geral","homework":"Homework","feedback":"Feedbacks","grades":"Minhas Notas","announcements":"Avisos","writing":"Redação","pronunciation":"Pronúncia","manual":"Manual do Aluno","profile":"Meu Perfil"};
 
 // Registra o acesso do aluno para a coordenação.
 // Chamado após a autenticação confirmar que é um aluno.
@@ -3034,8 +3207,210 @@ async function loadFeedbacks() {
   }).join('');
 }
 
-// ═══ ANNOUNCEMENTS ═══
-async function loadAnnouncements() {
+// ═══ MINHAS NOTAS (gamificado, somente consulta) ═══
+
+// Define o "rank" do aluno conforme a média geral (0-100).
+const GRADE_RANKS = [
+  { min: 0,  name: 'Aprendiz',   medal: '🌱', sub: 'Toda jornada começa com um passo' },
+  { min: 50, name: 'Explorador', medal: '🧭', sub: 'Você está pegando o ritmo' },
+  { min: 65, name: 'Talentoso',  medal: '⭐', sub: 'Seu esforço está dando resultado' },
+  { min: 75, name: 'Destaque',   medal: '🏅', sub: 'Desempenho que impressiona' },
+  { min: 85, name: 'Mestre',     medal: '🏆', sub: 'Você domina o conteúdo' },
+  { min: 95, name: 'Lenda',      medal: '👑', sub: 'Excelência absoluta!' }
+];
+
+function rankForAverage(avg) {
+  let idx = 0;
+  for (let i = 0; i < GRADE_RANKS.length; i++) {
+    if (avg >= GRADE_RANKS[i].min) idx = i;
+  }
+  return { idx: idx, rank: GRADE_RANKS[idx], next: GRADE_RANKS[idx + 1] || null };
+}
+
+function gradeBand(score) {
+  return score >= 70 ? 'good' : score >= 50 ? 'mid' : 'low';
+}
+
+// Média de uma avaliação: usa a média salva; se ausente, calcula.
+function examAverage(g) {
+  if (g.final_average != null && g.final_average !== '') return Number(g.final_average);
+  return (Number(g.oral_score) + Number(g.written_score) + Number(g.assessment_score)) / 3;
+}
+
+async function loadGrades() {
+  const div = document.getElementById('gradesContent');
+  try {
+    const grades = await getMyAssessmentGrades(currentUser.id);
+
+    if (!grades.length) {
+      div.innerHTML =
+        '<div class="empty-state" style="background:#fff;border:1px solid var(--g100);border-radius:18px">' +
+          '<div class="empty-icon">📋</div>' +
+          '<p>Você ainda não tem avaliações registradas.</p>' +
+          '<p style="font-size:13px;margin-top:4px">Assim que a coordenação lançar suas notas, elas aparecerão aqui. 🚀</p>' +
+        '</div>';
+      return;
+    }
+
+    // ── Estatísticas gerais ──
+    const averages = grades.map(examAverage);
+    const overall = averages.reduce((a, b) => a + b, 0) / averages.length;
+    const best = Math.max.apply(null, averages);
+    const ri = rankForAverage(overall);
+
+    // Progresso de XP até o próximo rank
+    let xpPct = 100, xpLabel = 'Rank máximo alcançado! 👑';
+    if (ri.next) {
+      const span = ri.next.min - ri.rank.min;
+      xpPct = Math.max(4, Math.min(100, Math.round(((overall - ri.rank.min) / span) * 100)));
+      xpLabel = 'Faltam ' + (ri.next.min - overall).toFixed(1) + ' pts para ' + ri.next.name;
+    }
+
+    // ── Conquistas ──
+    const badges = [
+      { emoji: '🎯', label: 'Primeira avaliação', earned: grades.length >= 1 },
+      { emoji: '📚', label: 'Três avaliações',     earned: grades.length >= 3 },
+      { emoji: '🔥', label: 'Nota 80+',            earned: best >= 80 },
+      { emoji: '💯', label: 'Nota 95+',            earned: best >= 95 },
+      { emoji: '⚖️', label: 'Média 70+',           earned: overall >= 70 },
+      { emoji: '🌟', label: 'Rank Destaque',       earned: ri.idx >= 3 }
+    ];
+
+    // ── Agrupar avaliações por livro ──
+    const byBook = {};
+    grades.forEach(g => {
+      const key = (g.book || 'Outros');
+      (byBook[key] = byBook[key] || []).push(g);
+    });
+
+    // ── Montar HTML ──
+    let html = '';
+
+    // Hero de rank + XP
+    html +=
+      '<div class="grades-hero">' +
+        '<div class="grades-hero-top">' +
+          '<div class="grades-rank-medal">' + ri.rank.medal + '</div>' +
+          '<div class="grades-hero-info">' +
+            '<div class="grades-rank-name">' + ri.rank.name + '</div>' +
+            '<div class="grades-rank-sub">' + ri.rank.sub + '</div>' +
+          '</div>' +
+          '<div class="grades-avg-big">' +
+            '<div class="gab-num">' + overall.toFixed(1) + '</div>' +
+            '<div class="gab-lbl">Média geral</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="grades-xp">' +
+          '<div class="grades-xp-head">' +
+            '<span>' + ri.rank.name + '</span>' +
+            '<span class="xp-next">' + xpLabel + '</span>' +
+          '</div>' +
+          '<div class="grades-xp-track"><div class="grades-xp-fill" style="width:' + xpPct + '%"></div></div>' +
+        '</div>' +
+      '</div>';
+
+    // Faixa de estatísticas
+    html +=
+      '<div class="grades-stat-strip">' +
+        '<div class="grades-stat"><div class="grades-stat-icon">📝</div>' +
+          '<div class="grades-stat-num">' + grades.length + '</div>' +
+          '<div class="grades-stat-lbl">Avaliações</div></div>' +
+        '<div class="grades-stat"><div class="grades-stat-icon">🚀</div>' +
+          '<div class="grades-stat-num">' + best.toFixed(1) + '</div>' +
+          '<div class="grades-stat-lbl">Melhor nota</div></div>' +
+        '<div class="grades-stat"><div class="grades-stat-icon">' + ri.rank.medal + '</div>' +
+          '<div class="grades-stat-num" style="font-size:18px;padding-top:5px">' + ri.rank.name + '</div>' +
+          '<div class="grades-stat-lbl">Seu rank</div></div>' +
+      '</div>';
+
+    // Conquistas
+    const earnedCount = badges.filter(b => b.earned).length;
+    html += '<div class="grades-section-label">🏆 Conquistas (' + earnedCount + '/' + badges.length + ')</div>';
+    html += '<div class="grades-badges">';
+    badges.forEach((b, i) => {
+      html +=
+        '<div class="grade-badge' + (b.earned ? ' earned' : '') + '"' +
+             (b.earned ? ' style="animation-delay:' + (0.1 + i * 0.07).toFixed(2) + 's"' : '') + '>' +
+          '<span class="gb-emoji">' + b.emoji + '</span>' + escapeGrade(b.label) +
+        '</div>';
+    });
+    html += '</div>';
+
+    // Cards por livro (na ordem da jornada EA)
+    html += '<div class="grades-section-label">📖 Notas por livro</div>';
+
+    const orderedBooks = [];
+    EA_JOURNEY.forEach(j => {
+      Object.keys(byBook).forEach(bk => {
+        if (bk.toLowerCase() === j.label.toLowerCase() && orderedBooks.indexOf(bk) < 0) {
+          orderedBooks.push(bk);
+        }
+      });
+    });
+    // Livros que não estão na jornada padrão entram no fim
+    Object.keys(byBook).forEach(bk => { if (orderedBooks.indexOf(bk) < 0) orderedBooks.push(bk); });
+
+    orderedBooks.forEach((bookName, bi) => {
+      const journey = EA_JOURNEY.filter(j => j.label.toLowerCase() === bookName.toLowerCase())[0];
+      const cover = journey ? journey.img : 'img/books/interchange-intro.jpg';
+      const cefr = journey ? journey.cefr : '';
+      const exams = byBook[bookName].slice().sort((a, b) =>
+        new Date(a.exam_date || a.created_at) - new Date(b.exam_date || b.created_at));
+
+      let examsHtml = '';
+      exams.forEach(g => {
+        const avg = examAverage(g);
+        const band = gradeBand(avg);
+        examsHtml +=
+          '<div class="grade-exam">' +
+            '<div class="grade-exam-head">' +
+              '<div>' +
+                '<div class="grade-exam-period">' + escapeGrade(g.period || 'Avaliação') + '</div>' +
+                (g.exam_date ? '<div class="grade-exam-date">' + formatDate(g.exam_date) + '</div>' : '') +
+              '</div>' +
+              '<div class="grade-exam-score ' + band + '">' + avg.toFixed(1) + '</div>' +
+            '</div>' +
+            '<div class="grade-exam-bar"><div class="grade-exam-bar-fill ' + band + '" style="width:' + Math.min(100, avg) + '%"></div></div>' +
+            '<div class="grade-exam-detail">' +
+              '<span class="grade-exam-chip">🗣️ Oral <b>' + escapeGrade(g.oral_score) + '</b></span>' +
+              '<span class="grade-exam-chip">✍️ Written <b>' + escapeGrade(g.written_score) + '</b></span>' +
+              '<span class="grade-exam-chip">📋 Assessment <b>' + escapeGrade(g.assessment_score) + '</b></span>' +
+            '</div>' +
+            (g.notes ? '<div class="grade-exam-date" style="margin-top:8px">💬 ' + escapeGrade(g.notes) + '</div>' : '') +
+          '</div>';
+      });
+      // Se só houver 1 das 2 avaliações do livro, mostra a pendente
+      if (exams.length === 1) {
+        examsHtml += '<div class="grade-exam-pending">Segunda avaliação ainda não registrada</div>';
+      }
+
+      html +=
+        '<div class="grade-book-card" style="animation-delay:' + (0.1 + bi * 0.1).toFixed(2) + 's">' +
+          '<div class="grade-book-cover"><img src="' + cover + '" alt="' + escapeGrade(bookName) + '" loading="lazy"></div>' +
+          '<div class="grade-book-body">' +
+            '<div class="grade-book-title">' + escapeGrade(bookName) + '</div>' +
+            (cefr ? '<span class="grade-book-cefr">Nível ' + cefr + '</span>' : '') +
+            '<div class="grade-exam-list">' + examsHtml + '</div>' +
+          '</div>' +
+        '</div>';
+    });
+
+    div.innerHTML = html;
+  } catch (e) {
+    console.error('loadGrades error:', e);
+    div.innerHTML =
+      '<div class="empty-state" style="background:#fff;border:1px solid var(--g100);border-radius:18px">' +
+        '<div class="empty-icon">⚠️</div><p>Não foi possível carregar suas notas. Tente novamente mais tarde.</p>' +
+      '</div>';
+  }
+}
+
+function escapeGrade(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+
   const anns = await getAnnouncements();
   const div = document.getElementById('annList');
   if (!anns.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📢</div><p>Nenhum aviso.</p></div>'; return; }
@@ -3641,6 +4016,7 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'homework': loadHomework(); break;
       case 'profile': loadProfile(); break;
       case 'feedback': loadFeedbacks(); break;
+      case 'grades': loadGrades(); break;
       case 'announcements': loadAnnouncements(); break;
       case 'writing': loadWriting(); break;
       case 'pronunciation': loadPronunciation(); break;

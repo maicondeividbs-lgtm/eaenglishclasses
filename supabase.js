@@ -657,6 +657,17 @@ async function deleteAssessmentGrade(gradeId) {
   if (error) throw error;
 }
 
+// Lista as avaliações do próprio aluno (uso do dashboard do aluno).
+// A RLS garante que o aluno só enxergue as próprias notas.
+async function getMyAssessmentGrades(studentId) {
+  const { data } = await db.from('assessment_grades')
+    .select('*')
+    .eq('student_id', studentId)
+    .order('exam_date', { ascending: true, nullsFirst: true })
+    .order('created_at', { ascending: true });
+  return data || [];
+}
+
 // ═══ LAST UPDATE INDICATOR ═══
 function showLastUpdate() {
   const el = document.getElementById('lastUpdate');

@@ -668,6 +668,52 @@ async function getMyAssessmentGrades(studentId) {
   return data || [];
 }
 
+// ═══════════════════════════════════════════════════════
+// VOCABULÁRIO (Professor → Aluno)
+// Tabela: 'vocabulary_words'
+// O professor registra palavras vistas em aula que o aluno
+// não conhecia: palavra, tradução e frase de exemplo.
+// A pronúncia é gerada no navegador (Web Speech API).
+// ═══════════════════════════════════════════════════════
+
+// Registra uma nova palavra de vocabulário para um aluno.
+async function addVocabularyWord(teacherId, studentId, word, translation, sentence) {
+  const { data, error } = await db.from('vocabulary_words').insert([{
+    teacher_id:  teacherId,
+    student_id:  studentId,
+    word:        word,
+    translation: translation,
+    sentence:    sentence || null
+  }]).select();
+  if (error) throw error;
+  return data && data[0];
+}
+
+// Lista as palavras enviadas por um professor (todas, mais recentes primeiro).
+async function getVocabularyByTeacher(teacherId) {
+  const { data } = await db.from('vocabulary_words')
+    .select('*, student:profiles!vocabulary_words_student_id_fkey(full_name)')
+    .eq('teacher_id', teacherId)
+    .order('created_at', { ascending: false });
+  return data || [];
+}
+
+// Lista as palavras de vocabulário do próprio aluno.
+// A RLS garante que o aluno só veja as próprias palavras.
+async function getVocabularyForStudent(studentId) {
+  const { data } = await db.from('vocabulary_words')
+    .select('*, teacher:profiles!vocabulary_words_teacher_id_fkey(full_name)')
+    .eq('student_id', studentId)
+    .order('created_at', { ascending: false });
+  return data || [];
+}
+
+// Exclui uma palavra de vocabulário.
+async function deleteVocabularyWord(wordId) {
+  const { error } = await db.from('vocabulary_words').delete().eq('id', wordId);
+  if (error) throw error;
+}
+
 // ═══ LAST UPDATE INDICATOR ═══
 function showLastUpdate() {
   const el = document.getElementById('lastUpdate');

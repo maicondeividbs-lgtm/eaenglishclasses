@@ -1596,6 +1596,54 @@ body.sb-collapsed .main { margin-left: 92px !important; }
   .profile-stat-num { font-size: 24px; }
 }
 
+/* ═══ VOCABULÁRIO ═══ */
+.voc-preview {
+  display: flex; align-items: center; gap: 10px; margin: 4px 0 14px;
+  padding: 10px 14px; border-radius: 12px; background: var(--ocean-light);
+  border: 1px solid var(--ocean); font-size: 13px; color: var(--navy); font-weight: 600;
+}
+.voc-preview b { color: var(--blue); }
+.voc-speak {
+  width: 38px; height: 38px; min-width: 38px; border-radius: 50%; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  background: var(--blue); color: #fff; transition: transform 0.15s, background 0.2s;
+}
+.voc-speak svg { width: 19px; height: 19px; }
+.voc-speak:hover { background: var(--blue-light); transform: scale(1.08); }
+.voc-speak:active { transform: scale(0.94); }
+.voc-speak.speaking { animation: vocPulse 1s ease-in-out infinite; }
+@keyframes vocPulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(37,60,150,0.45); }
+  50% { box-shadow: 0 0 0 8px rgba(37,60,150,0); }
+}
+
+.voc-word-card {
+  display: flex; align-items: flex-start; gap: 14px; padding: 16px 24px;
+  border-bottom: 1px solid var(--g100); animation: vocCardIn 0.4s ease backwards;
+}
+.voc-word-card:last-child { border-bottom: none; }
+@keyframes vocCardIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.voc-word-body { flex: 1; min-width: 0; }
+.voc-word-top { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.voc-word-term { font-size: 17px; font-weight: 800; color: var(--navy); }
+.voc-word-trans {
+  font-size: 14px; color: var(--blue); font-weight: 700;
+}
+.voc-word-trans::before { content: '→ '; color: var(--g400); }
+.voc-word-sentence {
+  font-size: 13px; color: var(--g700); font-style: italic; margin-top: 6px; line-height: 1.5;
+}
+.voc-word-meta { font-size: 12px; color: var(--g400); margin-top: 7px; }
+.voc-word-actions { display: flex; gap: 8px; flex-shrink: 0; }
+.voc-icon-btn {
+  width: 36px; height: 36px; border-radius: 9px; border: 1px solid var(--g200); background: #fff;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; color: var(--navy);
+}
+.voc-icon-btn svg { width: 17px; height: 17px; }
+.voc-icon-btn:hover { border-color: var(--blue); color: var(--blue); }
+.voc-icon-btn.danger:hover { border-color: #ef4444; color: #ef4444; }
+.voc-icon-btn.speaking { border-color: var(--blue); color: var(--blue); animation: vocPulse 1s ease-in-out infinite; }
+
 </style>
 </head>
 <body>
@@ -1647,6 +1695,10 @@ body.sb-collapsed .main { margin-left: 92px !important; }
       <button class="sb-link" data-section="pronunciation" data-tip="Pronúncia">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm-1-9c0-.55.45-1 1-1s1 .45 1 1v6c0 .55-.45 1-1 1s-1-.45-1-1V6zm6 6c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-2.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
         <span>Pronúncia</span>
+      </button>
+      <button class="sb-link" data-section="vocabulary" data-tip="Vocabulário">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h18a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H8l-5 4V4a1 1 0 0 1 1-1zm4 6v2h10V9H7zm0 4v2h7v-2H7z"/></svg>
+        <span>Vocabulário</span>
       </button>
       <a href="biblioteca.html" class="sb-link" data-tip="Biblioteca" style="color:rgba(255,255,255,0.5)">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg>
@@ -1978,6 +2030,49 @@ body.sb-collapsed .main { margin-left: 92px !important; }
       </div>
 
       
+      <!-- ═══ VOCABULÁRIO ═══ -->
+      <div class="section" id="sec-vocabulary">
+        <div class="section-head">
+          <div class="section-head-icon green">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          </div>
+          <div class="section-head-text">
+            <h2>Vocabulário</h2>
+            <p class="section-sub">Registre as palavras vistas em aula que o aluno ainda não conhecia. Ele poderá revê-las com tradução, frase e pronúncia.</p>
+          </div>
+        </div>
+        <div class="form-card">
+          <h3>
+            <span class="form-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+            Adicionar Palavra
+          </h3>
+          <p class="sub">Envie uma nova palavra para o vocabulário do aluno.</p>
+          <div class="f-group"><label>Aluno</label><select id="vocStudent"><option value="">Carregando...</option></select></div>
+          <div class="f-row">
+            <div class="f-group"><label>Palavra (em inglês)</label><input type="text" id="vocWord" placeholder="Ex: improve" autocomplete="off"></div>
+            <div class="f-group"><label>Tradução</label><input type="text" id="vocTranslation" placeholder="Ex: melhorar" autocomplete="off"></div>
+          </div>
+          <div class="f-group">
+            <label>Frase de exemplo <span style="font-weight:500;color:var(--g400)">(opcional, em inglês)</span></label>
+            <textarea id="vocSentence" rows="2" placeholder="Ex: Reading every day will improve your English."></textarea>
+          </div>
+          <div class="voc-preview" id="vocPreview" style="display:none">
+            <button type="button" class="voc-speak" id="vocPreviewSpeak" title="Ouvir pronúncia" onclick="speakVocPreview()">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+            </button>
+            <span>Prévia da pronúncia — <b id="vocPreviewWord">palavra</b></span>
+          </div>
+          <button class="btn-send" id="vocSend" onclick="sendVocabulary()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            Adicionar Palavra
+          </button>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title"><span class="panel-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>Palavras Enviadas</div></div>
+          <div id="vocList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhuma palavra enviada ainda.</p></div></div>
+        </div>
+      </div>
+
       <!-- ═══ MESSAGES ═══ -->
       <div class="section" id="sec-messages">
         <div class="section-head">
@@ -2069,7 +2164,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 <script src="supabase.js"></script>
 <script>
 let currentUser = null;
-const sections = {"overview":"Visão Geral","schedule":"Meu Schedule","students":"Meus Alunos","homework":"Homework","feedback":"Feedbacks","help-requests":"Perguntas dos Alunos","announcements":"Avisos","writing":"Redação","pronunciation":"Pronúncia","messages":"Mensagens","profile":"Meu Perfil"};
+const sections = {"overview":"Visão Geral","schedule":"Meu Schedule","students":"Meus Alunos","homework":"Homework","feedback":"Feedbacks","help-requests":"Perguntas dos Alunos","announcements":"Avisos","writing":"Redação","pronunciation":"Pronúncia","vocabulary":"Vocabulário","messages":"Mensagens","profile":"Meu Perfil"};
 
 // ═══ INIT ═══
 // Init collapsible sidebar immediately (independent of auth)
@@ -2162,7 +2257,7 @@ function initCollapsibleSidebar() {
 async function loadStudents() {
   const students = await getMyStudents(currentUser.id);
   window._myStudents = students; // store for reuse
-  const selects = ['hwStudent','fbStudent','wrStudent','prStudent'];
+  const selects = ['hwStudent','fbStudent','wrStudent','prStudent','vocStudent'];
   selects.forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
@@ -2286,6 +2381,138 @@ async function loadHomeworkList() {
     '</div>';
   }).join('') + '</div>';
 }
+
+// ═══ VOCABULÁRIO ═══
+
+// Pronúncia via Web Speech API do navegador (inglês).
+function speakWord(text, btnEl) {
+  if (!('speechSynthesis' in window)) {
+    showToast('Seu navegador não suporta pronúncia por voz.', 'error');
+    return;
+  }
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'en-US';
+  u.rate = 0.92;
+  // Tenta usar uma voz em inglês, se disponível
+  const enVoice = window.speechSynthesis.getVoices().find(v => /^en/i.test(v.lang));
+  if (enVoice) u.voice = enVoice;
+  if (btnEl) {
+    btnEl.classList.add('speaking');
+    u.onend = u.onerror = () => btnEl.classList.remove('speaking');
+  }
+  window.speechSynthesis.speak(u);
+}
+
+// Atualiza a prévia de pronúncia no formulário conforme digita.
+function updateVocPreview() {
+  const word = document.getElementById('vocWord').value.trim();
+  const prev = document.getElementById('vocPreview');
+  if (word) {
+    document.getElementById('vocPreviewWord').textContent = word;
+    prev.style.display = 'flex';
+  } else {
+    prev.style.display = 'none';
+  }
+}
+
+function speakVocPreview() {
+  const word = document.getElementById('vocWord').value.trim();
+  const sentence = document.getElementById('vocSentence').value.trim();
+  if (word) speakWord(sentence || word, document.getElementById('vocPreviewSpeak'));
+}
+
+async function sendVocabulary() {
+  const studentId = document.getElementById('vocStudent').value;
+  const word = document.getElementById('vocWord').value.trim();
+  const translation = document.getElementById('vocTranslation').value.trim();
+  const sentence = document.getElementById('vocSentence').value.trim();
+
+  if (!studentId) { showToast('Selecione um aluno', 'error'); return; }
+  if (!word) { showToast('Digite a palavra', 'error'); return; }
+  if (!translation) { showToast('Digite a tradução', 'error'); return; }
+
+  const btn = document.getElementById('vocSend');
+  btn.disabled = true;
+  try {
+    await addVocabularyWord(currentUser.id, studentId, word, translation, sentence || null);
+    showToast('Palavra adicionada ao vocabulário do aluno!');
+    document.getElementById('vocWord').value = '';
+    document.getElementById('vocTranslation').value = '';
+    document.getElementById('vocSentence').value = '';
+    updateVocPreview();
+    await loadVocabularyList();
+    const first = document.querySelector('#vocList .voc-word-card');
+    if (first) {
+      first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      first.style.background = 'var(--mango-soft)';
+      setTimeout(() => { first.style.background = ''; }, 2500);
+    }
+  } catch (e) {
+    showToast('Erro ao adicionar: ' + e.message, 'error');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function loadVocabularyList() {
+  const div = document.getElementById('vocList');
+  try {
+    const words = await getVocabularyByTeacher(currentUser.id);
+    if (!words.length) {
+      div.innerHTML = '<div class="empty-state"><div class="empty-icon">📚</div><p>Nenhuma palavra enviada ainda.</p></div>';
+      return;
+    }
+    div.innerHTML = '<div style="padding:6px 0">' + words.map(w => {
+      const studentName = (w.student && w.student.full_name) || 'Aluno';
+      const speakText = (w.sentence || w.word).replace(/'/g, "\\'");
+      return '<div class="voc-word-card">' +
+          '<button class="voc-icon-btn" title="Ouvir pronúncia" ' +
+                  'onclick="speakWord(\'' + escapeHtml(speakText) + '\', this)">' +
+            '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>' +
+          '</button>' +
+          '<div class="voc-word-body">' +
+            '<div class="voc-word-top">' +
+              '<span class="voc-word-term">' + escapeHtml(w.word) + '</span>' +
+              '<span class="voc-word-trans">' + escapeHtml(w.translation) + '</span>' +
+            '</div>' +
+            (w.sentence ? '<div class="voc-word-sentence">“' + escapeHtml(w.sentence) + '”</div>' : '') +
+            '<div class="voc-word-meta">👤 ' + escapeHtml(studentName) +
+              ' • ' + formatDate(w.created_at) + '</div>' +
+          '</div>' +
+          '<div class="voc-word-actions">' +
+            '<button class="voc-icon-btn danger" title="Excluir" onclick="removeVocabulary(\'' + w.id + '\')">' +
+              '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>' +
+            '</button>' +
+          '</div>' +
+        '</div>';
+    }).join('') + '</div>';
+  } catch (e) {
+    console.error('loadVocabularyList error:', e);
+    div.innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><p>Erro ao carregar o vocabulário.</p></div>';
+  }
+}
+
+async function removeVocabulary(wordId) {
+  if (!confirm('Excluir esta palavra do vocabulário do aluno?')) return;
+  try {
+    await deleteVocabularyWord(wordId);
+    showToast('Palavra excluída.');
+    await loadVocabularyList();
+  } catch (e) {
+    showToast('Erro ao excluir: ' + e.message, 'error');
+  }
+}
+
+// Liga a prévia de pronúncia ao campo de palavra
+document.addEventListener('DOMContentLoaded', () => {
+  const vw = document.getElementById('vocWord');
+  if (vw) vw.addEventListener('input', updateVocPreview);
+  // Garante que as vozes sejam carregadas (alguns navegadores carregam de forma assíncrona)
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+  }
+});
 
 // ═══ SEND FEEDBACK ═══
 async function sendFeedback() {
@@ -3295,6 +3522,7 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'announcements': loadAnnouncementList(); break;
       case 'writing': loadWritingList(); break;
       case 'pronunciation': loadPronunciationList(); break;
+      case 'vocabulary': loadVocabularyList(); break;
       case 'messages': loadMessages(); break;
       case 'profile': loadProfile(); break;
     }

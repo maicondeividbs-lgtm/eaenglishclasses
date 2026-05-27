@@ -671,25 +671,28 @@ async function getMyAssessmentGrades(studentId) {
 // ═══════════════════════════════════════════════════════
 // VOCABULÁRIO (Professor → Aluno)
 // Tabela: 'vocabulary_words'
-// O professor registra palavras vistas em aula que o aluno
-// não conhecia: palavra, tradução e frase de exemplo.
+// O professor envia apenas as palavras vistas em aula.
+// O dashboard do aluno gera tradução e frase de exemplo
+// automaticamente (via IA) e salva o resultado de volta.
 // A pronúncia é gerada no navegador (Web Speech API).
+// Campos: word, translation, sentence, part_of_speech, enriched
 // ═══════════════════════════════════════════════════════
 
-// Registra uma nova palavra de vocabulário para um aluno.
-async function addVocabularyWord(teacherId, studentId, word, translation, sentence) {
-  const { data, error } = await db.from('vocabulary_words').insert([{
-    teacher_id:  teacherId,
-    student_id:  studentId,
-    word:        word,
-    translation: translation,
-    sentence:    sentence || null
-  }]).select();
+// Envia uma lista de palavras de uma vez para um aluno.
+// Cada registro nasce "não enriquecido" (sem tradução/frase).
+async function addVocabularyWords(teacherId, studentId, words) {
+  const rows = words.map(w => ({
+    teacher_id: teacherId,
+    student_id: studentId,
+    word: w,
+    enriched: false
+  }));
+  const { data, error } = await db.from('vocabulary_words').insert(rows).select();
   if (error) throw error;
-  return data && data[0];
+  return data || [];
 }
 
-// Lista as palavras enviadas por um professor (todas, mais recentes primeiro).
+// Lista as palavras enviadas por um professor (mais recentes primeiro).
 async function getVocabularyByTeacher(teacherId) {
   const { data } = await db.from('vocabulary_words')
     .select('*, student:profiles!vocabulary_words_student_id_fkey(full_name)')
@@ -706,6 +709,17 @@ async function getVocabularyForStudent(studentId) {
     .eq('student_id', studentId)
     .order('created_at', { ascending: false });
   return data || [];
+}
+
+// Salva o conteúdo gerado (tradução, frase, classe gramatical) de uma palavra.
+async function saveVocabularyEnrichment(wordId, translation, sentence, partOfSpeech) {
+  const { error } = await db.from('vocabulary_words').update({
+    translation: translation,
+    sentence: sentence || null,
+    part_of_speech: partOfSpeech || null,
+    enriched: true
+  }).eq('id', wordId);
+  if (error) throw error;
 }
 
 // Exclui uma palavra de vocabulário.

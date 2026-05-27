@@ -1597,42 +1597,24 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 }
 
 /* ═══ VOCABULÁRIO ═══ */
-.voc-preview {
-  display: flex; align-items: center; gap: 10px; margin: 4px 0 14px;
-  padding: 10px 14px; border-radius: 12px; background: var(--ocean-light);
-  border: 1px solid var(--ocean); font-size: 13px; color: var(--navy); font-weight: 600;
+.voc-count-hint {
+  font-size: 12px; font-weight: 600; color: var(--g500); margin-top: 6px;
 }
-.voc-preview b { color: var(--blue); }
-.voc-speak {
-  width: 38px; height: 38px; min-width: 38px; border-radius: 50%; border: none; cursor: pointer;
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  background: var(--blue); color: #fff; transition: transform 0.15s, background 0.2s;
-}
-.voc-speak svg { width: 19px; height: 19px; }
-.voc-speak:hover { background: var(--blue-light); transform: scale(1.08); }
-.voc-speak:active { transform: scale(0.94); }
-.voc-speak.speaking { animation: vocPulse 1s ease-in-out infinite; }
-@keyframes vocPulse {
-  0%,100% { box-shadow: 0 0 0 0 rgba(37,60,150,0.45); }
-  50% { box-shadow: 0 0 0 8px rgba(37,60,150,0); }
-}
-
 .voc-word-card {
   display: flex; align-items: flex-start; gap: 14px; padding: 16px 24px;
   border-bottom: 1px solid var(--g100); animation: vocCardIn 0.4s ease backwards;
+  transition: background 0.3s;
 }
 .voc-word-card:last-child { border-bottom: none; }
 @keyframes vocCardIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 .voc-word-body { flex: 1; min-width: 0; }
-.voc-word-top { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.voc-word-top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .voc-word-term { font-size: 17px; font-weight: 800; color: var(--navy); }
-.voc-word-trans {
-  font-size: 14px; color: var(--blue); font-weight: 700;
+.voc-status {
+  font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 99px;
 }
-.voc-word-trans::before { content: '→ '; color: var(--g400); }
-.voc-word-sentence {
-  font-size: 13px; color: var(--g700); font-style: italic; margin-top: 6px; line-height: 1.5;
-}
+.voc-status.ready   { background: rgba(16,185,129,0.12); color: #0f9d6a; }
+.voc-status.waiting { background: var(--mango-soft); color: var(--mango); }
 .voc-word-meta { font-size: 12px; color: var(--g400); margin-top: 7px; }
 .voc-word-actions { display: flex; gap: 8px; flex-shrink: 0; }
 .voc-icon-btn {
@@ -1642,7 +1624,6 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 .voc-icon-btn svg { width: 17px; height: 17px; }
 .voc-icon-btn:hover { border-color: var(--blue); color: var(--blue); }
 .voc-icon-btn.danger:hover { border-color: #ef4444; color: #ef4444; }
-.voc-icon-btn.speaking { border-color: var(--blue); color: var(--blue); animation: vocPulse 1s ease-in-out infinite; }
 
 </style>
 </head>
@@ -2038,33 +2019,24 @@ body.sb-collapsed .main { margin-left: 92px !important; }
           </div>
           <div class="section-head-text">
             <h2>Vocabulário</h2>
-            <p class="section-sub">Registre as palavras vistas em aula que o aluno ainda não conhecia. Ele poderá revê-las com tradução, frase e pronúncia.</p>
+            <p class="section-sub">Envie as palavras vistas em aula que o aluno ainda não conhecia. O dashboard do aluno cuida da tradução, das frases de exemplo e da pronúncia.</p>
           </div>
         </div>
         <div class="form-card">
           <h3>
             <span class="form-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
-            Adicionar Palavra
+            Enviar Palavras
           </h3>
-          <p class="sub">Envie uma nova palavra para o vocabulário do aluno.</p>
+          <p class="sub">Selecione o aluno e digite as palavras — uma por linha. Você pode enviar várias de uma vez.</p>
           <div class="f-group"><label>Aluno</label><select id="vocStudent"><option value="">Carregando...</option></select></div>
-          <div class="f-row">
-            <div class="f-group"><label>Palavra (em inglês)</label><input type="text" id="vocWord" placeholder="Ex: improve" autocomplete="off"></div>
-            <div class="f-group"><label>Tradução</label><input type="text" id="vocTranslation" placeholder="Ex: melhorar" autocomplete="off"></div>
-          </div>
           <div class="f-group">
-            <label>Frase de exemplo <span style="font-weight:500;color:var(--g400)">(opcional, em inglês)</span></label>
-            <textarea id="vocSentence" rows="2" placeholder="Ex: Reading every day will improve your English."></textarea>
-          </div>
-          <div class="voc-preview" id="vocPreview" style="display:none">
-            <button type="button" class="voc-speak" id="vocPreviewSpeak" title="Ouvir pronúncia" onclick="speakVocPreview()">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
-            </button>
-            <span>Prévia da pronúncia — <b id="vocPreviewWord">palavra</b></span>
+            <label>Palavras (uma por linha)</label>
+            <textarea id="vocWords" rows="6" placeholder="improve&#10;although&#10;reliable&#10;to look forward to" autocomplete="off"></textarea>
+            <div class="voc-count-hint" id="vocCountHint">Nenhuma palavra digitada</div>
           </div>
           <button class="btn-send" id="vocSend" onclick="sendVocabulary()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-            Adicionar Palavra
+            Enviar Palavras
           </button>
         </div>
         <div class="panel">
@@ -2384,79 +2356,51 @@ async function loadHomeworkList() {
 
 // ═══ VOCABULÁRIO ═══
 
-// Pronúncia via Web Speech API do navegador (inglês).
-function speakWord(text, btnEl) {
-  if (!('speechSynthesis' in window)) {
-    showToast('Seu navegador não suporta pronúncia por voz.', 'error');
-    return;
-  }
-  window.speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = 'en-US';
-  u.rate = 0.92;
-  // Tenta usar uma voz em inglês, se disponível
-  const enVoice = window.speechSynthesis.getVoices().find(v => /^en/i.test(v.lang));
-  if (enVoice) u.voice = enVoice;
-  if (btnEl) {
-    btnEl.classList.add('speaking');
-    u.onend = u.onerror = () => btnEl.classList.remove('speaking');
-  }
-  window.speechSynthesis.speak(u);
-}
-
-// Atualiza a prévia de pronúncia no formulário conforme digita.
-function updateVocPreview() {
-  const word = document.getElementById('vocWord').value.trim();
-  const prev = document.getElementById('vocPreview');
-  if (word) {
-    document.getElementById('vocPreviewWord').textContent = word;
-    prev.style.display = 'flex';
-  } else {
-    prev.style.display = 'none';
-  }
-}
-
-function speakVocPreview() {
-  const word = document.getElementById('vocWord').value.trim();
-  const sentence = document.getElementById('vocSentence').value.trim();
-  if (word) speakWord(sentence || word, document.getElementById('vocPreviewSpeak'));
+// Atualiza o contador de palavras conforme o professor digita.
+function updateVocCount() {
+  const raw = document.getElementById("vocWords").value;
+  const words = raw.split(/[\n,;]+/).map(w => w.trim()).filter(Boolean);
+  const hint = document.getElementById("vocCountHint");
+  if (!words.length) { hint.textContent = "Nenhuma palavra digitada"; return; }
+  hint.textContent = words.length === 1
+    ? "1 palavra pronta para enviar"
+    : words.length + " palavras prontas para enviar";
 }
 
 async function sendVocabulary() {
-  const studentId = document.getElementById('vocStudent').value;
-  const word = document.getElementById('vocWord').value.trim();
-  const translation = document.getElementById('vocTranslation').value.trim();
-  const sentence = document.getElementById('vocSentence').value.trim();
+  const studentId = document.getElementById("vocStudent").value;
+  const raw = document.getElementById("vocWords").value;
+  // Aceita uma palavra por linha (também separadas por vírgula ou ponto e vírgula)
+  let words = raw.split(/[\n,;]+/).map(w => w.trim()).filter(Boolean);
+  // Remove duplicatas mantendo a ordem
+  words = words.filter((w, i) => words.findIndex(x => x.toLowerCase() === w.toLowerCase()) === i);
 
-  if (!studentId) { showToast('Selecione um aluno', 'error'); return; }
-  if (!word) { showToast('Digite a palavra', 'error'); return; }
-  if (!translation) { showToast('Digite a tradução', 'error'); return; }
+  if (!studentId) { showToast("Selecione um aluno", "error"); return; }
+  if (!words.length) { showToast("Digite ao menos uma palavra", "error"); return; }
 
-  const btn = document.getElementById('vocSend');
+  const btn = document.getElementById("vocSend");
   btn.disabled = true;
   try {
-    await addVocabularyWord(currentUser.id, studentId, word, translation, sentence || null);
-    showToast('Palavra adicionada ao vocabulário do aluno!');
-    document.getElementById('vocWord').value = '';
-    document.getElementById('vocTranslation').value = '';
-    document.getElementById('vocSentence').value = '';
-    updateVocPreview();
+    await addVocabularyWords(currentUser.id, studentId, words);
+    showToast(words.length === 1 ? "Palavra enviada!" : words.length + " palavras enviadas!");
+    document.getElementById("vocWords").value = "";
+    updateVocCount();
     await loadVocabularyList();
-    const first = document.querySelector('#vocList .voc-word-card');
+    const first = document.querySelector("#vocList .voc-word-card");
     if (first) {
-      first.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      first.style.background = 'var(--mango-soft)';
-      setTimeout(() => { first.style.background = ''; }, 2500);
+      first.scrollIntoView({ behavior: "smooth", block: "center" });
+      first.style.background = "var(--mango-soft)";
+      setTimeout(() => { first.style.background = ""; }, 2500);
     }
   } catch (e) {
-    showToast('Erro ao adicionar: ' + e.message, 'error');
+    showToast("Erro ao enviar: " + e.message, "error");
   } finally {
     btn.disabled = false;
   }
 }
 
 async function loadVocabularyList() {
-  const div = document.getElementById('vocList');
+  const div = document.getElementById("vocList");
   try {
     const words = await getVocabularyByTeacher(currentUser.id);
     if (!words.length) {
@@ -2464,19 +2408,16 @@ async function loadVocabularyList() {
       return;
     }
     div.innerHTML = '<div style="padding:6px 0">' + words.map(w => {
-      const studentName = (w.student && w.student.full_name) || 'Aluno';
-      const speakText = (w.sentence || w.word).replace(/'/g, "\\'");
+      const studentName = (w.student && w.student.full_name) || "Aluno";
+      const status = w.enriched
+        ? '<span class="voc-status ready">✓ Estudada pelo aluno</span>'
+        : '<span class="voc-status waiting">⏳ Aguardando o aluno abrir</span>';
       return '<div class="voc-word-card">' +
-          '<button class="voc-icon-btn" title="Ouvir pronúncia" ' +
-                  'onclick="speakWord(\'' + escapeHtml(speakText) + '\', this)">' +
-            '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>' +
-          '</button>' +
           '<div class="voc-word-body">' +
             '<div class="voc-word-top">' +
               '<span class="voc-word-term">' + escapeHtml(w.word) + '</span>' +
-              '<span class="voc-word-trans">' + escapeHtml(w.translation) + '</span>' +
+              status +
             '</div>' +
-            (w.sentence ? '<div class="voc-word-sentence">“' + escapeHtml(w.sentence) + '”</div>' : '') +
             '<div class="voc-word-meta">👤 ' + escapeHtml(studentName) +
               ' • ' + formatDate(w.created_at) + '</div>' +
           '</div>' +
@@ -2486,32 +2427,28 @@ async function loadVocabularyList() {
             '</button>' +
           '</div>' +
         '</div>';
-    }).join('') + '</div>';
+    }).join("") + '</div>';
   } catch (e) {
-    console.error('loadVocabularyList error:', e);
+    console.error("loadVocabularyList error:", e);
     div.innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><p>Erro ao carregar o vocabulário.</p></div>';
   }
 }
 
 async function removeVocabulary(wordId) {
-  if (!confirm('Excluir esta palavra do vocabulário do aluno?')) return;
+  if (!confirm("Excluir esta palavra do vocabulário do aluno?")) return;
   try {
     await deleteVocabularyWord(wordId);
-    showToast('Palavra excluída.');
+    showToast("Palavra excluída.");
     await loadVocabularyList();
   } catch (e) {
-    showToast('Erro ao excluir: ' + e.message, 'error');
+    showToast("Erro ao excluir: " + e.message, "error");
   }
 }
 
-// Liga a prévia de pronúncia ao campo de palavra
-document.addEventListener('DOMContentLoaded', () => {
-  const vw = document.getElementById('vocWord');
-  if (vw) vw.addEventListener('input', updateVocPreview);
-  // Garante que as vozes sejam carregadas (alguns navegadores carregam de forma assíncrona)
-  if ('speechSynthesis' in window) {
-    window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
-  }
+// Liga o contador ao campo de palavras
+document.addEventListener("DOMContentLoaded", () => {
+  const vw = document.getElementById("vocWords");
+  if (vw) vw.addEventListener("input", updateVocCount);
 });
 
 // ═══ SEND FEEDBACK ═══

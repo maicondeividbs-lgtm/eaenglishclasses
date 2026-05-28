@@ -2464,6 +2464,10 @@ body.sb-collapsed .main { margin-left: 92px !important; }
   padding: 11px 13px; border-radius: 10px; background: var(--g100);
   font-size: 13px; font-weight: 600; color: var(--g500);
 }
+.vocab-no-sentence {
+  margin-top: 12px; padding: 9px 13px; border-radius: 10px; background: var(--g50);
+  font-size: 12.5px; color: var(--g400); font-style: italic;
+}
 .vocab-error {
   margin-top: 12px; padding: 11px 13px; border-radius: 10px;
   background: rgba(239,68,68,0.08); font-size: 12.5px; color: #ef4444; font-weight: 600;
@@ -3405,38 +3409,76 @@ function speakVocab(text, btnEl) {
   window.speechSynthesis.speak(u);
 }
 
-// Gera tradução + frase + classe gramatical de uma palavra usando a IA.
+// Gera tradução + frase + classe gramatical de uma palavra usando
+// APIs públicas e gratuitas (MyMemory para tradução, Free Dictionary
+// API para frase e classe gramatical). Ambas permitem chamada direta
+// do navegador — sem necessidade de servidor nem chave de API.
 // Retorna um objeto { translation, sentence, partOfSpeech }.
-async function enrichVocabWord(word) {
-  const prompt =
-    'Você é um professor de inglês. Para a palavra ou expressão em inglês "' + word + '", ' +
-    'responda APENAS com um objeto JSON válido, sem markdown e sem texto extra, neste formato exato:\n' +
-    '{"translation":"tradução em português do Brasil","sentence":"uma frase de exemplo simples e natural em inglês usando a palavra","part_of_speech":"classe gramatical em português, ex: verbo, substantivo, adjetivo, advérbio, expressão"}';
 
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 1000,
-      messages: [{ role: 'user', content: prompt }]
-    })
-  });
-  const data = await response.json();
-  let text = (data.content || [])
-    .filter(b => b.type === 'text')
-    .map(b => b.text)
-    .join('')
-    .trim();
-  // Remove eventuais cercas de markdown
-  text = text.replace(/```json/gi, '').replace(/```/g, '').trim();
-  const parsed = JSON.parse(text);
-  return {
-    translation: parsed.translation || '',
-    sentence: parsed.sentence || '',
-    partOfSpeech: parsed.part_of_speech || ''
-  };
+// Traduz classes gramaticais do inglês para português.
+const POS_PT = {
+  noun: 'substantivo', verb: 'verbo', adjective: 'adjetivo',
+  adverb: 'advérbio', pronoun: 'pronome', preposition: 'preposição',
+  conjunction: 'conjunção', interjection: 'interjeição',
+  determiner: 'determinante', article: 'artigo', numeral: 'numeral',
+  phrase: 'expressão', exclamation: 'interjeição'
+};
+
+async function enrichVocabWord(word) {
+  let translation = '';
+  let sentence = '';
+  let partOfSpeech = '';
+
+  // 1) Tradução — MyMemory (gratuita, com CORS liberado)
+  try {
+    const tResp = await fetch(
+      'https://api.mymemory.translated.net/get?q=' +
+      encodeURIComponent(word) + '&langpair=en|pt-BR'
+    );
+    if (tResp.ok) {
+      const tData = await tResp.json();
+      if (tData && tData.responseData && tData.responseData.translatedText) {
+        translation = tData.responseData.translatedText.trim();
+      }
+    }
+  } catch (e) {
+    console.warn('Tradução indisponível para "' + word + '":', e);
+  }
+
+  // 2) Frase de exemplo + classe gramatical — Free Dictionary API
+  try {
+    const dResp = await fetch(
+      'https://api.dictionaryapi.dev/api/v2/entries/en/' +
+      encodeURIComponent(word.trim())
+    );
+    if (dResp.ok) {
+      const dData = await dResp.json();
+      const entry = Array.isArray(dData) ? dData[0] : null;
+      if (entry && entry.meanings && entry.meanings.length) {
+        // Classe gramatical da primeira acepção
+        const pos = (entry.meanings[0].partOfSpeech || '').toLowerCase();
+        partOfSpeech = POS_PT[pos] || pos;
+        // Procura a primeira definição que tenha um exemplo
+        for (const meaning of entry.meanings) {
+          for (const def of (meaning.definitions || [])) {
+            if (def.example) { sentence = def.example.trim(); break; }
+          }
+          if (sentence) break;
+        }
+      }
+    }
+  } catch (e) {
+    console.warn('Dicionário indisponível para "' + word + '":', e);
+  }
+
+  // Se não veio tradução de jeito nenhum, sinaliza para nova tentativa depois.
+  if (!translation) {
+    throw new Error('Não foi possível obter a tradução agora.');
+  }
+
+  return { translation: translation, sentence: sentence, partOfSpeech: partOfSpeech };
 }
+
 
 async function loadVocabulary() {
   const div = document.getElementById('vocabContent');
@@ -3532,7 +3574,7 @@ function renderVocabulary(words) {
                   '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3z"/></svg>' +
                   'Ouvir a frase' +
                 '</button>'
-              : '')
+              : '<div class="vocab-no-sentence">Sem frase de exemplo para esta palavra.</div>')
           : '<div class="vocab-preparing">' +
               '<span class="vocab-spinner"></span> Preparando tradução e exemplo...' +
             '</div>') +

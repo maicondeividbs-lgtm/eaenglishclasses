@@ -3412,16 +3412,23 @@ function speakVocab(text, btnEl) {
 // Gera tradução + frase + classe gramatical de uma palavra usando
 // APIs públicas e gratuitas (MyMemory para tradução, Free Dictionary
 // API para frase e classe gramatical). Ambas permitem chamada direta
-// do navegador — sem necessidade de servidor nem chave de API.
+// do navegador — sem servidor nem chave de API.
 // Retorna um objeto { translation, sentence, partOfSpeech }.
 
-// Traduz classes gramaticais do inglês para português.
+// Traduz a classe gramatical do inglês para português.
 const POS_PT = {
   noun: 'substantivo', verb: 'verbo', adjective: 'adjetivo',
   adverb: 'advérbio', pronoun: 'pronome', preposition: 'preposição',
   conjunction: 'conjunção', interjection: 'interjeição',
   determiner: 'determinante', article: 'artigo', numeral: 'numeral',
   phrase: 'expressão', exclamation: 'interjeição'
+};
+
+// Prioridade entre classes gramaticais: as mais comuns ganham das raras.
+// (Resolve casos como "think", que a API lista como substantivo antes de verbo.)
+const POS_PRIORITY = {
+  verb: 6, noun: 5, adjective: 4, adverb: 3,
+  preposition: 2, conjunction: 2, pronoun: 1
 };
 
 async function enrichVocabWord(word) {
@@ -3455,12 +3462,25 @@ async function enrichVocabWord(word) {
       const dData = await dResp.json();
       const entry = Array.isArray(dData) ? dData[0] : null;
       if (entry && entry.meanings && entry.meanings.length) {
-        // Classe gramatical da primeira acepção
-        const pos = (entry.meanings[0].partOfSpeech || '').toLowerCase();
-        partOfSpeech = POS_PT[pos] || pos;
-        // Procura a primeira definição que tenha um exemplo
-        for (const meaning of entry.meanings) {
-          for (const def of (meaning.definitions || [])) {
+        // Escolhe a classe gramatical MAIS RELEVANTE entre todas as acepções,
+        // em vez de pegar cegamente a primeira da lista.
+        let bestPos = '';
+        let bestScore = -1;
+        entry.meanings.forEach(m => {
+          const pos = (m.partOfSpeech || '').toLowerCase();
+          const score = POS_PRIORITY[pos] || 0;
+          if (score > bestScore) { bestScore = score; bestPos = pos; }
+        });
+        partOfSpeech = POS_PT[bestPos] || bestPos;
+
+        // Procura uma frase de exemplo, dando preferência à acepção
+        // da classe gramatical escolhida; se não houver, aceita qualquer uma.
+        const preferred = entry.meanings.filter(m =>
+          (m.partOfSpeech || '').toLowerCase() === bestPos);
+        const others = entry.meanings.filter(m =>
+          (m.partOfSpeech || '').toLowerCase() !== bestPos);
+        for (const m of preferred.concat(others)) {
+          for (const def of (m.definitions || [])) {
             if (def.example) { sentence = def.example.trim(); break; }
           }
           if (sentence) break;
@@ -3478,6 +3498,7 @@ async function enrichVocabWord(word) {
 
   return { translation: translation, sentence: sentence, partOfSpeech: partOfSpeech };
 }
+
 
 
 async function loadVocabulary() {

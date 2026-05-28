@@ -7,10 +7,10 @@
 //
 // Endpoint: POST /api/vocabulary   body: { "word": "improve" }
 
-const GEMINI_MODEL = 'gemini-2.5-flash-lite';
+// Modelos tentados em ordem (se o 1º não existir para a chave, tenta o 2º).
+const GEMINI_MODELS = ['gemini-2.5-flash-lite', 'gemini-2.5-flash'];
 
 export default async function handler(req, res) {
-  // Libera o próprio site a chamar esta função.
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -27,7 +27,6 @@ export default async function handler(req, res) {
     return;
   }
 
-  // O corpo pode vir como objeto (Vercel já parseia JSON) ou como string.
   let body = req.body;
   if (typeof body === 'string') {
     try { body = JSON.parse(body); } catch (e) { body = {}; }
@@ -43,65 +42,87 @@ export default async function handler(req, res) {
     'responda APENAS com um objeto JSON válido, sem markdown e sem texto extra, neste formato exato:\n' +
     '{"translation":"tradução em português do Brasil","sentence":"uma frase de exemplo simples e natural em inglês usando a palavra","part_of_speech":"classe gramatical em português, ex: verbo, substantivo, adjetivo, advérbio, expressão"}';
 
-  const url = 'https://generativelanguage.googleapis.com/v1beta/models/' +
-    GEMINI_MODEL + ':generateContent';
+  let lastDiag = ''; // guarda a última pista de erro para diagnóstico
 
-  try {
-    const aiResp = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-goog-api-key': apiKey
-      },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: {
-          temperature: 0.3,
-          maxOutputTokens: 400,
-          // Pede ao Gemini que devolva JSON puro, sem markdown.
-          responseMimeType: 'application/json'
-        }
-      })
-    });
-
-    if (!aiResp.ok) {
-      const errText = await aiResp.text();
-      console.error('Gemini error:', aiResp.status, errText);
-      res.status(502).json({ error: 'Falha ao consultar a IA.' });
-      return;
-    }
-
-    const data = await aiResp.json();
-    // Extrai o texto da resposta do Gemini.
-    let text = '';
+  for (const model of GEMINI_MODELS) {
+    const url = 'https://generativelanguage.googleapis.com/v1beta/models/' +
+      model + ':generateContent';
     try {
-      const parts = data.candidates[0].content.parts;
-      text = parts.map(p => p.text || '').join('').trim();
-    } catch (e) {
-      console.error('Resposta inesperada do Gemini:', JSON.stringify(data).slice(0, 500));
-      res.status(502).json({ error: 'Resposta inesperada da IA.' });
+      const aiResp = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-goog-api-key': apiKey
+        },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { temperature: 0.3, maxOutputTokens: 600 }
+        })
+      });
+
+      const rawText = await aiResp.text();
+
+      if (!aiResp.ok) {
+        lastDiag = 'HTTP ' + aiResp.status + ' (' + model + '): ' + rawText.slice(0, 300);
+        console.error('Gemini error:', lastDiag);
+        if (aiResp.status === 404) continue; // modelo inexistente: tenta o próximo
+        res.status(502).json({ error: 'Gemini recusou a requisição.', diag: lastDiag });
+        return;
+      }
+
+      let data;
+      try { data = JSON.parse(rawText); }
+      catch (e) {
+        lastDiag = 'Corpo não-JSON do Gemini: ' + rawText.slice(0, 200);
+        console.error(lastDiag);
+        res.status(502).json({ error: 'Resposta inesperada da IA.', diag: lastDiag });
+        return;
+      }
+
+      let text = '';
+      try {
+        const cand = (data.candidates && data.candidates[0]) || {};
+        const parts = (cand.content && cand.content.parts) || [];
+        text = parts.map(p => p.text || '').join('').trim();
+      } catch (e) { text = ''; }
+
+      if (!text) {
+        const reason = (data.promptFeedback && data.promptFeedback.blockReason) ||
+          (data.candidates && data.candidates[0] && data.candidates[0].finishReason) || 'sem texto';
+        lastDiag = 'Gemini não retornou texto (' + model + '): ' + reason;
+        console.error(lastDiag, JSON.stringify(data).slice(0, 300));
+        res.status(502).json({ error: 'A IA não gerou resposta.', diag: lastDiag });
+        return;
+      }
+
+      text = text.replace(/```json/gi, '').replace(/```/g, '').trim();
+      const firstBrace = text.indexOf('{');
+      const lastBrace = text.lastIndexOf('}');
+      if (firstBrace >= 0 && lastBrace > firstBrace) {
+        text = text.slice(firstBrace, lastBrace + 1);
+      }
+
+      let parsed;
+      try { parsed = JSON.parse(text); }
+      catch (e) {
+        lastDiag = 'Texto da IA não era JSON: ' + text.slice(0, 200);
+        console.error(lastDiag);
+        res.status(502).json({ error: 'Resposta inesperada da IA.', diag: lastDiag });
+        return;
+      }
+
+      res.status(200).json({
+        translation: parsed.translation || '',
+        sentence: parsed.sentence || '',
+        part_of_speech: parsed.part_of_speech || ''
+      });
       return;
-    }
 
-    // Remove eventuais cercas de markdown, por segurança.
-    text = text.replace(/```json/gi, '').replace(/```/g, '').trim();
-
-    let parsed;
-    try {
-      parsed = JSON.parse(text);
     } catch (e) {
-      console.error('Resposta não-JSON da IA:', text);
-      res.status(502).json({ error: 'Resposta inesperada da IA.' });
-      return;
+      lastDiag = 'Exceção (' + model + '): ' + (e && e.message ? e.message : String(e));
+      console.error('Erro na função de vocabulário:', lastDiag);
     }
-
-    res.status(200).json({
-      translation: parsed.translation || '',
-      sentence: parsed.sentence || '',
-      part_of_speech: parsed.part_of_speech || ''
-    });
-  } catch (e) {
-    console.error('Erro na função de vocabulário:', e);
-    res.status(500).json({ error: 'Erro interno.' });
   }
+
+  res.status(502).json({ error: 'Não foi possível gerar a resposta.', diag: lastDiag });
 }

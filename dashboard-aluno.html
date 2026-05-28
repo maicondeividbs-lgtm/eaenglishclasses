@@ -3409,97 +3409,33 @@ function speakVocab(text, btnEl) {
   window.speechSynthesis.speak(u);
 }
 
-// Gera tradução + frase + classe gramatical de uma palavra usando
-// APIs públicas e gratuitas (MyMemory para tradução, Free Dictionary
-// API para frase e classe gramatical). Ambas permitem chamada direta
-// do navegador — sem servidor nem chave de API.
+// Gera tradução + frase + classe gramatical de uma palavra chamando
+// a função serverless do próprio site (/api/vocabulary), que por sua
+// vez usa a IA do Google Gemini com a chave protegida no servidor.
 // Retorna um objeto { translation, sentence, partOfSpeech }.
-
-// Traduz a classe gramatical do inglês para português.
-const POS_PT = {
-  noun: 'substantivo', verb: 'verbo', adjective: 'adjetivo',
-  adverb: 'advérbio', pronoun: 'pronome', preposition: 'preposição',
-  conjunction: 'conjunção', interjection: 'interjeição',
-  determiner: 'determinante', article: 'artigo', numeral: 'numeral',
-  phrase: 'expressão', exclamation: 'interjeição'
-};
-
-// Prioridade entre classes gramaticais: as mais comuns ganham das raras.
-// (Resolve casos como "think", que a API lista como substantivo antes de verbo.)
-const POS_PRIORITY = {
-  verb: 6, noun: 5, adjective: 4, adverb: 3,
-  preposition: 2, conjunction: 2, pronoun: 1
-};
-
 async function enrichVocabWord(word) {
-  let translation = '';
-  let sentence = '';
-  let partOfSpeech = '';
+  const resp = await fetch('/api/vocabulary', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ word: word })
+  });
 
-  // 1) Tradução — MyMemory (gratuita, com CORS liberado)
-  try {
-    const tResp = await fetch(
-      'https://api.mymemory.translated.net/get?q=' +
-      encodeURIComponent(word) + '&langpair=en|pt-BR'
-    );
-    if (tResp.ok) {
-      const tData = await tResp.json();
-      if (tData && tData.responseData && tData.responseData.translatedText) {
-        translation = tData.responseData.translatedText.trim();
-      }
-    }
-  } catch (e) {
-    console.warn('Tradução indisponível para "' + word + '":', e);
+  if (!resp.ok) {
+    let msg = 'Falha ao preparar a palavra.';
+    try { const e = await resp.json(); if (e && e.error) msg = e.error; } catch (err) {}
+    throw new Error(msg);
   }
 
-  // 2) Frase de exemplo + classe gramatical — Free Dictionary API
-  try {
-    const dResp = await fetch(
-      'https://api.dictionaryapi.dev/api/v2/entries/en/' +
-      encodeURIComponent(word.trim())
-    );
-    if (dResp.ok) {
-      const dData = await dResp.json();
-      const entry = Array.isArray(dData) ? dData[0] : null;
-      if (entry && entry.meanings && entry.meanings.length) {
-        // Escolhe a classe gramatical MAIS RELEVANTE entre todas as acepções,
-        // em vez de pegar cegamente a primeira da lista.
-        let bestPos = '';
-        let bestScore = -1;
-        entry.meanings.forEach(m => {
-          const pos = (m.partOfSpeech || '').toLowerCase();
-          const score = POS_PRIORITY[pos] || 0;
-          if (score > bestScore) { bestScore = score; bestPos = pos; }
-        });
-        partOfSpeech = POS_PT[bestPos] || bestPos;
-
-        // Procura uma frase de exemplo, dando preferência à acepção
-        // da classe gramatical escolhida; se não houver, aceita qualquer uma.
-        const preferred = entry.meanings.filter(m =>
-          (m.partOfSpeech || '').toLowerCase() === bestPos);
-        const others = entry.meanings.filter(m =>
-          (m.partOfSpeech || '').toLowerCase() !== bestPos);
-        for (const m of preferred.concat(others)) {
-          for (const def of (m.definitions || [])) {
-            if (def.example) { sentence = def.example.trim(); break; }
-          }
-          if (sentence) break;
-        }
-      }
-    }
-  } catch (e) {
-    console.warn('Dicionário indisponível para "' + word + '":', e);
-  }
-
-  // Se não veio tradução de jeito nenhum, sinaliza para nova tentativa depois.
-  if (!translation) {
+  const data = await resp.json();
+  if (!data.translation) {
     throw new Error('Não foi possível obter a tradução agora.');
   }
-
-  return { translation: translation, sentence: sentence, partOfSpeech: partOfSpeech };
+  return {
+    translation: data.translation,
+    sentence: data.sentence || '',
+    partOfSpeech: data.part_of_speech || ''
+  };
 }
-
-
 
 async function loadVocabulary() {
   const div = document.getElementById('vocabContent');

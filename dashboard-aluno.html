@@ -3422,7 +3422,11 @@ async function enrichVocabWord(word) {
 
   if (!resp.ok) {
     let msg = 'Falha ao preparar a palavra.';
-    try { const e = await resp.json(); if (e && e.error) msg = e.error; } catch (err) {}
+    try {
+      const e = await resp.json();
+      if (e && e.error) msg = e.error;
+      if (e && e.diag) console.warn('Diagnóstico Gemini ("' + word + '"):', e.diag);
+    } catch (err) {}
     throw new Error(msg);
   }
 

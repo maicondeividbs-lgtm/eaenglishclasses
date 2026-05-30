@@ -4296,6 +4296,94 @@ async function deleteTest(id) {
 // ═══ COORDINATOR SCHEDULE — DRAG & DROP ═══
 
 // ═══ COORDINATOR SCHEDULE (Event Delegation) ═══
+// ═══ FERIADOS — Nacionais + Estado SP + Osasco ═══
+// Feriados fixos: chave "MM-DD", valor { nome, tipo }
+var FERIADOS_FIXOS = {
+  '01-01': { nome: 'Ano Novo',                     tipo: 'nacional'  },
+  '04-21': { nome: 'Tiradentes',                   tipo: 'nacional'  },
+  '05-01': { nome: 'Dia do Trabalho',               tipo: 'nacional'  },
+  '09-07': { nome: 'Independência do Brasil',       tipo: 'nacional'  },
+  '10-12': { nome: 'Nossa Sra. Aparecida',          tipo: 'nacional'  },
+  '11-02': { nome: 'Finados',                       tipo: 'nacional'  },
+  '11-15': { nome: 'Proclamação da República',      tipo: 'nacional'  },
+  '12-25': { nome: 'Natal',                         tipo: 'nacional'  },
+  '07-09': { nome: 'Revolução Constitucionalista',  tipo: 'estadual'  },
+  '11-20': { nome: 'Consciência Negra',             tipo: 'estadual'  },
+  '02-19': { nome: 'Emancipação de Osasco',         tipo: 'municipal' },
+  '06-13': { nome: 'Santo Antônio — Osasco',        tipo: 'municipal' },
+};
+
+// Calcula Páscoa (algoritmo de Butcher)
+function calcPascoa(ano) {
+  var a=ano%19,b=Math.floor(ano/100),c=ano%100;
+  var d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25);
+  var g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30;
+  var i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7;
+  var m=Math.floor((a+11*h+22*l)/451);
+  var mes=Math.floor((h+l-7*m+114)/31);
+  var dia=(h+l-7*m+114)%31+1;
+  return new Date(ano,mes-1,dia);
+}
+
+// Retorna objeto { nome, tipo } se a data for feriado, ou null
+function checkFeriado(dateStr) {
+  // dateStr = 'YYYY-MM-DD'
+  var parts = dateStr.split('-');
+  var ano = parseInt(parts[0]), mes = parseInt(parts[1]), dia = parseInt(parts[2]);
+  var chave = parts[1]+'-'+parts[2];
+  if (FERIADOS_FIXOS[chave]) return FERIADOS_FIXOS[chave];
+
+  // Feriados móveis baseados na Páscoa
+  var pascoa = calcPascoa(ano);
+  var moveis = [
+    { offset: -48, nome: 'Segunda de Carnaval',   tipo: 'facultativo' },
+    { offset: -47, nome: 'Terça de Carnaval',      tipo: 'facultativo' },
+    { offset: -46, nome: 'Quarta de Cinzas',       tipo: 'facultativo' },
+    { offset: -2,  nome: 'Sexta-Feira Santa',       tipo: 'nacional'   },
+    { offset: 0,   nome: 'Páscoa',                  tipo: 'nacional'   },
+    { offset: 60,  nome: 'Corpus Christi',          tipo: 'facultativo' },
+  ];
+  for (var i = 0; i < moveis.length; i++) {
+    var d = new Date(pascoa.getTime());
+    d.setDate(d.getDate() + moveis[i].offset);
+    if (d.getFullYear()===ano && (d.getMonth()+1)===mes && d.getDate()===dia) {
+      return { nome: moveis[i].nome, tipo: moveis[i].tipo };
+    }
+  }
+  return null;
+}
+
+// Retorna a próxima data (Date) em que um slot recorrente ocorre
+// dow = 0(Seg)..5(Sáb), timeStr = 'HH:MM:SS'
+function proximaOcorrencia(dow, timeStr) {
+  var now = new Date();
+  var hoje = now.getDay(); // 0=Dom,1=Seg..6=Sáb
+  var dowJS = dow + 1;     // nosso 0=Seg → JS 1=Seg
+  var diff = (dowJS - hoje + 7) % 7;
+  if (diff === 0) {
+    // Verifica se a aula de hoje já passou
+    var hm = (timeStr||'').substring(0,5).split(':');
+    var aulaMs = (parseInt(hm[0]||0)*60+parseInt(hm[1]||0))*60000;
+    var agora = (now.getHours()*60+now.getMinutes())*60000;
+    if (agora >= aulaMs) diff = 7; // próxima semana
+  }
+  var d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + diff);
+  return d;
+}
+
+// Formata Date para 'YYYY-MM-DD'
+function fmtDateISO(d) {
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+
+// Labels de tipo de feriado
+var FERIADO_TIPO_LABEL = {
+  nacional:   '🇧🇷 Feriado nacional',
+  estadual:   '🏛️ Feriado estadual (SP)',
+  municipal:  '🏙️ Feriado municipal (Osasco)',
+  facultativo:'📅 Ponto facultativo',
+};
+
 var C_DAYS=['Seg','Ter','Qua','Qui','Sex','Sab'];
 var C_HOURS=['07:00','07:30','08:00','08:30','09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30','18:00','18:30','19:00','19:30','20:00','20:30','21:00','21:30','22:00'];
 var C_COLORS=[{bg:'#dbeafe',b:'#93c5fd',t:'#1e40af'},{bg:'#fce7f3',b:'#f9a8d4',t:'#9d174d'},{bg:'#d1fae5',b:'#6ee7b7',t:'#065f46'},{bg:'#fef3c7',b:'#fcd34d',t:'#92400e'},{bg:'#ede9fe',b:'#c4b5fd',t:'#5b21b6'},{bg:'#fee2e2',b:'#fca5a5',t:'#991b1b'},{bg:'#ccfbf1',b:'#5eead4',t:'#134e4a'},{bg:'#e8eaf6',b:'#9fa8da',t:'#283593'},{bg:'#fff3e0',b:'#ffcc80',t:'#e65100'},{bg:'#f3e5f5',b:'#ce93d8',t:'#6a1b9a'},{bg:'#e8f5e9',b:'#a5d6a7',t:'#1b5e20'},{bg:'#fafafa',b:'#bdbdbd',t:'#424242'},{bg:'#fff8e1',b:'#ffe082',t:'#f57f17'},{bg:'#e1f5fe',b:'#81d4fa',t:'#01579b'},{bg:'#fbe9e7',b:'#ffab91',t:'#bf360c'},{bg:'#f1f8e9',b:'#aed581',t:'#33691e'}];
@@ -4354,7 +4442,7 @@ function initCoordDragDrop(){
     var del=e.target.closest('.sched-slot-x');
     if(del&&del.dataset.delid){e.stopPropagation();if(!confirm('Remover esta aula?'))return;try{await removeScheduleSlot(parseInt(del.dataset.delid));cPop();showToast('Aula removida!');loadCoordSchedule();}catch(er){showToast('Erro','error');}return;}
     var slot=e.target.closest('.sched-slot');
-    if(slot&&slot.dataset.slotid){showCPop(slot.dataset.name,buildCSlotPopup(slot.dataset.slotid,slot.dataset.name,slot.dataset.dur||'60'));return;}
+    if(slot&&slot.dataset.slotid){showCPop(slot.dataset.name,buildCSlotPopup(slot.dataset.slotid,slot.dataset.name,slot.dataset.dur||'60',parseInt(slot.dataset.dow)||0,slot.dataset.time||''));return;}
     var cell=e.target.closest('.sched-cell.sched-empty');
     if(cell){var cd=parseInt(cell.dataset.day),ch=cell.dataset.hour;showCPop('📌 '+C_DAYS[cd]+' '+ch,buildCExtraPopup(cd,ch));return;}
   });
@@ -4363,40 +4451,127 @@ function initCoordDragDrop(){
 function showCPop(t,h){document.getElementById('cPopTitle').textContent=t;document.getElementById('cPopContent').innerHTML=h;document.getElementById('cSchedPopup').style.display='';document.getElementById('cSchedOverlay').style.display='';}
 function closeCPop(){document.getElementById('cSchedPopup').style.display='none';document.getElementById('cSchedOverlay').style.display='none';}
 
-function buildCSlotPopup(slotId,name,dur){
-  var d30=dur==='30',d60=dur==='60',d90=dur==='90';
-  return '<p style="font-size:12px;color:var(--g400);margin-bottom:14px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700">Duração</p>'+
-  '<div style="display:flex;gap:8px;margin-bottom:20px">'+
-  '<button onclick="cChgDur('+slotId+',30)" style="flex:1;padding:12px;border:2px solid '+(d30?'var(--mango)':'var(--g200)')+';border-radius:10px;background:'+(d30?'var(--cream)':'#fff')+';font-family:inherit;font-size:14px;font-weight:700;color:var(--navy);cursor:pointer">30m</button>'+
-  '<button onclick="cChgDur('+slotId+',60)" style="flex:1;padding:12px;border:2px solid '+(d60?'var(--navy)':'var(--g200)')+';border-radius:10px;background:'+(d60?'var(--navy)':'#fff')+';font-family:inherit;font-size:14px;font-weight:700;color:'+(d60?'#fff':'var(--navy)')+';cursor:pointer">60m</button>'+
-  '<button onclick="cChgDur('+slotId+',90)" style="flex:1;padding:12px;border:2px solid '+(d90?'var(--blue)':'var(--g200)')+';border-radius:10px;background:'+(d90?'var(--blue-soft)':'#fff')+';font-family:inherit;font-size:14px;font-weight:700;color:var(--navy);cursor:pointer">90m</button></div>'+
-  '<hr style="border:none;border-top:1px solid var(--g100);margin:0 0 18px">'+
-  '<p style="font-size:12px;color:var(--g400);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700">Registrar Evento</p>'+
-  '<select id="cEvtType" style="width:100%;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:10px"><option value="cancellation">❌ Cancelamento com 24h</option><option value="cancellation_no24">⚠️ Cancelamento sem 24h</option><option value="replacement">🔄 Reposição</option><option value="cancellation_holiday">🏖️ Feriado</option><option value="cancellation_teacher">🚫 Falta do professor</option></select>'+
-  '<input type="date" id="cEvtDate" style="width:100%;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:10px">'+
-  '<input type="text" id="cEvtNotes" placeholder="Observação (opcional)" style="width:100%;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:14px">'+
-  '<button onclick="cSubmitEvt('+slotId+',\''+name.replace(/'/g,'')+'\')" style="width:100%;padding:12px;border:none;border-radius:10px;background:var(--orange);color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer">Registrar</button>';
+function buildCSlotPopup(slotId,name,dur,dow,timeStr){
+  var d30=String(dur)==='30',d60=String(dur)==='60',d90=String(dur)==='90';
+  var nextDate=(dow!==undefined&&timeStr)?proximaOcorrencia(dow,timeStr):null;
+  var nextISO=nextDate?fmtDateISO(nextDate):'';
+  var feriadoInfo=nextISO?checkFeriado(nextISO):null;
+  var feriadoBanner='';
+  if(feriadoInfo){
+    var tl=FERIADO_TIPO_LABEL[feriadoInfo.tipo]||'Feriado';
+    feriadoBanner='<div style="background:#fff8e1;border:1px solid #ffd54f;border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:12px;color:#5d4037"><strong>'+tl+'</strong><br>'+feriadoInfo.nome+(nextDate?' \u2014 '+nextDate.toLocaleDateString('pt-BR',{weekday:'short',day:'numeric',month:'short'}):' detectado')+'</div>';
+  }
+  var defEvt=feriadoInfo?'cancellation_holiday':'cancellation';
+  return '<p style="font-size:12px;color:var(--g400);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700">Dura\u00e7\u00e3o</p>'+
+    '<div style="display:flex;gap:8px;margin-bottom:20px">'+
+    '<button onclick="cChgDur('+slotId+',30)" style="flex:1;padding:10px;border:2px solid '+(d30?'var(--mango)':'var(--g200)')+';border-radius:10px;background:'+(d30?'var(--cream)':'#fff')+';font-family:inherit;font-size:13px;font-weight:700;color:var(--navy);cursor:pointer">30m</button>'+
+    '<button onclick="cChgDur('+slotId+',60)" style="flex:1;padding:10px;border:2px solid '+(d60?'var(--navy)':'var(--g200)')+';border-radius:10px;background:'+(d60?'var(--navy)':'#fff')+';font-family:inherit;font-size:13px;font-weight:700;color:'+(d60?'#fff':'var(--navy)')+';cursor:pointer">60m</button>'+
+    '<button onclick="cChgDur('+slotId+',90)" style="flex:1;padding:10px;border:2px solid '+(d90?'var(--blue)':'var(--g200)')+';border-radius:10px;background:'+(d90?'var(--blue-soft)':'#fff')+';font-family:inherit;font-size:13px;font-weight:700;color:var(--navy);cursor:pointer">90m</button>'+
+    '</div>'+
+    '<hr style="border:none;border-top:1px solid var(--g100);margin:0 0 14px">'+
+    feriadoBanner+
+    '<p style="font-size:12px;color:var(--g400);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700">Registrar Evento</p>'+
+    '<div id="cChips" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">'+
+      buildEvtChip('c','cancellation','\u274c Cancelar',defEvt)+
+      buildEvtChip('c','replacement','\ud83d\udd04 Reposi\u00e7\u00e3o',defEvt)+
+      buildEvtChip('c','cancellation_holiday','\ud83c\udfd6\ufe0f Feriado',defEvt)+
+      buildEvtChip('c','cancellation_teacher','\ud83d\udeab Falta prof.',defEvt)+
+      buildEvtChip('c','note','\ud83d\udcdd Observa\u00e7\u00e3o',defEvt)+
+    '</div>'+
+    '<div id="cMotivWrap" style="'+(defEvt==='cancellation'?'':'display:none;')+'margin-bottom:12px">'+
+      '<p style="font-size:11px;color:var(--g400);margin-bottom:8px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px">Motivo</p>'+
+      '<div style="display:flex;gap:8px">'+
+        buildMotivChip('c','com24','Com aviso (24h+)',true)+
+        buildMotivChip('c','sem24','Sem aviso (<24h)',false)+
+      '</div>'+
+    '</div>'+
+    '<input type="date" id="cEvtDate" value="'+nextISO+'" style="width:100%;box-sizing:border-box;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:10px">'+
+    '<input type="text" id="cEvtNotes" placeholder="Observa\u00e7\u00e3o (opcional)" style="width:100%;box-sizing:border-box;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:14px">'+
+    '<button id="cSubmitBtn" onclick="cSubmitEvt('+slotId+',\''+name.replace(/'/g,'')+'\')" style="width:100%;padding:12px;border:none;border-radius:10px;background:'+(feriadoInfo?'var(--mango)':'var(--orange)')+';color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer">'+(feriadoInfo?'Registrar feriado':'Registrar')+'</button>';
 }
 
 function buildCExtraPopup(day,hour){
-  return '<input type="hidden" id="cXDay" value="'+(day||'')+'">' +
-  '<input type="hidden" id="cXHour" value="'+(hour||'')+'">' +
-  '<select id="cXType" style="width:100%;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:10px"><option value="replacement">🔄 Reposição de aula</option><option value="meeting">📋 Reunião pedagógica</option><option value="note">📝 Observação</option></select>'+
-  '<input type="text" id="cXStudent" placeholder="Aluno (se aplicável)" style="width:100%;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:10px">'+
-  '<input type="date" id="cXDate" style="width:100%;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:10px">'+
-  '<input type="text" id="cXNotes" placeholder="Descrição" style="width:100%;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:14px">'+
-  '<button onclick="cSubmitXtra()" style="width:100%;padding:12px;border:none;border-radius:10px;background:var(--blue);color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer">Registrar Evento</button>';
+  return '<p style="font-size:12px;color:var(--g400);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700">Tipo de Evento</p>'+
+    '<div id="cXChips" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">'+
+      buildEvtChip('cX','replacement','\ud83d\udd04 Reposi\u00e7\u00e3o','replacement')+
+      buildEvtChip('cX','meeting','\ud83d\udccb Reuni\u00e3o pedag.','replacement')+
+      buildEvtChip('cX','note','\ud83d\udcdd Observa\u00e7\u00e3o','replacement')+
+    '</div>'+
+    '<input type="text" id="cXStudent" placeholder="Aluno (se aplic\u00e1vel)" style="width:100%;box-sizing:border-box;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:10px">'+
+    '<input type="date" id="cXDate" style="width:100%;box-sizing:border-box;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:10px">'+
+    '<input type="text" id="cXNotes" placeholder="Descri\u00e7\u00e3o" style="width:100%;box-sizing:border-box;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:14px">'+
+    '<input type="hidden" id="cXDay" value="'+day+'"><input type="hidden" id="cXHour" value="'+hour+'">'+
+    '<button onclick="cSubmitXtra()" style="width:100%;padding:12px;border:none;border-radius:10px;background:var(--blue);color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer">Registrar Evento</button>';
+}
+
+function buildEvtChip(prefix,val,lbl,selected){
+  var sel=(val===selected);
+  return '<button onclick="selectEvtChip(\''+prefix+'\',\''+val+'\')" data-chip-val="'+val+'" style="padding:8px 14px;border:2px solid '+(sel?'var(--navy)':'var(--g200)')+';border-radius:20px;background:'+(sel?'var(--navy)':'#fff')+';color:'+(sel?'#fff':'var(--navy)')+';font-family:inherit;font-size:12px;font-weight:700;cursor:pointer">'+lbl+'</button>';
+}
+function buildMotivChip(prefix,val,lbl,selected){
+  return '<button onclick="selectMotivChip(\''+prefix+'\',\''+val+'\')" data-motiv-val="'+val+'" style="flex:1;padding:8px;border:2px solid '+(selected?'var(--orange)':'var(--g200)')+';border-radius:10px;background:'+(selected?'var(--cream)':'#fff')+';color:var(--navy);font-family:inherit;font-size:12px;font-weight:700;cursor:pointer">'+lbl+'</button>';
+}
+function selectEvtChip(prefix,val){
+  var wrap=document.getElementById(prefix+'Chips');
+  if(!wrap)return;
+  wrap.querySelectorAll('button').forEach(function(b){
+    var active=b.dataset.chipVal===val;
+    b.style.background=active?'var(--navy)':'#fff';
+    b.style.color=active?'#fff':'var(--navy)';
+    b.style.borderColor=active?'var(--navy)':'var(--g200)';
+  });
+  var mw=document.getElementById(prefix+'MotivWrap');
+  if(mw)mw.style.display=(val==='cancellation')?'':'none';
+  var btn=document.getElementById(prefix+'SubmitBtn');
+  if(btn){
+    var lbls={cancellation:'Registrar cancelamento',replacement:'Registrar reposi\u00e7\u00e3o',cancellation_holiday:'Registrar feriado',cancellation_teacher:'Registrar falta',note:'Registrar observa\u00e7\u00e3o'};
+    btn.textContent=lbls[val]||'Registrar';
+    btn.style.background=(val==='cancellation'||val==='cancellation_teacher')?'#ef4444':(val==='replacement')?'var(--blue)':(val==='cancellation_holiday')?'var(--mango)':'var(--orange)';
+  }
+}
+function selectMotivChip(prefix,val){
+  var wrap=document.getElementById(prefix+'MotivWrap');
+  if(!wrap)return;
+  wrap.querySelectorAll('button').forEach(function(b){
+    var active=b.dataset.motivVal===val;
+    b.style.background=active?'var(--cream)':'#fff';
+    b.style.borderColor=active?'var(--orange)':'var(--g200)';
+  });
+}
+function getSelectedChip(prefix){
+  var wrap=document.getElementById(prefix+'Chips');
+  if(!wrap)return 'cancellation';
+  var found='cancellation';
+  wrap.querySelectorAll('button').forEach(function(b){if(b.style.background==='var(--navy)')found=b.dataset.chipVal;});
+  return found;
+}
+function getSelectedMotiv(prefix){
+  var wrap=document.getElementById(prefix+'MotivWrap');
+  if(!wrap)return 'com24';
+  var found='com24';
+  wrap.querySelectorAll('button').forEach(function(b){if(b.style.borderColor==='var(--orange)')found=b.dataset.motivVal;});
+  return found;
 }
 
 async function cChgDur(id,dur){try{await db.from('schedule_slots').update({duration_minutes:dur}).eq('id',id);cPop();closeCPop();showToast('Duração: '+dur+'min');loadCoordSchedule();}catch(e){showToast('Erro','error');}}
 
 async function cSubmitEvt(slotId,name){
-  var type=document.getElementById('cEvtType').value,date=document.getElementById('cEvtDate').value,notes=document.getElementById('cEvtNotes').value.trim();
+  var chip=getSelectedChip('c');
+  var motiv=getSelectedMotiv('c');
+  var date=document.getElementById('cEvtDate').value;
+  var notes=document.getElementById('cEvtNotes').value.trim();
   if(!date){showToast('Selecione a data','error');return;}
-  var labels={cancellation:'Cancelamento com 24h',cancellation_no24:'Cancelamento sem 24h',replacement:'Reposição',cancellation_holiday:'Feriado',cancellation_teacher:'Falta do professor'};
-  try{await addScheduleEvent(slotId,cTeacherId,date,type.startsWith('cancellation')?'cancellation':'replacement',(labels[type]||type)+(notes?' — '+notes:''),currentUser.id,name);var evtMonth2=document.getElementById('cEvtDate').value.substring(0,7);
-  document.getElementById('schedCoordMonth').value=evtMonth2;
-  cPop();closeCPop();showToast('Evento registrado!');loadCoordSchedule();}catch(e){showToast('Erro','error');}
+  var type=chip;
+  if(chip==='cancellation') type=(motiv==='sem24'?'cancellation_no24':'cancellation');
+  var labels={cancellation:'Cancelamento com aviso',cancellation_no24:'Cancelamento sem aviso',replacement:'Reposi\u00e7\u00e3o',cancellation_holiday:'Feriado',cancellation_teacher:'Falta do professor',note:'Observa\u00e7\u00e3o'};
+  var dbType=type.startsWith('cancellation')?'cancellation':(type==='replacement'?'replacement':'note');
+  var noteTxt=(labels[type]||type)+(notes?' \u2014 '+notes:'');
+  try{
+    await addScheduleEvent(slotId,cTeacherId,date,dbType,noteTxt,currentUser.id,name);
+    var evtMonth2=date.substring(0,7);
+    document.getElementById('schedCoordMonth').value=evtMonth2;
+    cPop();closeCPop();showToast('Evento registrado!');loadCoordSchedule();
+  }catch(e){showToast('Erro','error');}
 }
 
 async function cSubmitXtra(){
@@ -4473,7 +4648,7 @@ async function loadCoordSchedule(){
         var durTxt=dur===30?' 30m':dur===90?' 90m':'';
         var rs=span>1?' rowspan="'+span+'"':'';
         var ch=span*48;
-        cells+='<td class="sched-cell sched-filled" data-day="'+di+'" data-hour="'+hour+'"'+rs+' style="height:'+ch+'px"><div draggable="true" class="sched-slot" data-name="'+slot.student_name+'" data-level="'+(slot.student_level||'')+'" data-slotid="'+slot.id+'" data-dur="'+dur+'" style="background:'+c.bg+';border:2px solid '+c.b+';color:'+c.t+';cursor:grab;height:100%"><div class="sched-slot-name">'+slot.student_name+durTxt+'</div><div class="sched-slot-level">'+(slot.student_level||'')+'</div><div class="sched-slot-x" data-delid="'+slot.id+'">✕</div></div></td>';
+        cells+='<td class="sched-cell sched-filled" data-day="'+di+'" data-hour="'+hour+'"'+rs+' style="height:'+ch+'px"><div draggable="true" class="sched-slot" data-name="'+slot.student_name+'" data-level="'+(slot.student_level||'')+'" data-slotid="'+slot.id+'" data-dur="'+dur+'" data-dow="'+di+'" data-time="'+(slot.time_slot||'')+'" style="background:'+c.bg+';border:2px solid '+c.b+';color:'+c.t+';cursor:grab;height:100%"><div class="sched-slot-name">'+slot.student_name+durTxt+'</div><div class="sched-slot-level">'+(slot.student_level||'')+'</div><div class="sched-slot-x" data-delid="'+slot.id+'">✕</div></div></td>';
       }else if(cellEvts.length>0){
         var ev=cellEvts[0];
         var evIcon=ev.event_type==='cancellation'?'❌':'🔄';
@@ -4484,6 +4659,7 @@ async function loadCoordSchedule(){
     }rows+='<tr><td class="sched-hour">'+hour+'</td>'+cells+'</tr>';}
   tbody.innerHTML=rows;
   renderCoordSchedMobile(slots,evts);
+  window._coordEvtsForSalary = evts;
   renderSalaryEstimate(slots, mi);
   loadCoordScheduleEvents();
 }
@@ -4573,24 +4749,21 @@ function renderSalaryEstimate(slots, monthInput) {
   const year = parseInt(parts[0]);
   const month1 = parseInt(parts[1]);
   const weekdayCounts = countWeekdaysInMonth(year, month1);
-  const totalWeekdays = weekdayCounts.reduce((a, b) => a + b, 0);
 
-  let totalClasses = 0;     // nº de aulas previstas no mês (recorrência semanal)
-  let totalMinutes = 0;     // soma de minutos previstos no mês
-  let fullClasses = 0;      // ocorrências de aulas de 1h (ou mais) no mês
-  let halfClasses = 0;      // ocorrências de aulas de 30 min no mês
-  let billableUnits = 0;    // aula-base: 1h = 1 unidade, 30 min = 0,5 unidade
+  let totalClasses = 0;
+  let totalMinutes = 0;
+  let fullClasses = 0;
+  let halfClasses = 0;
+  let billableUnits = 0;
 
   for (let i = 0; i < slots.length; i++) {
     const s = slots[i];
-    const dow = s.day_of_week;            // 0=Seg..5=Sáb
+    const dow = s.day_of_week;
     if (dow < 0 || dow > 5) continue;
     const occurrences = weekdayCounts[dow] || 0;
     const dur = s.duration_minutes || 60;
     totalClasses += occurrences;
     totalMinutes += occurrences * dur;
-
-    // Peso da aula: 30 min = meia aula (0,5); demais durações = dur/60 aula-base
     if (dur <= 30) {
       halfClasses += occurrences;
       billableUnits += occurrences * 0.5;
@@ -4600,32 +4773,48 @@ function renderSalaryEstimate(slots, monthInput) {
     }
   }
 
+  // Descontar cancelamentos registrados no m\u00eas
+  var cancelCount = 0;
+  var cancelMinutes = 0;
+  if (window._coordEvtsForSalary && window._coordEvtsForSalary.length) {
+    window._coordEvtsForSalary.forEach(function(ev) {
+      if (ev.event_type === 'cancellation' || ev.event_type === 'note') {
+        // Encontrar o slot correspondente para saber a dura\u00e7\u00e3o
+        var dur = 60;
+        if (ev.slot_id) {
+          var s = slots.find(function(sl){return sl.id === ev.slot_id;});
+          if (s) dur = s.duration_minutes || 60;
+        }
+        cancelCount++;
+        cancelMinutes += dur;
+        var units = dur <= 30 ? 0.5 : dur / 60;
+        billableUnits = Math.max(0, billableUnits - units);
+        if (dur <= 30) halfClasses = Math.max(0, halfClasses - 1);
+        else fullClasses = Math.max(0, fullClasses - 1);
+      }
+    });
+  }
+
   const totalHours = (totalMinutes / 60);
   const hoursLabel = Number.isInteger(totalHours)
     ? totalHours + 'h'
     : totalHours.toFixed(1).replace('.', ',') + 'h';
-
   const monthName = (MONTHS[month1] || '') + ' de ' + year;
   document.getElementById('salaryCardSub').textContent =
-    'Referente a ' + monthName + ' · 1h = 1 aula · 30 min = meia aula';
-  document.getElementById('salWeekdays').textContent = totalWeekdays;
-  document.getElementById('salClasses').textContent = totalClasses;
+    'Refer\u00eante a ' + monthName + ' \u00b7 1h = 1 aula \u00b7 30 min = meia aula';
+  document.getElementById('salWeekdays').textContent = weekdayCounts.reduce((a,b)=>a+b,0);
+  document.getElementById('salClasses').textContent = totalClasses + (cancelCount > 0 ? ' (\u2212'+cancelCount+' canc.)' : '');
   document.getElementById('salHours').innerHTML =
     hoursLabel + '<span style="font-size:13px;font-weight:700;color:var(--g400);display:block;margin-top:3px">' +
     (Number.isInteger(billableUnits) ? billableUnits : billableUnits.toFixed(1).replace('.', ',')) +
     ' aula-base</span>';
-
-  // Guarda contexto para o recálculo do total
   _salaryCtx = { billableUnits: billableUnits, fullClasses: fullClasses, halfClasses: halfClasses };
-
-  // Restaura o valor da hora-aula salvo para este professor (se houver)
   const rateInput = document.getElementById('salaryRateInput');
   if (rateInput) {
     let saved = '';
     try { saved = localStorage.getItem(salaryRateKey()) || ''; } catch (e) { saved = ''; }
     rateInput.value = saved;
   }
-
   card.style.display = '';
   recomputeSalaryTotal();
   if (window.refreshSwipeScroll) setTimeout(window.refreshSwipeScroll, 60);

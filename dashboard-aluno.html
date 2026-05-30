@@ -2479,6 +2479,60 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 }
 @keyframes vocabSpin { to { transform: rotate(360deg); } }
 
+
+/* ═══ PRÓXIMA AULA CARD ═══ */
+.next-class-card {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+  border-radius: 16px;
+  padding: 20px 22px;
+  margin-bottom: 20px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.next-class-card::before {
+  content: '';
+  position: absolute;
+  top: -30px; right: -30px;
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+}
+.next-class-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+  background: rgba(255,255,255,0.12);
+  width: 56px; height: 56px;
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+}
+.next-class-info { flex: 1; min-width: 0; }
+.next-class-label {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.7px; opacity: 0.7; margin-bottom: 4px;
+}
+.next-class-day {
+  font-size: 17px; font-weight: 800; line-height: 1.2; margin-bottom: 2px;
+}
+.next-class-time {
+  font-size: 13px; opacity: 0.8; font-weight: 500;
+}
+.next-class-countdown {
+  text-align: right; flex-shrink: 0;
+}
+.next-class-countdown-val {
+  font-size: 22px; font-weight: 800; line-height: 1;
+}
+.next-class-countdown-unit {
+  font-size: 11px; opacity: 0.7; font-weight: 600; text-transform: uppercase;
+}
+.next-class-cancelled {
+  background: linear-gradient(135deg, #6b7280 0%, #9ca3af 100%);
+}
+.next-class-cancelled .next-class-icon { background: rgba(255,255,255,0.15); }
 </style>
 </head>
 <body>
@@ -2542,6 +2596,22 @@ body.sb-collapsed .main { margin-left: 92px !important; }
       <div class="section active" id="sec-overview">
         <h2 class="overview-greeting" id="greeting">Olá! 🎓</h2>
         <p class="overview-subline" id="levelInfo">Carregando...</p>
+        <!-- Próxima Aula -->
+        <div id="nextClassWrap" style="display:none">
+          <div id="nextClassCard" class="next-class-card">
+            <div class="next-class-icon" id="nextClassIcon">📅</div>
+            <div class="next-class-info">
+              <div class="next-class-label">Próxima aula</div>
+              <div class="next-class-day" id="nextClassDay">—</div>
+              <div class="next-class-time" id="nextClassTime">—</div>
+            </div>
+            <div class="next-class-countdown">
+              <div class="next-class-countdown-val" id="nextClassCountdown">—</div>
+              <div class="next-class-countdown-unit" id="nextClassCountdownUnit"></div>
+            </div>
+          </div>
+        </div>
+
         <div class="stat-row">
           <div class="stat-card"><div class="stat-icon">📝</div><div class="stat-label">Tarefas Pendentes</div><div class="stat-value" id="sPending">-</div></div>
           <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-label">Concluídas</div><div class="stat-value" id="sDone">-</div></div>
@@ -2900,6 +2970,7 @@ async function initStudentDashboard() {
   })();
 
   await loadOverview();
+  loadNextClass(); // card próxima aula
   // Load notifications
   const unread = await getUnreadCount(currentUser.id, 'student');
   if (unread > 0) {
@@ -4064,6 +4135,73 @@ async function loadProfile() {
 }
 
 // Show the student's weekly classes (read-only, from schedule_slots)
+// ═══ PRÓXIMA AULA (overview card) ═══
+async function loadNextClass() {
+  const wrap = document.getElementById('nextClassWrap');
+  if (!wrap) return;
+  try {
+    const info = await getStudentMainTeacher(currentUser.id);
+    if (!info || !info.teacher_id) return;
+
+    const slots = await getScheduleSlots(info.teacher_id);
+    const myName = (currentUser.full_name || '').trim().toLowerCase();
+    const mine = (slots || []).filter(s =>
+      s.student_name && s.student_name.trim().toLowerCase() === myName
+    );
+    if (!mine.length) return;
+
+    // Calcular qual slot ocorre primeiro a partir de agora
+    var now = new Date();
+    var best = null;
+    var bestMs = Infinity;
+    mine.forEach(function(s) {
+      var dowJS = s.day_of_week + 1; // nosso 0=Seg → JS 1=Seg
+      var hoje = now.getDay();
+      var diff = (dowJS - hoje + 7) % 7;
+      var hm = (s.time_slot || '').substring(0, 5).split(':');
+      var aulaMinutos = parseInt(hm[0] || 0) * 60 + parseInt(hm[1] || 0);
+      var agoraMinutos = now.getHours() * 60 + now.getMinutes();
+      if (diff === 0 && agoraMinutos >= aulaMinutos) diff = 7;
+      var nextMs = diff * 86400000 + aulaMinutos * 60000;
+      if (nextMs < bestMs) { bestMs = nextMs; best = s; best._diff = diff; }
+    });
+    if (!best) return;
+
+    var dow = best.day_of_week;
+    var dayNames = ['Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+    var hm = (best.time_slot || '').substring(0, 5);
+    var dur = best.duration_minutes ? best.duration_minutes + ' min' : '60 min';
+    var diff = best._diff;
+
+    // Texto do countdown
+    var countdownVal, countdownUnit;
+    if (diff === 0) {
+      countdownVal = 'Hoje';
+      countdownUnit = '';
+    } else if (diff === 1) {
+      countdownVal = 'Amanhã';
+      countdownUnit = '';
+    } else {
+      countdownVal = diff;
+      countdownUnit = diff === 1 ? 'dia' : 'dias';
+    }
+
+    document.getElementById('nextClassDay').textContent = dayNames[dow] || '—';
+    document.getElementById('nextClassTime').textContent = '🕐 ' + hm + ' · ' + dur;
+    document.getElementById('nextClassCountdown').textContent = countdownVal;
+    document.getElementById('nextClassCountdownUnit').textContent = countdownUnit;
+
+    var icon = document.getElementById('nextClassIcon');
+    if (diff === 0) { icon.textContent = '⚡'; }
+    else if (diff === 1) { icon.textContent = '📅'; }
+    else { icon.textContent = '🗓️'; }
+
+    wrap.style.display = '';
+  } catch(e) {
+    console.error('loadNextClass:', e);
+  }
+}
+
 async function loadMyClasses() {
   const body = document.getElementById('profClassesBody');
   if (!body) return;

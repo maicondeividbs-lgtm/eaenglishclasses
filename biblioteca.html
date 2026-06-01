@@ -950,10 +950,10 @@
 }
 .modal-body .gram-section:last-child { margin-bottom: 0; }
 .modal-body .gram-section-head {
-  padding: 12px 18px;
+  padding: 13px 18px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 11px;
   font-weight: 800;
   font-size: 12.5px;
   letter-spacing: 0.06em;
@@ -961,13 +961,14 @@
   border-bottom: 1px solid transparent;
 }
 .modal-body .gram-section-icon {
-  font-size: 17px;
+  font-size: 16px;
   line-height: 1;
   display: inline-flex;
-  width: 26px; height: 26px;
+  width: 30px; height: 30px;
   align-items: center; justify-content: center;
-  background: rgba(255,255,255,0.55);
-  border-radius: 50%;
+  background: rgba(255,255,255,0.7);
+  border-radius: 9px;
+  box-shadow: 0 2px 6px rgba(25,36,78,0.10);
   flex-shrink: 0;
 }
 .modal-body .gram-section-title {
@@ -1022,31 +1023,40 @@
   background: var(--lvl-color-modal, var(--blue));
 }
 
-/* Exemplos: cada item vira um "cartão" — inglês em cima, tradução embaixo */
-.modal-body .gram-section-exemplos .gram-bullets { display: grid; gap: 8px; margin-bottom: 0; }
+/* Exemplos: cada item vira um "cartão" numerado — inglês em cima, tradução embaixo */
+.modal-body .gram-section-exemplos .gram-bullets {
+  display: grid;
+  gap: 9px;
+  margin-bottom: 0;
+  counter-reset: ex;
+}
 .modal-body .gram-section-exemplos .gram-bullets li {
-  padding: 11px 14px 11px 38px;
+  padding: 12px 14px 12px 46px;
   border: 1px solid #d6f3e4;
   border-left: 3px solid #10b981;
-  border-radius: 10px;
+  border-radius: 12px;
   background: linear-gradient(180deg, #f4fcf8 0%, #ffffff 100%);
   transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  counter-increment: ex;
 }
-.modal-body .gram-section-exemplos .gram-bullets li:last-child { padding-bottom: 11px; }
+.modal-body .gram-section-exemplos .gram-bullets li:last-child { padding-bottom: 12px; }
 .modal-body .gram-section-exemplos .gram-bullets li::before {
-  content: "✓";
-  left: 13px; top: 11px;
-  width: auto; height: auto;
-  background: none;
-  border-radius: 0;
-  color: #10b981;
-  font-weight: 900;
-  font-size: 13px;
+  content: counter(ex);
+  left: 12px; top: 12px;
+  width: 22px; height: 22px;
+  display: inline-flex;
+  align-items: center; justify-content: center;
+  background: #10b981;
+  border-radius: 7px;
+  color: #fff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 12px;
 }
 .modal-body .gram-section-exemplos .gram-bullets li:hover {
   transform: translateX(2px);
   border-color: #10b981;
-  box-shadow: 0 4px 12px rgba(16,185,129,0.12);
+  box-shadow: 0 4px 14px rgba(16,185,129,0.14);
 }
 .modal-body .gram-section-body .gram-eng {
   display: block;
@@ -1166,10 +1176,10 @@
   to { transform: translateY(0) scale(1); opacity: 1; }
 }
 .modal-head {
-  padding: 24px 28px;
+  padding: 26px 28px 24px;
   background: linear-gradient(135deg, var(--lvl-color-2, var(--blue)) 0%, var(--lvl-color, var(--blue-light)) 100%);
   color: #fff;
-  display: flex; justify-content: space-between; align-items: center;
+  display: flex; justify-content: space-between; align-items: flex-start;
   gap: 16px;
   position: relative;
   overflow: hidden;
@@ -1177,20 +1187,45 @@
 .modal-head::before {
   content: '';
   position: absolute;
-  top: -50%; right: -10%;
-  width: 240px; height: 240px;
-  background: radial-gradient(circle, rgba(255,255,255,0.18) 0%, transparent 60%);
+  top: -55%; right: -12%;
+  width: 260px; height: 260px;
+  background: radial-gradient(circle, rgba(255,255,255,0.20) 0%, transparent 62%);
   border-radius: 50%;
   pointer-events: none;
 }
+.modal-head::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: rgba(255,255,255,0.22);
+  pointer-events: none;
+}
 .modal-head > * { position: relative; z-index: 1; }
+.modal-head-text { min-width: 0; }
+.modal-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 11px;
+  margin-bottom: 11px;
+  border-radius: 99px;
+  background: rgba(255,255,255,0.22);
+  border: 1px solid rgba(255,255,255,0.30);
+  color: #fff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  backdrop-filter: blur(2px);
+}
 .modal-head h3 {
   font-family: 'Fraunces', serif;
-  font-size: 21px; font-weight: 800;
+  font-size: 23px; font-weight: 800;
   letter-spacing: -0.01em;
-  line-height: 1.25;
+  line-height: 1.22;
   margin: 0;
-  max-width: 70%;
 }
 .modal-close {
   flex-shrink: 0;
@@ -1206,71 +1241,89 @@
 }
 .modal-close:hover { background: rgba(255,255,255,0.35); transform: rotate(90deg); }
 
-/* Container de ações no header do modal */
-.modal-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-}
-
-/* Botão de baixar PNG */
-.modal-download {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  height: 36px;
-  padding: 0 14px;
-  border-radius: 18px;
-  border: 1.5px solid rgba(255,255,255,0.35);
-  background: rgba(255,255,255,0.15);
-  color: #fff;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 12.5px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-}
-.modal-download:hover:not(:disabled) {
-  background: rgba(255,255,255,0.28);
-  border-color: rgba(255,255,255,0.55);
-  transform: translateY(-1px);
-}
-.modal-download:active:not(:disabled) { transform: translateY(0); }
-.modal-download:disabled {
-  opacity: 0.7;
-  cursor: progress;
-}
-.modal-download.is-success {
-  background: rgba(52, 211, 153, 0.35);
-  border-color: rgba(110, 231, 183, 0.7);
-}
-.modal-download svg {
-  flex-shrink: 0;
-  transition: transform 0.3s ease;
-}
-.modal-download.is-loading svg {
-  animation: dlSpin 0.9s linear infinite;
-}
-@keyframes dlSpin {
-  to { transform: rotate(360deg); }
-}
-@media (max-width: 540px) {
-  .modal-download-label { display: none; }
-  .modal-download { padding: 0; width: 36px; justify-content: center; gap: 0; }
-}
+/* Linha de referência (página/unidade) dentro do cabeçalho */
 .modal-meta {
-  padding: 14px 28px;
+  margin-top: 10px;
   font-size: 12px;
   font-weight: 600;
-  color: var(--g500);
-  border-bottom: 1px solid var(--g100);
-  background: linear-gradient(180deg, var(--off-white) 0%, #fff 100%);
-  display: flex; align-items: center; gap: 8px;
-  letter-spacing: 0.02em;
+  color: rgba(255,255,255,0.92);
+  display: inline-flex; align-items: center; gap: 7px;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
+}
+.modal-meta svg { opacity: 0.9; flex-shrink: 0; }
+
+/* ─── Rodapé do modal com ações (Copiar / Baixar) ─── */
+.modal-foot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 14px 22px;
+  border-top: 1px solid var(--g100);
+  background: linear-gradient(180deg, #fff 0%, var(--off-white, #faf7f2) 100%);
+  flex-shrink: 0;
+}
+.gram-foot-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 42px;
+  padding: 0 18px;
+  border-radius: 12px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+  white-space: nowrap;
+}
+.gram-foot-btn svg { flex-shrink: 0; transition: transform 0.3s ease; }
+.gram-foot-btn:active:not(:disabled) { transform: translateY(0); }
+
+/* Botão fantasma (Copiar) */
+.gram-foot-ghost {
+  background: #fff;
+  border: 1.5px solid var(--g200, #e2e8f0);
+  color: var(--navy);
+}
+.gram-foot-ghost:hover:not(:disabled) {
+  border-color: var(--blue);
+  color: var(--blue);
+  background: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(37,60,150,0.12);
+}
+.gram-foot-ghost.is-success {
+  border-color: #10b981;
+  color: #047857;
+  background: #ecfdf5;
+}
+
+/* Botão primário (Baixar imagem) */
+.gram-foot-primary {
+  background: linear-gradient(135deg, var(--orange) 0%, var(--mango) 100%);
+  border: 1.5px solid transparent;
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(243,107,46,0.28);
+}
+.gram-foot-primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(243,107,46,0.36);
+}
+.gram-foot-primary:disabled { opacity: 0.72; cursor: progress; }
+.gram-foot-primary.is-success {
+  background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+  box-shadow: 0 6px 16px rgba(16,185,129,0.3);
+}
+.modal-download.is-loading svg { animation: dlSpin 0.9s linear infinite; }
+@keyframes dlSpin { to { transform: rotate(360deg); } }
+
+@media (max-width: 540px) {
+  .modal-foot { padding: 12px 16px; gap: 8px; }
+  .gram-foot-btn { flex: 1; padding: 0 12px; font-size: 13px; }
 }
 .modal-body {
   padding: 22px 28px 28px;
@@ -1387,17 +1440,24 @@
 <div class="modal-bg" id="gramModal">
   <div class="modal-box">
     <div class="modal-head" id="gramHead">
-      <h3 id="gramTitle">Grammar</h3>
-      <div class="modal-actions">
-        <button class="modal-download" id="gramDownloadBtn" type="button" aria-label="Baixar como imagem" title="Baixar como imagem">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          <span class="modal-download-label">Baixar</span>
-        </button>
-        <button class="modal-close" id="gramCloseBtn" type="button" aria-label="Fechar">✕</button>
+      <div class="modal-head-text">
+        <span class="modal-chip" id="gramChip"></span>
+        <h3 id="gramTitle">Grammar</h3>
+        <div class="modal-meta" id="gramMeta"></div>
       </div>
+      <button class="modal-close" id="gramCloseBtn" type="button" aria-label="Fechar">✕</button>
     </div>
-    <div class="modal-meta" id="gramMeta"></div>
     <div class="modal-body" id="gramBody"></div>
+    <div class="modal-foot" id="gramFoot">
+      <button class="gram-foot-btn gram-foot-ghost" id="gramCopyBtn" type="button" aria-label="Copiar exemplos" title="Copiar exemplos">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span class="gram-foot-label">Copiar exemplos</span>
+      </button>
+      <button class="gram-foot-btn gram-foot-primary modal-download" id="gramDownloadBtn" type="button" aria-label="Baixar como imagem" title="Baixar como imagem">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span class="gram-foot-label">Baixar imagem</span>
+      </button>
+    </div>
   </div>
 </div>
 
@@ -2012,6 +2072,11 @@ function openGram(idx) {
   window._currentGramLevel = currentLevel;
   const topic = (ex.topic || '').replace(/<[^>]+>/g, '');
   document.getElementById('gramTitle').textContent = topic;
+
+  // Chip do cabeçalho: nome do livro/nível
+  const bookName = ex.book || LEVEL_NAMES[currentLevel] || '';
+  document.getElementById('gramChip').textContent = bookName;
+
   // Texto da meta: prefere ref ("Intro - pg. 3"), senão monta a partir do badge
   let metaText;
   if (ex.ref) {
@@ -2026,9 +2091,14 @@ function openGram(idx) {
     else prefix = 'Página ' + badge;
     metaText = prefix + ' · ' + (ex.book || LEVEL_NAMES[currentLevel]);
   }
+  // Evita repetir o nome do livro: já aparece no chip acima
+  let pageRef = metaText;
+  if (bookName && pageRef.indexOf(bookName + ' - ') === 0) {
+    pageRef = pageRef.slice((bookName + ' - ').length);
+  }
   document.getElementById('gramMeta').innerHTML =
-    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>' +
-    '<span>' + escapeHtml(metaText) + '</span>';
+    '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>' +
+    '<span>' + escapeHtml(pageRef) + '</span>';
 
   // Monta o corpo + rodapé com marca EA (para o PNG ficar elegante)
   const watermark =
@@ -2056,13 +2126,20 @@ function openGram(idx) {
   head.style.background = 'linear-gradient(135deg, ' + c2 + ' 0%, ' + c1 + ' 100%)';
   // Setar cor de destaque para subheads e bullets dentro do modal
   document.getElementById('gramBody').style.setProperty('--lvl-color-modal', c2);
-  // Resetar estado do botão de download
+  // Resetar estado dos botões do rodapé
   const dlBtn = document.getElementById('gramDownloadBtn');
   if (dlBtn) {
     dlBtn.disabled = false;
     dlBtn.classList.remove('is-loading', 'is-success');
-    const lbl = dlBtn.querySelector('.modal-download-label');
-    if (lbl) lbl.textContent = 'Baixar';
+    const lbl = dlBtn.querySelector('.gram-foot-label');
+    if (lbl) lbl.textContent = 'Baixar imagem';
+  }
+  const cpBtn = document.getElementById('gramCopyBtn');
+  if (cpBtn) {
+    cpBtn.disabled = false;
+    cpBtn.classList.remove('is-success');
+    const clbl = cpBtn.querySelector('.gram-foot-label');
+    if (clbl) clbl.textContent = 'Copiar exemplos';
   }
   document.getElementById('gramModal').classList.add('open');
 }
@@ -2099,7 +2176,7 @@ async function downloadGramAsPNG() {
   if (!ex) return;
 
   const dlBtn = document.getElementById('gramDownloadBtn');
-  const lbl = dlBtn.querySelector('.modal-download-label');
+  const lbl = dlBtn.querySelector('.gram-foot-label');
   // Feedback: estado "gerando" (já cobre o tempo de baixar a biblioteca na 1ª vez)
   dlBtn.disabled = true;
   dlBtn.classList.add('is-loading');
@@ -2123,15 +2200,16 @@ async function downloadGramAsPNG() {
 
   // Salvar estados a restaurar depois
   const closeBtn = document.getElementById('gramCloseBtn');
+  const foot = document.getElementById('gramFoot');
   const prevBodyMaxH = modalBody.style.maxHeight;
   const prevBodyOverflow = modalBody.style.overflowY;
   const prevBoxMaxH = modalBox.style.maxHeight;
   const prevBoxHeight = modalBox.style.height;
-  const dlPrevDisplay = dlBtn.style.display;
+  const footPrevDisplay = foot.style.display;
   const closePrevDisplay = closeBtn.style.display;
 
-  // Para a captura: esconder botões e expandir o corpo
-  dlBtn.style.display = 'none';
+  // Para a captura: esconder rodapé + fechar e expandir o corpo
+  foot.style.display = 'none';
   closeBtn.style.display = 'none';
   modalBody.style.maxHeight = 'none';
   modalBody.style.overflowY = 'visible';
@@ -2171,7 +2249,7 @@ async function downloadGramAsPNG() {
     setTimeout(() => {
       dlBtn.classList.remove('is-success');
       dlBtn.disabled = false;
-      if (lbl) lbl.textContent = 'Baixar';
+      if (lbl) lbl.textContent = 'Baixar imagem';
     }, 2200);
   } catch (err) {
     console.error('Erro ao gerar PNG:', err);
@@ -2181,12 +2259,75 @@ async function downloadGramAsPNG() {
     showToast('Não foi possível gerar a imagem.');
   } finally {
     // Restaurar estados
-    dlBtn.style.display = dlPrevDisplay;
+    foot.style.display = footPrevDisplay;
     closeBtn.style.display = closePrevDisplay;
     modalBody.style.maxHeight = prevBodyMaxH;
     modalBody.style.overflowY = prevBodyOverflow;
     modalBox.style.maxHeight = prevBoxMaxH;
     modalBox.style.height = prevBoxHeight;
+  }
+}
+
+// Copia os exemplos (inglês + tradução) do card atual como texto limpo
+function copyGramExamples() {
+  const ex = window._currentGramEx;
+  const body = document.getElementById('gramBody');
+  if (!body) return;
+  const items = Array.prototype.slice.call(
+    body.querySelectorAll('.gram-section-exemplos .gram-bullets li')
+  );
+  if (!items.length) { showToast('Nenhum exemplo para copiar.'); return; }
+
+  const lines = items.map(function (li) {
+    const eng = (li.querySelector('.gram-eng') ? li.querySelector('.gram-eng').textContent : '').trim();
+    const trans = (li.querySelector('.gram-trans') ? li.querySelector('.gram-trans').textContent : '').trim();
+    return trans ? ('• ' + eng + ' ' + trans) : ('• ' + eng);
+  });
+
+  const topic = ex ? (ex.topic || '').replace(/<[^>]+>/g, '').trim() : '';
+  const ref = ex ? (ex.ref || '').trim() : '';
+  const header = [topic, ref].filter(Boolean).join('\n');
+  const text = (header ? header + '\n\n' : '') +
+    'EXEMPLOS\n' + lines.join('\n') +
+    '\n\nEA English Classes · Biblioteca Pedagógica';
+
+  const cpBtn = document.getElementById('gramCopyBtn');
+  const clbl = cpBtn ? cpBtn.querySelector('.gram-foot-label') : null;
+  const markCopied = function () {
+    if (cpBtn) cpBtn.classList.add('is-success');
+    if (clbl) clbl.textContent = 'Copiado ✓';
+    showToast('Exemplos copiados!');
+    setTimeout(function () {
+      if (cpBtn) cpBtn.classList.remove('is-success');
+      if (clbl) clbl.textContent = 'Copiar exemplos';
+    }, 2200);
+  };
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(markCopied).catch(function () {
+      fallbackCopy(text, markCopied);
+    });
+  } else {
+    fallbackCopy(text, markCopied);
+  }
+}
+
+// Cópia de reserva (navegadores antigos / sem permissão de clipboard)
+function fallbackCopy(text, onOk) {
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-1000px';
+    document.body.appendChild(ta);
+    ta.select();
+    const ok = document.execCommand('copy');
+    document.body.removeChild(ta);
+    if (ok && onOk) onOk();
+    else showToast('Não foi possível copiar.');
+  } catch (e) {
+    showToast('Não foi possível copiar.');
   }
 }
 
@@ -2233,6 +2374,11 @@ document.addEventListener('click', (e) => {
   // Gram card
   const gramCard = e.target.closest('[data-gram-idx]');
   if (gramCard) { openGram(parseInt(gramCard.dataset.gramIdx)); return; }
+  // Modal copiar exemplos
+  if (e.target.closest('#gramCopyBtn')) {
+    copyGramExamples();
+    return;
+  }
   // Modal download (gerar PNG)
   if (e.target.closest('#gramDownloadBtn')) {
     downloadGramAsPNG();

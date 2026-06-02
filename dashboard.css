@@ -1,552 +1,315 @@
 /* ════════════════════════════════════════════════════════════════════════
-   EA English Classes — Camada de Redesign dos Dashboards (v8)
+   EA English Classes — Camada de Redesign dos Dashboards (v8.1)
    --------------------------------------------------------------------------
-   Folha de estilo ÚNICA para os três painéis (aluno, professor, coordenação).
-   É carregada por último no <head>, então tem prioridade sobre os estilos
-   antigos sem precisar reescrever o JavaScript ou a estrutura do HTML.
+   Folha ÚNICA para os três painéis (aluno, professor, coordenação),
+   carregada por último no <head> para ter prioridade sobre o estilo antigo
+   SEM tocar no JavaScript nem na estrutura do HTML.
 
-   Cada perfil define apenas a sua cor de destaque (--ac / --ac-2 / --ac-soft)
-   no <body class="dash-skin dash-skin--*">. Todo o resto é compartilhado.
-
-   Princípios: hierarquia visual clara · espaço para respirar · tipografia
-   legível · sombras suaves · animações discretas · tudo funcional.
+   FILOSOFIA DE ESPAÇAMENTO (corrigida nesta versão):
+   • Preservar o respiro interno que já funcionava (painéis, listas).
+   • Padding consistente e generoso — nunca apertar conteúdo.
+   • Uma escala de espaçamento única e previsível em todas as telas.
+   • Nada de padding cego em <div> genérico.
    ════════════════════════════════════════════════════════════════════════ */
 
-/* ── 1. Cor de destaque por perfil ────────────────────────────────────── */
+/* ── Cor de destaque por perfil ───────────────────────────────────────── */
 body.dash-skin {
-  --ac:        var(--blue);          /* fallback (aluno) */
-  --ac-2:      var(--blue-light, #4a60be);
-  --ac-soft:   rgba(37, 60, 150, 0.10);
-  --ac-softer: rgba(37, 60, 150, 0.05);
-  /* superfícies do redesign */
-  --app-bg:    #f4f5f9;
-  --surface:   #ffffff;
-  --hairline:  #eceef3;
-  --ink:       var(--navy);
-  --ink-soft:  #5b6275;
-  --ink-faint: #9097a7;
-  /* sombras em camadas (suaves, mas visíveis) */
-  --sh-sm: 0 1px 2px rgba(25,36,78,0.04), 0 1px 3px rgba(25,36,78,0.06);
-  --sh-md: 0 2px 4px rgba(25,36,78,0.04), 0 6px 16px rgba(25,36,78,0.07);
-  --sh-lg: 0 8px 24px rgba(25,36,78,0.10), 0 2px 6px rgba(25,36,78,0.05);
-  --sh-ac: 0 8px 22px var(--ac-soft);
+  --ac: var(--blue); --ac-2: var(--blue-light, #4a60be);
+  --ac-soft: rgba(37,60,150,0.10); --ac-softer: rgba(37,60,150,0.05);
+  --app-bg: #f5f6fa; --surface: #fff; --hairline: #ebedf2;
+  --ink: var(--navy); --ink-soft: #5b6275; --ink-faint: #949aa9;
+  /* escala de espaçamento (uso consistente em tudo) */
+  --gap: 20px;          /* respiro padrão entre blocos */
+  --pad-panel: 22px 24px;   /* padding interno dos painéis */
+  --sh-sm: 0 1px 2px rgba(25,36,78,0.04), 0 1px 3px rgba(25,36,78,0.05);
+  --sh-md: 0 1px 3px rgba(25,36,78,0.04), 0 6px 18px rgba(25,36,78,0.06);
+  --sh-lg: 0 10px 30px rgba(25,36,78,0.10);
+  --sh-ac: 0 8px 20px var(--ac-soft);
 }
 body.dash-skin--aluno {
-  --ac: #2f57d6; --ac-2: #5b7bf0;
-  --ac-soft: rgba(47,87,214,0.10); --ac-softer: rgba(47,87,214,0.05);
-  --sh-ac: 0 10px 24px rgba(47,87,214,0.18);
+  --ac:#2f57d6; --ac-2:#5b7bf0; --ac-soft:rgba(47,87,214,0.10); --ac-softer:rgba(47,87,214,0.05); --sh-ac:0 8px 20px rgba(47,87,214,0.16);
 }
 body.dash-skin--professor {
-  --ac: #f36b2e; --ac-2: #f59a1e;
-  --ac-soft: rgba(243,107,46,0.10); --ac-softer: rgba(243,107,46,0.05);
-  --sh-ac: 0 10px 24px rgba(243,107,46,0.20);
+  --ac:#f36b2e; --ac-2:#f59a1e; --ac-soft:rgba(243,107,46,0.10); --ac-softer:rgba(243,107,46,0.05); --sh-ac:0 8px 20px rgba(243,107,46,0.18);
 }
 body.dash-skin--coordenacao {
-  --ac: #d97516; --ac-2: #f59a1e;
-  --ac-soft: rgba(217,117,22,0.10); --ac-softer: rgba(217,117,22,0.05);
-  --sh-ac: 0 10px 24px rgba(217,117,22,0.18);
+  --ac:#dd7a16; --ac-2:#f59a1e; --ac-soft:rgba(217,117,22,0.10); --ac-softer:rgba(217,117,22,0.05); --sh-ac:0 8px 20px rgba(217,117,22,0.16);
 }
 
-/* ── 2. Base da página: fundo arejado + tipografia ────────────────────── */
-body.dash-skin {
-  background: var(--app-bg) !important;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-}
+/* ── Base da página ───────────────────────────────────────────────────── */
+body.dash-skin { background: var(--app-bg) !important; -webkit-font-smoothing: antialiased; }
 body.dash-skin .main { background: var(--app-bg) !important; }
 
-/* Mais espaço para respirar no conteúdo */
-body.dash-skin .content {
-  padding: 30px 44px 64px !important;
-  max-width: 1320px;
-}
-@media (max-width: 1024px) {
-  body.dash-skin .content { padding: 22px 22px 48px !important; }
-}
-@media (max-width: 640px) {
-  body.dash-skin .content { padding: 18px 15px 40px !important; }
-}
+/* Conteúdo: padding simétrico e confortável (sem max-width pra não deslocar) */
+body.dash-skin .content { padding: 30px 40px 56px !important; }
+@media (max-width: 1024px) { body.dash-skin .content { padding: 24px 22px 44px !important; } }
+@media (max-width: 640px)  { body.dash-skin .content { padding: 18px 15px 36px !important; } }
 
-/* ── 3. Barra lateral (sidebar) ───────────────────────────────────────── */
+/* Respiro vertical uniforme entre os blocos de uma seção.
+   (Cobre o caso de blocos soltos no topo da seção, ex.: saudação → cards → painéis.) */
+body.dash-skin .section.active > * { margin-bottom: var(--gap); }
+body.dash-skin .section.active > *:last-child { margin-bottom: 0; }
+
+/* ── Barra lateral ────────────────────────────────────────────────────── */
 body.dash-skin .sb {
   background:
-    radial-gradient(120% 70% at 50% -10%, rgba(255,255,255,0.06) 0%, transparent 55%),
-    linear-gradient(190deg, #1f2a55 0%, var(--navy) 55%, #141d3f 100%) !important;
-  padding: 18px 14px 16px !important;
+    radial-gradient(120% 60% at 50% -10%, rgba(255,255,255,0.05) 0%, transparent 55%),
+    linear-gradient(190deg, #1f2a55 0%, var(--navy) 58%, #141d3f 100%) !important;
+  padding: 18px 13px 16px !important;
   border-right: 1px solid rgba(255,255,255,0.05);
 }
-
-/* Marca / logo */
-body.dash-skin .sb-logo {
-  padding: 4px 6px 16px !important;
-  margin-bottom: 4px;
-  align-items: center; gap: 11px;
-}
-body.dash-skin .nav-logo-icon {
-  border-radius: 10px; overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.28);
-  flex-shrink: 0;
-}
-body.dash-skin .nav-logo-text {
-  font-family: 'Fraunces', serif; font-weight: 900;
-  font-size: 21px; color: #fff; letter-spacing: -0.01em;
-}
+body.dash-skin .sb-logo { padding: 4px 6px 14px !important; align-items: center; gap: 11px; }
+body.dash-skin .nav-logo-icon { border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.25); flex-shrink: 0; }
+body.dash-skin .nav-logo-text { font-family: 'Fraunces', serif; font-weight: 900; font-size: 21px; color: #fff; letter-spacing: -0.01em; }
 body.dash-skin .nav-logo-text span { color: var(--ac-2); }
 
-/* Selo de perfil ("Área do Aluno") */
 body.dash-skin .sb-badge {
   display: inline-flex; align-items: center; gap: 9px;
-  margin: 0 4px 16px !important;
-  padding: 8px 13px !important;
-  background: rgba(255,255,255,0.06) !important;
-  border: 1px solid rgba(255,255,255,0.09);
+  margin: 0 4px 14px !important; padding: 8px 12px !important;
+  background: rgba(255,255,255,0.06) !important; border: 1px solid rgba(255,255,255,0.08);
   border-radius: 11px !important;
-  backdrop-filter: blur(4px);
 }
-body.dash-skin .sb-badge-text {
-  font-size: 11px !important; font-weight: 800 !important;
-  letter-spacing: 0.07em; text-transform: uppercase;
-  color: rgba(255,255,255,0.82) !important;
-}
+body.dash-skin .sb-badge-text { font-size: 11px !important; font-weight: 800 !important; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.8) !important; }
 
-/* Itens de navegação */
-body.dash-skin .sb-nav { gap: 2px; display: flex; flex-direction: column; }
+body.dash-skin .sb-nav { display: flex; flex-direction: column; gap: 3px; }
 body.dash-skin .sb-link {
-  position: relative;
-  padding: 11px 13px !important;
-  border-radius: 11px !important;
-  color: rgba(255,255,255,0.62) !important;
-  font-size: 13.5px !important; font-weight: 600 !important;
-  letter-spacing: -0.005em;
-  gap: 12px !important;
-  transition: background 0.18s ease, color 0.18s ease, transform 0.12s ease !important;
+  position: relative; padding: 10px 12px !important; border-radius: 10px !important;
+  color: rgba(255,255,255,0.6) !important; font-size: 13.5px !important; font-weight: 600 !important;
+  gap: 12px !important; min-height: 40px;
+  transition: background 0.18s, color 0.18s !important;
 }
-body.dash-skin .sb-link svg {
-  width: 18px !important; height: 18px !important;
-  opacity: 0.65; transition: opacity 0.18s ease, transform 0.18s ease;
-  flex-shrink: 0;
-}
-body.dash-skin .sb-link:hover {
-  background: rgba(255,255,255,0.07) !important;
-  color: #fff !important;
-}
+body.dash-skin .sb-link svg { width: 18px !important; height: 18px !important; opacity: 0.62; flex-shrink: 0; transition: opacity 0.18s, color 0.18s; }
+body.dash-skin .sb-link:hover { background: rgba(255,255,255,0.07) !important; color: #fff !important; }
 body.dash-skin .sb-link:hover svg { opacity: 0.95; }
-
-/* Item ativo: barra de destaque + fundo + ícone na cor do perfil */
 body.dash-skin .sb-link.active {
-  background: linear-gradient(90deg, var(--ac-soft), rgba(255,255,255,0.03)) !important;
-  color: #fff !important; font-weight: 700 !important;
-  box-shadow: none !important;
+  background: linear-gradient(90deg, var(--ac-soft), rgba(255,255,255,0.02)) !important;
+  color: #fff !important; font-weight: 700 !important; box-shadow: none !important;
 }
 body.dash-skin .sb-link.active::before {
-  content: ''; position: absolute;
-  left: 0; top: 9px; bottom: 9px; width: 3px;
+  content: ''; position: absolute; left: 0; top: 9px; bottom: 9px; width: 3px;
   background: var(--ac-2); border-radius: 0 3px 3px 0;
 }
 body.dash-skin .sb-link.active::after { display: none !important; }
 body.dash-skin .sb-link.active svg { opacity: 1 !important; color: var(--ac-2) !important; }
 
-/* Contadores nos itens (ex.: nº de tarefas) */
 body.dash-skin .sb-count {
-  margin-left: auto; flex-shrink: 0;
-  min-width: 20px; height: 20px; padding: 0 6px;
+  margin-left: auto; flex-shrink: 0; min-width: 20px; height: 20px; padding: 0 6px;
   display: inline-flex; align-items: center; justify-content: center;
-  background: var(--ac-2); color: #fff;
-  font-size: 11px; font-weight: 800; border-radius: 999px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  background: var(--ac-2); color: #fff; font-size: 11px; font-weight: 800; border-radius: 999px;
 }
-
-/* Rodapé da sidebar (sair, etc.) */
-body.dash-skin .sb-bottom { margin-top: auto; padding-top: 12px; }
-body.dash-skin .sb-bottom a {
-  border-radius: 11px !important;
-  color: rgba(255,255,255,0.55) !important;
-  font-size: 13px !important; font-weight: 600 !important;
-  transition: background 0.18s, color 0.18s;
-}
-body.dash-skin .sb-bottom a:hover {
-  background: rgba(255,255,255,0.07) !important; color: #fff !important;
-}
-
-/* Botão de recolher */
-body.dash-skin .sb-toggle {
-  background: rgba(255,255,255,0.08) !important;
-  border: 1px solid rgba(255,255,255,0.10) !important;
-  color: rgba(255,255,255,0.8) !important;
-  transition: background 0.18s, transform 0.18s;
-}
+body.dash-skin .sb-bottom { margin-top: auto; padding-top: 10px; }
+body.dash-skin .sb-bottom a { border-radius: 10px !important; color: rgba(255,255,255,0.55) !important; font-size: 13px !important; font-weight: 600 !important; transition: background 0.18s, color 0.18s; }
+body.dash-skin .sb-bottom a:hover { background: rgba(255,255,255,0.07) !important; color: #fff !important; }
+body.dash-skin .sb-toggle { background: rgba(255,255,255,0.08) !important; border: 1px solid rgba(255,255,255,0.10) !important; color: rgba(255,255,255,0.8) !important; transition: background 0.18s; }
 body.dash-skin .sb-toggle:hover { background: rgba(255,255,255,0.16) !important; }
-
-/* Estado recolhido: barrinha do ativo fica centralizada */
 body.dash-skin .sb.collapsed .sb-link.active::before { top: 7px; bottom: 7px; }
 
-/* ── 4. Barra superior (topbar) ───────────────────────────────────────── */
+/* ── Barra superior ───────────────────────────────────────────────────── */
 body.dash-skin .topbar {
-  background: rgba(255,255,255,0.82) !important;
-  backdrop-filter: saturate(180%) blur(12px);
-  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  background: rgba(255,255,255,0.85) !important;
+  backdrop-filter: saturate(180%) blur(12px); -webkit-backdrop-filter: saturate(180%) blur(12px);
   border-bottom: 1px solid var(--hairline) !important;
-  padding: 0 44px !important;
-  height: 68px; min-height: 68px;
+  padding: 0 40px !important; height: 66px; min-height: 66px;
   display: flex; align-items: center;
 }
 @media (max-width: 1024px) { body.dash-skin .topbar { padding: 0 22px !important; } }
-@media (max-width: 640px)  { body.dash-skin .topbar { padding: 0 15px !important; height: 60px; min-height: 60px; } }
-
-body.dash-skin .topbar-title,
-body.dash-skin .topbar .topbar-title {
-  font-family: 'Fraunces', serif !important;
-  font-size: 21px !important; font-weight: 700 !important;
-  color: var(--ink) !important; letter-spacing: -0.01em;
-}
-body.dash-skin .topbar-user { gap: 16px !important; align-items: center; }
-body.dash-skin .topbar-name {
-  font-size: 13.5px !important; font-weight: 700 !important;
-  color: var(--ink) !important;
-}
-
-/* Avatar */
+@media (max-width: 640px)  { body.dash-skin .topbar { padding: 0 15px !important; height: 58px; min-height: 58px; } }
+body.dash-skin .topbar-title { font-family: 'Fraunces', serif !important; font-size: 20px !important; font-weight: 700 !important; color: var(--ink) !important; letter-spacing: -0.01em; }
+body.dash-skin .topbar-user { gap: 14px !important; align-items: center; }
+body.dash-skin .topbar-name { font-size: 13.5px !important; font-weight: 700 !important; color: var(--ink) !important; }
 body.dash-skin .topbar-avatar {
-  width: 40px !important; height: 40px !important;
-  border-radius: 12px !important;
+  width: 38px !important; height: 38px !important; border-radius: 11px !important;
   background: linear-gradient(135deg, var(--ac), var(--ac-2)) !important;
-  color: #fff !important; font-weight: 800 !important; font-size: 15px !important;
+  color: #fff !important; font-weight: 800 !important; font-size: 14px !important;
   display: inline-flex; align-items: center; justify-content: center;
-  box-shadow: var(--sh-ac); cursor: pointer;
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
-  border: none !important;
+  box-shadow: var(--sh-ac); cursor: pointer; border: none !important;
+  transition: transform 0.18s;
 }
-body.dash-skin .topbar-avatar:hover { transform: translateY(-1px) scale(1.03); }
-
-/* Sino de notificações */
+body.dash-skin .topbar-avatar:hover { transform: translateY(-1px); }
 body.dash-skin .notif-bell-btn {
-  width: 40px; height: 40px; border-radius: 12px;
-  background: var(--app-bg) !important;
-  border: 1px solid var(--hairline) !important;
-  font-size: 17px; cursor: pointer;
-  display: inline-flex; align-items: center; justify-content: center;
-  transition: background 0.18s, border-color 0.18s, transform 0.18s;
+  width: 38px; height: 38px; border-radius: 11px;
+  background: var(--app-bg) !important; border: 1px solid var(--hairline) !important;
+  font-size: 16px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+  transition: background 0.18s, border-color 0.18s;
 }
-body.dash-skin .notif-bell-btn:hover {
-  background: #fff !important; border-color: var(--ac-2) !important;
-  transform: translateY(-1px);
-}
-body.dash-skin .notif-badge {
-  background: var(--ac) !important; color: #fff !important;
-  font-weight: 800; box-shadow: 0 2px 6px var(--ac-soft);
-  border: 2px solid #fff;
-}
+body.dash-skin .notif-bell-btn:hover { background: #fff !important; border-color: var(--ac-2) !important; }
+body.dash-skin .notif-badge { background: var(--ac) !important; color: #fff !important; font-weight: 800; border: 2px solid #fff; }
 
-/* ── 5. Cabeçalho da Visão Geral (saudação) ───────────────────────────── */
-body.dash-skin .overview-greeting,
-body.dash-skin #greeting {
+/* ── Saudação da Visão Geral ──────────────────────────────────────────── */
+body.dash-skin .overview-greeting, body.dash-skin #greeting {
   font-family: 'Fraunces', serif !important;
-  font-size: clamp(26px, 3.4vw, 34px) !important;
-  font-weight: 700 !important; line-height: 1.12 !important;
-  color: var(--ink) !important; letter-spacing: -0.02em !important;
-  margin: 4px 0 8px !important;
+  font-size: clamp(25px, 3vw, 31px) !important; font-weight: 700 !important;
+  line-height: 1.14 !important; color: var(--ink) !important; letter-spacing: -0.02em !important;
+  margin: 2px 0 6px !important;
 }
-body.dash-skin .overview-greeting em,
-body.dash-skin #greeting em { color: var(--ac); font-style: italic; }
-body.dash-skin .overview-subline,
-body.dash-skin #levelInfo {
-  font-size: 14.5px !important; color: var(--ink-soft) !important;
-  margin-bottom: 26px !important;
-  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+body.dash-skin .overview-greeting em, body.dash-skin #greeting em { color: var(--ac); font-style: italic; }
+body.dash-skin .overview-subline, body.dash-skin #levelInfo {
+  font-size: 14px !important; color: var(--ink-soft) !important;
+  margin: 0 0 4px !important; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
 }
-body.dash-skin .overview-subline .pill {
-  padding: 4px 12px !important; border-radius: 999px !important;
-  background: var(--ac-soft) !important; color: var(--ac) !important;
-  font-size: 12px !important; font-weight: 700 !important;
-}
+body.dash-skin .overview-subline .pill { padding: 4px 12px !important; border-radius: 999px !important; background: var(--ac-soft) !important; color: var(--ac) !important; font-size: 12px !important; font-weight: 700 !important; }
 
-/* ── 6. Cards de números (stat cards) — elemento-herói ────────────────── */
+/* ── Cards de números ─────────────────────────────────────────────────── */
 body.dash-skin .stats-grid {
   display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)) !important;
-  gap: 18px !important;
-  margin-bottom: 30px !important;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
+  gap: 16px !important;
 }
 body.dash-skin .stat-card {
-  background: var(--surface) !important;
-  border: 1px solid var(--hairline) !important;
-  border-radius: 18px !important;
-  padding: 22px !important;
-  position: relative; overflow: hidden;
-  box-shadow: var(--sh-sm) !important;
+  background: var(--surface) !important; border: 1px solid var(--hairline) !important;
+  border-radius: 16px !important; padding: 20px 22px !important;
+  position: relative; overflow: hidden; box-shadow: var(--sh-sm) !important;
   display: flex; flex-direction: column;
-  transition: transform 0.22s cubic-bezier(0.4,0,0.2,1),
-              box-shadow 0.22s ease, border-color 0.22s ease !important;
+  transition: transform 0.2s cubic-bezier(0.4,0,0.2,1), box-shadow 0.2s, border-color 0.2s !important;
 }
-/* faixa de cor superior fininha */
 body.dash-skin .stat-card::before {
   content: '' !important; position: absolute !important;
-  top: 0 !important; left: 0 !important; right: 0 !important;
-  width: auto !important; height: 3px !important; bottom: auto !important;
-  border-radius: 0 !important;
-  background: linear-gradient(90deg, var(--ac), var(--ac-2)) !important;
-  opacity: 0.9;
+  top: 0 !important; left: 0 !important; right: 0 !important; bottom: auto !important;
+  width: auto !important; height: 3px !important; border-radius: 0 !important;
+  background: linear-gradient(90deg, var(--ac), var(--ac-2)) !important; opacity: 0.9;
 }
-body.dash-skin .stat-card:hover {
-  transform: translateY(-4px) !important;
-  box-shadow: var(--sh-lg) !important;
-  border-color: transparent !important;
-}
+body.dash-skin .stat-card:hover { transform: translateY(-3px) !important; box-shadow: var(--sh-lg) !important; border-color: transparent !important; }
 body.dash-skin .stat-card.clickable { cursor: pointer; }
-
-/* selo do ícone */
 body.dash-skin .stat-icon {
-  width: 44px !important; height: 44px !important;
-  border-radius: 13px !important;
+  width: 42px !important; height: 42px !important; border-radius: 12px !important;
   display: inline-flex !important; align-items: center; justify-content: center;
-  font-size: 21px !important; margin-bottom: 16px !important;
-  background: var(--ac-soft) !important;
-  box-shadow: inset 0 0 0 1px var(--ac-softer);
-  transition: transform 0.22s ease;
+  font-size: 20px !important; margin-bottom: 14px !important;
+  background: var(--ac-soft) !important; transition: transform 0.2s;
 }
-body.dash-skin .stat-card:hover .stat-icon { transform: scale(1.06) rotate(-2deg); }
-
+body.dash-skin .stat-card:hover .stat-icon { transform: scale(1.06); }
 body.dash-skin .stat-label {
-  font-family: 'Plus Jakarta Sans', sans-serif !important;
-  font-size: 11.5px !important; font-weight: 700 !important;
-  letter-spacing: 0.06em !important; text-transform: uppercase !important;
-  color: var(--ink-faint) !important; margin-bottom: 6px;
-  order: 2;
+  font-family: 'Plus Jakarta Sans', sans-serif !important; font-size: 11.5px !important;
+  font-weight: 700 !important; letter-spacing: 0.05em !important; text-transform: uppercase !important;
+  color: var(--ink-faint) !important; margin-bottom: 5px; order: 2;
 }
 body.dash-skin .stat-value {
-  font-family: 'Fraunces', serif !important;
-  font-size: 38px !important; font-weight: 900 !important;
-  line-height: 1 !important; color: var(--ink) !important;
-  -webkit-text-fill-color: var(--ink) !important;
+  font-family: 'Fraunces', serif !important; font-size: 34px !important; font-weight: 900 !important;
+  line-height: 1 !important; color: var(--ink) !important; -webkit-text-fill-color: var(--ink) !important;
   letter-spacing: -0.02em; order: 3;
 }
 
-/* setinha dos cards clicáveis */
-body.dash-skin .stat-arrow,
-body.dash-skin .stat-card .arrow {
-  color: var(--ac) !important; opacity: 0.55;
-  transition: transform 0.2s ease, opacity 0.2s ease;
-}
-body.dash-skin .stat-card:hover .stat-arrow,
-body.dash-skin .stat-card:hover .arrow { opacity: 1; transform: translateX(3px); }
-
-/* ── 7. Painéis (panels) ──────────────────────────────────────────────── */
+/* ── Painéis ──────────────────────────────────────────────────────────── */
 body.dash-skin .panel {
-  background: var(--surface) !important;
-  border: 1px solid var(--hairline) !important;
-  border-radius: 20px !important;
-  box-shadow: var(--sh-md) !important;
-  overflow: hidden; margin-bottom: 22px !important;
+  background: var(--surface) !important; border: 1px solid var(--hairline) !important;
+  border-radius: 18px !important; box-shadow: var(--sh-md) !important; overflow: hidden;
 }
 body.dash-skin .panel-head {
-  padding: 18px 24px !important;
-  background: transparent !important;
+  padding: 16px 24px !important; background: transparent !important;
   border-bottom: 1px solid var(--hairline) !important;
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
 }
 body.dash-skin .panel-title {
-  font-family: 'Plus Jakarta Sans', sans-serif !important;
-  font-size: 15px !important; font-weight: 800 !important;
-  color: var(--ink) !important; letter-spacing: -0.01em !important;
-  display: inline-flex; align-items: center; gap: 10px;
+  font-family: 'Plus Jakarta Sans', sans-serif !important; font-size: 15px !important;
+  font-weight: 800 !important; color: var(--ink) !important; letter-spacing: -0.01em !important;
+  display: inline-flex; align-items: center; gap: 11px;
 }
-/* barrinha de cor antes do título do painel */
-body.dash-skin .panel-title::before {
-  content: ''; width: 4px; height: 17px; border-radius: 3px;
-  background: linear-gradient(180deg, var(--ac), var(--ac-2));
-  flex-shrink: 0;
+/* o título JÁ tem um ícone (.panel-icon) — só refinamos, sem barrinha extra */
+body.dash-skin .panel-icon {
+  width: 32px; height: 32px; border-radius: 9px; flex-shrink: 0;
+  display: inline-flex; align-items: center; justify-content: center;
 }
-body.dash-skin .panel-body,
-body.dash-skin .panel > div:not(.panel-head) { padding: 4px 8px; }
+body.dash-skin .panel-icon svg { width: 17px !important; height: 17px !important; }
 
-/* ── 8. Botões ────────────────────────────────────────────────────────── */
-body.dash-skin .btn-primary,
-body.dash-skin .btn-send {
-  background: linear-gradient(135deg, var(--ac), var(--ac-2)) !important;
-  border: none !important; color: #fff !important;
-  border-radius: 12px !important;
-  font-weight: 700 !important; font-size: 14px !important;
-  padding: 12px 20px !important;
-  box-shadow: var(--sh-ac) !important;
-  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease !important;
-  cursor: pointer;
+/* PADDING INTERNO DO PAINEL — consistente e generoso.
+   Cobre .panel-body e os <div id="..."> que servem de corpo, MAS:
+   • exclui o cabeçalho, wrappers de tabela e grades;
+   • exclui qualquer div que já traga padding próprio via style inline
+     (esses já foram posicionados à mão e não devem ser sobrescritos);
+   • exclui grids de conteúdo (ex.: doc-student-grid) que têm layout próprio. */
+body.dash-skin .panel > .panel-body,
+body.dash-skin .panel > div[id]:not(.panel-head):not(.table-wrap):not(.stats-grid):not([class*="grid"]):not([style*="padding"]):not([style*="display"]) {
+  padding: 22px 24px !important;
 }
-body.dash-skin .btn-primary:hover,
-body.dash-skin .btn-send:hover {
-  transform: translateY(-2px) !important;
-  filter: brightness(1.04);
-  box-shadow: 0 12px 26px var(--ac-soft) !important;
-}
-body.dash-skin .btn-primary:active,
-body.dash-skin .btn-send:active { transform: translateY(0) !important; }
+body.dash-skin .panel > .panel-body { padding: 22px 24px !important; }
+/* Se o corpo já é uma lista com itens próprios, o padding acima dá o respiro certo;
+   listas internas não recebem padding duplicado. */
+body.dash-skin .panel .panel-body > .list-item:first-child,
+body.dash-skin .panel > div > .list-item:first-child { margin-top: 0 !important; }
 
+/* ── Botões ───────────────────────────────────────────────────────────── */
+body.dash-skin .btn-primary, body.dash-skin .btn-send {
+  background: linear-gradient(135deg, var(--ac), var(--ac-2)) !important; border: none !important;
+  color: #fff !important; border-radius: 11px !important; font-weight: 700 !important; font-size: 14px !important;
+  padding: 12px 20px !important; box-shadow: var(--sh-ac) !important; cursor: pointer;
+  transition: transform 0.18s, box-shadow 0.18s, filter 0.18s !important;
+}
+body.dash-skin .btn-primary:hover, body.dash-skin .btn-send:hover { transform: translateY(-2px) !important; filter: brightness(1.04); box-shadow: 0 12px 24px var(--ac-soft) !important; }
+body.dash-skin .btn-primary:active, body.dash-skin .btn-send:active { transform: translateY(0) !important; }
 body.dash-skin .btn-secondary {
-  background: #fff !important;
-  border: 1.5px solid var(--g200, #dde0e8) !important;
-  color: var(--ink) !important; border-radius: 12px !important;
-  font-weight: 700 !important; padding: 11px 18px !important;
-  transition: border-color 0.18s, color 0.18s, transform 0.18s, box-shadow 0.18s;
-  cursor: pointer;
+  background: #fff !important; border: 1.5px solid var(--g200, #dde0e8) !important; color: var(--ink) !important;
+  border-radius: 11px !important; font-weight: 700 !important; padding: 11px 18px !important; cursor: pointer;
+  transition: border-color 0.18s, color 0.18s, transform 0.18s;
 }
-body.dash-skin .btn-secondary:hover {
-  border-color: var(--ac) !important; color: var(--ac) !important;
-  transform: translateY(-1px); box-shadow: 0 6px 16px var(--ac-softer) !important;
-}
+body.dash-skin .btn-secondary:hover { border-color: var(--ac) !important; color: var(--ac) !important; transform: translateY(-1px); }
 
-/* ── 9. Formulários ───────────────────────────────────────────────────── */
-body.dash-skin .form-card {
-  background: var(--surface) !important;
-  border: 1px solid var(--hairline) !important;
-  border-radius: 20px !important; padding: 26px !important;
-  box-shadow: var(--sh-md) !important;
-}
-body.dash-skin .f-group label {
-  font-size: 12px !important; font-weight: 700 !important;
-  color: var(--ink) !important; letter-spacing: 0.01em;
-  margin-bottom: 6px !important;
-}
-body.dash-skin .f-group input,
-body.dash-skin .f-group select,
-body.dash-skin .f-group textarea {
-  border: 1.5px solid var(--g200, #dde0e8) !important;
-  border-radius: 11px !important; padding: 12px 14px !important;
-  font-size: 14px !important; color: var(--ink) !important;
-  background: #fcfcfd !important;
+/* ── Formulários ──────────────────────────────────────────────────────── */
+body.dash-skin .form-card { background: var(--surface) !important; border: 1px solid var(--hairline) !important; border-radius: 18px !important; padding: 26px !important; box-shadow: var(--sh-md) !important; }
+body.dash-skin .f-group { margin-bottom: 16px !important; }
+body.dash-skin .f-group label { font-size: 12px !important; font-weight: 700 !important; color: var(--ink) !important; margin-bottom: 6px !important; }
+body.dash-skin .f-group input, body.dash-skin .f-group select, body.dash-skin .f-group textarea {
+  border: 1.5px solid var(--g200, #dde0e8) !important; border-radius: 10px !important; padding: 12px 14px !important;
+  font-size: 14px !important; color: var(--ink) !important; background: #fcfcfd !important;
   transition: border-color 0.18s, box-shadow 0.18s, background 0.18s !important;
 }
-body.dash-skin .f-group input:focus,
-body.dash-skin .f-group select:focus,
-body.dash-skin .f-group textarea:focus {
-  border-color: var(--ac) !important; background: #fff !important;
-  box-shadow: 0 0 0 4px var(--ac-softer) !important; outline: none !important;
+body.dash-skin .f-group input:focus, body.dash-skin .f-group select:focus, body.dash-skin .f-group textarea:focus {
+  border-color: var(--ac) !important; background: #fff !important; box-shadow: 0 0 0 4px var(--ac-softer) !important; outline: none !important;
 }
 
-/* ── 10. Listas e itens ───────────────────────────────────────────────── */
+/* ── Listas e itens ───────────────────────────────────────────────────── */
 body.dash-skin .list-item {
-  border: 1px solid var(--hairline) !important;
-  border-radius: 14px !important;
-  padding: 15px 18px !important; margin-bottom: 10px !important;
-  background: var(--surface) !important;
-  transition: border-color 0.18s, box-shadow 0.18s, transform 0.18s !important;
+  border: 1px solid var(--hairline) !important; border-radius: 13px !important;
+  padding: 14px 16px !important; margin-bottom: 10px !important; background: var(--surface) !important;
+  transition: border-color 0.18s, box-shadow 0.18s !important;
 }
-body.dash-skin .list-item:hover {
-  border-color: var(--ac-soft) !important;
-  box-shadow: var(--sh-sm) !important; transform: translateX(2px);
-}
+body.dash-skin .list-item:last-child { margin-bottom: 0 !important; }
+body.dash-skin .list-item:hover { border-color: var(--ac-soft) !important; box-shadow: var(--sh-sm) !important; }
 
-/* ── 11. Selos / pílulas (badges) ─────────────────────────────────────── */
-body.dash-skin .badge {
-  border-radius: 999px !important;
-  font-size: 11.5px !important; font-weight: 800 !important;
-  letter-spacing: 0.03em; padding: 4px 11px !important;
-}
+/* ── Selos / pílulas ──────────────────────────────────────────────────── */
+body.dash-skin .badge { border-radius: 999px !important; font-size: 11.5px !important; font-weight: 800 !important; padding: 4px 11px !important; }
 
-/* ── 12. Tabelas ──────────────────────────────────────────────────────── */
+/* ── Tabelas ──────────────────────────────────────────────────────────── */
 body.dash-skin table { border-collapse: separate !important; border-spacing: 0; width: 100%; }
 body.dash-skin thead th {
-  background: var(--app-bg) !important;
-  font-family: 'Plus Jakarta Sans', sans-serif !important;
-  font-size: 11px !important; font-weight: 800 !important;
-  letter-spacing: 0.05em; text-transform: uppercase;
-  color: var(--ink-faint) !important;
-  padding: 12px 14px !important; text-align: left;
+  background: var(--app-bg) !important; font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-size: 11px !important; font-weight: 800 !important; letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--ink-faint) !important; padding: 12px 14px !important; text-align: left;
   border-bottom: 1px solid var(--hairline) !important;
 }
-body.dash-skin tbody td {
-  padding: 13px 14px !important; font-size: 13.5px !important;
-  color: var(--ink-soft) !important;
-  border-bottom: 1px solid var(--hairline) !important;
-}
+body.dash-skin tbody td { padding: 13px 14px !important; font-size: 13.5px !important; color: var(--ink-soft) !important; border-bottom: 1px solid var(--hairline) !important; }
 body.dash-skin tbody tr:nth-child(even) td { background: #fbfbfd !important; }
 body.dash-skin tbody tr:hover td { background: var(--ac-softer) !important; }
 body.dash-skin tbody tr:last-child td { border-bottom: none !important; }
 
-/* ── 13. Estados vazios (empty states) ────────────────────────────────── */
-body.dash-skin .empty-state {
-  padding: 38px 22px !important; text-align: center;
-  color: var(--ink-faint) !important;
-}
-body.dash-skin .empty-icon,
-body.dash-skin .empty-state .empty-icon {
-  font-size: 34px !important; opacity: 0.55;
-  display: block; margin: 0 auto 10px;
-}
+/* ── Estados vazios ───────────────────────────────────────────────────── */
+body.dash-skin .empty-state { padding: 34px 20px !important; text-align: center; color: var(--ink-faint) !important; }
+body.dash-skin .empty-icon { font-size: 32px !important; opacity: 0.5; display: block; margin: 0 auto 10px; }
 body.dash-skin .empty-state p { font-size: 14px !important; color: var(--ink-faint) !important; }
 
-/* ── 14. Dropdown de notificações ─────────────────────────────────────── */
-body.dash-skin .notif-dropdown {
-  border-radius: 16px !important;
-  border: 1px solid var(--hairline) !important;
-  box-shadow: var(--sh-lg) !important;
-  overflow: hidden;
-}
-body.dash-skin .notif-head {
-  padding: 15px 18px !important;
-  background: linear-gradient(135deg, var(--ac), var(--ac-2)) !important;
-  color: #fff !important;
-}
+/* ── Dropdown de notificações ─────────────────────────────────────────── */
+body.dash-skin .notif-dropdown { border-radius: 16px !important; border: 1px solid var(--hairline) !important; box-shadow: var(--sh-lg) !important; overflow: hidden; }
+body.dash-skin .notif-head { padding: 15px 18px !important; background: linear-gradient(135deg, var(--ac), var(--ac-2)) !important; color: #fff !important; }
 body.dash-skin .notif-head h4 { color: #fff !important; font-weight: 800 !important; }
-body.dash-skin .notif-foot {
-  font-size: 11.5px !important; color: var(--ink-faint) !important;
-  padding: 11px 18px !important; background: var(--app-bg) !important;
-  border-top: 1px solid var(--hairline) !important; text-align: center;
-}
+body.dash-skin .notif-foot { font-size: 11.5px !important; color: var(--ink-faint) !important; padding: 11px 18px !important; background: var(--app-bg) !important; border-top: 1px solid var(--hairline) !important; text-align: center; }
 
-/* ── 15. Cartão de "Próxima aula" (aluno) ─────────────────────────────── */
-body.dash-skin .next-class-card {
-  background: linear-gradient(135deg, var(--ac), var(--ac-2)) !important;
-  border-radius: 18px !important; border: none !important;
-  box-shadow: var(--sh-ac) !important;
-  color: #fff !important;
-}
+/* ── Cartão "Próxima aula" (aluno) ────────────────────────────────────── */
+body.dash-skin .next-class-card { background: linear-gradient(135deg, var(--ac), var(--ac-2)) !important; border-radius: 16px !important; border: none !important; box-shadow: var(--sh-ac) !important; color: #fff !important; }
 body.dash-skin .next-class-label { color: rgba(255,255,255,0.82) !important; }
-body.dash-skin .next-class-day,
-body.dash-skin .next-class-time { color: #fff !important; }
-body.dash-skin .next-class-icon {
-  background: rgba(255,255,255,0.18) !important; border-radius: 14px !important;
-}
+body.dash-skin .next-class-day, body.dash-skin .next-class-time { color: #fff !important; }
+body.dash-skin .next-class-icon { background: rgba(255,255,255,0.18) !important; border-radius: 13px !important; }
 
-/* ── 16. Barras de rolagem discretas ──────────────────────────────────── */
-body.dash-skin .content,
-body.dash-skin .notif-list { scrollbar-width: thin; scrollbar-color: var(--g300, #c3c7d0) transparent; }
-body.dash-skin .content::-webkit-scrollbar,
-body.dash-skin .notif-list::-webkit-scrollbar { width: 9px; height: 9px; }
-body.dash-skin .content::-webkit-scrollbar-thumb,
-body.dash-skin .notif-list::-webkit-scrollbar-thumb {
-  background: var(--g300, #c3c7d0); border-radius: 99px; border: 2px solid var(--app-bg);
-}
+/* ── Barras de rolagem ────────────────────────────────────────────────── */
+body.dash-skin .content, body.dash-skin .notif-list { scrollbar-width: thin; scrollbar-color: var(--g300, #c3c7d0) transparent; }
+body.dash-skin .content::-webkit-scrollbar, body.dash-skin .notif-list::-webkit-scrollbar { width: 9px; height: 9px; }
+body.dash-skin .content::-webkit-scrollbar-thumb, body.dash-skin .notif-list::-webkit-scrollbar-thumb { background: var(--g300, #c3c7d0); border-radius: 99px; border: 2px solid var(--app-bg); }
 
-/* ── 17. Animação de entrada (uma vez, ao trocar de seção) ────────────── */
-body.dash-skin .section.active { animation: dashFadeUp 0.4s cubic-bezier(0.22,0.61,0.36,1) both; }
-@keyframes dashFadeUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-/* entrada escalonada dos cards de números */
-body.dash-skin .section.active .stats-grid .stat-card { animation: dashPop 0.42s cubic-bezier(0.22,0.61,0.36,1) both; }
-body.dash-skin .section.active .stats-grid .stat-card:nth-child(1) { animation-delay: 0.04s; }
-body.dash-skin .section.active .stats-grid .stat-card:nth-child(2) { animation-delay: 0.10s; }
-body.dash-skin .section.active .stats-grid .stat-card:nth-child(3) { animation-delay: 0.16s; }
-body.dash-skin .section.active .stats-grid .stat-card:nth-child(4) { animation-delay: 0.22s; }
-body.dash-skin .section.active .stats-grid .stat-card:nth-child(n+5) { animation-delay: 0.26s; }
-@keyframes dashPop {
-  from { opacity: 0; transform: translateY(14px) scale(0.985); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
-}
+/* ── Animação de entrada (discreta) ───────────────────────────────────── */
+body.dash-skin .section.active { animation: dashFade 0.35s ease both; }
+@keyframes dashFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { body.dash-skin .section.active { animation: none !important; } }
 
-/* Acessibilidade: respeita quem pediu menos animação no aparelho */
-@media (prefers-reduced-motion: reduce) {
-  body.dash-skin .section.active,
-  body.dash-skin .section.active .stats-grid .stat-card { animation: none !important; }
-}
-
-/* ── 18. Foco visível (acessibilidade de teclado) ─────────────────────── */
-body.dash-skin .sb-link:focus-visible,
-body.dash-skin .btn-primary:focus-visible,
-body.dash-skin .btn-secondary:focus-visible,
-body.dash-skin .btn-send:focus-visible,
-body.dash-skin .stat-card.clickable:focus-visible,
-body.dash-skin .notif-bell-btn:focus-visible,
-body.dash-skin .topbar-avatar:focus-visible {
+/* ── Foco visível ─────────────────────────────────────────────────────── */
+body.dash-skin .sb-link:focus-visible, body.dash-skin .btn-primary:focus-visible, body.dash-skin .btn-secondary:focus-visible,
+body.dash-skin .btn-send:focus-visible, body.dash-skin .stat-card.clickable:focus-visible,
+body.dash-skin .notif-bell-btn:focus-visible, body.dash-skin .topbar-avatar:focus-visible {
   outline: 2px solid var(--ac-2) !important; outline-offset: 2px !important;
 }

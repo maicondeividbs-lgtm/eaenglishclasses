@@ -2600,6 +2600,46 @@ body.dash-skin.sb-collapsed .main { margin-left: 64px !important; }
   body.dash-skin .main,
   body.dash-skin.sb-collapsed .main { margin-left: 0 !important; }
 }
+
+
+/* ════════════════════════════════════════════════════════════
+   CORREÇÃO DE ALINHAMENTO DAS ABAS INTERNAS
+   (1) .section-head: alinhar ícone+título pelo TOPO (era flex-end,
+       o que criava vão no topo e título deslocado).
+   (2) .stat-row: o markup real usa .stat-row (não .stats-grid),
+       então aplicamos AQUI o mesmo grid/respiro do redesign para
+       os cards ficarem alinhados em todas as abas.
+   ════════════════════════════════════════════════════════════ */
+body.dash-skin .section-head {
+  display: flex !important;
+  align-items: center !important;
+  gap: 16px !important;
+  margin-bottom: 24px !important;
+  padding-bottom: 0 !important;
+  border-bottom: none !important;
+}
+body.dash-skin .section-head-icon {
+  width: 52px !important; height: 52px !important; min-width: 52px !important;
+  border-radius: 15px !important;
+  display: inline-flex !important; align-items: center; justify-content: center;
+}
+body.dash-skin .section-head-icon svg { width: 24px !important; height: 24px !important; }
+body.dash-skin .section-head-text { display: flex; flex-direction: column; justify-content: center; }
+body.dash-skin .section-head h2 {
+  font-family: 'Fraunces', serif !important; font-size: 26px !important; font-weight: 800 !important;
+  color: var(--ink) !important; letter-spacing: -0.02em !important; line-height: 1.15 !important; margin: 0 !important;
+}
+body.dash-skin .section-head .section-sub {
+  font-size: 13.5px !important; color: var(--ink-soft) !important; margin: 4px 0 0 !important; line-height: 1.4;
+}
+
+/* .stat-row recebe o MESMO tratamento de grade que demos ao .stats-grid */
+body.dash-skin .stat-row {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
+  gap: 16px !important;
+  margin-bottom: 24px !important;
+}
 </style>
 </head>
 <body class="dash-skin dash-skin--coordenacao">

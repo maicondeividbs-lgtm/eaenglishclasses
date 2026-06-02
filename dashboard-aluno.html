@@ -2918,6 +2918,29 @@ body.dash-skin .stat-row {
   gap: 16px !important;
   margin-bottom: 24px !important;
 }
+
+
+/* ════════════════════════════════════════════════════════════
+   NORMALIZAÇÃO DO TOPO DE TODAS AS SEÇÕES (alinhamento harmônico)
+   Objetivo: TODA aba começa na MESMA altura e com as MESMAS margens
+   laterais, igual à aba "Usuários" — sem faixa/vão no topo.
+   • zera a margem superior do 1º elemento de qualquer seção ativa
+     (a saudação da Visão Geral é <h2>, as outras são .section-head;
+      sem isso, a margem do <h2>/colapso cria o vão cinza no topo);
+   • o .content dá o respiro superior único para todas;
+   • .section ocupa a largura toda, sem deslocamento lateral.
+   ════════════════════════════════════════════════════════════ */
+body.dash-skin .content { padding-top: 28px !important; }
+body.dash-skin .section { width: 100% !important; margin: 0 !important; }
+body.dash-skin .section.active > *:first-child { margin-top: 0 !important; }
+/* a saudação da Visão Geral passa a ter o MESMO espaçamento inferior
+   que o .section-head das demais abas, para o conteúdo seguinte alinhar */
+body.dash-skin .overview-greeting,
+body.dash-skin #greeting { margin: 0 0 4px !important; }
+body.dash-skin .overview-subline,
+body.dash-skin #levelInfo { margin: 0 0 24px !important; }
+/* cabeçalho com ícone: trava a altura mínima para não "pular" entre abas */
+body.dash-skin .section-head { min-height: 52px; align-items: center !important; }
 </style>
 </head>
 <body class="dash-skin dash-skin--aluno">

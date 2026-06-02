@@ -40,8 +40,16 @@ body.dash-skin--coordenacao {
 body.dash-skin { background: var(--app-bg) !important; -webkit-font-smoothing: antialiased; }
 body.dash-skin .main { background: var(--app-bg) !important; }
 
-/* Conteúdo: padding simétrico e confortável (sem max-width pra não deslocar) */
-body.dash-skin .content { padding: 30px 40px 56px !important; }
+/* Conteúdo: ocupa 100% da largura disponível, sem trava de largura, com
+   margens laterais confortáveis. (max-width:none é defensivo: garante que
+   nenhuma regra antiga volte a "encolher" e deslocar o conteúdo.) */
+body.dash-skin .content {
+  padding: 28px 36px 56px !important;
+  max-width: none !important;
+  width: auto !important;
+  margin: 0 !important;
+  box-sizing: border-box;
+}
 @media (max-width: 1024px) { body.dash-skin .content { padding: 24px 22px 44px !important; } }
 @media (max-width: 640px)  { body.dash-skin .content { padding: 18px 15px 36px !important; } }
 

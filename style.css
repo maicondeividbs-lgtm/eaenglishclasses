@@ -29,6 +29,7 @@
   --g50: #f7f8fa;
   --g100: #eef0f4;
   --g200: #dde0e8;
+  --g300: #c3c7d0;
   --g400: #9ca3af;
   --g500: #6b7280;
   --g700: #374151;
@@ -710,4 +711,17 @@ body.menu-open { overflow: hidden; }
   gap: 12px;
   padding: 14px 0;
   border-bottom: 1px solid var(--g100);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Reduzir animações para quem ativou essa preferência no aparelho
+   (acessibilidade/conforto — vale para o site inteiro)
+   ───────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

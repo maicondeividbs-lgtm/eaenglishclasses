@@ -2260,13 +2260,11 @@ body.sb-collapsed .main { margin-left: 92px !important; }
   .doc-row-actions { margin-left: auto; }
   .doc-score-grid { grid-template-columns: 1fr; }
 }
-</style>
 <style id="coord-layout-v9">
 /* ════════════════════════════════════════════════════════════════════════
-   DASHBOARD COORDENAÇÃO — CAMADA DE LAYOUT REESCRITA DO ZERO (v9)
+   DASHBOARD COORDENAÇÃO — CAMADA DE LAYOUT REESCRITA DO ZERO (v9.1)
+   Alinhada ao dashboard do PROFESSOR (mesmos paddings, larguras e ritmo).
    Fonte ÚNICA de verdade para estrutura e alinhamento. Carregada por último.
-   As regras estruturais antigas foram neutralizadas; os componentes
-   específicos (schedule, funil, swipe, salário, abas) seguem preservados.
    ════════════════════════════════════════════════════════════════════════ */
 
 :root {
@@ -2274,8 +2272,8 @@ body.sb-collapsed .main { margin-left: 92px !important; }
   --ac:#dd7a16; --ac-2:#f59a1e; --ac-soft:rgba(217,117,22,0.10); --ac-softer:rgba(217,117,22,0.05);
   --app-bg:#f5f6fa; --surface:#fff; --hairline:#e9ebf1;
   --ink:#19244e; --ink-soft:#5b6275; --ink-faint:#949aa9;
-  --sb-w:264px;
-  --pad-x:40px;
+  --sb-w:260px;
+  --pad-x:36px;
   --sh-sm:0 1px 2px rgba(25,36,78,0.04),0 1px 3px rgba(25,36,78,0.05);
   --sh-md:0 1px 3px rgba(25,36,78,0.04),0 8px 20px rgba(25,36,78,0.06);
   --sh-lg:0 12px 32px rgba(25,36,78,0.10);
@@ -2287,7 +2285,7 @@ body.dash-skin--coordenacao * { box-sizing: border-box; }
 body.dash-skin--coordenacao { background: var(--app-bg) !important; margin:0; -webkit-font-smoothing:antialiased; }
 body.dash-skin--coordenacao .dash { display: block !important; min-height: 100vh; }
 
-/* Sidebar: fixa à esquerda, largura única */
+/* Sidebar: fixa à esquerda, largura única (igual professor: 260px) */
 body.dash-skin--coordenacao .sb {
   position: fixed !important; top:0; left:0; bottom:0; z-index:100;
   width: var(--sb-w) !important;
@@ -2300,7 +2298,7 @@ body.dash-skin--coordenacao .sb {
   transform: none !important;
 }
 
-/* Área principal: começa exatamente onde a sidebar termina (sem 20px sobrando) */
+/* Área principal: começa exatamente onde a sidebar termina */
 body.dash-skin--coordenacao .main {
   margin-left: var(--sb-w) !important;
   border-left: none !important;
@@ -2309,10 +2307,10 @@ body.dash-skin--coordenacao .main {
   background: var(--app-bg) !important;
 }
 
-/* Topbar: barra superior fixa */
+/* Topbar: barra superior fixa (padding 40px, igual professor) */
 body.dash-skin--coordenacao .topbar {
   height: 66px !important; min-height:66px; flex-shrink:0;
-  padding: 0 var(--pad-x) !important;
+  padding: 0 40px !important;
   display: flex !important; align-items: center; justify-content: space-between;
   background: rgba(255,255,255,0.85) !important;
   backdrop-filter: saturate(180%) blur(12px); -webkit-backdrop-filter: saturate(180%) blur(12px);
@@ -2320,19 +2318,18 @@ body.dash-skin--coordenacao .topbar {
   position: sticky; top:0; z-index:50;
 }
 
-/* CONTEÚDO: padding único; TODAS as abas começam na mesma altura e margem */
+/* CONTEÚDO: padding único (28px topo / 36px laterais / 56px base — igual professor) */
 body.dash-skin--coordenacao .content {
   flex: 1;
-  padding: 30px var(--pad-x) 64px !important;
+  padding: 28px 36px 56px !important;
   overflow-x: hidden;
   max-width: none !important; width: auto !important;
 }
 
-/* SEÇÃO: bloco simples; só uma ativa; sem flex/centralização */
+/* SEÇÃO: bloco simples; só uma ativa */
 body.dash-skin--coordenacao .section { display: none !important; width: 100%; margin: 0; }
 body.dash-skin--coordenacao .section.active { display: block !important; animation: coordFade 0.3s ease both; }
 @keyframes coordFade { from{opacity:0;transform:translateY(8px);} to{opacity:1;transform:translateY(0);} }
-/* o 1º elemento de QUALQUER aba não tem margem no topo → topo idêntico em todas */
 body.dash-skin--coordenacao .section.active > *:first-child { margin-top: 0 !important; }
 
 /* ─── CABEÇALHO DA SEÇÃO (ícone ao lado do título — alinhado) ─────────── */
@@ -2340,7 +2337,7 @@ body.dash-skin--coordenacao .section-head {
   display: flex !important; flex-direction: row !important;
   align-items: center !important; justify-content: flex-start !important;
   gap: 16px !important;
-  margin: 0 0 26px !important; padding: 0 !important; border: none !important;
+  margin: 0 0 24px !important; padding: 0 !important; border: none !important;
   min-height: 52px;
 }
 body.dash-skin--coordenacao .section-head-icon {
@@ -2352,25 +2349,25 @@ body.dash-skin--coordenacao .section-head-icon {
 body.dash-skin--coordenacao .section-head-icon svg { width: 24px !important; height: 24px !important; }
 body.dash-skin--coordenacao .section-head-text { flex:1; min-width:0; display:flex; flex-direction:column; justify-content:center; gap:3px; }
 body.dash-skin--coordenacao .section-head h2 {
-  font-family:'Fraunces',serif !important; font-size: 27px !important; font-weight: 800 !important;
-  color: var(--ink) !important; letter-spacing:-0.02em !important; line-height:1.12 !important; margin:0 !important;
+  font-family:'Fraunces',serif !important; font-size: 26px !important; font-weight: 800 !important;
+  color: var(--ink) !important; letter-spacing:-0.02em !important; line-height:1.15 !important; margin:0 !important;
 }
 body.dash-skin--coordenacao .section-head h2::after { display:none !important; }
-body.dash-skin--coordenacao .section-head .section-sub { font-size:14px !important; color:var(--ink-soft) !important; margin:0 !important; line-height:1.4; }
+body.dash-skin--coordenacao .section-head .section-sub { font-size:13.5px !important; color:var(--ink-soft) !important; margin:0 !important; line-height:1.4; }
 
-/* Saudação da Visão Geral: MESMO ritmo de topo/baixo das outras abas */
+/* Saudação da Visão Geral: mesmo ritmo das demais abas (igual professor) */
 body.dash-skin--coordenacao .overview-greeting, body.dash-skin--coordenacao #greeting {
   font-family:'Fraunces',serif !important; font-size: clamp(26px,3vw,32px) !important; font-weight:800 !important;
-  color:var(--ink) !important; letter-spacing:-0.02em !important; line-height:1.12 !important; margin: 0 0 6px !important;
+  color:var(--ink) !important; letter-spacing:-0.02em !important; line-height:1.12 !important; margin: 0 0 4px !important;
 }
 body.dash-skin--coordenacao .overview-greeting em, body.dash-skin--coordenacao #greeting em { color:var(--ac); font-style:italic; }
-body.dash-skin--coordenacao .overview-subline { font-size:14px !important; color:var(--ink-soft) !important; margin: 0 0 26px !important; }
+body.dash-skin--coordenacao .overview-subline { font-size:14px !important; color:var(--ink-soft) !important; margin: 0 0 24px !important; }
 
 /* ─── CARDS DE NÚMEROS (stat-row é o container real) ─────────────────── */
 body.dash-skin--coordenacao .stat-row, body.dash-skin--coordenacao .stats-grid {
   display: grid !important;
   grid-template-columns: repeat(auto-fit, minmax(220px,1fr)) !important;
-  gap: 16px !important; margin: 0 0 26px !important;
+  gap: 16px !important; margin: 0 0 24px !important;
 }
 body.dash-skin--coordenacao .stat-card {
   background: var(--surface) !important; border:1px solid var(--hairline) !important;
@@ -2416,7 +2413,6 @@ body.dash-skin--coordenacao .panel-title {
 }
 body.dash-skin--coordenacao .panel-icon { width:32px; height:32px; border-radius:9px; flex-shrink:0; display:inline-flex; align-items:center; justify-content:center; }
 body.dash-skin--coordenacao .panel-icon svg { width:17px !important; height:17px !important; }
-/* corpo do painel: respiro consistente, sem mexer em quem já tem padding/grade próprios */
 body.dash-skin--coordenacao .panel > .panel-body,
 body.dash-skin--coordenacao .panel > div[id]:not(.panel-head):not([class*="grid"]):not([style*="padding"]):not([style*="display"]) {
   padding: 22px 24px !important;
@@ -2494,18 +2490,18 @@ body.dash-skin--coordenacao .notif-bell-btn { width:38px; height:38px; border-ra
 body.dash-skin--coordenacao .notif-bell-btn:hover { background:#fff !important; border-color:var(--ac-2) !important; }
 body.dash-skin--coordenacao .notif-badge { background:var(--ac) !important; color:#fff !important; font-weight:800; border:2px solid #fff; }
 
-/* ─── RESPONSIVO ─────────────────────────────────────────────────────── */
+/* ─── RESPONSIVO (breakpoints alinhados ao professor) ────────────────── */
 @media (max-width: 1024px) {
   body.dash-skin--coordenacao .sb { transform: translateX(-100%) !important; transition: transform .3s; }
   body.dash-skin--coordenacao .sb.open { transform: translateX(0) !important; }
   body.dash-skin--coordenacao .main { margin-left: 0 !important; }
-  body.dash-skin--coordenacao .content { padding: 24px 22px 48px !important; }
+  body.dash-skin--coordenacao .content { padding: 24px 22px 44px !important; }
   body.dash-skin--coordenacao .topbar { padding: 0 22px !important; }
 }
 @media (max-width: 640px) {
-  body.dash-skin--coordenacao .content { padding: 18px 15px 40px !important; }
+  body.dash-skin--coordenacao .content { padding: 18px 15px 36px !important; }
   body.dash-skin--coordenacao .topbar { padding: 0 15px !important; height:58px !important; min-height:58px; }
-  body.dash-skin--coordenacao .section-head h2 { font-size: 22px !important; }
+  body.dash-skin--coordenacao .section-head h2 { font-size: 24px !important; }
 }
 
 /* Acessibilidade: reduzir animações */

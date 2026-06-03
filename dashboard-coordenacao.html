@@ -2260,6 +2260,77 @@ body.sb-collapsed .main { margin-left: 92px !important; }
   .doc-row-actions { margin-left: auto; }
   .doc-score-grid { grid-template-columns: 1fr; }
 }
+
+/* ════════════════════════════════════════════════
+   REFINAMENTOS MOBILE (consolidado)
+   ════════════════════════════════════════════════ */
+
+/* iOS faz zoom ao focar campos com fonte < 16px.
+   Mantém o visual do desktop e só ajusta no toque/telas pequenas. */
+@media (max-width: 768px) {
+  .f-group input, .f-group select, .f-group textarea,
+  .form-card input, .form-card select, .form-card textarea,
+  .coord-search-bar input, .coord-filter-field input, .coord-filter-field select,
+  input[type="text"], input[type="email"], input[type="password"],
+  input[type="date"], input[type="number"], input[type="search"],
+  select, textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Barra de busca + filtros: input na 1ª linha inteira,
+   botões de filtro distribuídos por igual na linha de baixo */
+@media (max-width: 640px) {
+  .coord-search-bar { gap: 8px; }
+  .coord-search-bar > input[type="text"],
+  .coord-search-bar > input[type="search"] {
+    flex: 1 1 100% !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+  .coord-search-bar .user-filter {
+    flex: 1 1 0 !important;
+    justify-content: center !important;
+    padding: 9px 8px !important;
+    white-space: nowrap;
+  }
+}
+
+/* Cabeçalho de painel: ações descem para baixo do título sem espremer */
+@media (max-width: 640px) {
+  .panel-head { flex-wrap: wrap; gap: 10px; padding: 16px 18px !important; }
+  .panel-head > .panel-title { flex: 1 1 100%; }
+  .panel-head > div:not(.panel-title) {
+    width: 100%;
+    justify-content: flex-start !important;
+    flex-wrap: wrap;
+  }
+}
+
+/* Modais: ocupam melhor a tela e rolam com folga */
+@media (max-width: 560px) {
+  #createModal > div, #editModal > div, #gradeModal > div {
+    padding: 22px 18px !important;
+    width: 94% !important;
+    max-width: 94% !important;
+    max-height: 88vh !important;
+    max-height: 88dvh !important;
+    border-radius: 18px !important;
+  }
+  #cSchedPopup { width: 92vw !important; padding: 22px 18px !important; }
+}
+
+/* Tabelas largas: rolagem horizontal com inércia no toque */
+@media (max-width: 768px) {
+  #coordGridWrap, .panel [style*="overflow-x"] {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Alvos de toque um pouco maiores nos botões de ação compactos */
+@media (max-width: 640px) {
+  .ctr-action { width: 40px; height: 40px; }
+}
 </style>
 </head>
 <body>

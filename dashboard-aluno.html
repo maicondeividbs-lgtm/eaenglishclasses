@@ -1402,7 +1402,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 .panel {
   border-radius: 18px !important;
   border-color: var(--g100) !important;
-  box-shadow: 0 2px 8px rgba(25,36,78,0.03);
+  box-shadow: 0 2px 10px rgba(25,36,78,0.06);
 }
 .panel-head {
   padding: 18px 26px !important;
@@ -2533,6 +2533,11 @@ body.sb-collapsed .main { margin-left: 92px !important; }
   background: linear-gradient(135deg, #6b7280 0%, #9ca3af 100%);
 }
 .next-class-cancelled .next-class-icon { background: rgba(255,255,255,0.15); }
+/* Item 4 — bloco animado de carregamento (visão geral)
+   Para quem ativou "reduzir animações", vira só uma barra cinza estática. */
+.sk-ann { display: flex; flex-direction: column; gap: 12px; padding: 18px 24px; }
+.sk-line { height: 14px; border-radius: 7px; background: linear-gradient(90deg, var(--g100) 25%, var(--g50) 50%, var(--g100) 75%); background-size: 200% 100%; animation: skShimmer 1.4s ease-in-out infinite; }
+@keyframes skShimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
 </style>
 </head>
 <body>
@@ -2630,7 +2635,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
           </div>
         </div>
 
-        <div class="panel"><div class="panel-head"><div class="panel-title"><span class="panel-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>Avisos Recentes</div></div><div id="overviewAnn"><div class="empty-state"><div class="empty-icon">📭</div><p>Carregando...</p></div></div></div>
+        <div class="panel"><div class="panel-head"><div class="panel-title"><span class="panel-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>Avisos Recentes</div></div><div id="overviewAnn"><div class="sk-ann"><div class="sk-line" style="width:70%"></div><div class="sk-line" style="width:90%"></div><div class="sk-line" style="width:55%"></div></div></div></div>
       </div>
 
       <!-- HOMEWORK -->

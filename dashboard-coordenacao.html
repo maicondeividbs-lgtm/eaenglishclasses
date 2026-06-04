@@ -447,12 +447,12 @@ body { background: var(--g50); margin: 0; }
 .list-title { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 2px; }
 .list-sub { font-size: 12px; color: var(--g500); }
 .badge { padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; }
-.badge-pending { background: rgba(245,154,30,0.12); color: var(--mango); }
-.badge-done { background: rgba(16,185,129,0.12); color: #10b981; }
+.badge-pending { background: rgba(245,154,30,0.12); color: #b45309; }
+.badge-done { background: rgba(16,185,129,0.12); color: #047857; }
 .badge-graded { background: rgba(37,60,150,0.12); color: var(--blue); }
-.badge-new { background: rgba(243,107,46,0.12); color: var(--orange); }
+.badge-new { background: rgba(243,107,46,0.12); color: #c2410c; }
 .badge-time { background: rgba(107,114,128,0.08); color: var(--g500); }
-.empty-state { text-align: center; padding: 48px 20px; color: var(--g400); }
+.empty-state { text-align: center; padding: 48px 20px; color: var(--g500); }
 .empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; opacity: 0.4; }
 
 /* User cards */
@@ -1577,6 +1577,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
   background: linear-gradient(135deg, var(--orange) 0%, var(--mango) 100%) !important;
   color: #fff !important;
   font-weight: 600 !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.35);
   box-shadow: 0 4px 14px rgba(243,107,46,0.30), inset 0 1px 0 rgba(255,255,255,0.18) !important;
 }
 .sb-link.active svg {
@@ -2457,7 +2458,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
         <span class="topbar-title" id="topbarTitle">Visão Geral</span>
         <div class="topbar-date" id="topbarDate"></div>
       </div>
-      <button class="mobile-menu-btn" onclick="document.querySelector('.sb').classList.toggle('open');document.getElementById('sbOverlay').classList.toggle('open')">☰</button>
+      <button class="mobile-menu-btn" aria-label="Abrir menu" type="button" onclick="document.querySelector('.sb').classList.toggle('open');document.getElementById('sbOverlay').classList.toggle('open')">☰</button>
       <div class="topbar-user">
         <div class="notif-wrap">
           <button id="notifBell" class="notif-bell-btn" type="button" aria-label="Notificações" title="Notificações">
@@ -3727,7 +3728,7 @@ async function loadOverview() {
 
     // Recent activity
     const recent = [];
-    placements.slice(0,3).forEach(p => recent.push({title:'📅 Nivelamento: ' + p.full_name, sub: p.email + ' — ' + formatDateTime(p.created_at), badge: p.status === 'pending' ? 'Pendente' : p.status, cls: 'badge-new'}));
+    placements.slice(0,3).forEach(p => recent.push({title:'📅 Nivelamento: ' + p.full_name, sub: p.email + ' — ' + formatDateTime(p.created_at), badge: ({pending:'Pendente',reviewed:'Avaliado',contacted:'Contatado',enrolled:'Matriculado'}[p.status] || 'Novo'), cls: 'badge-new'}));
     announcements.slice(0,3).forEach(a => recent.push({title:'📢 ' + a.title, sub: (a.author?.full_name||'') + ' — ' + formatDateTime(a.created_at), badge: 'Aviso', cls: 'badge-time'}));
 
     const div = document.getElementById('recentActivity');
@@ -4261,7 +4262,7 @@ async function loadWritingCoord() {
   const div = document.getElementById('wrCoordList');
   if (!items || !items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">✍️</div><p>Nenhuma redação no sistema.</p></div>'; return; }
   div.innerHTML = items.map(w => {
-    const statusMap = {pending:'<span class="badge badge-pending">Aguardando aluno</span>',submitted:'<span class="badge" style="background:rgba(243,107,46,0.12);color:var(--orange)">Aguardando correção</span>',graded:'<span class="badge badge-done">Corrigida: '+(w.grade||'')+'</span>'};
+    const statusMap = {pending:'<span class="badge badge-pending">Aguardando aluno</span>',submitted:'<span class="badge" style="background:rgba(243,107,46,0.12);color:#c2410c">Aguardando correção</span>',graded:'<span class="badge badge-done">Corrigida: '+(w.grade||'')+'</span>'};
     return '<div class="list-item"><div><div class="list-title">✍️ ' + w.title + '</div><div class="list-sub">Prof. ' + (w.teacher?.full_name||'?') + ' → ' + (w.student?.full_name||'?') + ' — ' + formatDateTime(w.created_at) + '</div></div>' + (statusMap[w.status]||'') + '</div>';
   }).join('');
 }

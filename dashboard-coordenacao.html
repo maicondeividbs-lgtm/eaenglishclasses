@@ -180,6 +180,21 @@ body { background: var(--g50); margin: 0; }
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* ═══ Light entrance animations ═══ */
+.stat-row .stat-card { animation: statIn 0.45s cubic-bezier(0.16,1,0.3,1) backwards; }
+.stat-row .stat-card:nth-child(1) { animation-delay: .04s; }
+.stat-row .stat-card:nth-child(2) { animation-delay: .10s; }
+.stat-row .stat-card:nth-child(3) { animation-delay: .16s; }
+.stat-row .stat-card:nth-child(4) { animation-delay: .22s; }
+@keyframes statIn { from { opacity: 0; transform: translateY(12px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.niv-funnel-card { animation: statIn 0.5s cubic-bezier(0.16,1,0.3,1) backwards; }
+.niv-funnel-card.niv-fc-pending { animation-delay: .08s; }
+.niv-funnel-card.niv-fc-contacted { animation-delay: .16s; }
+.niv-funnel-card.niv-fc-rate { animation-delay: .24s; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+}
+
 /* Better hover on sidebar links */
 
 /* Sidebar groups */
@@ -905,10 +920,25 @@ body { background: var(--g50); margin: 0; }
   font-size: 22px;
   flex-shrink: 0;
 }
-.niv-fc-total .niv-funnel-icon    { background: rgba(37,60,150,0.10); }
-.niv-fc-pending .niv-funnel-icon  { background: rgba(245,154,30,0.12); }
-.niv-fc-contacted .niv-funnel-icon{ background: rgba(16,185,129,0.12); }
-.niv-fc-rate .niv-funnel-icon     { background: rgba(243,107,46,0.12); }
+.niv-funnel-icon svg { width: 24px; height: 24px; }
+.niv-funnel-meta { min-width: 0; }
+.niv-fc-total .niv-funnel-icon    { background: rgba(37,60,150,0.10); color: var(--blue); }
+.niv-fc-pending .niv-funnel-icon  { background: rgba(245,154,30,0.12); color: #b45309; }
+.niv-fc-contacted .niv-funnel-icon{ background: rgba(16,185,129,0.12); color: #047857; }
+.niv-fc-rate .niv-funnel-icon     { background: rgba(243,107,46,0.12); color: var(--orange); }
+.niv-rate-bar {
+  margin-top: 8px;
+  height: 6px;
+  background: var(--g100);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.niv-rate-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--orange), var(--mango));
+  border-radius: 99px;
+  transition: width 0.9s cubic-bezier(0.16,1,0.3,1);
+}
 .niv-funnel-num {
   font-family: 'Fraunces', serif;
   font-size: 26px;
@@ -926,11 +956,11 @@ body { background: var(--g50); margin: 0; }
   margin-top: 4px;
 }
 .niv-funnel-arrow {
-  font-size: 20px;
   color: var(--g300, #cbd2dd);
-  font-weight: 900;
   text-align: center;
+  display: flex; align-items: center; justify-content: center;
 }
+.niv-funnel-arrow svg { width: 20px; height: 20px; }
 @media (max-width: 1024px) {
   .niv-funnel { grid-template-columns: 1fr 1fr; }
   .niv-funnel-arrow { display: none; }
@@ -1208,8 +1238,10 @@ body { background: var(--g50); margin: 0; }
   background: linear-gradient(135deg, rgba(245,154,30,0.12), rgba(243,107,46,0.10));
   display: flex; align-items: center; justify-content: center;
   font-size: 32px;
+  color: var(--orange);
   margin: 0 auto 16px;
 }
+.niv-empty-icon svg { width: 34px; height: 34px; }
 .niv-empty h4 {
   font-family: 'Fraunces', serif;
   font-size: 19px;
@@ -2767,33 +2799,34 @@ body.sb-collapsed .main { margin-left: 92px !important; }
         <!-- Resumo do funil -->
         <div class="niv-funnel" id="nivFunnel">
           <div class="niv-funnel-card niv-fc-total">
-            <div class="niv-funnel-icon">📥</div>
+            <div class="niv-funnel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg></div>
             <div class="niv-funnel-meta">
               <div class="niv-funnel-num" id="nivStatTotal">0</div>
               <div class="niv-funnel-lbl">Leads recebidos</div>
             </div>
           </div>
-          <div class="niv-funnel-arrow">→</div>
+          <div class="niv-funnel-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
           <div class="niv-funnel-card niv-fc-pending">
-            <div class="niv-funnel-icon">⏳</div>
+            <div class="niv-funnel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
             <div class="niv-funnel-meta">
               <div class="niv-funnel-num" id="nivStatPending">0</div>
               <div class="niv-funnel-lbl">Aguardando contato</div>
             </div>
           </div>
-          <div class="niv-funnel-arrow">→</div>
+          <div class="niv-funnel-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
           <div class="niv-funnel-card niv-fc-contacted">
-            <div class="niv-funnel-icon">✅</div>
+            <div class="niv-funnel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
             <div class="niv-funnel-meta">
               <div class="niv-funnel-num" id="nivStatContacted">0</div>
               <div class="niv-funnel-lbl">Já contatados</div>
             </div>
           </div>
           <div class="niv-funnel-card niv-fc-rate">
-            <div class="niv-funnel-icon">📊</div>
+            <div class="niv-funnel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
             <div class="niv-funnel-meta">
               <div class="niv-funnel-num" id="nivStatRate">0%</div>
               <div class="niv-funnel-lbl">Taxa de atendimento</div>
+              <div class="niv-rate-bar"><div class="niv-rate-fill" id="nivRateBar" style="width:0%"></div></div>
             </div>
           </div>
         </div>
@@ -3846,6 +3879,8 @@ function nivUpdateStats() {
   set('nivStatPending', pending);
   set('nivStatContacted', contacted);
   set('nivStatRate', rate + '%');
+  const rateBar = document.getElementById('nivRateBar');
+  if (rateBar) requestAnimationFrame(() => { rateBar.style.width = rate + '%'; });
   set('nivTabAll', total);
   set('nivTabPending', pending);
   set('nivTabContacted', contacted);
@@ -3909,17 +3944,18 @@ function renderNivList() {
 
   if (!items.length) {
     let msg, icon, title;
+    const sv = (inner) => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + inner + '</svg>';
     if (_nivSearch) {
-      icon = '🔍'; title = 'Nenhum lead encontrado';
+      icon = sv('<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>'); title = 'Nenhum lead encontrado';
       msg = 'Nenhuma solicitação corresponde à sua busca. Tente outro termo.';
     } else if (_nivFilter === 'pending') {
-      icon = '🎉'; title = 'Tudo em dia!';
+      icon = sv('<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>'); title = 'Tudo em dia!';
       msg = 'Não há leads aguardando contato. Todos os agendamentos já foram atendidos.';
     } else if (_nivFilter === 'contacted') {
-      icon = '📭'; title = 'Nenhum lead contatado ainda';
+      icon = sv('<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/>'); title = 'Nenhum lead contatado ainda';
       msg = 'Os leads que você marcar como contatados aparecerão aqui.';
     } else {
-      icon = '📥'; title = 'Nenhum lead recebido';
+      icon = sv('<polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>'); title = 'Nenhum lead recebido';
       msg = 'Quando alguém preencher o formulário de nivelamento no site, a solicitação aparecerá aqui automaticamente.';
     }
     div.innerHTML = '<div class="niv-empty"><div class="niv-empty-icon">' + icon + '</div>' +

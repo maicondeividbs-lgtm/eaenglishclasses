@@ -1449,9 +1449,9 @@
     </div>
     <div class="modal-body" id="gramBody"></div>
     <div class="modal-foot" id="gramFoot">
-      <button class="gram-foot-btn gram-foot-ghost" id="gramCopyBtn" type="button" aria-label="Copiar exemplos" title="Copiar exemplos">
+      <button class="gram-foot-btn gram-foot-ghost" id="gramCopyBtn" type="button" aria-label="Copiar conteúdo" title="Copiar conteúdo">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-        <span class="gram-foot-label">Copiar exemplos</span>
+        <span class="gram-foot-label">Copiar conteúdo</span>
       </button>
       <button class="gram-foot-btn gram-foot-primary modal-download" id="gramDownloadBtn" type="button" aria-label="Baixar como imagem" title="Baixar como imagem">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -2139,7 +2139,7 @@ function openGram(idx) {
     cpBtn.disabled = false;
     cpBtn.classList.remove('is-success');
     const clbl = cpBtn.querySelector('.gram-foot-label');
-    if (clbl) clbl.textContent = 'Copiar exemplos';
+    if (clbl) clbl.textContent = 'Copiar conteúdo';
   }
   document.getElementById('gramModal').classList.add('open');
 }
@@ -2273,22 +2273,59 @@ function copyGramExamples() {
   const ex = window._currentGramEx;
   const body = document.getElementById('gramBody');
   if (!body) return;
-  const items = Array.prototype.slice.call(
-    body.querySelectorAll('.gram-section-exemplos .gram-bullets li')
-  );
-  if (!items.length) { showToast('Nenhum exemplo para copiar.'); return; }
 
-  const lines = items.map(function (li) {
-    const eng = (li.querySelector('.gram-eng') ? li.querySelector('.gram-eng').textContent : '').trim();
-    const trans = (li.querySelector('.gram-trans') ? li.querySelector('.gram-trans').textContent : '').trim();
-    return trans ? ('• ' + eng + ' ' + trans) : ('• ' + eng);
+  // Converte um elemento em texto legível, tratando <br> como quebra de linha
+  function cleanText(el) {
+    const clone = el.cloneNode(true);
+    Array.prototype.slice.call(clone.querySelectorAll('br')).forEach(function (br) {
+      br.replaceWith('\n');
+    });
+    return clone.textContent.replace(/\u00a0/g, ' ').replace(/[ \t]{2,}/g, ' ')
+      .split('\n').map(function (s) { return s.trim(); }).filter(Boolean).join('\n').trim();
+  }
+
+  // Percorre TODAS as seções do pop-up (Explicação, Estrutura, Exemplos, Dica…)
+  const sections = Array.prototype.slice.call(body.querySelectorAll('.gram-section'));
+  const parts = [];
+  sections.forEach(function (sec) {
+    const titleEl = sec.querySelector('.gram-section-title');
+    const title = titleEl ? titleEl.textContent.trim() : '';
+    const secBody = sec.querySelector('.gram-section-body');
+    const lines = [];
+    if (secBody) {
+      Array.prototype.slice.call(secBody.children).forEach(function (node) {
+        if (node.classList && node.classList.contains('gram-subhead')) {
+          lines.push('— ' + node.textContent.trim());
+        } else if ((node.classList && node.classList.contains('gram-bullets')) || node.tagName === 'UL' || node.tagName === 'OL') {
+          Array.prototype.slice.call(node.querySelectorAll('li')).forEach(function (li) {
+            const eng = li.querySelector('.gram-eng');
+            const trans = li.querySelector('.gram-trans');
+            if (eng || trans) {
+              const e = eng ? eng.textContent.trim() : '';
+              const t = trans ? trans.textContent.trim() : '';
+              lines.push('• ' + (t ? (e + ' ' + t) : e));
+            } else {
+              lines.push('• ' + cleanText(li));
+            }
+          });
+        } else {
+          const txt = cleanText(node);
+          if (txt) lines.push(txt);
+        }
+      });
+    }
+    if (title || lines.length) {
+      parts.push(title.toUpperCase() + (lines.length ? '\n' + lines.join('\n') : ''));
+    }
   });
+
+  if (!parts.length) { showToast('Nada para copiar.'); return; }
 
   const topic = ex ? (ex.topic || '').replace(/<[^>]+>/g, '').trim() : '';
   const ref = ex ? (ex.ref || '').trim() : '';
   const header = [topic, ref].filter(Boolean).join('\n');
   const text = (header ? header + '\n\n' : '') +
-    'EXEMPLOS\n' + lines.join('\n') +
+    parts.join('\n\n') +
     '\n\nEA English Classes · Biblioteca Pedagógica';
 
   const cpBtn = document.getElementById('gramCopyBtn');
@@ -2296,10 +2333,10 @@ function copyGramExamples() {
   const markCopied = function () {
     if (cpBtn) cpBtn.classList.add('is-success');
     if (clbl) clbl.textContent = 'Copiado ✓';
-    showToast('Exemplos copiados!');
+    showToast('Conteúdo copiado!');
     setTimeout(function () {
       if (cpBtn) cpBtn.classList.remove('is-success');
-      if (clbl) clbl.textContent = 'Copiar exemplos';
+      if (clbl) clbl.textContent = 'Copiar conteúdo';
     }, 2200);
   };
 

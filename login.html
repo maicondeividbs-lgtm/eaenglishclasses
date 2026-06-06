@@ -186,6 +186,13 @@
     .portal-buttons { flex-direction: column; }
     .portal-btn { justify-content: center; }
   }
+
+/* ════════ AJUSTES MOBILE/TABLET (≤768px) — NÃO afetam o desktop ════════ */
+@media (max-width: 768px){
+  #rememberMe { width: 20px !important; height: 20px !important; accent-color: var(--orange); }
+  #forgotLink { display: inline-flex; align-items: center; min-height: 44px; }
+  .back-home { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
+}
 </style>
 
 <div class="login-wrap">

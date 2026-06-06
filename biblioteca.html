@@ -1474,10 +1474,18 @@
 <!-- Hero -->
 <header class="bib-hero">
   <div class="container">
-    <a href="dashboard-professor.html" class="bib-back">
+    <a href="dashboard-professor.html" id="bibBackLink" class="bib-back">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
       Voltar ao Dashboard
     </a>
+    <script>
+    (function(){
+      var map={coordenacao:'dashboard-coordenacao.html',professor:'dashboard-professor.html',aluno:'dashboard-aluno.html'};
+      var from=new URLSearchParams(location.search).get('from');
+      var link=document.getElementById('bibBackLink');
+      if(link && from && map[from]) link.setAttribute('href', map[from]);
+    })();
+    </script>
     <div class="bib-eyebrow">Biblioteca Pedagógica</div>
     <h1 class="bib-title">Toda a jornada,<br><em>em um só lugar</em></h1>
     <p class="bib-sub">Currículo completo, worksheets e explicações gramaticais — organizados como uma linha do tempo de aprendizado, por livro e nível.</p>

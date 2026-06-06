@@ -2465,7 +2465,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
             <span>Ferramenta</span>
             <span class="tip">Ferramenta</span>
           </button>
-          <a class="sb-link" href="biblioteca.html" target="_blank" rel="noopener" title="Abrir Biblioteca em nova aba">
+          <a class="sb-link" href="biblioteca.html?from=coordenacao" title="Abrir Biblioteca">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
             <span>Biblioteca</span>
             <span class="tip">Biblioteca</span>
@@ -4543,11 +4543,54 @@ function initCoordDragDrop(){
       var ex=cell.querySelector('.sched-slot');
       if(ex&&ex.dataset.slotid!==oldId){showToast('⚠️ Horário ocupado por '+ex.dataset.name,'error');return;}
     }
+    // Validação de conflitos: aluno em dois lugares ou sobreposição de duração
+    var _conf=await cScheduleConflict(cTeacherId,name,day,hour+':00',60,oldId);
+    if(_conf){showToast(_conf.msg,'error');return;}
     if(oldId){try{await removeScheduleSlot(parseInt(oldId));await addScheduleSlot(cTeacherId,day,hour+':00',name,level,60);cPop();showToast('Aula movida!');loadCoordSchedule();}catch(er){showToast('Erro','error');}return;}
     try{await addScheduleSlot(cTeacherId,day,hour+':00',name,level,60);cPop();showToast('Aula adicionada!');loadCoordSchedule();}catch(er){showToast('Erro','error');}
   });
 
 
+
+  // Verifica conflitos antes de alocar uma aula:
+  // (a) o mesmo aluno já tem aula com OUTRO professor no horário; (b) sobreposição de duração com o próprio professor.
+  async function cScheduleConflict(teacherId, studentName, day, timeSlot, durationMin, excludeSlotId){
+    var startIdx = cFindHourIdx(timeSlot);
+    if(startIdx < 0) return null;
+    var span = Math.max(1, Math.ceil((durationMin||60)/30));
+    var newEnd = startIdx + span;
+    function overlaps(otherTime, otherDur){
+      var oi = cFindHourIdx(otherTime); if(oi < 0) return false;
+      var os = Math.max(1, Math.ceil((otherDur||60)/30));
+      return startIdx < (oi + os) && oi < newEnd;
+    }
+    try{
+      var stuRes = await db.from('schedule_slots')
+        .select('id,teacher_id,time_slot,duration_minutes')
+        .eq('student_name', studentName).eq('day_of_week', day);
+      var stu = (stuRes && stuRes.data) || [];
+      for(var i=0;i<stu.length;i++){
+        var s = stu[i];
+        if(excludeSlotId && String(s.id) === String(excludeSlotId)) continue;
+        if(overlaps(s.time_slot, s.duration_minutes)){
+          if(String(s.teacher_id) !== String(teacherId))
+            return { msg: '⚠️ ' + studentName + ' já tem aula com outro professor nesse horário.' };
+          return { msg: '⚠️ ' + studentName + ' já está alocado nesse horário.' };
+        }
+      }
+      var tRes = await db.from('schedule_slots')
+        .select('id,student_name,time_slot,duration_minutes')
+        .eq('teacher_id', teacherId).eq('day_of_week', day);
+      var ts = (tRes && tRes.data) || [];
+      for(var j=0;j<ts.length;j++){
+        var t = ts[j];
+        if(excludeSlotId && String(t.id) === String(excludeSlotId)) continue;
+        if(overlaps(t.time_slot, t.duration_minutes))
+          return { msg: '⚠️ Conflito de horário: sobrepõe a aula de ' + t.student_name + '.' };
+      }
+    }catch(err){ return null; } // falha de rede: não bloqueia (degradação segura)
+    return null;
+  }
 
   // Click slot = popup, click empty = extra event
   coordGridWrap.addEventListener('click',async function(e){

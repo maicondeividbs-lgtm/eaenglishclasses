@@ -278,6 +278,13 @@
 
 /* ═══ Conversação (perguntas por unidade) ═══ */
 .conv-list { display: flex; flex-direction: column; gap: 12px; }
+.conv-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+.conv-unit { width: 100%; display: flex; align-items: center; gap: 12px; padding: 16px 18px; cursor: pointer; font-family: inherit; text-align: left; }
+.conv-unit:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(25,36,78,0.10); border-color: rgba(243,107,46,0.35); }
+.conv-unit-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.conv-unit .conv-unit-title { white-space: normal; line-height: 1.25; }
+.conv-unit-arrow { flex-shrink: 0; color: var(--g300, #cbd2dd); transition: transform .2s, color .2s; }
+.conv-unit:hover .conv-unit-arrow { color: var(--orange, #f36b2e); transform: translateX(3px); }
 .conv-unit {
   background: #fff;
   border: 1px solid var(--g100, #eef0f4);
@@ -1524,6 +1531,25 @@
 <body>
 
 <!-- Modal -->
+<div class="modal-bg" id="convModal">
+  <div class="modal-box">
+    <div class="modal-head" id="convHead">
+      <div class="modal-head-text">
+        <span class="modal-chip" id="convChip"></span>
+        <h3 id="convTitle">Conversation</h3>
+        <div class="modal-meta" id="convMeta"></div>
+      </div>
+      <button class="modal-close" id="convCloseBtn" type="button" aria-label="Fechar">✕</button>
+    </div>
+    <div class="modal-body" id="convBody"></div>
+    <div class="modal-foot">
+      <button class="gram-foot-btn gram-foot-ghost" id="convCopyBtn" type="button" aria-label="Copiar perguntas" title="Copiar perguntas">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span class="gram-foot-label">Copiar perguntas</span>
+      </button>
+    </div>
+  </div>
+</div>
 <div class="modal-bg" id="gramModal">
   <div class="modal-box">
     <div class="modal-head" id="gramHead">
@@ -1985,35 +2011,41 @@ function renderConversation(search) {
   const intro = '<div class="view-intro">' +
     '<div class="view-intro-eyebrow">' + LEVEL_BOOK_TAGS[currentLevel] + '</div>' +
     '<h2>Perguntas de <em>conversação</em> por unidade</h2>' +
-    '<p>Clique numa unidade para abrir as perguntas. Ideais para aquecimento, prática de fluência e lição de casa.</p>' +
+    '<p>Escolha uma unidade para abrir as perguntas. Ideais para aquecimento, prática de fluência e lição de casa.</p>' +
   '</div>';
   let cards = '', any = false;
   units.forEach(function(u) {
-    let qs = u.questions;
-    if (q) qs = qs.filter(function(x){ return x.toLowerCase().indexOf(q) >= 0; });
-    if (q && !qs.length) return;
+    let n = u.questions.length;
+    if (q) { n = u.questions.filter(function(x){ return x.toLowerCase().indexOf(q) >= 0; }).length; if (!n) return; }
     any = true;
-    const open = q ? ' open' : '';
-    const lis = qs.map(function(x){ return '<li>' + escapeHtml(x) + '</li>'; }).join('');
-    const countTxt = q ? (qs.length + ' resultado' + (qs.length > 1 ? 's' : '')) : (qs.length + ' perguntas');
-    cards += '<div class="conv-unit' + open + '" data-conv-unit="' + u.n + '">' +
-      '<button class="conv-unit-head" type="button" aria-expanded="' + (q ? 'true' : 'false') + '">' +
-        '<span class="conv-unit-emoji">' + (u.emoji || '💬') + '</span>' +
+    const countTxt = q ? (n + ' resultado' + (n > 1 ? 's' : '')) : (n + ' perguntas');
+    cards += '<button class="conv-unit" type="button" data-conv-open="' + u.n + '">' +
+      '<span class="conv-unit-emoji">' + (u.emoji || '💬') + '</span>' +
+      '<span class="conv-unit-main">' +
         '<span class="conv-unit-badge">Unit ' + u.n + '</span>' +
         '<span class="conv-unit-title">' + escapeHtml(u.title) + '</span>' +
         '<span class="conv-unit-count">' + countTxt + '</span>' +
-        '<svg class="conv-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>' +
-      '</button>' +
-      '<div class="conv-unit-body"><div class="conv-unit-inner">' +
-        '<div class="conv-unit-tools"><button class="conv-copy" type="button" data-conv-copy="' + u.n + '">' +
-          '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>' +
-          'Copiar perguntas</button></div>' +
-        '<ol class="conv-qs">' + lis + '</ol>' +
-      '</div></div>' +
-    '</div>';
+      '</span>' +
+      '<svg class="conv-unit-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>' +
+    '</button>';
   });
   if (q && !any) { div.innerHTML = intro + emptyState('🔍', 'Nenhuma pergunta corresponde à sua busca.'); return; }
   div.innerHTML = intro + '<div class="conv-list">' + cards + '</div>';
+}
+
+function openConvUnit(n) {
+  const units = (convData[currentLevel] && convData[currentLevel].units) || [];
+  const u = units.find(function(x){ return x.n === n; });
+  if (!u) return;
+  window._convUnit = { level: currentLevel, n: n };
+  document.getElementById('convChip').textContent = 'Unit ' + u.n + ' · ' + (LEVEL_BOOK_TAGS[currentLevel] || '');
+  document.getElementById('convTitle').textContent = (u.emoji ? u.emoji + ' ' : '') + u.title;
+  document.getElementById('convMeta').textContent = u.questions.length + ' perguntas de conversação';
+  document.getElementById('convBody').innerHTML = '<ol class="conv-qs">' + u.questions.map(function(x){ return '<li>' + escapeHtml(x) + '</li>'; }).join('') + '</ol>';
+  document.getElementById('convBody').scrollTop = 0;
+  const cb = document.getElementById('convCopyBtn'); const lbl = cb ? cb.querySelector('.gram-foot-label') : null;
+  if (cb) cb.classList.remove('is-success'); if (lbl) lbl.textContent = 'Copiar perguntas';
+  document.getElementById('convModal').classList.add('open');
 }
 
 function copyConvUnit(n, btn) {
@@ -2600,12 +2632,13 @@ document.addEventListener('click', (e) => {
   // Tab
   const tab = e.target.closest('.bib-tab');
   if (tab) { setView(tab.dataset.view); return; }
-  // Conversação: abrir/fechar unidade
-  const convHead = e.target.closest('.conv-unit-head');
-  if (convHead) { const cu = convHead.closest('.conv-unit'); const op = cu.classList.toggle('open'); convHead.setAttribute('aria-expanded', op ? 'true' : 'false'); return; }
-  // Conversação: copiar perguntas da unidade
-  const convCopy = e.target.closest('[data-conv-copy]');
-  if (convCopy) { copyConvUnit(parseInt(convCopy.dataset.convCopy, 10), convCopy); return; }
+  // Conversação: abrir pop-up da unidade
+  const convOpen = e.target.closest('[data-conv-open]');
+  if (convOpen) { openConvUnit(parseInt(convOpen.dataset.convOpen, 10)); return; }
+  // Conversação: copiar perguntas (no pop-up)
+  if (e.target.closest('#convCopyBtn')) { if (window._convUnit) copyConvUnit(window._convUnit.n, document.getElementById('convCopyBtn')); return; }
+  // Conversação: fechar pop-up
+  if (e.target.closest('#convCloseBtn') || e.target.id === 'convModal') { document.getElementById('convModal').classList.remove('open'); return; }
   // Carrossel currículo: prev
   if (e.target.closest('[data-cur-prev]')) { goCarousel(curCarouselState.index - 1); return; }
   // Carrossel currículo: next
@@ -2653,7 +2686,7 @@ document.getElementById('searchInput').addEventListener('input', () => {
 
 // Escape to close modal + setas no carrossel
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') document.getElementById('gramModal').classList.remove('open');
+  if (e.key === 'Escape') { document.getElementById('gramModal').classList.remove('open'); document.getElementById('convModal').classList.remove('open'); }
   // Setas só navegam o carrossel quando estamos na aba Currículo e modal fechado
   const modalOpen = document.getElementById('gramModal').classList.contains('open');
   const searchFocused = document.activeElement && document.activeElement.id === 'searchInput';

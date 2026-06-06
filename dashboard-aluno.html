@@ -2569,6 +2569,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
     <div class="sb-badge"><span style="font-size:18px">🎓</span><span class="sb-badge-text">Área do Aluno</span></div>
     <nav class="sb-nav">
       <button class="sb-link active" data-section="overview" data-tip="Visão Geral"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>Visão Geral</span></button>
+      <button class="sb-link" data-section="schedule" data-tip="Minha Grade"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2zM9 14H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2z"/></svg><span>Minha Grade</span></button>
       <button class="sb-link" data-section="homework" data-tip="Homework"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg><span>Homework</span></button>
       <button class="sb-link" data-section="feedback" data-tip="Feedbacks"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg><span>Feedbacks</span></button>
       <button class="sb-link" data-section="grades" data-tip="Minhas Notas"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm-2 14l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg><span>Minhas Notas</span></button>
@@ -2658,6 +2659,22 @@ body.sb-collapsed .main { margin-left: 92px !important; }
       </div>
 
       <!-- HOMEWORK -->
+      <div class="section" id="sec-schedule">
+        <div class="section-head">
+          <div class="section-head-icon blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <div class="section-head-text">
+            <h2>Minha Grade</h2>
+            <p class="section-sub">Seus horários de aula da semana. Ajustes são feitos pela coordenação.</p>
+          </div>
+        </div>
+        <div id="schedNextBanner" style="display:none;margin-bottom:18px"></div>
+        <div id="schedWeekBody">
+          <div class="skel-line" style="height:160px;border-radius:20px"></div>
+        </div>
+      </div>
+
       <div class="section" id="sec-homework">
         <div class="section-head">
           <div class="section-head-icon blue">
@@ -2928,7 +2945,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 <script src="supabase.js"></script>
 <script>
 let currentUser = null;
-const sections = {"overview":"Visão Geral","homework":"Homework","feedback":"Feedbacks","grades":"Minhas Notas","vocabulary":"Vocabulário","announcements":"Avisos","writing":"Redação","pronunciation":"Pronúncia","manual":"Manual do Aluno","profile":"Meu Perfil"};
+const sections = {"overview":"Visão Geral","schedule":"Minha Grade","homework":"Homework","feedback":"Feedbacks","grades":"Minhas Notas","vocabulary":"Vocabulário","announcements":"Avisos","writing":"Redação","pronunciation":"Pronúncia","manual":"Manual do Aluno","profile":"Meu Perfil"};
 
 // Registra o acesso do aluno para a coordenação.
 // Chamado após a autenticação confirmar que é um aluno.
@@ -4276,6 +4293,74 @@ async function loadMyClasses() {
   }
 }
 
+// ═══ MINHA GRADE (aba dedicada) ═══
+async function loadStudentSchedule() {
+  const banner = document.getElementById('schedNextBanner');
+  const body = document.getElementById('schedWeekBody');
+  if (!body) return;
+  const dayNames = ['Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+  const dayAbbr = ['Seg','Ter','Qua','Qui','Sex','Sáb'];
+  const emptyHtml = '<div class="empty-state"><div class="empty-icon">🗓️</div><p>Nenhuma aula agendada ainda. Assim que a coordenação definir sua turma, seus horários aparecem aqui.</p></div>';
+  try {
+    const info = await getStudentMainTeacher(currentUser.id);
+    if (!info || !info.teacher_id) { if (banner) banner.style.display='none'; body.innerHTML = emptyHtml; return; }
+    const slots = await getScheduleSlots(info.teacher_id);
+    const myName = (currentUser.full_name || '').trim().toLowerCase();
+    const mine = (slots || []).filter(s => s.student_name && s.student_name.trim().toLowerCase() === myName);
+    if (!mine.length) { if (banner) banner.style.display='none'; body.innerHTML = emptyHtml; return; }
+
+    // Próxima aula
+    const now = new Date();
+    let best = null, bestMs = Infinity;
+    mine.forEach(function(s){
+      const dowJS = s.day_of_week + 1, hoje = now.getDay();
+      let diff = (dowJS - hoje + 7) % 7;
+      const hm = (s.time_slot || '').substring(0,5).split(':');
+      const aulaMin = parseInt(hm[0]||0)*60 + parseInt(hm[1]||0);
+      const agoraMin = now.getHours()*60 + now.getMinutes();
+      if (diff === 0 && agoraMin >= aulaMin) diff = 7;
+      const ms = diff*86400000 + aulaMin*60000;
+      if (ms < bestMs) { bestMs = ms; best = s; best._diff = diff; }
+    });
+    if (banner && best) {
+      const hm = (best.time_slot || '').substring(0,5);
+      const dur = best.duration_minutes ? best.duration_minutes + ' min' : '60 min';
+      const when = best._diff === 0 ? 'Hoje' : best._diff === 1 ? 'Amanhã' : dayNames[best.day_of_week];
+      banner.style.display = '';
+      banner.innerHTML =
+        '<div style="display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,var(--blue),var(--blue-light));color:#fff;border-radius:16px;padding:18px 20px">' +
+          '<div style="font-size:30px">' + (best._diff === 0 ? '⚡' : '🗓️') + '</div>' +
+          '<div><div style="font-size:12px;text-transform:uppercase;letter-spacing:.06em;opacity:.85;font-weight:700">Próxima aula</div>' +
+          '<div style="font-size:18px;font-weight:800">' + when + ' · ' + hm + '</div>' +
+          '<div style="font-size:13px;opacity:.9">🕐 ' + dur + (info.teacher_name ? (' · ' + wrEscapeHtml(info.teacher_name)) : '') + '</div></div>' +
+        '</div>';
+    } else if (banner) { banner.style.display = 'none'; }
+
+    // Grade semanal
+    mine.sort(function(a,b){ return a.day_of_week !== b.day_of_week ? a.day_of_week - b.day_of_week : (a.time_slot||'').localeCompare(b.time_slot||''); });
+    let html = '';
+    mine.forEach(function(s){
+      const di = s.day_of_week;
+      const dayFull = (di>=0 && di<dayNames.length) ? dayNames[di] : 'Dia';
+      const abbr = (di>=0 && di<dayAbbr.length) ? dayAbbr[di] : '?';
+      const time = (s.time_slot || '').substring(0,5);
+      const dur = s.duration_minutes ? (' · ' + s.duration_minutes + ' min') : '';
+      const isNext = best && s === best;
+      html +=
+        '<div class="class-item"' + (isNext ? ' style="border-color:var(--blue)"' : '') + '>' +
+          '<div class="class-day"><span class="class-day-abbr">' + abbr + '</span></div>' +
+          '<div><div class="class-info-day">' + dayFull + (isNext ? ' <span style="color:var(--blue);font-size:11px;font-weight:700">• próxima</span>' : '') + '</div>' +
+            '<div class="class-info-time">🕐 ' + wrEscapeHtml(time) + dur + '</div></div>' +
+        '</div>';
+    });
+    body.innerHTML = '<div class="profile-card-body" style="padding:0">' + html + '</div>';
+  } catch(e) {
+    console.error('Student schedule:', e);
+    if (banner) banner.style.display = 'none';
+    body.innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><p>Não foi possível carregar sua grade no momento.</p></div>';
+  }
+}
+
 async function saveProfile() {
   const name = document.getElementById('profName').value.trim();
   if (!name) { showToast('Nome é obrigatório','error'); return; }
@@ -4318,6 +4403,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!active || !currentUser) return;
     const id = active.id.replace('sec-','');
     switch(id) {
+      case 'schedule': loadStudentSchedule(); break;
       case 'homework': loadHomework(); break;
       case 'profile': loadProfile(); break;
       case 'feedback': loadFeedbacks(); break;

@@ -1,0 +1,24 @@
+{
+  "name": "EA English Classes",
+  "short_name": "EA English",
+  "description": "Escola de inglês online — aulas ao vivo, currículo, biblioteca pedagógica e área do aluno.",
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "background_color": "#19244e",
+  "theme_color": "#19244e",
+  "categories": ["education"],
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Área do Aluno", "short_name": "Aluno", "url": "/dashboard-aluno.html" },
+    { "name": "Biblioteca Pedagógica", "short_name": "Biblioteca", "url": "/biblioteca.html" },
+    { "name": "Agendar Nivelamento", "short_name": "Agendar", "url": "/contato.html" }
+  ]
+}

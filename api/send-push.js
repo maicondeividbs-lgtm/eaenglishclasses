@@ -68,6 +68,21 @@ export default async function handler(req, res) {
 
   let body = req.body;
   if (typeof body === 'string') { try { body = JSON.parse(body); } catch (e) { body = {}; } }
+
+  // Modo de teste: { test:true, user_id:"..." } envia um push direto para o aparelho daquele usuário.
+  if (body && body.test && body.user_id) {
+    webpush.setVapidDetails(process.env.VAPID_SUBJECT || 'mailto:eaenglished@gmail.com', process.env.VAPID_PUBLIC, process.env.VAPID_PRIVATE);
+    const tsubs = await sbSelect(`push_subscriptions?user_id=eq.${body.user_id}&select=endpoint,subscription`);
+    const tpayload = JSON.stringify({ title: body.title || '🔔 Teste EA', body: body.body || 'Se você recebeu isto, o push está funcionando!', url: '/login.html', tag: 'ea-test' });
+    let tsent = 0; const errors = [];
+    await Promise.all((tsubs || []).map(async (s) => {
+      try { await webpush.sendNotification(s.subscription, tpayload); tsent++; }
+      catch (err) { errors.push(err && err.statusCode ? err.statusCode : String(err)); }
+    }));
+    res.status(200).json({ test: true, candidates: (tsubs || []).length, sent: tsent, errors });
+    return;
+  }
+
   const table = body.table || (body.record && body.type ? body.table : null);
   const rec = body.record || body.new || {};
   if (!table || !rec) { res.status(200).json({ skipped: 'no record' }); return; }

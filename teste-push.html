@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagnóstico de Push — EA</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f4f5f7;color:#19244e;padding:24px;line-height:1.5}
+  .card{max-width:520px;margin:0 auto;background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:24px;box-shadow:0 10px 30px rgba(25,36,78,.06)}
+  h1{font-size:20px;margin-bottom:6px}
+  p.sub{color:#6b7280;font-size:14px;margin-bottom:20px}
+  label{display:block;font-size:13px;font-weight:700;margin:14px 0 6px}
+  input{width:100%;padding:12px;border:1px solid #d1d5db;border-radius:10px;font-size:15px;font-family:inherit}
+  button{width:100%;margin-top:20px;background:#f36b2e;color:#fff;border:none;border-radius:12px;padding:14px;font-size:16px;font-weight:800;cursor:pointer}
+  button:active{transform:scale(.98)}
+  pre{margin-top:18px;background:#0f1733;color:#cfe3ff;padding:14px;border-radius:10px;font-size:13px;white-space:pre-wrap;word-break:break-word;display:none}
+  .hint{font-size:12px;color:#9ca3af;margin-top:4px}
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>🔔 Diagnóstico de Push</h1>
+    <p class="sub">Envia um push de teste direto para um usuário, sem depender de webhook. Use no computador.</p>
+
+    <label>Endereço do site</label>
+    <input id="base" value="https://eaenglishclasse.vercel.app">
+
+    <label>EA_PUSH_SECRET</label>
+    <input id="secret" placeholder="o mesmo segredo que está na Vercel">
+    <div class="hint">É o valor da variável EA_PUSH_SECRET.</div>
+
+    <label>user_id do destinatário</label>
+    <input id="uid" placeholder="copie da coluna user_id da tabela push_subscriptions">
+    <div class="hint">Supabase → Table Editor → push_subscriptions → copie o user_id da linha que apareceu.</div>
+
+    <button onclick="testar()">Enviar push de teste</button>
+    <pre id="out"></pre>
+  </div>
+
+<script>
+async function testar(){
+  var out=document.getElementById('out');
+  out.style.display='block'; out.textContent='Enviando...';
+  var base=document.getElementById('base').value.replace(/\/+$/,'');
+  var secret=document.getElementById('secret').value.trim();
+  var uid=document.getElementById('uid').value.trim();
+  try{
+    var r=await fetch(base+'/api/send-push',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-ea-secret':secret},
+      body:JSON.stringify({test:true,user_id:uid})
+    });
+    var txt=await r.text();
+    var pretty; try{ pretty=JSON.stringify(JSON.parse(txt),null,2);}catch(e){pretty=txt;}
+    out.textContent='HTTP '+r.status+'\n\n'+pretty+'\n\n'+interpretar(r.status,pretty);
+  }catch(e){
+    out.textContent='Erro de rede: '+e+'\n\n(o endereço do site está certo? a função /api/send-push existe no deploy?)';
+  }
+}
+function interpretar(status,body){
+  if(status===401) return '➡️ 401: o EA_PUSH_SECRET digitado não bate com o da Vercel.';
+  if(status===500) return '➡️ 500: falta variável de ambiente na Vercel (confira as 6) e refaça o deploy.';
+  if(status===200){
+    if(/"candidates":0/.test(body)) return '➡️ candidates:0 — esse user_id não tem inscrição salva. Copie o user_id exato da tabela push_subscriptions.';
+    if(/"sent":0/.test(body) && /"errors"/.test(body)) return '➡️ enviou mas falhou (errors). 401/403 = VAPID errado (pública x privada não combinam). 410/404 = inscrição expirada (reabra o app).';
+    if(/"sent":[1-9]/.test(body)) return '✅ Push enviado! Olhe o aparelho agora. Se não chegou, veja as notificações nas configurações do app/celular.';
+  }
+  return '';
+}
+</script>
+</body>
+</html>

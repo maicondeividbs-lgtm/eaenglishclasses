@@ -2232,6 +2232,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   window._eaLastUnread = unread;
   initNotifications('teacher');
   eaStartNotifPolling('teacher');
+  eaStartRealtime('teacher');
+  eaSetupPush();
 });
 
 // ═══ COLLAPSIBLE SIDEBAR ═══
@@ -2647,6 +2649,84 @@ function eaStartNotifPolling(role) {
       }
     } catch (e) {}
   }, 45000);
+}
+
+
+// ═══ Notificações no aparelho + tempo real ═══
+window.EA_VAPID_PUBLIC = "BPX1oXbjIJtGZxXBZaxoIwh0RC4IWI9YUT1EqpPDN2vkM7be4sIj7T9-hYfY0Q0cp2wUSvjLTtk8snyCfE_I990";
+function eaUrlB64ToUint8(b64) {
+  var pad = '='.repeat((4 - b64.length % 4) % 4);
+  var s = (b64 + pad).replace(/-/g, '+').replace(/_/g, '/');
+  var raw = atob(s); var arr = new Uint8Array(raw.length);
+  for (var i = 0; i < raw.length; i++) arr[i] = raw.charCodeAt(i);
+  return arr;
+}
+async function eaSetupPush() {
+  try {
+    if (!('Notification' in window)) return;
+    if (Notification.permission === 'default') { try { await Notification.requestPermission(); } catch (e) {} }
+    if (Notification.permission !== 'granted') return;
+    if (!('serviceWorker' in navigator) || !('PushManager' in window) || !window.EA_VAPID_PUBLIC) return;
+    var reg = await navigator.serviceWorker.ready;
+    var sub = await reg.pushManager.getSubscription();
+    if (!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: eaUrlB64ToUint8(window.EA_VAPID_PUBLIC) });
+    if (sub && window.currentUser) {
+      await db.from('push_subscriptions').upsert(
+        { user_id: currentUser.id, endpoint: sub.endpoint, subscription: sub, role: 'teacher' },
+        { onConflict: 'endpoint' }
+      );
+    }
+  } catch (e) { console.warn('push setup:', e); }
+}
+function eaDeviceNotify(title, body) {
+  try {
+    if (!('Notification' in window) || Notification.permission !== 'granted') return;
+    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+      navigator.serviceWorker.ready.then(function (reg) {
+        reg.showNotification(title, { body: body, icon: '/icons/icon-192.png', badge: '/icons/icon-192.png', vibrate: [80,40,80], tag: 'ea-notif', renotify: true, data: { url: location.pathname } });
+      });
+    } else { new Notification(title, { body: body, icon: '/icons/icon-192.png' }); }
+  } catch (e) {}
+}
+function eaNotifMessage(table, row, isUpdate) {
+  switch (table) {
+    case 'task_submissions': return { title: '📝 Novo homework', body: 'Você recebeu uma nova tarefa.' };
+    case 'writing_activities': return isUpdate ? { title: '✅ Redação atualizada', body: 'Há novidade na sua redação.' } : { title: '✍️ Novo tema de redação', body: 'Um novo tema foi atribuído.' };
+    case 'feedbacks': return { title: '💬 Novo feedback', body: 'Seu professor deixou um feedback.' };
+    case 'announcements': return { title: '📢 Novo aviso', body: (row && row.title) ? row.title : 'Há um novo aviso.' };
+    case 'coord_messages': return { title: '📨 Coordenação', body: (row && row.title) ? row.title : 'Você tem uma nova mensagem.' };
+    case 'placement_tests': return { title: '🎯 Novo nivelamento', body: 'Um novo lead solicitou aula.' };
+    default: return { title: 'EA English Classes', body: 'Você tem uma nova notificação.' };
+  }
+}
+async function eaOnNewNotif(role, table, row, isUpdate) {
+  try {
+    eaPlayPing();
+    if (navigator.vibrate) { try { navigator.vibrate(90); } catch (e) {} }
+    var u = await getUnreadCount(currentUser.id, role);
+    window._eaLastUnread = u;
+    var badge = document.getElementById('notifBadge'), bell = document.getElementById('notifBell');
+    if (badge && u > 0) { badge.style.display = ''; badge.textContent = u; if (bell) bell.classList.add('has-new'); }
+    if (document.hidden) { var m = eaNotifMessage(table, row, isUpdate); eaDeviceNotify(m.title, m.body); }
+  } catch (e) {}
+}
+function eaStartRealtime(role) {
+  if (window._eaRT || !db.channel) return;
+  var tables = role === 'student'
+    ? [['task_submissions','student_id=eq.'+currentUser.id],['writing_activities','student_id=eq.'+currentUser.id],['feedbacks','student_id=eq.'+currentUser.id],['announcements',null]]
+    : role === 'teacher'
+    ? [['writing_activities','teacher_id=eq.'+currentUser.id],['coord_messages','teacher_id=eq.'+currentUser.id]]
+    : [['placement_tests',null]];
+  var ch = db.channel('ea-notif-' + currentUser.id);
+  tables.forEach(function (cfg) {
+    ['INSERT','UPDATE'].forEach(function (ev) {
+      var opts = { event: ev, schema: 'public', table: cfg[0] };
+      if (cfg[1]) opts.filter = cfg[1];
+      ch.on('postgres_changes', opts, function (payload) { eaOnNewNotif(role, cfg[0], payload.new, ev === 'UPDATE'); });
+    });
+  });
+  ch.subscribe();
+  window._eaRT = ch;
 }
 
 function initNotifications(role) {

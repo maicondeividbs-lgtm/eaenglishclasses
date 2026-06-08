@@ -9,7 +9,7 @@
 //   VAPID_PRIVATE                chave privada VAPID (segredo)
 //   VAPID_SUBJECT                ex.: mailto:eaenglished@gmail.com
 //   EA_PUSH_SECRET               um segredo qualquer; o mesmo é enviado pelo webhook
-import webpush from 'web-push';
+// (web-push é carregado sob demanda dentro do handler, com tratamento de erro)
 
 const SB_URL = process.env.SUPABASE_URL;
 const SB_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -49,65 +49,85 @@ function resolve(table, rec) {
 }
 
 export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-ea-secret');
+  if (req.method === 'OPTIONS') { res.status(200).end(); return; }
   if (req.method !== 'POST') { res.status(405).json({ error: 'Use POST.' }); return; }
 
-  // Autenticação simples por segredo compartilhado
-  const secret = req.headers['x-ea-secret'] || (req.query && req.query.secret);
-  if (!process.env.EA_PUSH_SECRET || secret !== process.env.EA_PUSH_SECRET) {
-    res.status(401).json({ error: 'unauthorized' }); return;
-  }
-  if (!SB_URL || !SB_KEY || !process.env.VAPID_PRIVATE) {
-    res.status(500).json({ error: 'missing env' }); return;
-  }
-
-  webpush.setVapidDetails(
-    process.env.VAPID_SUBJECT || 'mailto:eaenglished@gmail.com',
-    process.env.VAPID_PUBLIC,
-    process.env.VAPID_PRIVATE
-  );
-
-  let body = req.body;
-  if (typeof body === 'string') { try { body = JSON.parse(body); } catch (e) { body = {}; } }
-
-  // Modo de teste: { test:true, user_id:"..." } envia um push direto para o aparelho daquele usuário.
-  if (body && body.test && body.user_id) {
-    webpush.setVapidDetails(process.env.VAPID_SUBJECT || 'mailto:eaenglished@gmail.com', process.env.VAPID_PUBLIC, process.env.VAPID_PRIVATE);
-    const tsubs = await sbSelect(`push_subscriptions?user_id=eq.${body.user_id}&select=endpoint,subscription`);
-    const tpayload = JSON.stringify({ title: body.title || '🔔 Teste EA', body: body.body || 'Se você recebeu isto, o push está funcionando!', url: '/login.html', tag: 'ea-test' });
-    let tsent = 0; const errors = [];
-    await Promise.all((tsubs || []).map(async (s) => {
-      try { await webpush.sendNotification(s.subscription, tpayload); tsent++; }
-      catch (err) { errors.push(err && err.statusCode ? err.statusCode : String(err)); }
-    }));
-    res.status(200).json({ test: true, candidates: (tsubs || []).length, sent: tsent, errors });
-    return;
-  }
-
-  const table = body.table || (body.record && body.type ? body.table : null);
-  const rec = body.record || body.new || {};
-  if (!table || !rec) { res.status(200).json({ skipped: 'no record' }); return; }
-
-  const r = resolve(table, rec);
-  if (!r) { res.status(200).json({ skipped: 'no mapping' }); return; }
-
-  // Busca as inscrições push do destinatário
-  let subs = [];
-  if (r.byUser) subs = await sbSelect(`push_subscriptions?user_id=eq.${r.byUser}&select=endpoint,subscription`);
-  else if (r.byRole) subs = await sbSelect(`push_subscriptions?role=eq.${r.byRole}&select=endpoint,subscription`);
-  else subs = await sbSelect(`push_subscriptions?select=endpoint,subscription`);
-
-  const payload = JSON.stringify({ title: r.title, body: r.body, url: '/login.html', tag: 'ea-' + table });
-  let sent = 0;
-  await Promise.all((subs || []).map(async (s) => {
-    try {
-      await webpush.sendNotification(s.subscription, payload);
-      sent++;
-    } catch (err) {
-      if (err && (err.statusCode === 404 || err.statusCode === 410)) {
-        await sbDelete(`push_subscriptions?endpoint=eq.${encodeURIComponent(s.endpoint)}`);
-      }
+  try {
+    // Autenticação simples por segredo compartilhado
+    const secret = req.headers['x-ea-secret'] || (req.query && req.query.secret);
+    if (!process.env.EA_PUSH_SECRET || secret !== process.env.EA_PUSH_SECRET) {
+      res.status(401).json({ error: 'unauthorized' }); return;
     }
-  }));
+    // Diagnóstico de variáveis (quais existem, sem revelar os valores)
+    const envOk = {
+      SUPABASE_URL: !!SB_URL, SUPABASE_SERVICE_ROLE_KEY: !!SB_KEY,
+      VAPID_PUBLIC: !!process.env.VAPID_PUBLIC, VAPID_PRIVATE: !!process.env.VAPID_PRIVATE,
+      VAPID_SUBJECT: !!process.env.VAPID_SUBJECT
+    };
+    if (!SB_URL || !SB_KEY || !process.env.VAPID_PRIVATE || !process.env.VAPID_PUBLIC) {
+      res.status(500).json({ error: 'missing env', envPresent: envOk }); return;
+    }
 
-  res.status(200).json({ ok: true, sent, candidates: (subs || []).length });
+    // Carrega a biblioteca web-push sob demanda (revela erro real se não estiver instalada)
+    let webpush;
+    try {
+      const mod = await import('web-push');
+      webpush = mod.default || mod;
+    } catch (e) {
+      res.status(500).json({ error: 'web-push não carregou (dependência não instalada no deploy?)', detail: String(e) });
+      return;
+    }
+    webpush.setVapidDetails(
+      process.env.VAPID_SUBJECT || 'mailto:eaenglished@gmail.com',
+      process.env.VAPID_PUBLIC,
+      process.env.VAPID_PRIVATE
+    );
+
+    let body = req.body;
+    if (typeof body === 'string') { try { body = JSON.parse(body); } catch (e) { body = {}; } }
+    body = body || {};
+
+    // Modo de teste: { test:true, user_id:"..." } envia push direto para o aparelho daquele usuário.
+    if (body.test && body.user_id) {
+      const tsubs = await sbSelect(`push_subscriptions?user_id=eq.${body.user_id}&select=endpoint,subscription`);
+      const tpayload = JSON.stringify({ title: body.title || '🔔 Teste EA', body: body.body || 'Se você recebeu isto, o push está funcionando!', url: '/login.html', tag: 'ea-test' });
+      let tsent = 0; const errors = [];
+      await Promise.all((tsubs || []).map(async (s) => {
+        try { await webpush.sendNotification(s.subscription, tpayload); tsent++; }
+        catch (err) { errors.push(err && err.statusCode ? err.statusCode : String(err)); }
+      }));
+      res.status(200).json({ test: true, candidates: (tsubs || []).length, sent: tsent, errors });
+      return;
+    }
+
+    const table = body.table || (body.record && body.type ? body.table : null);
+    const rec = body.record || body.new || {};
+    if (!table || !rec) { res.status(200).json({ skipped: 'no record' }); return; }
+
+    const r = resolve(table, rec);
+    if (!r) { res.status(200).json({ skipped: 'no mapping' }); return; }
+
+    let subs = [];
+    if (r.byUser) subs = await sbSelect(`push_subscriptions?user_id=eq.${r.byUser}&select=endpoint,subscription`);
+    else if (r.byRole) subs = await sbSelect(`push_subscriptions?role=eq.${r.byRole}&select=endpoint,subscription`);
+    else subs = await sbSelect(`push_subscriptions?select=endpoint,subscription`);
+
+    const payload = JSON.stringify({ title: r.title, body: r.body, url: '/login.html', tag: 'ea-' + table });
+    let sent = 0;
+    await Promise.all((subs || []).map(async (s) => {
+      try { await webpush.sendNotification(s.subscription, payload); sent++; }
+      catch (err) {
+        if (err && (err.statusCode === 404 || err.statusCode === 410)) {
+          await sbDelete(`push_subscriptions?endpoint=eq.${encodeURIComponent(s.endpoint)}`);
+        }
+      }
+    }));
+
+    res.status(200).json({ ok: true, sent, candidates: (subs || []).length });
+  } catch (e) {
+    res.status(500).json({ error: 'erro interno', detail: String((e && e.stack) || e) });
+  }
 }

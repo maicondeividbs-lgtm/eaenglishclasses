@@ -4,7 +4,7 @@
    - Supabase/API/CDNs (cross-origin) e POST/PUT passam direto (dados e auth sempre ao vivo).
    - Páginas autenticadas (dashboards/login) nunca são armazenadas em cache.
 */
-const VERSION = 'ea-v1';
+const VERSION = 'ea-v2';
 const CACHE = 'ea-shell-' + VERSION;
 const PRECACHE = [
   '/offline.html',
@@ -36,38 +36,27 @@ self.addEventListener('message', (e) => {
 
 self.addEventListener('fetch', (e) => {
   const req = e.request;
-  if (req.method !== 'GET') return;                 // POST/PUT/DELETE → rede (forms, Supabase writes)
+  if (req.method !== 'GET') return;                 // POST/PUT → rede (forms, Supabase writes)
   const url = new URL(req.url);
-  if (url.origin !== self.location.origin) return;  // cross-origin (Supabase, CDNs) → rede
-  if (url.pathname.startsWith('/api/')) return;      // serverless API → rede
+  if (url.origin !== self.location.origin) return;  // Supabase/CDNs → rede
+  if (url.pathname.startsWith('/api/')) return;      // serverless → rede
 
-  // Navegações (HTML): network-first → cache (só público) → offline
-  if (req.mode === 'navigate') {
-    e.respondWith(
-      fetch(req)
-        .then((res) => {
-          if (res && res.ok && PUBLIC_PAGES.includes(url.pathname)) {
-            const copy = res.clone();
-            caches.open(CACHE).then((c) => c.put(req, copy));
-          }
-          return res;
-        })
-        .catch(() => caches.match(req).then((r) => r || caches.match('/offline.html')))
-    );
-    return;
-  }
-
-  // Assets estáticos (css/js/img/fontes): stale-while-revalidate
+  // MESMA ORIGEM: network-first (sempre a versão mais recente do site quando online),
+  // com cache apenas como reserva offline. Dashboards/login nunca são gravados em cache.
   e.respondWith(
-    caches.match(req).then((cached) => {
-      const network = fetch(req).then((res) => {
-        if (res && res.status === 200 && res.type === 'basic') {
+    fetch(req).then((res) => {
+      if (res && res.ok && (res.type === 'basic' || res.type === 'default')) {
+        const isNav = req.mode === 'navigate';
+        if (!isNav || PUBLIC_PAGES.includes(url.pathname)) {
           const copy = res.clone();
           caches.open(CACHE).then((c) => c.put(req, copy));
         }
-        return res;
-      }).catch(() => cached);
-      return cached || network;
-    })
+      }
+      return res;
+    }).catch(() =>
+      caches.match(req).then((cached) =>
+        cached || (req.mode === 'navigate' ? caches.match('/offline.html') : Promise.reject('offline'))
+      )
+    )
   );
 });

@@ -3027,7 +3027,9 @@ async function initStudentDashboard() {
     document.getElementById('notifBadge').textContent = unread;
     document.getElementById('notifBell').classList.add('has-new');
   }
+  window._eaLastUnread = unread;
   initNotifications('student');
+  eaStartNotifPolling('student');
   // Help request: floating button + modal (needs currentUser)
   initHelpRequest();
   // Load avatar if exists
@@ -4513,6 +4515,60 @@ function escapeHtmlBasic(s) {
 }
 
 // ═══ NOTIFICATIONS BELL ═══
+
+// ═══ Notificações sonoras (app) ═══
+function eaUnlockAudio() {
+  try {
+    var Ctx = window.AudioContext || window.webkitAudioContext;
+    if (Ctx && !window._eaAudio) window._eaAudio = new Ctx();
+    if (window._eaAudio && window._eaAudio.state === 'suspended') window._eaAudio.resume();
+  } catch (e) {}
+}
+['click', 'touchstart', 'keydown'].forEach(function (ev) {
+  document.addEventListener(ev, eaUnlockAudio, { once: true, passive: true });
+});
+function eaPlayPing() {
+  try {
+    var Ctx = window.AudioContext || window.webkitAudioContext;
+    if (!Ctx) return;
+    if (!window._eaAudio) window._eaAudio = new Ctx();
+    var ctx = window._eaAudio;
+    if (ctx.state === 'suspended') ctx.resume();
+    function note(freq, start, dur, peak) {
+      var o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = 'sine'; o.frequency.value = freq;
+      var t = ctx.currentTime + start;
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(peak, t + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g); g.connect(ctx.destination);
+      o.start(t); o.stop(t + dur + 0.02);
+    }
+    note(880, 0, 0.32, 0.18);    // ding
+    note(1175, 0.16, 0.40, 0.15); // dong
+  } catch (e) {}
+}
+function eaStartNotifPolling(role) {
+  if (window._eaNotifPoll) return;
+  window._eaNotifPoll = setInterval(async function () {
+    if (document.hidden) return;
+    try {
+      var u = await getUnreadCount(currentUser.id, role);
+      var badge = document.getElementById('notifBadge');
+      var bell = document.getElementById('notifBell');
+      if (u > (window._eaLastUnread || 0)) {
+        eaPlayPing();
+        if (navigator.vibrate) { try { navigator.vibrate(90); } catch (e) {} }
+      }
+      window._eaLastUnread = u;
+      if (badge) {
+        if (u > 0) { badge.style.display = ''; badge.textContent = u; if (bell) bell.classList.add('has-new'); }
+        else { badge.style.display = 'none'; if (bell) bell.classList.remove('has-new'); }
+      }
+    } catch (e) {}
+  }, 45000);
+}
+
 function initNotifications(role) {
   const bell = document.getElementById('notifBell');
   const dd = document.getElementById('notifDropdown');

@@ -2154,6 +2154,57 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="EA English">
 <script src="/pwa.js" defer></script>
+<style id="app-section-css">
+.app-cta{position:relative;overflow:hidden;background:linear-gradient(160deg,#1c2858,#131c3d);padding:100px 0}
+.app-cta .ag1{position:absolute;top:-120px;right:-80px;width:420px;height:420px;background:radial-gradient(circle,rgba(243,107,46,.16),transparent 60%);border-radius:50%}
+.app-cta .ag2{position:absolute;bottom:-160px;left:-120px;width:520px;height:520px;background:radial-gradient(circle,rgba(245,154,30,.10),transparent 60%);border-radius:50%}
+.app-grid{position:relative;display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center}
+.app-copy{color:#fff}
+.app-copy h2{font-family:'Fraunces',serif;font-size:clamp(2rem,3.6vw,3.1rem);letter-spacing:-.03em;line-height:1.08;margin:14px 0 16px;color:#fff}
+.app-copy h2 em{color:var(--mango);font-style:italic;font-weight:900}
+.app-sub{font-size:17px;color:rgba(255,255,255,.66);max-width:520px;line-height:1.6;margin-bottom:28px}
+.app-benefits{list-style:none;margin:0 0 34px;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:14px 22px;max-width:520px}
+.app-benefits li{display:flex;align-items:center;gap:11px;color:rgba(255,255,255,.9);font-size:14.5px;font-weight:600}
+.app-benefits .ab-ic{width:34px;height:34px;border-radius:10px;background:rgba(243,107,46,.16);color:#ffb38a;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.app-benefits .ab-ic svg{width:18px;height:18px}
+.app-actions{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.app-install-btn{display:inline-flex;align-items:center;gap:10px;background:var(--orange);color:#fff;border:none;border-radius:15px;padding:16px 28px;font-family:inherit;font-size:16px;font-weight:800;cursor:pointer;box-shadow:0 16px 40px rgba(243,107,46,.35);transition:transform .2s,box-shadow .2s;min-height:54px}
+.app-install-btn:hover{transform:translateY(-3px);box-shadow:0 22px 52px rgba(243,107,46,.45)}
+.app-install-btn svg{width:20px;height:20px}
+.app-platforms{display:flex;align-items:center;gap:7px;color:rgba(255,255,255,.55);font-size:13px;font-weight:600}
+.app-platforms svg{width:16px;height:16px;opacity:.7}
+.app-visual{display:flex;justify-content:center;position:relative}
+.phone{width:270px;height:550px;background:#0e1530;border:10px solid #0a1024;border-radius:44px;position:relative;box-shadow:0 40px 90px rgba(0,0,0,.45),inset 0 0 0 2px rgba(255,255,255,.04);overflow:hidden}
+.phone .notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:120px;height:24px;background:#0a1024;border-radius:0 0 16px 16px;z-index:3}
+.phone-screen{position:absolute;inset:0;background:linear-gradient(165deg,#1b2a5e,#0f1733);padding:40px 18px 18px;display:flex;flex-direction:column;gap:13px}
+.ps-topbar{display:flex;align-items:center;gap:10px;margin-bottom:2px}
+.ps-ico{width:40px;height:40px;border-radius:11px;background:#19244e;border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-weight:800;font-size:18px;color:#fff;flex-shrink:0}
+.ps-ico i{color:var(--orange);font-style:normal}
+.ps-hello{color:#fff;font-weight:800;font-size:13.5px;line-height:1.2}.ps-hello span{display:block;font-weight:500;font-size:11px;color:rgba(255,255,255,.5);margin-top:2px}
+.ps-card{background:linear-gradient(135deg,var(--blue),#2f4bb5);border-radius:16px;padding:14px;color:#fff;box-shadow:0 10px 24px rgba(0,0,0,.25)}
+.ps-card .lbl{font-size:9px;text-transform:uppercase;letter-spacing:.08em;opacity:.85;font-weight:800}
+.ps-card .big{font-size:17px;font-weight:800;margin-top:3px}
+.ps-card .small{font-size:11px;opacity:.85;margin-top:3px}
+.ps-row{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.07);border-radius:13px;padding:11px;display:flex;align-items:center;gap:10px}
+.ps-row .dot{width:30px;height:30px;border-radius:9px;flex-shrink:0}
+.ps-row .l1{height:8px;width:72%;background:rgba(255,255,255,.22);border-radius:4px}
+.ps-row .l2{height:7px;width:46%;background:rgba(255,255,255,.12);border-radius:4px;margin-top:6px}
+.app-badge{position:absolute;top:26px;right:-10px;background:#fff;border-radius:16px;padding:10px 14px;display:flex;align-items:center;gap:9px;box-shadow:0 16px 40px rgba(0,0,0,.28);animation:appFloat 3.6s ease-in-out infinite}
+@keyframes appFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+@media(max-width:900px){
+  .app-grid{grid-template-columns:1fr;gap:42px;text-align:center}
+  .app-sub{margin-left:auto;margin-right:auto}
+  .app-benefits{margin-left:auto;margin-right:auto;text-align:left}
+  .app-actions{justify-content:center}
+  .app-badge{display:none}
+}
+@media(max-width:560px){
+  .app-cta{padding:64px 0}
+  .app-benefits{grid-template-columns:1fr;gap:12px}
+  .phone{width:228px;height:466px}
+}
+@media (prefers-reduced-motion: reduce){.app-badge{animation:none}}
+</style>
 </head>
 <body>
 <a href="#main-content" class="skip-link" style="position:absolute;top:-40px;left:0;background:var(--navy);color:#fff;padding:8px 16px;z-index:10000;transition:top 0.3s;font-size:14px;font-weight:700;border-radius:0 0 8px 0" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">Pular para o conteúdo</a>
@@ -2854,6 +2905,53 @@
   </div>
 </section>
 
+<!-- ═══ BAIXE O APP ═══ -->
+<section class="app-cta reveal" id="app">
+  <div class="ag1"></div><div class="ag2"></div>
+  <div class="container">
+    <div class="app-grid">
+      <div class="app-copy">
+        <div class="section-label" style="background:rgba(245,154,30,.15);color:var(--mango)">Aplicativo</div>
+        <h2>Leve a EA na <em>palma da mão</em></h2>
+        <p class="app-sub">Instale o app da EA no celular ou no computador e tenha sua área de aluno, a agenda de aulas e a biblioteca sempre à mão — em tela cheia, com acesso rápido e avisos na hora.</p>
+        <ul class="app-benefits">
+          <li><span class="ab-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg></span> Abre em tela cheia</li>
+          <li><span class="ab-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span> Acesso em 1 toque</li>
+          <li><span class="ab-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span> Avisos com som</li>
+          <li><span class="ab-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg></span> Funciona offline</li>
+        </ul>
+        <div class="app-actions">
+          <button type="button" class="app-install-btn" onclick="if(window.eaInstallApp)eaInstallApp()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Instalar app
+          </button>
+          <div class="app-platforms">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 12.04c-.03-2.6 2.13-3.85 2.22-3.91-1.21-1.77-3.1-2.01-3.77-2.04-1.6-.16-3.13.94-3.94.94-.81 0-2.07-.92-3.4-.9-1.75.03-3.36 1.02-4.26 2.58-1.82 3.15-.47 7.81 1.3 10.37.86 1.25 1.89 2.66 3.24 2.61 1.3-.05 1.79-.84 3.36-.84 1.57 0 2.01.84 3.39.81 1.4-.02 2.29-1.28 3.15-2.54.99-1.45 1.4-2.86 1.42-2.93-.03-.01-2.72-1.04-2.75-4.12M14.5 4.66c.72-.87 1.2-2.08 1.07-3.29-1.03.04-2.28.69-3.02 1.56-.66.77-1.24 2-1.08 3.18 1.15.09 2.32-.58 3.03-1.45"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.6 9.48l1.84-3.18c.16-.31.04-.69-.26-.85-.29-.15-.65-.06-.83.22l-1.88 3.24a11.46 11.46 0 0 0-8.94 0L5.65 5.67c-.19-.29-.57-.38-.87-.2-.28.18-.37.54-.22.83L6.4 9.48A10.78 10.78 0 0 0 1 18h22a10.78 10.78 0 0 0-5.4-8.52M7 15.25a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5m10 0a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5"/></svg>
+            Android e iPhone
+          </div>
+        </div>
+      </div>
+      <div class="app-visual">
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="phone-screen">
+            <div class="ps-topbar"><div class="ps-ico">EA<i>.</i></div><div class="ps-hello">Ol&aacute;, Maria!<span>Bem-vinda de volta</span></div></div>
+            <div class="ps-card"><div class="lbl">Pr&oacute;xima aula</div><div class="big">Segunda &middot; 18:00</div><div class="small">&#128336; 60 min &middot; Prof. Laura</div></div>
+            <div class="ps-row"><div class="dot" style="background:rgba(243,107,46,.5)"></div><div style="flex:1"><div class="l1"></div><div class="l2"></div></div></div>
+            <div class="ps-row"><div class="dot" style="background:rgba(37,60,150,.65)"></div><div style="flex:1"><div class="l1"></div><div class="l2"></div></div></div>
+            <div class="ps-row"><div class="dot" style="background:rgba(245,154,30,.55)"></div><div style="flex:1"><div class="l1"></div><div class="l2"></div></div></div>
+          </div>
+        </div>
+        <div class="app-badge">
+          <div style="width:30px;height:30px;border-radius:8px;background:#19244e;color:#fff;display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-weight:800;font-size:14px">EA<span style="color:#f36b2e">.</span></div>
+          <div style="font-size:12px;font-weight:800;color:#19244e;line-height:1.15">App da EA<br><span style="font-weight:600;color:#6b7280;font-size:10px">na tela inicial</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ═══ CTA FINAL ═══ -->
 <section class="cta-final reveal">
   <div class="container">
@@ -2883,6 +2981,7 @@
         <a href="index.html">Início</a>
         <a href="cursos.html">Cursos</a>
         <a href="contato.html">Contato</a>
+              <a href="#app"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg>Baixar o app</a>
       </div>
       <div class="footer-col">
         <h4>Contato</h4>

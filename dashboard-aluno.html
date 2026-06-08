@@ -3031,7 +3031,8 @@ async function initStudentDashboard() {
   initNotifications('student');
   eaStartNotifPolling('student');
   eaStartRealtime('student');
-  eaSetupPush();
+  // iOS exige que o pedido de permissão venha de um gesto do usuário:
+  ['click','touchend','keydown'].forEach(function(ev){ document.addEventListener(ev, eaSetupPush, { once: true }); });
   // Help request: floating button + modal (needs currentUser)
   initHelpRequest();
   // Load avatar if exists
@@ -4590,7 +4591,7 @@ async function eaSetupPush() {
     var reg = await navigator.serviceWorker.ready;
     var sub = await reg.pushManager.getSubscription();
     if (!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: eaUrlB64ToUint8(window.EA_VAPID_PUBLIC) });
-    if (sub && window.currentUser) {
+    if (sub && currentUser) {
       await db.from('push_subscriptions').upsert(
         { user_id: currentUser.id, endpoint: sub.endpoint, subscription: sub, role: 'student' },
         { onConflict: 'endpoint' }

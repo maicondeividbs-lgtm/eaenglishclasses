@@ -94,12 +94,16 @@ export default async function handler(req, res) {
     if (body.test && body.user_id) {
       const tsubs = await sbSelect(`push_subscriptions?user_id=eq.${body.user_id}&select=endpoint,subscription`);
       const tpayload = JSON.stringify({ title: body.title || '🔔 Teste EA', body: body.body || 'Se você recebeu isto, o push está funcionando!', url: '/login.html', tag: 'ea-test' });
-      let tsent = 0; const errors = [];
+      let tsent = 0; const errors = []; let removed = 0;
       await Promise.all((tsubs || []).map(async (s) => {
         try { await webpush.sendNotification(s.subscription, tpayload); tsent++; }
-        catch (err) { errors.push(err && err.statusCode ? err.statusCode : String(err)); }
+        catch (err) {
+          const code = err && err.statusCode ? err.statusCode : String(err);
+          errors.push(code);
+          if (code === 404 || code === 410) { await sbDelete(`push_subscriptions?endpoint=eq.${encodeURIComponent(s.endpoint)}`); removed++; }
+        }
       }));
-      res.status(200).json({ test: true, candidates: (tsubs || []).length, sent: tsent, errors });
+      res.status(200).json({ test: true, candidates: (tsubs || []).length, sent: tsent, removed_dead: removed, errors });
       return;
     }
 

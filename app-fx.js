@@ -43,11 +43,16 @@
 
   var EaFx = {
     haptic: haptic,
-    tap: function () { if (!isMuted()) note(430, 0, 0.06, 0.045, 'triangle'); haptic(7); },
-    nav: function () { if (!isMuted()) note(560, 0, 0.07, 0.05, 'sine'); haptic(10); },
-    toggle: function () { if (!isMuted()) note(380, 0, 0.05, 0.05, 'square'); haptic(12); },
-    success: function () { if (!isMuted()) { note(660, 0, 0.10, 0.06, 'sine'); note(990, 0.09, 0.14, 0.05, 'sine'); } haptic(18); },
-    error: function () { if (!isMuted()) { note(300, 0, 0.12, 0.06, 'sawtooth'); note(220, 0.1, 0.16, 0.05, 'sawtooth'); } haptic([20, 40, 20]); }
+    // Toque delicado (C6) — discreto e arredondado
+    tap: function () { if (!isMuted()) note(1046.5, 0, 0.055, 0.03, 'sine'); haptic(6); },
+    // Navegação: dois toques suaves subindo (E5 → B5)
+    nav: function () { if (!isMuted()) { note(659.3, 0, 0.06, 0.04, 'sine'); note(987.8, 0.045, 0.08, 0.03, 'sine'); } haptic(9); },
+    // Liga/desliga: nota única quente (A5)
+    toggle: function () { if (!isMuted()) note(880, 0, 0.07, 0.035, 'sine'); haptic(10); },
+    // Sucesso: arpejo maior alegre (C5 → E5 → G5)
+    success: function () { if (!isMuted()) { note(523.3, 0, 0.10, 0.045, 'sine'); note(659.3, 0.085, 0.10, 0.045, 'sine'); note(784.0, 0.17, 0.17, 0.04, 'sine'); } haptic(16); },
+    // Erro: descida suave (Ab4 → Eb4), sem aspereza
+    error: function () { if (!isMuted()) { note(415.3, 0, 0.12, 0.045, 'sine'); note(311.1, 0.11, 0.18, 0.04, 'sine'); } haptic([16, 36, 16]); }
   };
   window.eaFx = EaFx;
 
@@ -60,7 +65,7 @@
   document.addEventListener('click', function (e) {
     var el = e.target.closest('button, a[href], .sb-link, [role="button"], [data-section], .tap-fx');
     if (!el) return;
-    if (el.closest('[data-nofx]') || el.id === 'eaSoundToggle') return;
+    if (el.closest('[data-nofx]') || el.hasAttribute('data-nofx')) return;
     var isNav = !!(el.closest('.sb-nav') || el.hasAttribute('data-section') || el.classList.contains('sb-link'));
     if (isNav) EaFx.nav(); else EaFx.tap();
   }, true);
@@ -75,43 +80,20 @@
     window._eaToastWrapped = true;
   }
 
-  // Estilos: feedback de "press" + botão de som
-  var st = document.createElement('style');
-  st.id = 'eaFxStyle';
-  st.textContent =
-    (reduce ? '' :
+  // Estilos: apenas o feedback de "press" (sem botão flutuante — o controle
+  // de som agora fica na aba "Meu Perfil").
+  if (!reduce) {
+    var st = document.createElement('style');
+    st.id = 'eaFxStyle';
+    st.textContent =
       'button,.sb-link,[role="button"],.app-install-btn{transition:transform .09s ease}' +
-      'button:active,.sb-link:active,[role="button"]:active,.app-install-btn:active{transform:scale(.97)}') +
-    '#eaSoundToggle{position:fixed;left:16px;bottom:16px;z-index:99990;width:44px;height:44px;border-radius:50%;' +
-    'border:1px solid rgba(25,36,78,.12);background:#fff;color:#19244e;box-shadow:0 8px 24px rgba(25,36,78,.18);' +
-    'display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}' +
-    '#eaSoundToggle:active{transform:scale(.92)}' +
-    '#eaSoundToggle svg{width:20px;height:20px}';
-  (document.head || document.documentElement).appendChild(st);
+      'button:active,.sb-link:active,[role="button"]:active,.app-install-btn:active{transform:scale(.97)}';
+    (document.head || document.documentElement).appendChild(st);
+  }
 
-  // Botão flutuante de som (liga/desliga) — só nas telas do app
-  function icon(on) {
-    return on
-      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>'
-      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>';
-  }
-  function mountToggle() {
-    if (document.getElementById('eaSoundToggle')) return;
-    var btn = document.createElement('button');
-    btn.id = 'eaSoundToggle';
-    btn.type = 'button';
-    btn.setAttribute('aria-label', 'Ligar ou desligar o som do app');
-    btn.setAttribute('data-nofx', '');
-    btn.innerHTML = icon(!isMuted());
-    btn.addEventListener('click', function () {
-      var nowMuted = !isMuted();
-      setMuted(nowMuted);
-      btn.innerHTML = icon(!nowMuted);
-      if (!nowMuted) EaFx.toggle(); // toca só ao LIGAR
-      else haptic(12);
-    });
-    document.body.appendChild(btn);
-  }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mountToggle);
-  else mountToggle();
+  // Helper público para o controle de som da aba "Meu Perfil"
+  window.eaSound = {
+    isOn: function () { return !isMuted(); },
+    set: function (on) { setMuted(!on); if (on) { try { EaFx.toggle(); } catch (e) {} } else { haptic(12); } }
+  };
 })();

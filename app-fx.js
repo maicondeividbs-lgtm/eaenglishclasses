@@ -2,6 +2,15 @@
 (function () {
   'use strict';
 
+  // App/mobile apenas. No DESKTOP (navegador largo) o app-fx fica inerte:
+  // sem som, sem botão de áudio, sem feedback de "press" — o site continua site.
+  var mq = window.matchMedia ? window.matchMedia.bind(window) : null;
+  var isApp = (mq && (mq('(display-mode: standalone)').matches || mq('(max-width: 900px)').matches)) || window.navigator.standalone === true;
+  if (!isApp) {
+    window.eaFx = { tap: function () {}, nav: function () {}, toggle: function () {}, success: function () {}, error: function () {}, haptic: function () {} };
+    return;
+  }
+
   function isMuted() { try { return localStorage.getItem('ea_sound') === 'off'; } catch (e) { return false; } }
   function setMuted(v) { try { localStorage.setItem('ea_sound', v ? 'off' : 'on'); } catch (e) {} }
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -73,7 +82,7 @@
     (reduce ? '' :
       'button,.sb-link,[role="button"],.app-install-btn{transition:transform .09s ease}' +
       'button:active,.sb-link:active,[role="button"]:active,.app-install-btn:active{transform:scale(.97)}') +
-    '#eaSoundToggle{position:fixed;right:16px;bottom:16px;z-index:99990;width:44px;height:44px;border-radius:50%;' +
+    '#eaSoundToggle{position:fixed;left:16px;bottom:16px;z-index:99990;width:44px;height:44px;border-radius:50%;' +
     'border:1px solid rgba(25,36,78,.12);background:#fff;color:#19244e;box-shadow:0 8px 24px rgba(25,36,78,.18);' +
     'display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}' +
     '#eaSoundToggle:active{transform:scale(.92)}' +

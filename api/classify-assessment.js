@@ -33,6 +33,11 @@ half = true SOMENTE quando a descrição indicar explicitamente duração curta:
 ATENÇÃO: números em "Page 30", "p. 30", "pg 30", "Unit 5", "Exercise 2", "Lesson 3" são página/unidade/exercício/lição e NÃO indicam duração — NUNCA marque half por causa deles.
 Na dúvida entre NORMAL e um status especial, só use o status especial se houver indício claro no texto; senão use NORMAL.
 
+MUITO IMPORTANTE — palavras que são TEMA da aula, e não motivo de falta:
+As unidades dos materiais (Interchange/Evolve) têm títulos como "Vacations", "Holidays", "Free time" etc. Quando "Vacation(s)", "Holiday(s)" ou "Recess" aparecem como TEMA/conteúdo da aula (junto de "Unit", "Page", "Exercise", "Lesson" ou de matéria dada), a aula ACONTECEU normalmente — NÃO use VACATION/HOLIDAY/RECESS nesses casos.
+Só use HOLIDAY/VACATION/RECESS quando a descrição disser que NÃO houve aula por esse motivo (ex.: "Feriado, sem aula", "Aluno de férias", "Recesso escolar - sem aula").
+"Reposição", "Repôs", "Aula reposta", "Reagendada/remarcada que aconteceu" indicam uma aula que ACONTECEU nesta data: use MOVED_HERE (é paga).
+
 Exemplos:
 - "Conversation + Page 30 (Exercise 2) - Unit 5 - Mixed feelings" => {"status":"NORMAL","half":false}
 - "Unit 8 - Reading p. 30" => {"status":"NORMAL","half":false}
@@ -40,7 +45,11 @@ Exemplos:
 - "Cancelou sem avisar, menos de 24h" => {"status":"CANCELED_NO_24H","half":false}
 - "Cancelada com antecedência (24h)" => {"status":"CANCELED_24H","half":false}
 - "Feriado nacional" => {"status":"HOLIDAY","half":false}
-- "Professor não pôde dar a aula" => {"status":"TEACHER_ABSENT","half":false}`;
+- "Professor não pôde dar a aula" => {"status":"TEACHER_ABSENT","half":false}
+- "Reposição dia 31/03 - Pages 28, 29 & 30 (Exercise 1) - Unit 5 - Vacations" => {"status":"MOVED_HERE","half":false}
+- "Unit 7 - Holidays around the world" => {"status":"NORMAL","half":false}
+- "Feriado de Tiradentes, sem aula" => {"status":"HOLIDAY","half":false}
+- "Aluno em férias esta semana, sem aula" => {"status":"VACATION","half":false}`;
 
 async function callGemini(items, key, model) {
   const list = items.map((t, i) => i + ': ' + String(t).replace(/\s+/g, ' ').trim()).join('\n');

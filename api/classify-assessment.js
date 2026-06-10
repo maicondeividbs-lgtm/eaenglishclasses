@@ -29,8 +29,18 @@ Definições dos status:
 - STUDENT_ABSENT: o aluno não compareceu sem avisar (no-show / falta do aluno).
 - MOVED_HERE: aula antecipada/remarcada que ACONTECEU nesta data.
 - MOVED_AWAY: aula que foi movida para OUTRA data (não acontece nesta).
-half = true quando a descrição indicar meia aula, 30 minutos, meia hora, metade ou equivalente; caso contrário false.
-Na dúvida entre NORMAL e um status especial, só use o status especial se houver indício claro no texto; senão use NORMAL.`;
+half = true SOMENTE quando a descrição indicar explicitamente duração curta: "30 min", "30 minutos", "meia hora", "meia aula", "metade", "aula reduzida" ou equivalente.
+ATENÇÃO: números em "Page 30", "p. 30", "pg 30", "Unit 5", "Exercise 2", "Lesson 3" são página/unidade/exercício/lição e NÃO indicam duração — NUNCA marque half por causa deles.
+Na dúvida entre NORMAL e um status especial, só use o status especial se houver indício claro no texto; senão use NORMAL.
+
+Exemplos:
+- "Conversation + Page 30 (Exercise 2) - Unit 5 - Mixed feelings" => {"status":"NORMAL","half":false}
+- "Unit 8 - Reading p. 30" => {"status":"NORMAL","half":false}
+- "Aula de 30 minutos (aluno chegou atrasado)" => {"status":"NORMAL","half":true}
+- "Cancelou sem avisar, menos de 24h" => {"status":"CANCELED_NO_24H","half":false}
+- "Cancelada com antecedência (24h)" => {"status":"CANCELED_24H","half":false}
+- "Feriado nacional" => {"status":"HOLIDAY","half":false}
+- "Professor não pôde dar a aula" => {"status":"TEACHER_ABSENT","half":false}`;
 
 async function callGemini(items, key, model) {
   const list = items.map((t, i) => i + ': ' + String(t).replace(/\s+/g, ' ').trim()).join('\n');

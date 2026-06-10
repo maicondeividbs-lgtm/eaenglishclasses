@@ -8,7 +8,8 @@
 // Variáveis de ambiente aceitas (usa a primeira encontrada):
 //   GEMINI_API_KEY  |  GOOGLE_API_KEY  |  GOOGLE_GENERATIVE_AI_API_KEY
 // Opcional:
-//   GEMINI_MODEL    (padrão: gemini-2.5-flash)
+//   GEMINI_MODEL    (padrão: gemini-2.5-flash-lite — rápido e barato; troque para
+//                    gemini-2.5-flash se quiser mais precisão, sem mexer no código)
 
 const STATUSES = ['NORMAL','CANCELED_NO_24H','CANCELED_24H','HOLIDAY','VACATION','RECESS','TEACHER_ABSENT','STUDENT_ABSENT','MOVED_HERE','MOVED_AWAY'];
 
@@ -65,7 +66,14 @@ async function callGemini(items, key, model) {
     headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
     body: JSON.stringify({
       contents: [{ role: 'user', parts: [{ text: prompt }] }],
-      generationConfig: { temperature: 0, responseMimeType: 'application/json' }
+      generationConfig: {
+        temperature: 0,
+        responseMimeType: 'application/json',
+        maxOutputTokens: 8192,
+        // "thinking" desligado = bem mais rápido e barato; saída idêntica para classificação.
+        // Modelos 2.5 usam thinkingBudget; modelos 3.x usam thinkingLevel.
+        thinkingConfig: /gemini-3/.test(model) ? { thinkingLevel: 'low' } : { thinkingBudget: 0 }
+      }
     })
   });
   if (!r.ok) {
@@ -100,20 +108,35 @@ export default async function handler(req, res) {
     const descriptions = (body && Array.isArray(body.descriptions)) ? body.descriptions : [];
     if (!descriptions.length) { res.status(200).json({ results: [] }); return; }
 
-    const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+    const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash-lite';
 
-    // Lotes, para o caso de muitas descrições.
-    const CHUNK = 60;
+    // Lotes em PARALELO (com limite de concorrência), para reduzir a latência.
+    const CHUNK = 50;
+    const chunks = [];
+    for (let i = 0; i < descriptions.length; i += CHUNK) chunks.push(descriptions.slice(i, i + CHUNK));
+
+    const LIMIT = 4; // chamadas simultâneas — respeita o rate limit do plano gratuito
+    const partial = new Array(chunks.length);
+    let next = 0;
+    async function worker() {
+      while (next < chunks.length) {
+        const my = next++;
+        partial[my] = await callGemini(chunks[my], key, model);
+      }
+    }
+    const workers = [];
+    for (let w = 0; w < Math.min(LIMIT, chunks.length); w++) workers.push(worker());
+    await Promise.all(workers);
+
     const out = [];
-    for (let i = 0; i < descriptions.length; i += CHUNK) {
-      const part = descriptions.slice(i, i + CHUNK);
-      const arr = await callGemini(part, key, model);
+    chunks.forEach((part, ci) => {
+      const arr = partial[ci] || [];
       for (let j = 0; j < part.length; j++) {
         const it = arr[j] || {};
         const st = STATUSES.includes(it.status) ? it.status : 'NORMAL';
         out.push({ status: st, half: !!it.half });
       }
-    }
+    });
     res.status(200).json({ results: out, model });
   } catch (err) {
     res.status(502).json({ error: String((err && err.message) || err) });

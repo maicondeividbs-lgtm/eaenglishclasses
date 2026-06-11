@@ -2452,6 +2452,21 @@ body.sb-collapsed .main { margin-left: 92px !important; }
             <span>Avaliações</span>
             <span class="tip">Notas de Avaliações</span>
           </button>
+          <button class="sb-link" data-section="my-students">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+            <span>Meus Alunos</span>
+            <span class="tip">Meus Alunos</span>
+          </button>
+          <button class="sb-link" data-section="writing">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.996.996 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+            <span>Redações</span>
+            <span class="tip">Redações</span>
+          </button>
+          <button class="sb-link" data-section="co-vocab">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
+            <span>Vocabulário</span>
+            <span class="tip">Vocabulário</span>
+          </button>
           <button class="sb-link" data-section="teach">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
             <span>Área do Professor</span>
@@ -2981,6 +2996,9 @@ body.sb-collapsed .main { margin-left: 92px !important; }
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
               Registrar avaliação
             </button>
+            <button class="doc-action-btn" onclick="if(docCurrentStudent)openStudentDetailCoord(docCurrentStudent.id, docCurrentStudent.full_name)">
+              📋 Ver tudo do aluno
+            </button>
           </div>
 
           <div class="panel">
@@ -3090,7 +3108,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
       <!-- Keep old hidden sections for compatibility -->
       <div class="section" id="sec-homework" style="display:none"></div>
       <div class="section" id="sec-feedbacks" style="display:none"></div>
-            <div class="section" id="sec-writing" style="display:none"></div>
+
       <div class="section" id="sec-pronunciation-coord" style="display:none"></div>
 
       <div class="section" id="sec-announcements">
@@ -3224,6 +3242,41 @@ body.sb-collapsed .main { margin-left: 92px !important; }
           </div>
         </div>
       </div>
+
+            <div class="section" id="sec-writing">
+              <div class="section-head">
+                <div class="section-head-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+                <div class="section-head-text"><h2>Redações</h2><p class="section-sub">Veja as redações dos alunos e corrija as entregues — clique numa redação com status "Aguardando correção".</p></div>
+              </div>
+              <div class="panel">
+                <div class="panel-head"><div class="panel-title">✍️ Todas as redações</div></div>
+                <div id="wrPageList" style="padding:8px 16px 16px"><div class="empty-state"><div class="empty-icon">✍️</div><p>Carregando...</p></div></div>
+              </div>
+            </div>
+
+            <div class="section" id="sec-my-students">
+              <div class="section-head">
+                <div class="section-head-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+                <div class="section-head-text"><h2>Meus Alunos</h2><p class="section-sub">Veja o resumo completo de cada aluno: tarefas, feedbacks, pronúncia, vocabulário, redação e notas.</p></div>
+              </div>
+              <div id="coMyStudentsList" class="doc-student-grid"><div class="empty-state"><div class="empty-icon">👥</div><p>Carregando...</p></div></div>
+            </div>
+
+            <div class="section" id="sec-co-vocab">
+              <div class="section-head">
+                <div class="section-head-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+                <div class="section-head-text"><h2>Vocabulário</h2><p class="section-sub">Envie novas palavras de vocabulário para os seus alunos.</p></div>
+              </div>
+              <div class="form-card">
+                <div class="f-group"><label>Aluno</label><select id="coVocabStudent" class="filter-select" style="width:100%"><option value="">Selecione</option></select></div>
+                <div class="f-group"><label>Palavras (uma por linha ou separadas por vírgula)</label><textarea id="coVocabWords" rows="4" placeholder="Ex: although, however, despite, in spite of"></textarea></div>
+                <button class="btn-send" onclick="sendCoVocab()">Enviar Vocabulário</button>
+              </div>
+              <div class="panel" style="margin-top:16px">
+                <div class="panel-head"><div class="panel-title">📚 Vocabulário do aluno</div></div>
+                <div id="coVocabList" style="padding:8px 16px 16px"><div class="empty-state"><p>Selecione um aluno para ver o vocabulário.</p></div></div>
+              </div>
+            </div>
 
             <div class="section" id="sec-tool">
         <div class="section-head">
@@ -3462,7 +3515,7 @@ function recalcFinal(){const adj=toolAdjustments.reduce((s,a)=>s+a.val,0);const 
 <script src="supabase.js"></script>
 <script>
 let currentUser = null;
-const sections = {"overview":"Visão Geral","users":"Usuários","access":"Acessos de Alunos","schedules":"Schedules","nivelamento":"Nivelamentos","supervision":"Supervisão","homework":"Homeworks","feedbacks":"Feedbacks","announcements":"Avisos","messages":"Msg → Professor","writing":"Redações","pronunciation-coord":"Pronúncias","documents":"Notas de Avaliações","testimonials":"Depoimentos","teach":"Área do Professor","tool":"Ferramenta","my-profile":"Meu Perfil"};
+const sections = {"overview":"Visão Geral","users":"Usuários","access":"Acessos de Alunos","schedules":"Schedules","nivelamento":"Nivelamentos","supervision":"Supervisão","homework":"Homeworks","feedbacks":"Feedbacks","announcements":"Avisos","messages":"Msg → Professor","writing":"Redações","pronunciation-coord":"Pronúncias","documents":"Notas de Avaliações","testimonials":"Depoimentos","teach":"Área do Professor","tool":"Ferramenta","my-students":"Meus Alunos","co-vocab":"Vocabulário","my-profile":"Meu Perfil"};
 
 // ═══ INIT ═══
 // ═══ COLLAPSIBLE SIDEBAR ═══
@@ -4520,16 +4573,119 @@ async function saveUserEdit() {
 
 
 // ═══ WRITING SUPERVISION ═══
+// ═══ MEUS ALUNOS (coordenador) ═══
+async function loadCoMyStudents(){
+  var list=document.getElementById('coMyStudentsList'); if(!list) return;
+  list.innerHTML='<div class="empty-state"><div class="empty-icon">⏳</div><p>Carregando...</p></div>';
+  var students=[];
+  try{ students=await getMyStudents(currentUser.id); }catch(e){}
+  window._coStudents=students;
+  if(!students.length){ list.innerHTML='<div class="empty-state"><div class="empty-icon">👥</div><p>Você ainda não tem alunos atribuídos a você.</p></div>'; return; }
+  list.innerHTML=students.map(function(s){
+    var ini=(s.full_name||'A').trim().charAt(0).toUpperCase();
+    var meta=s.level||s.email||'—';
+    return '<button class="doc-student-card" data-sid="'+docEsc(s.id)+'" data-sname="'+docEsc(s.full_name||'')+'" onclick="openStudentDetailCoord(this.dataset.sid,this.dataset.sname)">'+
+      '<div class="dsc-avatar">'+(s.avatar_url?'<img src="'+docEsc(s.avatar_url)+'" alt="">':docEsc(ini))+'</div>'+
+      '<div style="text-align:left;min-width:0"><div class="dsc-name">'+docEsc(s.full_name||'Aluno')+'</div><div class="dsc-meta">'+docEsc(meta)+'</div></div>'+
+    '</button>';
+  }).join('');
+}
+
+// ═══ VOCABULÁRIO (coordenador) ═══
+async function loadCoVocab(){
+  var sel=document.getElementById('coVocabStudent'); if(!sel) return;
+  var students=window._coStudents;
+  if(!students){ try{ students=await getMyStudents(currentUser.id); window._coStudents=students; }catch(e){ students=[]; } }
+  sel.innerHTML='<option value="">Selecione o aluno</option>'+(students||[]).map(function(s){return '<option value="'+docEsc(s.id)+'">'+docEsc(s.full_name||'')+'</option>';}).join('');
+  sel.onchange=function(){ loadCoVocabList(sel.value); };
+  var div=document.getElementById('coVocabList'); if(div) div.innerHTML='<div class="empty-state"><p>Selecione um aluno para ver o vocabulário.</p></div>';
+}
+async function loadCoVocabList(sid){
+  var div=document.getElementById('coVocabList'); if(!div) return;
+  if(!sid){ div.innerHTML='<div class="empty-state"><p>Selecione um aluno.</p></div>'; return; }
+  div.innerHTML='<div class="empty-state"><p>Carregando...</p></div>';
+  var words=[]; try{ words=await getVocabularyForStudent(sid); }catch(e){}
+  if(!words.length){ div.innerHTML='<div class="empty-state"><div class="empty-icon">📚</div><p>Nenhuma palavra enviada ainda.</p></div>'; return; }
+  div.innerHTML=words.map(function(v){ return '<div class="list-item"><div><div class="list-title">'+docEsc(v.word||'')+(v.translation?' <span style="color:var(--g500);font-weight:400">— '+docEsc(v.translation)+'</span>':'')+'</div>'+(v.sentence?'<div class="list-sub">'+docEsc(v.sentence)+'</div>':'')+'</div></div>'; }).join('');
+}
+async function sendCoVocab(){
+  var sid=document.getElementById('coVocabStudent').value;
+  var raw=document.getElementById('coVocabWords').value.trim();
+  if(!sid){ showToast('Selecione o aluno','error'); return; }
+  var words=raw.split(/[\n,;]+/).map(function(w){return w.trim();}).filter(Boolean);
+  if(!words.length){ showToast('Digite ao menos uma palavra','error'); return; }
+  try{
+    await addVocabularyWords(currentUser.id, sid, words);
+    showToast(words.length+' palavra(s) enviada(s)!');
+    document.getElementById('coVocabWords').value='';
+    loadCoVocabList(sid);
+  }catch(e){ showToast('Erro: '+(e.message||e),'error'); }
+}
+
+// ═══ CORREÇÃO DE REDAÇÃO (coordenador) ═══
+function openWrCorrect(id){
+  var items=window._wrCoordItems||[];
+  var w=null; for(var i=0;i<items.length;i++){ if(items[i].id===id){ w=items[i]; break; } }
+  if(!w) return;
+  eaStuDetailStyles();
+  var prev=document.getElementById('stuOverlay'); if(prev)prev.remove();
+  var ov=document.createElement('div'); ov.id='stuOverlay'; ov.className='stu-overlay';
+  var graded=w.status==='graded';
+  ov.innerHTML='<div class="stu-modal" onclick="event.stopPropagation()">'+
+    '<div class="stu-head"><div><div style="font-weight:800;color:var(--navy);font-size:16px">✍️ '+docEsc(w.title||'Redação')+'</div><div style="font-size:12px;color:var(--g400)">'+docEsc((w.student&&w.student.full_name)||'Aluno')+'</div></div><button class="stu-x" onclick="eaStuClose()">✕</button></div>'+
+    '<div class="stu-body">'+
+      (w.prompt?'<div style="font-size:12px;color:var(--g600);font-style:italic;margin-bottom:10px">'+docEsc(w.prompt)+'</div>':'')+
+      '<div style="font-size:11px;font-weight:700;color:var(--g400);text-transform:uppercase;margin-bottom:6px">Texto do aluno</div>'+
+      '<div class="stu-row" style="white-space:pre-wrap;font-size:13px;color:var(--navy);max-height:240px;overflow:auto">'+(w.response?docEsc(w.response):'<span style="color:var(--g400)">O aluno ainda não respondeu.</span>')+'</div>'+
+      '<div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;align-items:flex-end">'+
+        '<div style="width:120px"><label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px">Nota</label><input type="number" id="wrGrade" step="0.5" value="'+(w.grade!=null?w.grade:'')+'" style="width:100%;padding:10px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:14px;color:var(--navy);outline:none"></div>'+
+        '<div style="flex:1;min-width:200px"><label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px">Feedback</label><textarea id="wrFeedback" rows="3" style="width:100%;padding:10px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:14px;color:var(--navy);outline:none">'+docEsc(w.feedback||'')+'</textarea></div>'+
+      '</div>'+
+      '<button class="btn-send" style="margin-top:14px;width:100%" onclick="saveWrCorrect(\''+w.id+'\')">'+(graded?'Atualizar correção':'Salvar correção')+'</button>'+
+    '</div>'+
+  '</div>';
+  ov.addEventListener('click', eaStuClose);
+  document.body.appendChild(ov);
+  requestAnimationFrame(function(){ov.classList.add('show');});
+}
+async function saveWrCorrect(id){
+  var g=document.getElementById('wrGrade').value;
+  var fb=document.getElementById('wrFeedback').value.trim();
+  if(g===''){ showToast('Informe a nota','error'); return; }
+  try{
+    await gradeWriting(id, fb, Number(g));
+    showToast('Correção salva!');
+    eaStuClose();
+    loadWritingCoord();
+  }catch(e){ showToast('Erro: '+(e.message||e),'error'); }
+}
+async function loadWritingPage(){
+  var div=document.getElementById('wrPageList'); if(!div) return;
+  div.innerHTML='<div class="empty-state"><div class="empty-icon">\u23f3</div><p>Carregando...</p></div>';
+  var items=[];
+  try{
+    var r=await db.from('writing_activities').select('*, teacher:profiles!writing_activities_teacher_id_fkey(full_name), student:profiles!writing_activities_student_id_fkey(full_name)').order('created_at',{ascending:false});
+    items=r.data||[];
+  }catch(e){}
+  window._wrCoordItems=items;
+  if(!items.length){ div.innerHTML='<div class="empty-state"><div class="empty-icon">\u270d\ufe0f</div><p>Nenhuma reda\u00e7\u00e3o no sistema.</p></div>'; return; }
+  div.innerHTML=items.map(function(w){
+    var statusMap={pending:'<span class="badge badge-pending">Aguardando aluno</span>',submitted:'<span class="badge" style="background:rgba(243,107,46,0.12);color:#c2410c">Aguardando corre\u00e7\u00e3o</span>',graded:'<span class="badge badge-done">Corrigida: '+(w.grade!=null?w.grade:'')+'</span>'};
+    var clickable=(w.status==='submitted'||w.status==='graded');
+    return '<div class="list-item"'+(clickable?' style="cursor:pointer" onclick="openWrCorrect(\''+w.id+'\')"':'')+'><div><div class="list-title">\u270d\ufe0f '+docEsc(w.title||'')+'</div><div class="list-sub">'+docEsc((w.student&&w.student.full_name)||'?')+' \u2014 '+formatDateTime(w.created_at)+'</div></div>'+(statusMap[w.status]||'')+'</div>';
+  }).join('');
+}
+
 async function loadWritingCoord() {
   const filterTeacher = document.getElementById('wrFilter')?.value || '';
   let query = db.from('writing_activities').select('*, teacher:profiles!writing_activities_teacher_id_fkey(full_name, id), student:profiles!writing_activities_student_id_fkey(full_name)').order('created_at', {ascending: false});
   if (filterTeacher) query = query.eq('teacher_id', filterTeacher);
-  const { data: items } = await query;
+  const { data: items } = await query; window._wrCoordItems = items || [];
   const div = document.getElementById('wrCoordList');
   if (!items || !items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">✍️</div><p>Nenhuma redação no sistema.</p></div>'; return; }
   div.innerHTML = items.map(w => {
     const statusMap = {pending:'<span class="badge badge-pending">Aguardando aluno</span>',submitted:'<span class="badge" style="background:rgba(243,107,46,0.12);color:#c2410c">Aguardando correção</span>',graded:'<span class="badge badge-done">Corrigida: '+(w.grade||'')+'</span>'};
-    return '<div class="list-item"><div><div class="list-title">✍️ ' + w.title + '</div><div class="list-sub">Prof. ' + (w.teacher?.full_name||'?') + ' → ' + (w.student?.full_name||'?') + ' — ' + formatDateTime(w.created_at) + '</div></div>' + (statusMap[w.status]||'') + '</div>';
+    return '<div class="list-item"'+((w.status==='submitted'||w.status==='graded')?' style="cursor:pointer" onclick="openWrCorrect(\''+w.id+'\')"':'')+'><div><div class="list-title">✍️ ' + w.title + '</div><div class="list-sub">Prof. ' + (w.teacher?.full_name||'?') + ' → ' + (w.student?.full_name||'?') + ' — ' + formatDateTime(w.created_at) + '</div></div>' + (statusMap[w.status]||'') + '</div>';
   }).join('');
 }
 
@@ -5558,12 +5714,14 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'announcements': loadAnnouncementList(); break;
       case 'announcements': loadAnnouncementList(); break;
       case 'messages': loadMsgList(); break;
-      case 'writing': loadWritingCoord(); break;
+      case 'writing': loadWritingPage(); break;
       case 'pronunciation-coord': loadPronunciationCoord(); break;
       case 'documents': loadDocStudents(); break;
       case 'testimonials': loadTestimonials(); break;
       case 'teach': loadTeachStudents(); break;
       case 'tool': initToolProfessors(); break;
+      case 'my-students': loadCoMyStudents(); break;
+      case 'co-vocab': loadCoVocab(); break;
       case 'my-profile': loadMyProfile(); break;
     }
   });
@@ -5776,6 +5934,91 @@ function closeDocDetail() {
 
 // Média de uma avaliação: usa a média salva (que pode ter sido
 // ajustada manualmente); se ausente, calcula (oral+written+assessment)/3.
+// ═══ DETALHES COMPLETOS DO ALUNO (coordenador) ═══
+function eaStuDetailStyles(){
+  if(document.getElementById('eaStuDetailStyle'))return;
+  var s=document.createElement('style');s.id='eaStuDetailStyle';
+  s.textContent=
+   '.stu-overlay{position:fixed;inset:0;background:rgba(25,36,78,.55);backdrop-filter:blur(3px);z-index:9998;display:flex;align-items:center;justify-content:center;padding:4%;opacity:0;transition:opacity .2s}'+
+   '.stu-overlay.show{opacity:1}'+
+   '.stu-modal{background:#fff;border-radius:20px;width:100%;max-width:680px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.3);transform:translateY(14px);transition:transform .2s}'+
+   '.stu-overlay.show .stu-modal{transform:none}'+
+   '.stu-head{display:flex;align-items:center;gap:14px;padding:20px 22px;border-bottom:1px solid var(--g100)}'+
+   '.stu-av{width:46px;height:46px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;flex-shrink:0}'+
+   '.stu-x{margin-left:auto;border:none;background:var(--g100);width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:15px;color:var(--g500)}'+
+   '.stu-tabs{display:flex;gap:6px;flex-wrap:wrap;padding:14px 22px 0}'+
+   '.stu-tab{border:none;background:var(--g100);color:var(--navy);font-weight:700;font-size:12px;padding:8px 13px;border-radius:20px;cursor:pointer;font-family:inherit}'+
+   '.stu-tab.active{background:var(--navy);color:#fff}'+
+   '.stu-body{padding:14px 22px 22px;overflow-y:auto}'+
+   '.stu-row{padding:12px 14px;border:1px solid var(--g100);border-radius:12px;margin-bottom:8px}'+
+   '.stu-row b{color:var(--navy);font-size:13px}'+
+   '.stu-empty{text-align:center;color:var(--g400);font-size:13px;padding:24px}'+
+   '.stu-pill{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;margin-left:6px}';
+  document.head.appendChild(s);
+}
+function eaStuClose(){var o=document.getElementById('stuOverlay');if(o){o.classList.remove('show');setTimeout(function(){o.remove();},200);}}
+async function openStudentDetailCoord(sid, sname){
+  eaStuDetailStyles();
+  var prev=document.getElementById('stuOverlay');if(prev)prev.remove();
+  var ov=document.createElement('div');ov.id='stuOverlay';ov.className='stu-overlay';
+  var initial=(sname||'?').charAt(0).toUpperCase();
+  ov.innerHTML='<div class="stu-modal" onclick="event.stopPropagation()">'+
+    '<div class="stu-head"><div class="stu-av">'+docEsc(initial)+'</div><div><div style="font-weight:800;color:var(--navy);font-size:16px">'+docEsc(sname||'Aluno')+'</div><div style="font-size:12px;color:var(--g400)">Resumo completo do aluno</div></div><button class="stu-x" onclick="eaStuClose()">✕</button></div>'+
+    '<div class="stu-tabs" id="stuTabs"></div>'+
+    '<div class="stu-body" id="stuBody"><div class="stu-empty">Carregando…</div></div>'+
+  '</div>';
+  ov.addEventListener('click', eaStuClose);
+  document.body.appendChild(ov);
+  requestAnimationFrame(function(){ov.classList.add('show');});
+
+  var R=await Promise.all([
+    getTasksForStudent(sid).catch(function(){return[];}),
+    getFeedbacksForStudent(sid).catch(function(){return[];}),
+    getPronunciationForStudent(sid).catch(function(){return[];}),
+    getVocabularyForStudent(sid).catch(function(){return[];}),
+    getWritingForStudent(sid).catch(function(){return[];}),
+    getAssessmentGrades(sid).catch(function(){return null;})
+  ]);
+  var tasks=(R[0]||[]).map(function(r){return {title:(r.task&&r.task.title)||'(tarefa)', due:(r.task&&r.task.due_date)||null, status:r.status};});
+  window._stuData={tasks:tasks, fbs:R[1]||[], pron:R[2]||[], vocab:R[3]||[], wr:R[4]||[], grades:R[5]};
+
+  var tabs=[
+    {k:'tasks',label:'📝 Tarefas',n:tasks.length},
+    {k:'fbs',label:'💬 Feedbacks',n:(R[1]||[]).length},
+    {k:'pron',label:'🔊 Pronúncia',n:(R[2]||[]).length},
+    {k:'vocab',label:'📚 Vocabulário',n:(R[3]||[]).length},
+    {k:'wr',label:'✍️ Redação',n:(R[4]||[]).length},
+    {k:'grades',label:'🎯 Notas',n:(R[5]&&R[5].length)||0}
+  ];
+  document.getElementById('stuTabs').innerHTML=tabs.map(function(t,i){return '<button class="stu-tab'+(i===0?' active':'')+'" onclick="eaStuTab(this,\''+t.k+'\')">'+t.label+' ('+t.n+')</button>';}).join('');
+  eaStuRender('tasks');
+}
+function eaStuTab(btn,k){
+  document.querySelectorAll('.stu-tab').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  eaStuRender(k);
+}
+function eaStuRender(k){
+  var d=window._stuData||{};var b=document.getElementById('stuBody');if(!b)return;
+  function empty(t){return '<div class="stu-empty">'+t+'</div>';}
+  var h='';
+  if(k==='tasks'){
+    h=(d.tasks&&d.tasks.length)?d.tasks.map(function(t){var st=t.status==='submitted'?'<span class="stu-pill" style="background:#dcfce7;color:#16a34a">entregue</span>':'<span class="stu-pill" style="background:#fff7ed;color:#d97706">pendente</span>';return '<div class="stu-row"><b>'+docEsc(t.title||'')+'</b>'+st+'<div style="font-size:12px;color:var(--g500);margin-top:4px">Prazo: '+(t.due?formatDate(t.due):'—')+'</div></div>';}).join(''):empty('Nenhuma tarefa para este aluno.');
+  } else if(k==='fbs'){
+    h=(d.fbs&&d.fbs.length)?d.fbs.map(function(f){return '<div class="stu-row"><b>'+docEsc(f.title||'')+'</b>'+(f.category?'<span class="stu-pill" style="background:var(--g100);color:var(--g600)">'+docEsc(f.category)+'</span>':'')+'<div style="font-size:12px;color:var(--g600);margin-top:4px">'+docEsc(f.content||'')+'</div><div style="font-size:11px;color:var(--g400);margin-top:4px">'+(f.created_at?formatDate(f.created_at):'')+'</div></div>';}).join(''):empty('Nenhum feedback ainda.');
+  } else if(k==='pron'){
+    h=(d.pron&&d.pron.length)?d.pron.map(function(p){return '<div class="stu-row"><b>'+docEsc(p.word||'')+'</b>'+(p.practiced?'<span class="stu-pill" style="background:#dcfce7;color:#16a34a">praticada</span>':'')+(p.phonetic?'<div style="font-size:12px;color:var(--g500);margin-top:4px">'+docEsc(p.phonetic)+'</div>':'')+(p.notes?'<div style="font-size:12px;color:var(--g600);margin-top:2px">'+docEsc(p.notes)+'</div>':'')+'</div>';}).join(''):empty('Nenhuma pronúncia enviada.');
+  } else if(k==='vocab'){
+    h=(d.vocab&&d.vocab.length)?d.vocab.map(function(v){return '<div class="stu-row"><b>'+docEsc(v.word||'')+'</b>'+(v.translation?'<span style="font-size:12px;color:var(--g500)"> — '+docEsc(v.translation)+'</span>':'')+(v.sentence?'<div style="font-size:12px;color:var(--g600);margin-top:4px;font-style:italic">'+docEsc(v.sentence)+'</div>':'')+'</div>';}).join(''):empty('Nenhuma palavra enviada.');
+  } else if(k==='wr'){
+    h=(d.wr&&d.wr.length)?d.wr.map(function(w){var st=w.status==='graded'?'<span class="stu-pill" style="background:#dcfce7;color:#16a34a">nota '+(w.grade!=null?w.grade:'-')+'</span>':(w.status==='submitted'?'<span class="stu-pill" style="background:#fef9c3;color:#a16207">aguardando</span>':'<span class="stu-pill" style="background:#fff7ed;color:#d97706">tema</span>');return '<div class="stu-row"><b>'+docEsc(w.title||'')+'</b>'+st+(w.prompt?'<div style="font-size:12px;color:var(--g600);margin-top:4px">'+docEsc(w.prompt)+'</div>':'')+'</div>';}).join(''):empty('Nenhuma redação.');
+  } else if(k==='grades'){
+    if(d.grades===null){ h=empty('Sem acesso às notas deste aluno.'); }
+    else h=(d.grades&&d.grades.length)?d.grades.map(function(g){return '<div class="stu-row"><b>'+docEsc((g.book||'')+' • '+(g.period||''))+'</b><span class="stu-pill" style="background:var(--navy);color:#fff">média '+(g.final_average!=null?g.final_average:'-')+'</span><div style="font-size:12px;color:var(--g500);margin-top:4px">Oral '+(g.oral_score!=null?g.oral_score:'-')+' · Escrita '+(g.written_score!=null?g.written_score:'-')+' · Assessment '+(g.assessment_score!=null?g.assessment_score:'-')+'</div></div>';}).join(''):empty('Nenhuma nota lançada.');
+  }
+  b.innerHTML=h;
+}
+
 function gradeAverage(g) {
   if (g.final_average != null && g.final_average !== '') return Number(g.final_average);
   return (Number(g.oral_score) + Number(g.written_score) + Number(g.assessment_score)) / 3;

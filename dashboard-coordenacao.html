@@ -3291,6 +3291,10 @@ body.sb-collapsed .main { margin-left: 92px !important; }
             <div class="f-group"><label>Descrição / Instruções</label><textarea id="tHwDesc" rows="3" placeholder="Descreva a atividade..."></textarea></div>
             <button class="btn-send" onclick="sendTeachHw()">Enviar Homework</button>
           </div>
+          <div class="panel" style="margin-top:16px">
+            <div class="panel-head"><div class="panel-title">📝 Homeworks enviados</div></div>
+            <div id="tHwList" style="padding:8px 16px 16px"><div class="empty-state"><div class="empty-icon">📝</div><p>Carregando...</p></div></div>
+          </div>
         </div>
 
         <!-- FB pane -->
@@ -3300,6 +3304,10 @@ body.sb-collapsed .main { margin-left: 92px !important; }
             <div class="f-group"><label>Título</label><input type="text" id="tFbTitle" placeholder="Ex: Progresso da semana"></div>
             <div class="f-group"><label>Feedback</label><textarea id="tFbContent" rows="5" placeholder="Escreva o feedback..."></textarea></div>
             <button class="btn-send" onclick="sendTeachFb()">Enviar Feedback</button>
+          </div>
+          <div class="panel" style="margin-top:16px">
+            <div class="panel-head"><div class="panel-title">💬 Feedbacks enviados</div></div>
+            <div id="tFbList" style="padding:8px 16px 16px"><div class="empty-state"><div class="empty-icon">💬</div><p>Carregando...</p></div></div>
           </div>
         </div>
 
@@ -3323,6 +3331,10 @@ body.sb-collapsed .main { margin-left: 92px !important; }
             <div class="f-group"><label>Palavras / Frases</label><textarea id="tPrWords" rows="3" placeholder="Ex: though, think, these, that, those"></textarea></div>
             <button class="btn-send" onclick="sendTeachPr()">Enviar Pronúncia</button>
           </div>
+          <div class="panel" style="margin-top:16px">
+            <div class="panel-head"><div class="panel-title">🎙️ Pronúncias enviadas</div></div>
+            <div id="tPrList" style="padding:8px 16px 16px"><div class="empty-state"><div class="empty-icon">🎙️</div><p>Carregando...</p></div></div>
+          </div>
         </div>
 
         <!-- VOCAB pane -->
@@ -3331,6 +3343,10 @@ body.sb-collapsed .main { margin-left: 92px !important; }
             <div class="f-group"><label>Aluno</label><select id="tVocabStudent" class="filter-select" style="width:100%"><option value="">Selecione</option></select></div>
             <div class="f-group"><label>Palavras (uma por linha ou separadas por vírgula)</label><textarea id="tVocabWords" rows="4" placeholder="Ex: although, however, despite, in spite of"></textarea></div>
             <button class="btn-send" onclick="sendTeachVocab()">Enviar Vocabulário</button>
+          </div>
+          <div class="panel" style="margin-top:16px">
+            <div class="panel-head"><div class="panel-title">📚 Vocabulário enviado</div></div>
+            <div id="tVocList" style="padding:8px 16px 16px"><div class="empty-state"><div class="empty-icon">📚</div><p>Carregando...</p></div></div>
           </div>
         </div>
       </div>
@@ -3773,6 +3789,10 @@ function switchTeach(key, btn) {
   if(pane) pane.style.display='';
   if(btn) btn.classList.add('active');
   if(key==='t-wr') loadTeachWriting();
+  if(key==='t-hw') loadTeachHwList();
+  if(key==='t-fb') loadTeachFbList();
+  if(key==='t-pr') loadTeachPrList();
+  if(key==='t-vocab') loadTeachVocList();
 }
 
 var teachStudentsLoaded = false;
@@ -3800,6 +3820,7 @@ async function sendTeachHw() {
     await createTask(title, desc, currentUser.id, [sid], null);
     showToast('Homework enviado!');
     document.getElementById('tHwTitle').value='';document.getElementById('tHwDesc').value='';
+    loadTeachHwList();
   }catch(e){showToast('Erro: '+e.message,'error');}
 }
 
@@ -3813,6 +3834,7 @@ async function sendTeachFb() {
     showToast('Feedback enviado!');
     document.getElementById('tFbTitle').value='';
     document.getElementById('tFbContent').value='';
+    loadTeachFbList();
   }catch(e){showToast('Erro: '+e.message,'error');}
 }
 
@@ -3836,6 +3858,7 @@ async function sendTeachPr() {
     await createPronunciation(currentUser.id, sid, words, '', '');
     showToast('Pronúncia enviada!');
     document.getElementById('tPrWords').value='';
+    loadTeachPrList();
   }catch(e){showToast('Erro: '+e.message,'error');}
 }
 
@@ -4740,7 +4763,55 @@ async function sendTeachVocab(){
     await addVocabularyWords(currentUser.id, sid, words);
     showToast(words.length+' palavra(s) enviada(s)!');
     document.getElementById('tVocabWords').value='';
+    loadTeachVocList();
   }catch(e){ showToast('Erro: '+(e.message||e),'error'); }
+}
+
+// ═══ ÁREA DO PROFESSOR — histórico de envios aos meus alunos ═══
+async function loadTeachHwList(){
+  var div=document.getElementById('tHwList'); if(!div) return;
+  div.innerHTML='<div class="empty-state"><div class="empty-icon">⏳</div><p>Carregando...</p></div>';
+  var items=[]; try{ items=await getTasksByTeacher(currentUser.id); }catch(e){}
+  if(!items.length){ div.innerHTML='<div class="empty-state"><div class="empty-icon">📝</div><p>Nenhum homework enviado ainda.</p></div>'; return; }
+  div.innerHTML='<div style="padding:8px 0">'+items.map(function(t){
+    var subs=t.task_submissions||[];
+    var names=subs.map(function(s){return (s.student&&s.student.full_name)||'';}).filter(Boolean).join(', ')||'—';
+    var done=subs.filter(function(s){return s.status!=='pending';}).length;
+    var badge=done>0?'<span class="badge badge-done">'+done+'/'+subs.length+' feito(s)</span>':'<span class="badge badge-pending">Pendente</span>';
+    return '<div class="list-item"><div><div class="list-title">📝 '+docEsc(t.title||'')+'</div><div class="list-sub">'+docEsc(names)+' — '+formatDateTime(t.created_at)+'</div></div>'+badge+'</div>';
+  }).join('')+'</div>';
+}
+async function loadTeachFbList(){
+  var div=document.getElementById('tFbList'); if(!div) return;
+  div.innerHTML='<div class="empty-state"><div class="empty-icon">⏳</div><p>Carregando...</p></div>';
+  var items=[]; try{ items=await getFeedbacksByTeacher(currentUser.id); }catch(e){}
+  if(!items.length){ div.innerHTML='<div class="empty-state"><div class="empty-icon">💬</div><p>Nenhum feedback enviado ainda.</p></div>'; return; }
+  div.innerHTML='<div style="padding:8px 0">'+items.map(function(f){
+    var nm=(f.student&&f.student.full_name)||'Aluno';
+    return '<div class="list-item"><div><div class="list-title">💬 '+docEsc(f.title||'')+'</div><div class="list-sub">Para '+docEsc(nm)+' — '+formatDateTime(f.created_at)+'</div>'+(f.content?'<div style="font-size:12px;color:var(--g600);margin-top:4px">'+docEsc(f.content)+'</div>':'')+'</div></div>';
+  }).join('')+'</div>';
+}
+async function loadTeachPrList(){
+  var div=document.getElementById('tPrList'); if(!div) return;
+  div.innerHTML='<div class="empty-state"><div class="empty-icon">⏳</div><p>Carregando...</p></div>';
+  var items=[]; try{ items=await getPronunciationByTeacher(currentUser.id); }catch(e){}
+  if(!items.length){ div.innerHTML='<div class="empty-state"><div class="empty-icon">🎙️</div><p>Nenhuma pronúncia enviada ainda.</p></div>'; return; }
+  div.innerHTML='<div style="padding:8px 0">'+items.map(function(p){
+    var nm=(p.student&&p.student.full_name)||'Aluno';
+    var st=p.practiced?'<span class="badge badge-done">Praticada</span>':'<span class="badge badge-pending">Pendente</span>';
+    return '<div class="list-item"><div><div class="list-title">🎙️ '+docEsc(p.word||'')+'</div><div class="list-sub">Para '+docEsc(nm)+' — '+formatDateTime(p.created_at)+'</div></div>'+st+'</div>';
+  }).join('')+'</div>';
+}
+async function loadTeachVocList(){
+  var div=document.getElementById('tVocList'); if(!div) return;
+  div.innerHTML='<div class="empty-state"><div class="empty-icon">⏳</div><p>Carregando...</p></div>';
+  var items=[]; try{ items=await getVocabularyByTeacher(currentUser.id); }catch(e){}
+  if(!items.length){ div.innerHTML='<div class="empty-state"><div class="empty-icon">📚</div><p>Nenhuma palavra enviada ainda.</p></div>'; return; }
+  div.innerHTML='<div style="padding:8px 0">'+items.map(function(v){
+    var nm=(v.student&&v.student.full_name)||'Aluno';
+    var st=v.enriched?'<span class="badge badge-done">Estudada</span>':'<span class="badge badge-pending">Aguardando</span>';
+    return '<div class="list-item"><div><div class="list-title">📚 '+docEsc(v.word||'')+'</div><div class="list-sub">Para '+docEsc(nm)+' — '+formatDate(v.created_at)+'</div></div>'+st+'</div>';
+  }).join('')+'</div>';
 }
 
 // ═══ REDAÇÃO — correção inline (portado fielmente do dashboard do professor) ═══
@@ -5061,7 +5132,7 @@ async function loadCoMyStudents(){
   eaRenderStudentList('coMyStudentsList', students, coStudentCard);
 }
 document.addEventListener('DOMContentLoaded', function(){
-  ['hwList','fbList','annList','prCoordList','msgList','tWrList','wrCoordList'].forEach(function(id){ eaWatchVerMais(id, 5); });
+  ['hwList','fbList','annList','prCoordList','msgList','tWrList','wrCoordList','tHwList','tFbList','tPrList','tVocList'].forEach(function(id){ eaWatchVerMais(id, 5); });
 });
 
 async function loadWritingCoord() {
@@ -6116,7 +6187,7 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'pronunciation-coord': loadPronunciationCoord(); break;
       case 'documents': loadDocStudents(); break;
       case 'testimonials': loadTestimonials(); break;
-      case 'teach': loadTeachStudents(); break;
+      case 'teach': loadTeachStudents(); loadTeachHwList(); break;
       case 'tool': initToolProfessors(); break;
       case 'my-students': loadCoMyStudents(); break;
       case 'my-profile': loadMyProfile(); break;

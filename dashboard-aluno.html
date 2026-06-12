@@ -2099,46 +2099,57 @@ body.sb-collapsed .main { margin-left: 92px !important; }
   .pron-card { padding: 16px; }
   .pron-word { font-size: 22px !important; }
 
-  /* ── Cards de redação no celular ── */
+  /* ── Cards de redação no celular (cabeçalho reorganizado) ── */
   .wr-card { border-radius: 16px; margin-bottom: 16px; }
-  .wr-header { padding: 16px 18px; }
-  .wr-header-row { gap: 11px; }
-  .wr-header-icon { width: 40px; height: 40px; min-width: 40px; }
-  .wr-header-info h4 { font-size: 17px !important; }
-  .wr-body { padding: 18px; }
-  /* O selo de status quebra para a linha de baixo, evitando aperto no topo */
-  .wr-status-badge { font-size: 10.5px; padding: 5px 11px; }
-  /* Prompt: menos recuo à esquerda, aspa menor */
-  .wr-prompt {
-    padding: 16px 16px 16px 40px;
-    font-size: 13.5px;
-    margin-bottom: 18px;
-  }
-  .wr-prompt::before { font-size: 44px; left: 10px; }
-  /* Medalha de nota um pouco menor */
-  .wr-grade-wrap { gap: 13px; padding: 16px 18px; }
-  .wr-grade-medal { width: 48px; height: 48px; min-width: 48px; }
-  .wr-grade-medal .wr-grade-num { font-size: 16px; }
-  /* Textarea com toque confortável */
-  .wr-card textarea { font-size: 16px !important; min-height: 150px; }
-  .wr-submit-btn { width: 100%; justify-content: center; }
-  /* Legenda de categorias quebra melhor */
-  .wr-cat-legend { gap: 10px 14px !important; padding: 10px 14px; }
-  .wr-comments-list { padding: 14px; }
-  .wr-comment-item { padding: 11px 13px !important; }
-  /* Resumo da redação corrigida (estado minimizado) */
-  .wr-collapse-summary { gap: 8px 10px; font-size: 11px; }
-}
-@media (max-width: 420px) {
-  .wr-header { padding: 14px 14px; }
-  .wr-header-row { flex-wrap: wrap; }
-  /* Em telas bem estreitas, o selo e o botão de expandir vão para a 2ª linha */
-  .wr-status-badge { order: 3; }
-  .wr-toggle-btn { order: 4; }
-  .wr-body { padding: 14px; }
+  .wr-header { padding: 15px 16px; }
+  .wr-header-icon { width: 38px; height: 38px; min-width: 38px; border-radius: 11px; }
+  .wr-header-icon svg { width: 19px; height: 19px; }
+  .wr-header-info h4 { font-size: 16px !important; line-height: 1.3; }
+  .wr-header-meta { gap: 4px 10px; font-size: 11px; margin-top: 2px; }
+  /* Ícone + título na 1ª linha; selo desce alinhado ao título */
+  .wr-header-row { flex-wrap: wrap; align-items: flex-start; column-gap: 11px; row-gap: 9px; }
+  .wr-card:not(.is-graded) .wr-header-info { flex: 1 1 calc(100% - 49px); min-width: 0; }
+  .wr-card.is-graded .wr-header-info { flex: 1 1 auto; min-width: 0; }
+  .wr-toggle-btn { order: 3; margin-left: auto; align-self: flex-start; }
+  .wr-status-badge { order: 4; align-self: flex-start; margin-left: 49px; font-size: 10.5px; padding: 5px 11px; }
+  /* Corrigida: selo é redundante com o resumo/medalha — escondido no app */
+  .wr-card.is-graded .wr-status-badge { display: none; }
+  .wr-body { padding: 16px; }
+  .wr-prompt { padding: 15px 16px 15px 38px; font-size: 13.5px; margin-bottom: 16px; }
+  .wr-prompt::before { font-size: 42px; left: 9px; }
+  .wr-grade-wrap { gap: 12px; padding: 15px 16px; margin-bottom: 16px; }
+  .wr-grade-medal { width: 46px; height: 46px; min-width: 46px; }
+  .wr-grade-medal .wr-grade-num { font-size: 15px; }
   .wr-grade-text strong { font-size: 14px; }
   .wr-grade-text span { font-size: 12px; }
+  .wr-card textarea { font-size: 16px !important; min-height: 150px; }
+  .wr-submit-btn { width: 100%; justify-content: center; }
+  /* Legenda de categorias: grade 2 colunas, mais limpa */
+  .wr-cat-legend { display: grid !important; grid-template-columns: 1fr 1fr; gap: 8px 12px !important; padding: 11px 14px; font-size: 11px !important; }
+  .wr-essay-view { font-size: 14px !important; line-height: 1.8 !important; }
+  .wr-comments-list { padding: 14px; margin-top: 14px !important; }
+  .wr-comment-item { padding: 11px 13px !important; gap: 10px; }
+  .wr-general-feedback { padding: 14px 16px; margin-top: 14px; }
+  /* Resumo (minimizado): alinhado ao título, sem título duplicado */
+  .wr-collapse-summary { margin-left: 49px; gap: 7px 12px; font-size: 11px; padding-top: 11px; margin-top: 11px; }
+  .wr-cs-title { display: none; }
 }
+
+@media (max-width: 420px) {
+  .wr-header { padding: 13px 13px; }
+  .wr-header-icon { width: 34px; height: 34px; min-width: 34px; }
+  .wr-header-icon svg { width: 17px; height: 17px; }
+  .wr-header-info h4 { font-size: 15.5px !important; }
+  .wr-card:not(.is-graded) .wr-header-info { flex-basis: calc(100% - 45px); }
+  .wr-status-badge { margin-left: 45px; }
+  .wr-collapse-summary { margin-left: 45px; }
+  .wr-body { padding: 14px; }
+  .wr-prompt { padding-left: 34px; }
+  .wr-prompt::before { left: 8px; font-size: 38px; }
+  .wr-grade-text strong { font-size: 13.5px; }
+  .wr-grade-text span { font-size: 11.5px; }
+}
+
 
 /* ════════════════════════════════════════════════════════
    ✦ SIDEBAR REDESIGN (v7.6 — unified across dashboards)
@@ -3808,7 +3819,7 @@ async function loadWriting() {
       collapseSummary =
         '<div class="wr-collapse-summary">' +
           '<span class="wr-cs-item">' + dueIcon + correctedDate + '</span>' +
-          '<span class="wr-cs-item">📝 ' + (w.title || 'Redação') + '</span>' +
+          '<span class="wr-cs-item wr-cs-title">📝 ' + (w.title || 'Redação') + '</span>' +
           '<span class="wr-cs-grade">Nota: ' + (w.grade || '—') + '</span>' +
           '<span class="wr-cs-corrected"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>Corrigido</span>' +
         '</div>';

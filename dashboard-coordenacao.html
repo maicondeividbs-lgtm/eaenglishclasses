@@ -5570,7 +5570,8 @@ async function cSubmitEvt(slotId,name){
 }
 
 async function cSubmitXtra(){
-  var type=document.getElementById('cXType').value,date=document.getElementById('cXDate').value,student=document.getElementById('cXStudent').value.trim(),notes=document.getElementById('cXNotes').value.trim();
+  var type=getSelectedChip('cX'); if(['replacement','meeting','note'].indexOf(type)<0) type='replacement';
+  var date=document.getElementById('cXDate').value,student=document.getElementById('cXStudent').value.trim(),notes=document.getElementById('cXNotes').value.trim();
   var day=document.getElementById('cXDay').value,hour=document.getElementById('cXHour').value;
   if(!date){showToast('Selecione a data','error');return;}
   var labels={replacement:'Reposição',meeting:'Reunião pedagógica',note:'Observação'};

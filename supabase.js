@@ -16,8 +16,13 @@ async function signIn(email, password) {
 }
 
 async function signOut() {
-  await db.auth.signOut();
-  window.location.href = 'login.html';
+  // Mostra uma notificação de saída antes de redirecionar.
+  try { if (typeof showToast === 'function') showToast('Você saiu da sua conta. Até logo! 👋'); } catch (e) {}
+  try { await db.auth.signOut(); } catch (e) {}
+  // Desktop volta para a página inicial do site; no app fica no login (sem escapar do app).
+  var isApp = (window.matchMedia && (matchMedia('(display-mode: standalone)').matches || matchMedia('(max-width: 900px)').matches)) || navigator.standalone === true;
+  var dest = isApp ? 'login.html' : 'index.html';
+  setTimeout(function () { window.location.href = dest; }, 850);
 }
 
 async function getSession() {

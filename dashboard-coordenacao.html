@@ -2441,6 +2441,10 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 .as-list .student-avatar { width:38px !important; height:38px !important; font-size:14px !important; }
 .as-list .doc-student-card { padding:10px 12px !important; }
 .as-list .dsc-avatar { width:38px !important; height:38px !important; min-width:38px !important; }
+
+.user-grid.as-list { display:flex !important; flex-direction:column !important; gap:8px !important; }
+.as-list .user-card { padding:10px 14px !important; }
+.as-list .user-card-avatar { width:38px !important; height:38px !important; min-width:38px !important; }
 </style>
 <!-- PWA / App -->
 <link rel="manifest" href="/manifest.webmanifest">
@@ -2659,6 +2663,18 @@ body.sb-collapsed .main { margin-left: 92px !important; }
         </div>
         <div class="panel">
           <div class="panel-head"><div class="panel-title">Todos os Usuários</div><div style="display:flex;gap:8px;align-items:center"><span class="badge badge-time" id="userCount">0</span><button onclick="openCreateModal()" style="padding:8px 16px;border:none;border-radius:8px;background:var(--mango);color:#fff;font-size:12px;font-weight:700;cursor:pointer">+ Novo Usuário</button></div></div>
+          <div class="ea-list-controls" id="userListCtl">
+  <span class="ea-seg-label">Ordenar</span>
+  <div class="ea-seg" data-ctl="usort">
+    <button data-v="az" class="active" onclick="eaUserSort('az')">A–Z</button>
+    <button data-v="za" onclick="eaUserSort('za')">Z–A</button>
+  </div>
+  <span class="ea-seg-label" style="margin-left:6px">Exibir</span>
+  <div class="ea-seg" data-ctl="ulayout">
+    <button data-v="card" class="active" onclick="eaUserLayout('card')">▦ Cards</button>
+    <button data-v="list" onclick="eaUserLayout('list')">☰ Lista</button>
+  </div>
+</div>
           <div id="userList" class="user-grid"></div>
         </div>
 
@@ -5941,6 +5957,7 @@ function applyUserFilters() {
   let filtered = allUsersCache;
   if (currentRoleFilter) filtered = filtered.filter(p => p.role === currentRoleFilter);
   if (search) filtered = filtered.filter(p => (p.full_name||'').toLowerCase().includes(search) || (p.email||'').toLowerCase().includes(search));
+  var _us=window._userSort||'az'; filtered=filtered.slice().sort(function(a,b){var r=String(a.full_name||'').localeCompare(String(b.full_name||''),'pt',{sensitivity:'base'});return _us==='za'?-r:r;});
   
   document.getElementById('userCount').textContent = filtered.length + ' de ' + allUsersCache.length;
   const div = document.getElementById('userList');
@@ -5972,6 +5989,16 @@ function applyUserFilters() {
       '</div></div>';
   }).join('');
 }
+
+window._userSort = window._userSort || 'az';
+window._userLayout = window._userLayout || 'card';
+function eaUserCtlActive(){
+  var bar=document.getElementById('userListCtl'); if(!bar) return;
+  bar.querySelectorAll('.ea-seg[data-ctl="usort"] button').forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-v')===window._userSort); });
+  bar.querySelectorAll('.ea-seg[data-ctl="ulayout"] button').forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-v')===window._userLayout); });
+}
+function eaUserSort(v){ window._userSort=v; eaUserCtlActive(); applyUserFilters(); }
+function eaUserLayout(v){ window._userLayout=v; var ul=document.getElementById('userList'); if(ul) ul.classList.toggle('as-list', v==='list'); eaUserCtlActive(); }
 
 // ═══ ACESSOS DE ALUNOS ═══
 let allAccessCache = [];

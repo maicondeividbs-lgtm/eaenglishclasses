@@ -3512,7 +3512,8 @@ async function submitEvt(slotId,name){
 }
 
 async function submitXtra(){
-  var type=document.getElementById('pXType').value,date=document.getElementById('pXDate').value;
+  var type=getSelectedChip('pX'); if(['replacement','meeting','note'].indexOf(type)<0) type='replacement';
+  var date=document.getElementById('pXDate').value;
   var student=document.getElementById('pXStudent').value.trim(),notes=document.getElementById('pXNotes').value.trim();
   var day=document.getElementById('pXDay').value,hour=document.getElementById('pXHour').value;
   if(!date){showToast('Selecione a data','error');return;}

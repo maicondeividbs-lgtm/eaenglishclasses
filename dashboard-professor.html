@@ -3683,17 +3683,105 @@ async function loadStudentsList() {
   div.innerHTML = students.map(s => {
     const initial = (s.full_name || '?').charAt(0).toUpperCase();
     const courseTxt = (s.course_name || s.level || '') + (s.cefr ? ' • ' + s.cefr : '');
-    return '<div class="student-card">' +
+    return '<div class="student-card" data-sid="'+escapeHtml(s.id)+'" data-sname="'+escapeHtml(s.full_name||'')+'" onclick="openStudentDetail(this.dataset.sid,this.dataset.sname)" style="cursor:pointer" title="Ver detalhes do aluno">' +
       '<div class="student-avatar">' + escapeHtml(initial) + '</div>' +
       '<div class="student-info">' +
         '<div class="student-name">' + escapeHtml(s.full_name) + '</div>' +
         (courseTxt ? '<div class="student-level">' + escapeHtml(courseTxt) + '</div>' : '') +
         (s.email ? '<div style="font-size:11px;color:var(--g500);margin-top:4px">' + escapeHtml(s.email) + '</div>' : '') +
       '</div>' +
+      '<div style="margin-left:auto;align-self:center;color:var(--g300);font-size:24px;font-weight:700;line-height:1">\u203a</div>' +
     '</div>';
   }).join('');
 }
 
+
+// ═══ DETALHES DO ALUNO (modal) ═══
+function eaStuDetailStyles(){
+  if(document.getElementById('eaStuDetailStyle'))return;
+  var s=document.createElement('style');s.id='eaStuDetailStyle';
+  s.textContent=
+   '.stu-overlay{position:fixed;inset:0;background:rgba(25,36,78,.55);backdrop-filter:blur(3px);z-index:9998;display:flex;align-items:center;justify-content:center;padding:4%;opacity:0;transition:opacity .2s}'+
+   '.stu-overlay.show{opacity:1}'+
+   '.stu-modal{background:#fff;border-radius:20px;width:100%;max-width:680px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.3);transform:translateY(14px);transition:transform .2s}'+
+   '.stu-overlay.show .stu-modal{transform:none}'+
+   '.stu-head{display:flex;align-items:center;gap:14px;padding:20px 22px;border-bottom:1px solid var(--g100)}'+
+   '.stu-av{width:46px;height:46px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;flex-shrink:0}'+
+   '.stu-x{margin-left:auto;border:none;background:var(--g100);width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:15px;color:var(--g500)}'+
+   '.stu-tabs{display:flex;gap:6px;flex-wrap:wrap;padding:14px 22px 0}'+
+   '.stu-tab{border:none;background:var(--g100);color:var(--navy);font-weight:700;font-size:12px;padding:8px 13px;border-radius:20px;cursor:pointer;font-family:inherit}'+
+   '.stu-tab.active{background:var(--navy);color:#fff}'+
+   '.stu-body{padding:14px 22px 22px;overflow-y:auto}'+
+   '.stu-row{padding:12px 14px;border:1px solid var(--g100);border-radius:12px;margin-bottom:8px}'+
+   '.stu-row b{color:var(--navy);font-size:13px}'+
+   '.stu-empty{text-align:center;color:var(--g400);font-size:13px;padding:24px}'+
+   '.stu-pill{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;margin-left:6px}';
+  document.head.appendChild(s);
+}
+function eaStuClose(){var o=document.getElementById('stuOverlay');if(o){o.classList.remove('show');setTimeout(function(){o.remove();},200);} if(window.eaFx&&eaFx.close)eaFx.close();}
+async function openStudentDetail(sid, sname){
+  if(window.eaFx&&eaFx.open)eaFx.open();
+  eaStuDetailStyles();
+  var prev=document.getElementById('stuOverlay');if(prev)prev.remove();
+  var ov=document.createElement('div');ov.id='stuOverlay';ov.className='stu-overlay';
+  var initial=(sname||'?').charAt(0).toUpperCase();
+  ov.innerHTML='<div class="stu-modal" onclick="event.stopPropagation()">'+
+    '<div class="stu-head"><div class="stu-av">'+escapeHtml(initial)+'</div><div><div style="font-weight:800;color:var(--navy);font-size:16px">'+escapeHtml(sname||'Aluno')+'</div><div style="font-size:12px;color:var(--g400)">Resumo do aluno</div></div><button class="stu-x" onclick="eaStuClose()" data-nofx>✕</button></div>'+
+    '<div class="stu-tabs" id="stuTabs"></div>'+
+    '<div class="stu-body" id="stuBody"><div class="stu-empty">Carregando…</div></div>'+
+  '</div>';
+  ov.addEventListener('click', eaStuClose);
+  document.body.appendChild(ov);
+  requestAnimationFrame(function(){ov.classList.add('show');});
+
+  var R=await Promise.all([
+    getTasksForStudent(sid).catch(function(){return[];}),
+    getFeedbacksForStudent(sid).catch(function(){return[];}),
+    getPronunciationForStudent(sid).catch(function(){return[];}),
+    getVocabularyForStudent(sid).catch(function(){return[];}),
+    getWritingForStudent(sid).catch(function(){return[];}),
+    getAssessmentGrades(sid).catch(function(){return null;})
+  ]);
+  var tasks=(R[0]||[]).map(function(r){return {title:(r.task&&r.task.title)||'(tarefa)', due:(r.task&&r.task.due_date)||null, status:r.status};});
+  var fbs=R[1]||[], pron=R[2]||[], vocab=R[3]||[], wr=R[4]||[], grades=R[5];
+
+  window._stuData={tasks:tasks,fbs:fbs,wr:wr,pron:pron,vocab:vocab,grades:grades};
+  var tabs=[
+    {k:'tasks',label:'📝 Tarefas',n:tasks.length},
+    {k:'fbs',label:'💬 Feedbacks',n:fbs.length},
+    {k:'pron',label:'🔊 Pronúncia',n:pron.length},
+    {k:'vocab',label:'📚 Vocabulário',n:vocab.length},
+    {k:'wr',label:'✍️ Redação',n:wr.length},
+    {k:'grades',label:'🎯 Notas',n:(grades&&grades.length)||0}
+  ];
+  document.getElementById('stuTabs').innerHTML=tabs.map(function(t,i){return '<button class="stu-tab'+(i===0?' active':'')+'" data-nofx onclick="eaStuTab(this,\''+t.k+'\')">'+t.label+' ('+t.n+')</button>';}).join('');
+  eaStuRender('tasks');
+}
+function eaStuTab(btn,k){
+  document.querySelectorAll('.stu-tab').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active'); if(window.eaFx&&eaFx.tap)eaFx.tap();
+  eaStuRender(k);
+}
+function eaStuRender(k){
+  var d=window._stuData||{};var b=document.getElementById('stuBody');if(!b)return;
+  function empty(t){return '<div class="stu-empty">'+t+'</div>';}
+  var h='';
+  if(k==='tasks'){
+    h=(d.tasks&&d.tasks.length)?d.tasks.map(function(t){var st=t.status==='submitted'?'<span class="stu-pill" style="background:#dcfce7;color:#16a34a">entregue</span>':'<span class="stu-pill" style="background:#fff7ed;color:#d97706">pendente</span>';return '<div class="stu-row"><b>'+escapeHtml(t.title||'')+'</b>'+st+'<div style="font-size:12px;color:var(--g500);margin-top:4px">Prazo: '+formatDate(t.due)+'</div></div>';}).join(''):empty('Nenhuma tarefa para este aluno.');
+  } else if(k==='fbs'){
+    h=(d.fbs&&d.fbs.length)?d.fbs.map(function(f){return '<div class="stu-row"><b>'+escapeHtml(f.title||'')+'</b>'+(f.category?'<span class="stu-pill" style="background:var(--g100);color:var(--g600)">'+escapeHtml(f.category)+'</span>':'')+'<div style="font-size:12px;color:var(--g600);margin-top:4px">'+escapeHtml(f.content||'')+'</div><div style="font-size:11px;color:var(--g400);margin-top:4px">'+formatDate(f.created_at)+'</div></div>';}).join(''):empty('Nenhum feedback ainda.');
+  } else if(k==='pron'){
+    h=(d.pron&&d.pron.length)?d.pron.map(function(p){return '<div class="stu-row"><b>'+escapeHtml(p.word||'')+'</b>'+(p.practiced?'<span class="stu-pill" style="background:#dcfce7;color:#16a34a">praticada</span>':'')+(p.phonetic?'<div style="font-size:12px;color:var(--g500);margin-top:4px">'+escapeHtml(p.phonetic)+'</div>':'')+(p.notes?'<div style="font-size:12px;color:var(--g600);margin-top:2px">'+escapeHtml(p.notes)+'</div>':'')+'</div>';}).join(''):empty('Nenhuma pronúncia enviada.');
+  } else if(k==='vocab'){
+    h=(d.vocab&&d.vocab.length)?d.vocab.map(function(v){return '<div class="stu-row"><b>'+escapeHtml(v.word||'')+'</b>'+(v.translation?'<span style="font-size:12px;color:var(--g500)"> — '+escapeHtml(v.translation)+'</span>':'')+(v.sentence?'<div style="font-size:12px;color:var(--g600);margin-top:4px;font-style:italic">'+escapeHtml(v.sentence)+'</div>':'')+'</div>';}).join(''):empty('Nenhuma palavra enviada.');
+  } else if(k==='wr'){
+    h=(d.wr&&d.wr.length)?d.wr.map(function(w){var st=w.status==='graded'?'<span class="stu-pill" style="background:#dcfce7;color:#16a34a">nota '+(w.grade!=null?w.grade:'-')+'</span>':(w.status==='submitted'?'<span class="stu-pill" style="background:#fef9c3;color:#a16207">aguardando</span>':'<span class="stu-pill" style="background:#fff7ed;color:#d97706">tema</span>');return '<div class="stu-row"><b>'+escapeHtml(w.title||'')+'</b>'+st+(w.prompt?'<div style="font-size:12px;color:var(--g600);margin-top:4px">'+escapeHtml(w.prompt)+'</div>':'')+'</div>';}).join(''):empty('Nenhuma redação.');
+  } else if(k==='grades'){
+    if(d.grades===null){ h=empty('Sem acesso às notas deste aluno.'); }
+    else h=(d.grades&&d.grades.length)?d.grades.map(function(g){return '<div class="stu-row"><b>'+escapeHtml((g.book||'')+' • '+(g.period||''))+'</b><span class="stu-pill" style="background:var(--navy);color:#fff">média '+(g.final_average!=null?g.final_average:'-')+'</span><div style="font-size:12px;color:var(--g500);margin-top:4px">Oral '+(g.oral_score!=null?g.oral_score:'-')+' · Escrita '+(g.written_score!=null?g.written_score:'-')+' · Assessment '+(g.assessment_score!=null?g.assessment_score:'-')+'</div></div>';}).join(''):empty('Nenhuma nota lançada.');
+  }
+  b.innerHTML=h;
+}
 
 // ═══ MEU PERFIL ═══
 function setAvatarEverywhere(url) {

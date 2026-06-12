@@ -4604,8 +4604,9 @@ async function sendCoVocab(){
 // ═══ CORREÇÃO DE REDAÇÃO (coordenador) ═══
 function openWrCorrect(id){
   var items=window._wrCoordItems||[];
-  var w=null; for(var i=0;i<items.length;i++){ if(items[i].id===id){ w=items[i]; break; } }
-  if(!w) return;
+  var w=null; for(var i=0;i<items.length;i++){ if(String(items[i].id)===String(id)){ w=items[i]; break; } }
+  if(!w){ showToast('Não foi possível abrir a redação.','error'); return; }
+  window._wrCurrentId=w.id;
   eaStuDetailStyles();
   var prev=document.getElementById('stuOverlay'); if(prev)prev.remove();
   var ov=document.createElement('div'); ov.id='stuOverlay'; ov.className='stu-overlay';
@@ -4620,14 +4621,15 @@ function openWrCorrect(id){
         '<div style="width:120px"><label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px">Nota</label><input type="number" id="wrGrade" step="0.5" value="'+(w.grade!=null?w.grade:'')+'" style="width:100%;padding:10px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:14px;color:var(--navy);outline:none"></div>'+
         '<div style="flex:1;min-width:200px"><label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px">Feedback</label><textarea id="wrFeedback" rows="3" style="width:100%;padding:10px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:14px;color:var(--navy);outline:none">'+docEsc(w.feedback||'')+'</textarea></div>'+
       '</div>'+
-      '<button class="btn-send" style="margin-top:14px;width:100%" onclick="saveWrCorrect(\''+w.id+'\')">'+(graded?'Atualizar correção':'Salvar correção')+'</button>'+
+      '<button class="btn-send" style="margin-top:14px;width:100%" onclick="saveWrCorrect()">'+(graded?'Atualizar correção':'Salvar correção')+'</button>'+
     '</div>'+
   '</div>';
   ov.addEventListener('click', eaStuClose);
   document.body.appendChild(ov);
   requestAnimationFrame(function(){ov.classList.add('show');});
 }
-async function saveWrCorrect(id){
+async function saveWrCorrect(){
+  var id=window._wrCurrentId;
   var g=document.getElementById('wrGrade').value;
   var fb=document.getElementById('wrFeedback').value.trim();
   if(g===''){ showToast('Informe a nota','error'); return; }
@@ -4635,7 +4637,8 @@ async function saveWrCorrect(id){
     await gradeWriting(id, fb, Number(g));
     showToast('Correção salva!');
     eaStuClose();
-    loadWritingCoord();
+    if(document.getElementById('tWrList')) loadTeachWriting();
+    if(document.getElementById('wrCoordList')) loadWritingCoord();
   }catch(e){ showToast('Erro: '+(e.message||e),'error'); }
 }
 async function loadWritingPage(){

@@ -1644,6 +1644,22 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 .voc-icon-btn:hover { border-color: var(--blue); color: var(--blue); }
 .voc-icon-btn.danger:hover { border-color: #ef4444; color: #ef4444; }
 
+
+/* ═══ CONTROLES DE LISTA — "ver mais" + filtros de aluno ═══ */
+.ea-vermais-btn { display:block; margin:14px auto 6px; padding:9px 24px; border:1px solid var(--g200); background:#fff; color:var(--navy); font-family:inherit; font-size:13px; font-weight:700; border-radius:999px; cursor:pointer; transition:all .2s; }
+.ea-vermais-btn:hover { background:var(--g50); border-color:var(--navy); transform:translateY(-1px); }
+.ea-list-controls { display:flex; gap:10px; flex-wrap:wrap; padding:14px 20px 2px; align-items:center; }
+.ea-list-controls .ea-seg-label { font-size:11px; font-weight:700; color:var(--g400); text-transform:uppercase; letter-spacing:.05em; margin-right:2px; }
+.ea-seg { display:inline-flex; background:var(--g100); border-radius:10px; padding:3px; gap:2px; }
+.ea-seg button { border:none; background:transparent; color:var(--g600); font-family:inherit; font-size:12px; font-weight:700; padding:6px 12px; border-radius:8px; cursor:pointer; transition:all .15s; line-height:1; }
+.ea-seg button:hover { color:var(--navy); }
+.ea-seg button.active { background:#fff; color:var(--navy); box-shadow:0 1px 3px rgba(0,0,0,.12); }
+/* modo lista (compacto) para grades de alunos */
+#studentsList.as-list, #coMyStudentsList.as-list, .doc-student-grid.as-list { display:flex !important; flex-direction:column !important; gap:8px !important; }
+.as-list .student-card { padding:10px 14px !important; }
+.as-list .student-avatar { width:38px !important; height:38px !important; font-size:14px !important; }
+.as-list .doc-student-card { padding:10px 12px !important; }
+.as-list .dsc-avatar { width:38px !important; height:38px !important; min-width:38px !important; }
 </style>
 <!-- PWA / App -->
 <link rel="manifest" href="/manifest.webmanifest">
@@ -3670,30 +3686,6 @@ async function loadProfEvents(){
 async function delEv(id){if(!confirm('Remover?'))return;try{await removeScheduleEvent(id);showToast('Removido');loadSchedule();}catch(e){showToast('Erro','error');}}
 
 // ═══ MY STUDENTS LIST ═══
-async function loadStudentsList() {
-  const students = window._myStudents || await getMyStudents(currentUser.id);
-  const div = document.getElementById('studentsList');
-  document.getElementById('myStudentCount').textContent = students.length + ' aluno(s)';
-  
-  if (!students.length) {
-    div.innerHTML = '<div class="empty-state" style="grid-column:1/-1;margin:0"><div class="empty-icon">👥</div><p>Nenhum aluno vinculado a você. A coordenação precisa criar as matrículas.</p></div>';
-    return;
-  }
-  
-  div.innerHTML = students.map(s => {
-    const initial = (s.full_name || '?').charAt(0).toUpperCase();
-    const courseTxt = (s.course_name || s.level || '') + (s.cefr ? ' • ' + s.cefr : '');
-    return '<div class="student-card" data-sid="'+escapeHtml(s.id)+'" data-sname="'+escapeHtml(s.full_name||'')+'" onclick="openStudentDetail(this.dataset.sid,this.dataset.sname)" style="cursor:pointer" title="Ver detalhes do aluno">' +
-      '<div class="student-avatar">' + escapeHtml(initial) + '</div>' +
-      '<div class="student-info">' +
-        '<div class="student-name">' + escapeHtml(s.full_name) + '</div>' +
-        (courseTxt ? '<div class="student-level">' + escapeHtml(courseTxt) + '</div>' : '') +
-        (s.email ? '<div style="font-size:11px;color:var(--g500);margin-top:4px">' + escapeHtml(s.email) + '</div>' : '') +
-      '</div>' +
-      '<div style="margin-left:auto;align-self:center;color:var(--g300);font-size:24px;font-weight:700;line-height:1">\u203a</div>' +
-    '</div>';
-  }).join('');
-}
 
 
 // ═══ DETALHES DO ALUNO (modal) ═══
@@ -3782,6 +3774,110 @@ function eaStuRender(k){
   }
   b.innerHTML=h;
 }
+
+// ═══ CONTROLES DE LISTA (ver mais + filtros de aluno) ═══
+function eaVerMais(containerId, limit){
+  limit = limit || 5;
+  var c = document.getElementById(containerId); if(!c) return;
+  var old = c.querySelector(':scope > [data-vermais-btn]'); if(old) old.remove();
+  var host = c;
+  var kids = Array.prototype.slice.call(c.children).filter(function(e){ return !(e.hasAttribute && e.hasAttribute('data-vermais-btn')); });
+  if(kids.length===1 && kids[0].children && kids[0].children.length>1) host = kids[0];
+  var items = Array.prototype.slice.call(host.children).filter(function(e){ return e.nodeType===1; });
+  if(items.length<=limit){ items.forEach(function(it){ it.style.display=''; }); return; }
+  var expanded = c.dataset.vmExpanded==='1';
+  items.forEach(function(it,i){ it.style.display=(i<limit||expanded)?'':'none'; });
+  var rem = items.length - limit;
+  var btn = document.createElement('button');
+  btn.setAttribute('data-vermais-btn','1'); btn.className='ea-vermais-btn';
+  btn.innerHTML = expanded ? 'Ver menos ▴' : ('Ver mais ('+rem+') ▾');
+  btn.onclick = function(){
+    expanded = !expanded; c.dataset.vmExpanded = expanded?'1':'0';
+    items.forEach(function(it,i){ it.style.display=(i<limit||expanded)?'':'none'; });
+    btn.innerHTML = expanded ? 'Ver menos ▴' : ('Ver mais ('+rem+') ▾');
+  };
+  c.appendChild(btn);
+}
+function eaWatchVerMais(containerId, limit){
+  var c = document.getElementById(containerId); if(!c) return;
+  if(c._vmObs){ eaVerMais(containerId, limit); return; }
+  var obs = new MutationObserver(function(muts){
+    if(c._vmBusy) return;
+    var relevant = muts.some(function(m){
+      return [].concat(Array.prototype.slice.call(m.addedNodes), Array.prototype.slice.call(m.removedNodes)).some(function(n){
+        return n.nodeType===1 && !(n.hasAttribute && n.hasAttribute('data-vermais-btn'));
+      });
+    });
+    if(!relevant) return;
+    c._vmBusy = true;
+    try{ eaVerMais(containerId, limit); }catch(e){}
+    c._vmBusy = false;
+  });
+  obs.observe(c, { childList:true });
+  c._vmObs = obs;
+  eaVerMais(containerId, limit);
+}
+function eaStudentControlsHtml(sort, layout){
+  return '<span class="ea-seg-label">Ordenar</span>'+
+    '<div class="ea-seg" data-ctl="sort">'+
+      '<button data-v="az" class="'+(sort==='az'?'active':'')+'">A–Z</button>'+
+      '<button data-v="za" class="'+(sort==='za'?'active':'')+'">Z–A</button>'+
+    '</div>'+
+    '<span class="ea-seg-label" style="margin-left:6px">Exibir</span>'+
+    '<div class="ea-seg" data-ctl="layout">'+
+      '<button data-v="card" class="'+(layout==='card'?'active':'')+'">▦ Cards</button>'+
+      '<button data-v="list" class="'+(layout==='list'?'active':'')+'">☰ Lista</button>'+
+    '</div>';
+}
+function eaRenderStudentList(containerId, students, renderCard, countElId){
+  var c = document.getElementById(containerId); if(!c) return;
+  c._students = students||[]; c._renderCard = renderCard;
+  if(countElId){ var ce=document.getElementById(countElId); if(ce) ce.textContent=(students?students.length:0)+' aluno(s)'; }
+  var bar = document.getElementById(containerId+'-ctl');
+  if(!bar){ bar=document.createElement('div'); bar.id=containerId+'-ctl'; bar.className='ea-list-controls'; if(c.parentNode) c.parentNode.insertBefore(bar, c); }
+  if(!students || !students.length){
+    c.classList.remove('as-list');
+    c.innerHTML='<div class="empty-state" style="grid-column:1/-1;margin:0"><div class="empty-icon">👥</div><p>Nenhum aluno por aqui ainda.</p></div>';
+    bar.style.display='none'; return;
+  }
+  bar.style.display='';
+  eaPaintStudents(containerId, c.dataset.sort||'az', c.dataset.layout||'card');
+}
+function eaPaintStudents(containerId, sort, layout){
+  var c = document.getElementById(containerId); if(!c) return;
+  c.dataset.sort=sort; c.dataset.layout=layout;
+  var arr=(c._students||[]).slice();
+  arr.sort(function(a,b){ var r=String(a.full_name||'').localeCompare(String(b.full_name||''),'pt',{sensitivity:'base'}); return sort==='za'?-r:r; });
+  c.classList.toggle('as-list', layout==='list');
+  c.innerHTML = arr.map(c._renderCard).join('');
+  var bar=document.getElementById(containerId+'-ctl');
+  if(bar){
+    bar.innerHTML=eaStudentControlsHtml(sort,layout);
+    bar.querySelectorAll('.ea-seg button').forEach(function(b){
+      b.onclick=function(){ var ctl=b.parentNode.getAttribute('data-ctl'), v=b.getAttribute('data-v'); eaPaintStudents(containerId, ctl==='sort'?v:c.dataset.sort, ctl==='layout'?v:c.dataset.layout); };
+    });
+  }
+}
+function profStudentCard(s){
+  var initial=(s.full_name||'?').charAt(0).toUpperCase();
+  var courseTxt=(s.course_name||s.level||'')+(s.cefr?' • '+s.cefr:'');
+  return '<div class="student-card" data-sid="'+escapeHtml(s.id)+'" data-sname="'+escapeHtml(s.full_name||'')+'" onclick="openStudentDetail(this.dataset.sid,this.dataset.sname)" style="cursor:pointer" title="Ver detalhes do aluno">'+
+    '<div class="student-avatar">'+escapeHtml(initial)+'</div>'+
+    '<div class="student-info">'+
+      '<div class="student-name">'+escapeHtml(s.full_name)+'</div>'+
+      (courseTxt?'<div class="student-level">'+escapeHtml(courseTxt)+'</div>':'')+
+      (s.email?'<div style="font-size:11px;color:var(--g500);margin-top:4px">'+escapeHtml(s.email)+'</div>':'')+
+    '</div>'+
+    '<div style="margin-left:auto;align-self:center;color:var(--g300);font-size:24px;font-weight:700;line-height:1">\u203a</div>'+
+  '</div>';
+}
+async function loadStudentsList() {
+  const students = window._myStudents || await getMyStudents(currentUser.id);
+  eaRenderStudentList('studentsList', students, profStudentCard, 'myStudentCount');
+}
+document.addEventListener('DOMContentLoaded', function(){
+  ['hwList','fbList','annList','wrList','prList','vocList','msgList'].forEach(function(id){ eaWatchVerMais(id, 5); });
+});
 
 // ═══ MEU PERFIL ═══
 function setAvatarEverywhere(url) {

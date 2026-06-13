@@ -4,7 +4,7 @@
    - Supabase/API/CDNs (cross-origin) e POST/PUT passam direto (dados e auth sempre ao vivo).
    - Páginas autenticadas (dashboards/login) nunca são armazenadas em cache.
 */
-const VERSION = 'ea-v7';
+const VERSION = 'ea-v8';
 const CACHE = 'ea-shell-' + VERSION;
 const PRECACHE = [
   '/offline',
@@ -30,15 +30,29 @@ self.addEventListener('activate', (e) => {
   );
 });
 
+// ── Notificação padronizada da EA (logo oficial + categoria + ação) ──
+function eaShowNotification(d) {
+  d = d || {};
+  var opts = {
+    body: d.body || '',
+    icon: '/icons/icon-512.png',     // logo oficial da escola
+    badge: '/icons/icon-192.png',    // ícone monocromático na barra de status
+    vibrate: [60, 30, 60],
+    tag: d.tag || 'ea-notif',        // mesma categoria agrupa/atualiza
+    renotify: true,
+    lang: 'pt-BR', dir: 'ltr',
+    timestamp: Date.now(),
+    data: { url: d.url || '/login', cat: d.cat || 'geral' }
+  };
+  if (d.image) opts.image = d.image;                         // big picture (Android)
+  if (d.actionLabel) opts.actions = [{ action: 'open', title: d.actionLabel }];
+  return self.registration.showNotification(d.title || 'EA English Classes', opts);
+}
+
 self.addEventListener('message', (e) => {
   if (e.data === 'SKIP_WAITING') { self.skipWaiting(); return; }
   if (e.data && e.data.type === 'EA_NOTIFY') {
-    var d = e.data.payload || {};
-    self.registration.showNotification(d.title || 'EA English Classes', {
-      body: d.body || '', icon: '/icons/icon-192.png', badge: '/icons/icon-192.png',
-      vibrate: [80, 40, 80], tag: d.tag || 'ea-notif', renotify: true,
-      data: { url: d.url || '/login' }
-    });
+    eaShowNotification(e.data.payload || {});
   }
 });
 
@@ -46,11 +60,7 @@ self.addEventListener('message', (e) => {
 self.addEventListener('push', (e) => {
   var data = {};
   try { data = e.data ? e.data.json() : {}; } catch (err) { data = { title: 'EA English Classes', body: e.data ? e.data.text() : '' }; }
-  e.waitUntil(self.registration.showNotification(data.title || 'EA English Classes', {
-    body: data.body || '', icon: '/icons/icon-192.png', badge: '/icons/icon-192.png',
-    vibrate: [80, 40, 80], tag: data.tag || 'ea-notif', renotify: true,
-    data: { url: data.url || '/login' }
-  }));
+  e.waitUntil(eaShowNotification(data));
 });
 
 self.addEventListener('notificationclick', (e) => {

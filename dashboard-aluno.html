@@ -2822,6 +2822,63 @@ body.sb-collapsed .main { margin-left: 92px !important; }
       <div class="section" id="sec-profile">
         <h2 style="font-size:24px;font-weight:800;color:var(--navy);margin-bottom:8px;letter-spacing:-0.02em">👤 Meu Perfil</h2>
         <p style="font-size:14px;color:var(--g500);margin-bottom:24px">Suas informações pessoais e progresso na EA English Classes.</p>
+        <style>
+          .ea-cfg{background:#fff;border:1px solid var(--g100);border-radius:16px;padding:20px 22px;margin-bottom:24px;box-shadow:0 2px 8px rgba(25,36,78,0.04)}
+          .ea-cfg-head{display:flex;align-items:center;gap:8px;font-family:'Fraunces',serif;font-size:18px;font-weight:800;color:var(--navy)}
+          .ea-cfg-sub{font-size:12.5px;color:var(--g500);margin:2px 0 14px}
+          .ea-cfg-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 0;border-top:1px solid var(--g100)}
+          .ea-cfg-row:first-of-type{border-top:none}
+          .ea-cfg-row .lbl strong{display:block;font-size:14px;color:var(--navy);font-weight:700}
+          .ea-cfg-row .lbl span{font-size:12px;color:var(--g500)}
+          .ea-switch{position:relative;display:inline-block;width:46px;height:26px;flex-shrink:0}
+          .ea-switch input{opacity:0;width:0;height:0}
+          .ea-switch .tr{position:absolute;inset:0;background:var(--g300);border-radius:999px;transition:.25s;cursor:pointer}
+          .ea-switch .tr::before{content:'';position:absolute;width:20px;height:20px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.25s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+          .ea-switch input:checked + .tr{background:var(--orange)}
+          .ea-switch input:checked + .tr::before{transform:translateX(20px)}
+          .ea-cfg-vol{display:flex;align-items:center;gap:12px;min-width:170px}
+          .ea-cfg-vol input[type=range]{flex:1;accent-color:var(--orange);height:4px;cursor:pointer}
+          .ea-cfg-vol .val{font-size:12px;font-weight:700;color:var(--g600);width:40px;text-align:right}
+          .ea-cfg-row.dim{opacity:.5}
+          .ea-cfg-soon{font-size:11px;font-weight:700;color:var(--g500);background:var(--g50);padding:4px 10px;border-radius:999px}
+        </style>
+        <div class="ea-cfg" id="eaCfgCard">
+          <div class="ea-cfg-head">⚙️ Configurações</div>
+          <div class="ea-cfg-sub">Preferências do app neste dispositivo.</div>
+          <div class="ea-cfg-row">
+            <div class="lbl"><strong>Som do app</strong><span>Efeitos de toque, navegação e alertas</span></div>
+            <label class="ea-switch"><input type="checkbox" id="cfgSound"><span class="tr"></span></label>
+          </div>
+          <div class="ea-cfg-row" id="cfgVolRow">
+            <div class="lbl"><strong>Volume</strong><span>Mais baixo = mais discreto</span></div>
+            <div class="ea-cfg-vol"><input type="range" id="cfgVol" min="0" max="100" step="5"><span class="val" id="cfgVolVal">—</span></div>
+          </div>
+          <div class="ea-cfg-row dim">
+            <div class="lbl"><strong>Modo escuro</strong><span>Tema escuro para o app</span></div>
+            <span class="ea-cfg-soon">Em breve</span>
+          </div>
+        </div>
+        <script>
+        (function(){
+          function init(){
+            var s=document.getElementById('cfgSound'), v=document.getElementById('cfgVol'),
+                vv=document.getElementById('cfgVolVal'), row=document.getElementById('cfgVolRow');
+            if(!s||!v||!window.eaSound) return;
+            function refresh(){
+              var on=eaSound.isOn();
+              s.checked=on;
+              var x=(eaSound.getVolume?eaSound.getVolume():0.4);
+              v.value=Math.round(x*100); vv.textContent=v.value+'%';
+              row.classList.toggle('dim', !on);
+            }
+            refresh();
+            s.addEventListener('change', function(){ eaSound.set(s.checked); refresh(); });
+            v.addEventListener('input', function(){ vv.textContent=v.value+'%'; if(eaSound.setVolume) eaSound.setVolume(v.value/100); });
+          }
+          if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', init); else init();
+        })();
+        </script>
+
 
         <div class="profile-grid">
           <!-- LEFT: Avatar + identity card -->

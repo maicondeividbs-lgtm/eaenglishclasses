@@ -18,7 +18,7 @@ const RESEND_KEY = process.env.RESEND_API_KEY;
 const FROM = process.env.EMAIL_FROM || 'EA English Classes <avisos@eaenglishclasses.com.br>';
 const REPLY_TO = process.env.EMAIL_REPLY_TO || '';
 const SITE_URL = (process.env.SITE_URL || 'https://www.eaenglishclasses.com.br').replace(/\/+$/, '');
-const LOGO = process.env.EMAIL_LOGO_URL || (SITE_URL + '/icons/icon-192.png');
+const LOGO = process.env.EMAIL_LOGO_URL || (SITE_URL + '/icons/Logo_EA.jpg');
 
 async function sbSelect(path) {
   const r = await fetch(`${SB_URL}/rest/v1/${path}`, {

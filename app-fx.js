@@ -107,9 +107,27 @@
   };
   window.eaFx = EaFx;
 
-  // Destrava o audio no primeiro gesto do usuario (exigencia de mobile/iOS)
-  ['pointerdown', 'touchstart', 'keydown'].forEach(function (ev) {
-    document.addEventListener(ev, function un() { audio(); document.removeEventListener(ev, un); }, { once: true, passive: true });
+  // Destrava o audio no primeiro gesto (mobile/iOS): cria, da resume e toca um
+  // buffer silencioso (so o resume nao basta no iOS). Continua tentando ate o
+  // contexto ficar "running"; depois remove os listeners.
+  function unlockAudio() {
+    var c = audio(); if (!c) return;
+    try {
+      if (c.state === 'suspended') c.resume();
+      var b = c.createBuffer(1, 1, 22050);
+      var s = c.createBufferSource(); s.buffer = b;
+      s.connect(c.destination); s.start(0);
+    } catch (e) {}
+    if (c.state === 'running') removeUnlock();
+  }
+  var _uEv = ['touchend', 'pointerdown', 'mousedown', 'click', 'keydown'];
+  function removeUnlock() { _uEv.forEach(function (ev) { document.removeEventListener(ev, unlockAudio, true); }); }
+  _uEv.forEach(function (ev) { document.addEventListener(ev, unlockAudio, true); });
+  // Ao reabrir o app (PWA volta do segundo plano) o contexto pode suspender.
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden && window._eaAudio && window._eaAudio.state === 'suspended') {
+      try { window._eaAudio.resume(); } catch (e) {}
+    }
   });
 
   // Feedback ao tocar em elementos interativos (delegacao)
@@ -121,14 +139,23 @@
     if (isNav) EaFx.nav(); else EaFx.tap();
   }, true);
 
-  // Som de sucesso/erro automatico quando aparece um toast
-  if (typeof window.showToast === 'function' && !window._eaToastWrapped) {
+  // Som de sucesso/erro quando aparece um toast. O showToast pode ser definido
+  // depois deste script (ordem de carregamento), entao tentamos algumas vezes.
+  function wrapToast() {
+    if (window._eaToastWrapped) return true;
+    if (typeof window.showToast !== 'function') return false;
     var _orig = window.showToast;
     window.showToast = function (msg, type) {
       try { (type === 'error' ? EaFx.error : EaFx.success)(); } catch (e) {}
       return _orig.apply(this, arguments);
     };
     window._eaToastWrapped = true;
+    return true;
+  }
+  if (!wrapToast()) {
+    var _tw = 0, _twId = setInterval(function () {
+      if (wrapToast() || ++_tw > 40) clearInterval(_twId);
+    }, 150);
   }
 
   // Estilo de "press" (escala sutil ao tocar)

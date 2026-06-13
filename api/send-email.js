@@ -18,6 +18,7 @@ const RESEND_KEY = process.env.RESEND_API_KEY;
 const FROM = process.env.EMAIL_FROM || 'EA English Classes <avisos@eaenglishclasses.com.br>';
 const REPLY_TO = process.env.EMAIL_REPLY_TO || '';
 const SITE_URL = (process.env.SITE_URL || 'https://www.eaenglishclasses.com.br').replace(/\/+$/, '');
+const LOGO = process.env.EMAIL_LOGO_URL || (SITE_URL + '/icons/icon-192.png');
 
 async function sbSelect(path) {
   const r = await fetch(`${SB_URL}/rest/v1/${path}`, {
@@ -120,19 +121,30 @@ async function plan(table, rec, old) {
 
 function template(p) {
   const cta = SITE_URL + '/login.html';
-  return '<!doctype html><html lang="pt-BR"><body style="margin:0;background:#fef9f0;font-family:Arial,Helvetica,sans-serif">' +
-    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fef9f0;padding:24px 0"><tr><td align="center">' +
-    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#fff;border-radius:16px;overflow:hidden;border:1px solid #ececec">' +
-    '<tr><td style="background:#19244e;padding:22px 28px">' +
-    '<span style="color:#fff;font-size:20px;font-weight:800;letter-spacing:-.02em">EA <span style="color:#f36b2e">English Classes</span></span></td></tr>' +
-    '<tr><td style="padding:28px">' +
-    '<h1 style="margin:0 0 10px;color:#19244e;font-size:20px;line-height:1.3">' + esc(p.heading) + '</h1>' +
-    '<p style="margin:0 0 22px;color:#41506b;font-size:15px;line-height:1.6">' + esc(p.message) + '</p>' +
-    '<a href="' + esc(cta) + '" style="display:inline-block;background:#f36b2e;color:#fff;text-decoration:none;font-weight:700;font-size:15px;padding:13px 24px;border-radius:10px">' + esc(p.ctaLabel || 'Abrir o app') + '</a>' +
+  return '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>' +
+    '<body style="margin:0;padding:0;background:#eef1f7;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">' +
+    '<div style="display:none;max-height:0;overflow:hidden;opacity:0">' + esc(p.heading) + ' \u2014 EA English Classes</div>' +
+    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#eef1f7;padding:32px 14px"><tr><td align="center">' +
+    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:540px;background:#ffffff;border-radius:20px;overflow:hidden;box-shadow:0 8px 30px rgba(25,36,78,.10)">' +
+    '<tr><td style="background:#19244e;background-image:linear-gradient(135deg,#19244e 0%,#253c96 100%);padding:30px 28px 26px;text-align:center">' +
+      '<img src="' + esc(LOGO) + '" width="68" height="68" alt="EA English Classes" style="display:inline-block;width:68px;height:68px;border-radius:18px;background:#fff;border:3px solid rgba(255,255,255,.9);box-shadow:0 4px 14px rgba(0,0,0,.18)">' +
+      '<div style="margin-top:12px;color:#ffffff;font-size:18px;font-weight:800;letter-spacing:-.01em">EA <span style="color:#f59a1e">English Classes</span></div>' +
     '</td></tr>' +
-    '<tr><td style="padding:18px 28px;background:#f7f7fa;color:#8a93a6;font-size:12px;line-height:1.5">' +
-    'Você recebeu este e-mail porque tem uma conta na EA English Classes.<br>' + esc(SITE_URL.replace(/^https?:\/\//, '')) +
-    '</td></tr></table></td></tr></table></body></html>';
+    '<tr><td style="height:4px;background:#f36b2e;line-height:4px;font-size:0">&nbsp;</td></tr>' +
+    '<tr><td style="padding:30px 32px 34px">' +
+      '<h1 style="margin:0 0 12px;color:#19244e;font-size:22px;line-height:1.3;font-weight:800">' + esc(p.heading) + '</h1>' +
+      '<p style="margin:0 0 26px;color:#48526b;font-size:15px;line-height:1.7">' + esc(p.message) + '</p>' +
+      '<table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="border-radius:12px;background:#f36b2e;box-shadow:0 6px 16px rgba(243,107,46,.30)">' +
+        '<a href="' + esc(cta) + '" style="display:inline-block;padding:15px 30px;color:#ffffff;text-decoration:none;font-weight:700;font-size:15px">' + esc(p.ctaLabel || 'Abrir o app') + '</a>' +
+      '</td></tr></table>' +
+    '</td></tr>' +
+    '<tr><td style="padding:20px 32px;background:#f7f8fb;border-top:1px solid #eceef3;color:#9099ab;font-size:12px;line-height:1.6">' +
+      'Voc\u00ea recebeu este e-mail porque tem uma conta na EA English Classes.<br>' +
+      '<a href="' + esc(SITE_URL) + '" style="color:#253c96;text-decoration:none;font-weight:600">' + esc(SITE_URL.replace(/^https?:\/\//, '')) + '</a>' +
+    '</td></tr>' +
+    '</table>' +
+    '<div style="color:#aeb4c2;font-size:11px;padding:16px 0 0">EA English Classes \u00b7 Osasco/SP</div>' +
+    '</td></tr></table></body></html>';
 }
 
 async function sendEmail(to, subject, html) {

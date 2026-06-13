@@ -8,12 +8,18 @@
   if (!isApp) {
     var noop = function () {};
     window.eaFx = { active: false, tap: noop, nav: noop, toggle: noop, success: noop, error: noop, notify: noop, open: noop, close: noop, dismiss: noop, pop: noop, haptic: noop };
-    window.eaSound = { isOn: function () { return true; }, set: noop };
+    window.eaSound = {
+      isOn: function () { try { return localStorage.getItem('ea_sound') !== 'off'; } catch (e) { return true; } },
+      set: function (on) { try { localStorage.setItem('ea_sound', on ? 'on' : 'off'); } catch (e) {} },
+      getVolume: function () { try { var x = parseFloat(localStorage.getItem('ea_volume')); return isNaN(x) ? 0.4 : x; } catch (e) { return 0.4; } },
+      setVolume: function (v) { try { localStorage.setItem('ea_volume', String(v)); } catch (e) {} }
+    };
     return;
   }
 
   function isMuted() { try { return localStorage.getItem('ea_sound') === 'off'; } catch (e) { return false; } }
   function setMuted(v) { try { localStorage.setItem('ea_sound', v ? 'off' : 'on'); } catch (e) {} }
+  function vol() { try { var x = parseFloat(localStorage.getItem('ea_volume')); return isNaN(x) ? 0.4 : Math.max(0, Math.min(1, x)); } catch (e) { return 0.4; } }
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   function audio() {
@@ -49,7 +55,7 @@
     try {
       var s = c.createBufferSource(); s.buffer = window._eaSample;
       s.playbackRate.value = rate || 1;
-      var g = c.createGain(); g.gain.value = (gain == null ? 0.5 : gain);
+      var g = c.createGain(); g.gain.value = (gain == null ? 0.5 : gain) * vol();
       s.connect(g); g.connect(master(c));
       s.start(0);
       return true;
@@ -64,7 +70,7 @@
       var o = c.createOscillator(), g = c.createGain();
       o.type = 'sine'; o.frequency.setValueAtTime(freq, t);
       if (glideTo) o.frequency.exponentialRampToValueAtTime(glideTo, t + dur);
-      var p = peak || 0.04;
+      var p = (peak || 0.04) * vol();
       g.gain.setValueAtTime(0.0001, t);
       g.gain.exponentialRampToValueAtTime(p, t + 0.015);
       g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
@@ -157,6 +163,8 @@
   // Controle de som da aba "Meu Perfil"
   window.eaSound = {
     isOn: function () { return !isMuted(); },
-    set: function (on) { setMuted(!on); if (on) { try { EaFx.tap(); } catch (e) {} } else { haptic(12); } }
+    set: function (on) { setMuted(!on); if (on) { try { EaFx.tap(); } catch (e) {} } else { haptic(12); } },
+    getVolume: function () { return vol(); },
+    setVolume: function (v) { try { localStorage.setItem('ea_volume', String(Math.max(0, Math.min(1, v)))); } catch (e) {} try { EaFx.tap(); } catch (e) {} }
   };
 })();

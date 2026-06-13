@@ -93,7 +93,7 @@ export default async function handler(req, res) {
     // Modo de teste: { test:true, user_id:"..." } envia push direto para o aparelho daquele usuário.
     if (body.test && body.user_id) {
       const tsubs = await sbSelect(`push_subscriptions?user_id=eq.${body.user_id}&select=endpoint,subscription`);
-      const tpayload = JSON.stringify({ title: body.title || '🔔 Teste EA', body: body.body || 'Se você recebeu isto, o push está funcionando!', url: '/login.html', tag: 'ea-test' });
+      const tpayload = JSON.stringify({ title: body.title || '🔔 Teste EA', body: body.body || 'Se você recebeu isto, o push está funcionando!', url: '/login', tag: 'ea-test' });
       let tsent = 0; const errors = []; let removed = 0;
       await Promise.all((tsubs || []).map(async (s) => {
         try { await webpush.sendNotification(s.subscription, tpayload); tsent++; }
@@ -119,7 +119,7 @@ export default async function handler(req, res) {
     else if (r.byRole) subs = await sbSelect(`push_subscriptions?role=eq.${r.byRole}&select=endpoint,subscription`);
     else subs = await sbSelect(`push_subscriptions?select=endpoint,subscription`);
 
-    const payload = JSON.stringify({ title: r.title, body: r.body, url: '/login.html', tag: 'ea-' + table });
+    const payload = JSON.stringify({ title: r.title, body: r.body, url: '/login', tag: 'ea-' + table });
     let sent = 0;
     await Promise.all((subs || []).map(async (s) => {
       try { await webpush.sendNotification(s.subscription, payload); sent++; }

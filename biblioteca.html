@@ -11,7 +11,7 @@
 <style>
 /* ════════════════════════════════════════════════════════
    📚 BIBLIOTECA PEDAGÓGICA — Timeline Design (v7.3)
-   Inspirado em cursos.html, com linha do tempo cinematográfica
+   Inspirado em /cursos, com linha do tempo cinematográfica
    ════════════════════════════════════════════════════════ */
 
 * { box-sizing: border-box; }
@@ -1585,13 +1585,13 @@
 <!-- Hero -->
 <header class="bib-hero">
   <div class="container">
-    <a href="dashboard-professor.html" id="bibBackLink" class="bib-back">
+    <a href="/dashboard-professor" id="bibBackLink" class="bib-back">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
       Voltar ao Dashboard
     </a>
     <script>
     (function(){
-      var map={coordenacao:'dashboard-coordenacao.html',professor:'dashboard-professor.html',aluno:'dashboard-aluno.html'};
+      var map={coordenacao:'/dashboard-coordenacao',professor:'/dashboard-professor',aluno:'/dashboard-aluno'};
       var from=new URLSearchParams(location.search).get('from');
       var link=document.getElementById('bibBackLink');
       if(link && from && map[from]) link.setAttribute('href', map[from]);

@@ -21,7 +21,7 @@ async function signOut() {
   try { await db.auth.signOut(); } catch (e) {}
   // Desktop volta para a página inicial do site; no app fica no login (sem escapar do app).
   var isApp = (window.matchMedia && (matchMedia('(display-mode: standalone)').matches || matchMedia('(max-width: 900px)').matches)) || navigator.standalone === true;
-  var dest = isApp ? 'login.html' : 'index.html';
+  var dest = isApp ? '/login' : '/';
   setTimeout(function () { window.location.href = dest; }, 850);
 }
 
@@ -39,19 +39,19 @@ async function getUserProfile() {
 
 async function requireAuth(allowedRoles) {
   const session = await getSession();
-  if (!session) { window.location.href = 'login.html'; return null; }
+  if (!session) { window.location.href = '/login'; return null; }
   const profile = await getUserProfile();
-  if (!profile) { window.location.href = 'login.html'; return null; }
+  if (!profile) { window.location.href = '/login'; return null; }
   if (allowedRoles && !allowedRoles.includes(profile.role)) {
-    window.location.href = 'login.html';
+    window.location.href = '/login';
     return null;
   }
   return profile;
 }
 
 function redirectByRole(role) {
-  const routes = { student: 'dashboard-aluno.html', teacher: 'dashboard-professor.html', coordinator: 'dashboard-coordenacao.html' };
-  window.location.href = routes[role] || 'dashboard-aluno.html';
+  const routes = { student: '/dashboard-aluno', teacher: '/dashboard-professor', coordinator: '/dashboard-coordenacao' };
+  window.location.href = routes[role] || '/dashboard-aluno';
 }
 
 // ═══ PLACEMENT TESTS ═══

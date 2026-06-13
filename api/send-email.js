@@ -120,7 +120,7 @@ async function plan(table, rec, old) {
 }
 
 function template(p) {
-  const cta = SITE_URL + '/login.html';
+  const cta = SITE_URL + '/login';
   return '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>' +
     '<body style="margin:0;padding:0;background:#eef1f7;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">' +
     '<div style="display:none;max-height:0;overflow:hidden;opacity:0">' + esc(p.heading) + ' \u2014 EA English Classes</div>' +
@@ -143,7 +143,7 @@ function template(p) {
       '<a href="' + esc(SITE_URL) + '" style="color:#253c96;text-decoration:none;font-weight:600">' + esc(SITE_URL.replace(/^https?:\/\//, '')) + '</a>' +
     '</td></tr>' +
     '</table>' +
-    '<div style="color:#aeb4c2;font-size:11px;padding:16px 0 0">EA English Classes \u00b7 Osasco/SP</div>' +
+    '<div style="color:#aeb4c2;font-size:11px;padding:16px 0 0">EA English Classes \u00b7 São Paulo/SP</div>' +
     '</td></tr></table></body></html>';
 }
 

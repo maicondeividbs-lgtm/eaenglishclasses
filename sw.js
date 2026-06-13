@@ -4,17 +4,17 @@
    - Supabase/API/CDNs (cross-origin) e POST/PUT passam direto (dados e auth sempre ao vivo).
    - Páginas autenticadas (dashboards/login) nunca são armazenadas em cache.
 */
-const VERSION = 'ea-v5';
+const VERSION = 'ea-v6';
 const CACHE = 'ea-shell-' + VERSION;
 const PRECACHE = [
-  '/offline.html',
+  '/offline',
   '/style.css',
   '/manifest.webmanifest',
   '/icons/icon-192.png',
   '/icons/icon-512.png'
 ];
 // Páginas públicas que PODEM ser cacheadas para uso offline
-const PUBLIC_PAGES = ['/', '/index.html', '/cursos.html', '/contato.html', '/biblioteca.html', '/404.html'];
+const PUBLIC_PAGES = ['/', '/cursos', '/contato', '/biblioteca', '/404'];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(
@@ -37,7 +37,7 @@ self.addEventListener('message', (e) => {
     self.registration.showNotification(d.title || 'EA English Classes', {
       body: d.body || '', icon: '/icons/icon-192.png', badge: '/icons/icon-192.png',
       vibrate: [80, 40, 80], tag: d.tag || 'ea-notif', renotify: true,
-      data: { url: d.url || '/login.html' }
+      data: { url: d.url || '/login' }
     });
   }
 });
@@ -49,13 +49,13 @@ self.addEventListener('push', (e) => {
   e.waitUntil(self.registration.showNotification(data.title || 'EA English Classes', {
     body: data.body || '', icon: '/icons/icon-192.png', badge: '/icons/icon-192.png',
     vibrate: [80, 40, 80], tag: data.tag || 'ea-notif', renotify: true,
-    data: { url: data.url || '/login.html' }
+    data: { url: data.url || '/login' }
   }));
 });
 
 self.addEventListener('notificationclick', (e) => {
   e.notification.close();
-  var url = (e.notification.data && e.notification.data.url) || '/login.html';
+  var url = (e.notification.data && e.notification.data.url) || '/login';
   e.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((list) => {
       for (var i = 0; i < list.length; i++) {
@@ -87,7 +87,7 @@ self.addEventListener('fetch', (e) => {
       return res;
     }).catch(() =>
       caches.match(req).then((cached) =>
-        cached || (req.mode === 'navigate' ? caches.match('/offline.html') : Promise.reject('offline'))
+        cached || (req.mode === 'navigate' ? caches.match('/offline') : Promise.reject('offline'))
       )
     )
   );

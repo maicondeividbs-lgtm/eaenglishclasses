@@ -4,7 +4,7 @@
   "description": "Escola de inglês online — aulas ao vivo, currículo, biblioteca pedagógica e área do aluno.",
   "lang": "pt-BR",
   "dir": "ltr",
-  "start_url": "/login.html",
+  "start_url": "/login",
   "scope": "/",
   "display": "standalone",
   "display_override": ["standalone", "minimal-ui"],
@@ -17,8 +17,8 @@
     { "src": "/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
   "shortcuts": [
-    { "name": "Área do Aluno", "short_name": "Aluno", "url": "/dashboard-aluno.html" },
-    { "name": "Biblioteca Pedagógica", "short_name": "Biblioteca", "url": "/biblioteca.html" },
-    { "name": "Agendar Nivelamento", "short_name": "Agendar", "url": "/contato.html" }
+    { "name": "Área do Aluno", "short_name": "Aluno", "url": "/dashboard-aluno" },
+    { "name": "Biblioteca Pedagógica", "short_name": "Biblioteca", "url": "/biblioteca" },
+    { "name": "Agendar Nivelamento", "short_name": "Agendar", "url": "/contato" }
   ]
 }

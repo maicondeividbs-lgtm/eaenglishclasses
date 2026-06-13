@@ -170,9 +170,18 @@
     overflow: hidden;
     background: var(--navy);
   }
+  .hero-video-player { position: relative; }
   .hero-video-player video {
     width: 100%; height: 100%;
     object-fit: cover;
+    pointer-events: none;            /* bloqueia clique-direito / segurar-pressionar */
+    -webkit-user-select: none; user-select: none;
+    -webkit-touch-callout: none;     /* iOS: sem menu "salvar vídeo" */
+  }
+  /* camada transparente extra sobre o vídeo (reforço anti-interação) */
+  .hero-video-player::after {
+    content: ""; position: absolute; inset: 0; z-index: 2;
+    background: transparent; pointer-events: auto;
   }
   
   /* Floating badges around hero */
@@ -2178,8 +2187,21 @@
 .phone .notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:120px;height:24px;background:#0a1024;border-radius:0 0 16px 16px;z-index:3}
 .phone-screen{position:absolute;inset:0;background:linear-gradient(165deg,#1b2a5e,#0f1733);padding:40px 18px 18px;display:flex;flex-direction:column;gap:13px}
 .ps-topbar{display:flex;align-items:center;gap:10px;margin-bottom:2px}
-.ps-ico{width:40px;height:40px;border-radius:11px;background:#19244e;border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-weight:800;font-size:18px;color:#fff;flex-shrink:0}
-.ps-ico i{color:var(--orange);font-style:normal}
+.ps-ico{width:40px;height:40px;border-radius:11px;overflow:hidden;background:#fff;flex-shrink:0;box-shadow:0 4px 12px rgba(0,0,0,.25)}
+.ps-ico img{width:100%;height:100%;object-fit:cover;display:block}
+/* lockup da logo oficial + textos de audiência */
+.app-logo-lockup{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.app-logo-lockup img{width:62px;height:62px;border-radius:16px;box-shadow:0 12px 32px rgba(0,0,0,.4);flex-shrink:0}
+.app-logo-lockup .all-t{font-weight:800;font-size:15.5px;color:#fff;line-height:1.25}
+.app-logo-lockup .all-t span{display:block;font-weight:600;font-size:12.5px;color:rgba(255,255,255,.6);margin-top:2px}
+.app-audience{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:2px 0 30px;max-width:560px}
+.app-aud-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.11);border-radius:15px;padding:15px 14px;transition:background .25s,border-color .25s}
+.app-aud-card:hover{background:rgba(255,255,255,.1);border-color:rgba(243,107,46,.4)}
+.app-aud-card .aud-emoji{font-size:21px;line-height:1}
+.app-aud-card .aud-t{font-weight:800;color:#fff;font-size:13.5px;margin:9px 0 4px}
+.app-aud-card .aud-d{font-size:12px;color:rgba(255,255,255,.64);line-height:1.45}
+.app-reassure{display:flex;align-items:center;gap:7px;color:rgba(255,255,255,.62);font-size:13px;font-weight:600;margin-top:14px}
+.app-reassure svg{width:16px;height:16px;color:var(--mango);flex-shrink:0}
 .ps-hello{color:#fff;font-weight:800;font-size:13.5px;line-height:1.2}.ps-hello span{display:block;font-weight:500;font-size:11px;color:rgba(255,255,255,.5);margin-top:2px}
 .ps-card{background:linear-gradient(135deg,var(--blue),#2f4bb5);border-radius:16px;padding:14px;color:#fff;box-shadow:0 10px 24px rgba(0,0,0,.25)}
 .ps-card .lbl{font-size:9px;text-transform:uppercase;letter-spacing:.08em;opacity:.85;font-weight:800}
@@ -2197,10 +2219,18 @@
   .app-benefits{margin-left:auto;margin-right:auto;text-align:left}
   .app-actions{justify-content:center}
   .app-badge{display:none}
+  .app-logo-lockup{justify-content:center}
+  .app-audience{margin-left:auto;margin-right:auto;text-align:left}
+  .app-reassure{justify-content:center}
 }
 @media(max-width:560px){
   .app-cta{padding:64px 0}
   .app-benefits{grid-template-columns:1fr;gap:12px}
+  .app-audience{grid-template-columns:1fr;gap:10px}
+  .app-aud-card{display:flex;align-items:center;gap:12px;padding:13px 14px}
+  .app-aud-card .aud-emoji{font-size:22px}
+  .app-aud-card .aud-txt{flex:1}
+  .app-aud-card .aud-t{margin:0 0 2px}
   .phone{width:228px;height:466px}
 }
 @media (prefers-reduced-motion: reduce){.app-badge{animation:none}}
@@ -2287,7 +2317,7 @@
             <span class="hero-video-live">● Online</span>
           </div>
           <div class="hero-video-player">
-            <video src="https://i.imgur.com/wawSBLv.mp4" autoplay muted loop playsinline></video>
+            <video src="https://i.imgur.com/wawSBLv.mp4" autoplay muted loop playsinline preload="auto" disablepictureinpicture disableremoteplayback controlslist="nodownload noremoteplayback noplaybackrate" oncontextmenu="return false" tabindex="-1" aria-hidden="true"></video>
           </div>
         </div>
         <div class="hero-float-card hero-float-1">
@@ -2982,19 +3012,28 @@
   <div class="container">
     <div class="app-grid">
       <div class="app-copy">
-        <div class="section-label" style="background:rgba(245,154,30,.15);color:var(--mango)">Aplicativo</div>
-        <h2>Leve a EA na <em>palma da mão</em></h2>
-        <p class="app-sub">Instale o app da EA no celular ou no computador e tenha sua área de aluno, a agenda de aulas e a biblioteca sempre à mão — em tela cheia, com acesso rápido e avisos na hora.</p>
+        <div class="app-logo-lockup">
+          <img src="/icons/icon-512.png" alt="App EA English Classes" width="62" height="62" loading="lazy">
+          <div class="all-t">App EA English Classes<span>Android · iPhone · Computador</span></div>
+        </div>
+        <div class="section-label" style="background:rgba(245,154,30,.15);color:var(--mango)">Aplicativo oficial</div>
+        <h2>Toda a sua escola de inglês <em>num só app</em></h2>
+        <p class="app-sub">Aulas, agenda, materiais e avisos sempre com você. Instala em segundos direto pelo navegador — <strong style="color:#fff">sem ocupar espaço</strong>, sem loja de apps e funcionando até offline. É a EA na palma da mão de toda a família.</p>
         <ul class="app-benefits">
-          <li><span class="ab-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg></span> Abre em tela cheia</li>
           <li><span class="ab-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span> Acesso em 1 toque</li>
-          <li><span class="ab-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span> Avisos com som</li>
+          <li><span class="ab-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span> Avisos na hora, com som</li>
+          <li><span class="ab-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span> Agenda e materiais à mão</li>
           <li><span class="ab-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg></span> Funciona offline</li>
         </ul>
+        <div class="app-audience">
+          <div class="app-aud-card"><div class="aud-emoji">🎓</div><div class="aud-txt"><div class="aud-t">Para alunos</div><div class="aud-d">Aulas, lição de casa e progresso sempre organizados.</div></div></div>
+          <div class="app-aud-card"><div class="aud-emoji">👨‍👩‍👧</div><div class="aud-txt"><div class="aud-t">Para responsáveis</div><div class="aud-d">Acompanhe a evolução e a frequência de perto.</div></div></div>
+          <div class="app-aud-card"><div class="aud-emoji">🧑‍🏫</div><div class="aud-txt"><div class="aud-t">Para professores</div><div class="aud-d">Agenda, alunos e correções num só painel.</div></div></div>
+        </div>
         <div class="app-actions">
           <button type="button" class="app-install-btn" onclick="if(window.eaInstallApp)eaInstallApp()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            Instalar app
+            Instalar agora — é grátis
           </button>
           <div class="app-platforms">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 12.04c-.03-2.6 2.13-3.85 2.22-3.91-1.21-1.77-3.1-2.01-3.77-2.04-1.6-.16-3.13.94-3.94.94-.81 0-2.07-.92-3.4-.9-1.75.03-3.36 1.02-4.26 2.58-1.82 3.15-.47 7.81 1.3 10.37.86 1.25 1.89 2.66 3.24 2.61 1.3-.05 1.79-.84 3.36-.84 1.57 0 2.01.84 3.39.81 1.4-.02 2.29-1.28 3.15-2.54.99-1.45 1.4-2.86 1.42-2.93-.03-.01-2.72-1.04-2.75-4.12M14.5 4.66c.72-.87 1.2-2.08 1.07-3.29-1.03.04-2.28.69-3.02 1.56-.66.77-1.24 2-1.08 3.18 1.15.09 2.32-.58 3.03-1.45"/></svg>
@@ -3002,12 +3041,16 @@
             Android e iPhone
           </div>
         </div>
+        <div class="app-reassure">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 1.66-4 6-9 6s-9-4.34-9-6 4-6 9-6 9 4.34 9 6z" opacity="0"/><circle cx="12" cy="12" r="10"/></svg>
+          Instalação em segundos · 100% gratuito · sem cadastro na loja
+        </div>
       </div>
       <div class="app-visual">
         <div class="phone">
           <div class="notch"></div>
           <div class="phone-screen">
-            <div class="ps-topbar"><div class="ps-ico">EA<i>.</i></div><div class="ps-hello">Ol&aacute;, Maria!<span>Bem-vinda de volta</span></div></div>
+            <div class="ps-topbar"><div class="ps-ico"><img src="/icons/icon-512.png" alt="EA"></div><div class="ps-hello">Ol&aacute;, Maria!<span>Bem-vinda de volta</span></div></div>
             <div class="ps-card"><div class="lbl">Pr&oacute;xima aula</div><div class="big">Segunda &middot; 18:00</div><div class="small">&#128336; 60 min &middot; Prof. Laura</div></div>
             <div class="ps-row"><div class="dot" style="background:rgba(243,107,46,.5)"></div><div style="flex:1"><div class="l1"></div><div class="l2"></div></div></div>
             <div class="ps-row"><div class="dot" style="background:rgba(37,60,150,.65)"></div><div style="flex:1"><div class="l1"></div><div class="l2"></div></div></div>
@@ -3015,7 +3058,7 @@
           </div>
         </div>
         <div class="app-badge">
-          <div style="width:30px;height:30px;border-radius:8px;background:#19244e;color:#fff;display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-weight:800;font-size:14px">EA<span style="color:#f36b2e">.</span></div>
+          <img src="/icons/icon-512.png" alt="App EA" style="width:36px;height:36px;border-radius:9px;flex-shrink:0">
           <div style="font-size:12px;font-weight:800;color:#19244e;line-height:1.15">App da EA<br><span style="font-weight:600;color:#6b7280;font-size:10px">na tela inicial</span></div>
         </div>
       </div>
@@ -3043,7 +3086,7 @@
         <p style="font-size:14px;line-height:1.7;margin-top:16px;max-width:320px;color:rgba(255,255,255,0.6)">Transformando vidas através do inglês há mais de <strong style="color:#f59a1e">10 anos</strong>. Aulas online ao vivo com foco em resultados reais.</p>
         <div class="footer-social">
           <a href="https://www.instagram.com/contatoea" target="_blank" title="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.3.1 4.8 1.7 4.9 4.9.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.2-1.7 4.8-4.9 4.9-1.3.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-3.3-.1-4.8-1.7-4.9-4.9C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8C2.4 4 4 2.4 7.2 2.3 8.4 2.2 8.8 2.2 12 2.2zM12 0C8.7 0 8.3 0 7.1.1 2.7.3.3 2.7.1 7.1 0 8.3 0 8.7 0 12s0 3.7.1 4.9c.2 4.4 2.6 6.8 7 7 1.2.1 1.6.1 4.9.1s3.7 0 4.9-.1c4.4-.2 6.8-2.6 7-7 .1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9C23.7 2.7 21.3.3 16.9.1 15.7 0 15.3 0 12 0zm0 5.8C8.6 5.8 5.8 8.6 5.8 12s2.8 6.2 6.2 6.2 6.2-2.8 6.2-6.2S15.4 5.8 12 5.8zM12 16c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4zm6.4-11.8c-.8 0-1.4.6-1.4 1.4s.6 1.4 1.4 1.4 1.4-.6 1.4-1.4-.6-1.4-1.4-1.4z"/></svg></a>
-          <a href="#" title="WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8.9-.9 1.1-.2.2-.3.2-.6.1-1.8-.9-3-1.6-4.2-3.6-.3-.5.3-.5.9-1.6.1-.2 0-.4 0-.5s-.7-1.6-.9-2.2c-.2-.6-.5-.5-.7-.5H8c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3 1.8.8 2.5.8 3.4.7.5-.1 1.8-.7 2-1.5.3-.8.3-1.4.2-1.5-.1-.1-.3-.2-.5-.3zM20.5 3.5C18.2 1.2 15.2 0 12 0 5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.3-1.6c1.7.9 3.7 1.4 5.7 1.4 6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.3zM12 22c-1.8 0-3.6-.5-5.2-1.4l-.4-.2-3.7.9L3.7 18l-.2-.4C2.5 15.9 2 13.9 2 12c0-5.5 4.5-10 10-10 2.7 0 5.2 1 7.1 2.9 1.9 1.9 2.9 4.4 2.9 7.1 0 5.5-4.5 10-10 10z"/></svg></a>
+          <a href="https://wa.me/5511978388843" target="_blank" rel="noopener" title="WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8.9-.9 1.1-.2.2-.3.2-.6.1-1.8-.9-3-1.6-4.2-3.6-.3-.5.3-.5.9-1.6.1-.2 0-.4 0-.5s-.7-1.6-.9-2.2c-.2-.6-.5-.5-.7-.5H8c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3 1.8.8 2.5.8 3.4.7.5-.1 1.8-.7 2-1.5.3-.8.3-1.4.2-1.5-.1-.1-.3-.2-.5-.3zM20.5 3.5C18.2 1.2 15.2 0 12 0 5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.3-1.6c1.7.9 3.7 1.4 5.7 1.4 6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.3zM12 22c-1.8 0-3.6-.5-5.2-1.4l-.4-.2-3.7.9L3.7 18l-.2-.4C2.5 15.9 2 13.9 2 12c0-5.5 4.5-10 10-10 2.7 0 5.2 1 7.1 2.9 1.9 1.9 2.9 4.4 2.9 7.1 0 5.5-4.5 10-10 10z"/></svg></a>
           <a href="mailto:eaenglished@gmail.com" title="E-mail"><svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></a>
         </div>
       </div>

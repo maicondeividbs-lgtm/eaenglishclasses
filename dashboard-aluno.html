@@ -969,12 +969,24 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 .book-info .b-series {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.7px;
-  opacity: 0.85;
+  letter-spacing: 0.6px;
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.3);
+  backdrop-filter: blur(6px);
+  padding: 4px 10px;
+  border-radius: 99px;
+}
+/* polimento extra do "Meu Livro Atual" */
+.book-card { border: 1px solid rgba(255,255,255,0.14); }
+.book-info .b-name { overflow-wrap: anywhere; }
+.book-cover-img::after {
+  content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 7px;
+  background: linear-gradient(90deg, rgba(0,0,0,0.28), rgba(0,0,0,0.05) 60%, transparent);
+  pointer-events: none;
 }
 .book-empty {
   background: var(--g50);

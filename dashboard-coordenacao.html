@@ -471,8 +471,8 @@ body { background: var(--g50); margin: 0; }
 .empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; opacity: 0.4; }
 
 /* User cards */
-.user-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap: 16px; padding: 24px; }
-.user-card { padding: 20px; border-radius: 14px; border: 1px solid var(--g100); display: flex; align-items: center; gap: 16px; background: #fff; }
+.user-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px),1fr)); gap: 16px; padding: 24px; }
+.user-card { padding: 20px; border-radius: 14px; border: 1px solid var(--g100); display: flex; align-items: center; gap: 16px; background: #fff; min-width: 0; }
 .user-card-avatar { width: 48px; height: 48px; min-width: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800; color: #fff; overflow: hidden; }
 .user-card-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .user-card-avatar.student { background: linear-gradient(135deg, var(--blue), var(--blue-light)); }
@@ -484,6 +484,10 @@ body { background: var(--g50); margin: 0; }
 .user-card-role.teacher { color: var(--orange); }
 .user-card-role.coordinator { color: var(--mango); }
 .user-card-email { font-size: 12px; color: var(--g500); margin-top: 2px; }
+@media (max-width: 640px) {
+  .user-grid { grid-template-columns: 1fr; padding: 14px; gap: 12px; }
+  .user-card { padding: 16px; }
+}
 
 /* Tool section placeholder */
 .tool-placeholder {
@@ -584,11 +588,11 @@ body { background: var(--g50); margin: 0; }
 }
 .ctr-item:hover { border-color: var(--g200); box-shadow: 0 4px 12px rgba(0,0,0,0.05); transform: translateY(-1px); }
 .ctr-item.ctr-expired:hover { border-color: #fca5a5; box-shadow: 0 4px 12px rgba(220,38,38,0.1); }
-.ctr-info { flex: 1; min-width: 180px; }
+.ctr-info { flex: 1; min-width: 180px; order: 1; }
 .ctr-name { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 2px; }
 .ctr-expired .ctr-name { color: #991b1b; }
-.ctr-meta { font-size: 12px; color: var(--g500); }
-.ctr-actions { display: inline-flex; gap: 6px; align-items: center; }
+.ctr-meta { font-size: 12px; color: var(--g500); word-break: break-word; }
+.ctr-actions { display: inline-flex; gap: 6px; align-items: center; order: 3; }
 .ctr-action {
   width: 34px; height: 34px; border-radius: 10px;
   border: 1px solid var(--g200); background: #fff;
@@ -606,17 +610,17 @@ body { background: var(--g50); margin: 0; }
 .ctr-badge {
   padding: 6px 12px; border-radius: 99px;
   font-size: 11px; font-weight: 700;
-  white-space: nowrap; flex-shrink: 0;
+  white-space: nowrap; flex-shrink: 0; order: 2;
 }
 .ctr-badge-expired { background: #dc2626; color: #fff; }
 .ctr-badge-urgent { background: #ef4444; color: #fff; }
 .ctr-badge-warn { background: #f59a1e; color: #fff; }
 .ctr-badge-soft { background: #fef3c7; color: #92400e; }
 @media (max-width: 640px) {
-  .ctr-item { padding: 12px; }
-  .ctr-info { width: 100%; min-width: 0; }
+  .ctr-item { padding: 12px; gap: 10px 12px; }
+  .ctr-info { flex: 1 1 55%; width: auto; min-width: 0; }
+  .ctr-badge { align-self: flex-start; }
   .ctr-actions { width: 100%; justify-content: flex-end; }
-  .ctr-badge { width: 100%; text-align: center; }
 }
 
 /* Dashboard mobile responsive */
@@ -3182,6 +3186,18 @@ body.sb-collapsed .main { margin-left: 92px !important; }
           .ea-cfg-vol .val{font-size:12px;font-weight:700;color:var(--g600);width:40px;text-align:right}
           .ea-cfg-row.dim{opacity:.5}
           .ea-cfg-soon{font-size:11px;font-weight:700;color:var(--g500);background:var(--g50);padding:4px 10px;border-radius:999px}
+          /* layout responsivo do Meu Perfil */
+          .coord-profile-grid{display:grid;grid-template-columns:200px 1fr;gap:24px;align-items:start}
+          .coord-profile-av{background:#fff;border-radius:16px;border:1px solid var(--g100);padding:24px;text-align:center}
+          @media(max-width:760px){
+            .coord-profile-grid{grid-template-columns:1fr;gap:18px}
+            .coord-profile-av{max-width:320px;margin:0 auto;width:100%}
+          }
+          @media(max-width:560px){
+            .ea-cfg{padding:18px 16px}
+            #cfgVolRow{flex-direction:column;align-items:stretch;gap:10px}
+            #cfgVolRow .ea-cfg-vol{min-width:0;width:100%}
+          }
         </style>
         <div class="ea-cfg" id="eaCfgCard">
           <div class="ea-cfg-head">⚙️ Configurações</div>
@@ -3219,9 +3235,9 @@ body.sb-collapsed .main { margin-left: 92px !important; }
           if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', init); else init();
         })();
         </script>
-        <div style="display:grid;grid-template-columns:200px 1fr;gap:24px;align-items:start">
+        <div class="coord-profile-grid">
           <!-- Avatar -->
-          <div style="background:#fff;border-radius:16px;border:1px solid var(--g100);padding:24px;text-align:center">
+          <div class="coord-profile-av">
             <div id="profileAvatar" style="width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,var(--mango),var(--orange));margin:0 auto 14px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:40px;font-weight:900;overflow:hidden;cursor:pointer" onclick="document.getElementById('profileAvatarInput').click()">C</div>
             <input type="file" id="profileAvatarInput" accept="image/*" style="display:none" onchange="uploadProfilePic(this.files[0])">
             <p style="font-size:12px;color:var(--g400)">Clique para alterar a foto</p>

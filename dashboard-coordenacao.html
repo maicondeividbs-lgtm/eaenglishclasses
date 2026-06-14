@@ -2981,6 +2981,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
             <button class="sup-tab" data-sup="fb" onclick="switchSup('fb',this)">💬 Feedbacks</button>
             <button class="sup-tab" data-sup="wr" onclick="switchSup('wr',this)">✍️ Redações</button>
             <button class="sup-tab" data-sup="pr" onclick="switchSup('pr',this)">🎙️ Pronúncias</button>
+            <button class="sup-tab" data-sup="vocab" onclick="switchSup('vocab',this)">📚 Vocabulário</button>
           </div>
         </div>
 
@@ -3021,6 +3022,14 @@ body.sb-collapsed .main { margin-left: 92px !important; }
           <div class="panel">
             <div class="panel-head"><div class="panel-title">Todas as Pronúncias</div></div>
             <div id="prCoordList"><div class="empty-state"><div class="empty-icon">🎙️</div><p>Nenhuma pronúncia.</p></div></div>
+          </div>
+        </div>
+
+        <!-- Vocabulary pane -->
+        <div class="sup-pane" id="sup-vocab" style="display:none">
+          <div class="panel">
+            <div class="panel-head"><div class="panel-title">Todo o Vocabulário</div></div>
+            <div id="vocabCoordList"><div class="empty-state"><div class="empty-icon">📚</div><p>Nenhum vocabulário.</p></div></div>
           </div>
         </div>
       </div>
@@ -5207,7 +5216,7 @@ async function loadCoMyStudents(){
   eaRenderStudentList('coMyStudentsList', students, coStudentCard);
 }
 document.addEventListener('DOMContentLoaded', function(){
-  ['hwList','fbList','annList','prCoordList','msgList','tWrList','wrCoordList','tHwList','tFbList','tPrList','tVocList'].forEach(function(id){ eaWatchVerMais(id, 5); });
+  ['hwList','fbList','annList','prCoordList','vocabCoordList','msgList','tWrList','wrCoordList','tHwList','tFbList','tPrList','tVocList'].forEach(function(id){ eaWatchVerMais(id, 5); });
 });
 
 async function loadWritingCoord() {
@@ -5232,6 +5241,19 @@ async function loadPronunciationCoord() {
   const div = document.getElementById('prCoordList');
   if (!items || !items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">🎙️</div><p>Nenhuma pronúncia no sistema.</p></div>'; return; }
   div.innerHTML = items.map(p => '<div class="list-item"><div><div class="list-title">🎙️ ' + p.word + (p.phonetic ? ' <span style="color:var(--g400);font-weight:400;font-style:italic">' + p.phonetic + '</span>' : '') + '</div><div class="list-sub">Prof. ' + (p.teacher?.full_name||'?') + ' → ' + (p.student?.full_name||'?') + ' — ' + formatDateTime(p.created_at) + '</div></div><span class="badge ' + (p.practiced ? 'badge-done' : 'badge-pending') + '">' + (p.practiced ? 'Praticado' : 'Pendente') + '</span></div>').join('');
+}
+
+// ═══ VOCABULARY SUPERVISION ═══
+async function loadVocabularyCoord() {
+  const filterTeacher = document.getElementById('supFilter')?.value || '';
+  const div = document.getElementById('vocabCoordList');
+  if (div) div.innerHTML = '<div class="empty-state"><div class="empty-icon">⏳</div><p>Carregando...</p></div>';
+  let query = db.from('vocabulary_words').select('*, teacher:profiles!vocabulary_words_teacher_id_fkey(full_name, id), student:profiles!vocabulary_words_student_id_fkey(full_name)').order('created_at', {ascending: false});
+  if (filterTeacher) query = query.eq('teacher_id', filterTeacher);
+  const { data: items } = await query;
+  if (!div) return;
+  if (!items || !items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📚</div><p>Nenhum vocabulário no sistema.</p></div>'; return; }
+  div.innerHTML = items.map(v => '<div class="list-item"><div><div class="list-title">📚 ' + (v.word || '') + (v.translation ? ' <span style="color:var(--g400);font-weight:400">— ' + v.translation + '</span>' : '') + '</div><div class="list-sub">Prof. ' + (v.teacher?.full_name||'?') + ' → ' + (v.student?.full_name||'?') + ' — ' + formatDateTime(v.created_at) + '</div></div><span class="badge ' + (v.enriched ? 'badge-done' : 'badge-pending') + '">' + (v.enriched ? 'Estudada' : 'Aguardando') + '</span></div>').join('');
 }
 
 // ═══ CREATE USER ═══
@@ -5560,17 +5582,24 @@ function buildCSlotPopup(slotId,name,dur,dow,timeStr){
 }
 
 function buildCExtraPopup(day,hour){
-  return '<p style="font-size:12px;color:var(--g400);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700">Tipo de Evento</p>'+
-    '<div id="cXChips" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">'+
+  var lbl='display:block;font-size:11px;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:.4px;margin:0 0 6px';
+  var opt=' <span style="color:var(--g400);font-weight:600;text-transform:none;letter-spacing:0">(opcional)</span>';
+  var inp='width:100%;box-sizing:border-box;padding:11px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:14px';
+  return '<p style="font-size:12.5px;color:var(--g500);margin:0 0 16px;line-height:1.55">Registre um evento avulso neste horário — reposi\u00e7\u00e3o, reuni\u00e3o pedag\u00f3gica ou uma observa\u00e7\u00e3o.</p>'+
+    '<label style="'+lbl+'">Tipo de evento</label>'+
+    '<div id="cXChips" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px">'+
       buildEvtChip('cX','replacement','\ud83d\udd04 Reposi\u00e7\u00e3o','replacement')+
       buildEvtChip('cX','meeting','\ud83d\udccb Reuni\u00e3o pedag.','replacement')+
       buildEvtChip('cX','note','\ud83d\udcdd Observa\u00e7\u00e3o','replacement')+
     '</div>'+
-    '<input type="text" id="cXStudent" placeholder="Aluno (se aplic\u00e1vel)" style="width:100%;box-sizing:border-box;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:10px">'+
-    '<input type="date" id="cXDate" style="width:100%;box-sizing:border-box;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:10px">'+
-    '<input type="text" id="cXNotes" placeholder="Descri\u00e7\u00e3o" style="width:100%;box-sizing:border-box;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:14px">'+
+    '<label style="'+lbl+'">Data</label>'+
+    '<input type="date" id="cXDate" style="'+inp+'">'+
+    '<label style="'+lbl+'">Aluno'+opt+'</label>'+
+    '<input type="text" id="cXStudent" placeholder="Nome do aluno, se aplic\u00e1vel" style="'+inp+'">'+
+    '<label style="'+lbl+'">Descri\u00e7\u00e3o'+opt+'</label>'+
+    '<input type="text" id="cXNotes" placeholder="Ex.: reposi\u00e7\u00e3o da aula de ter\u00e7a" style="'+inp+'">'+
     '<input type="hidden" id="cXDay" value="'+day+'"><input type="hidden" id="cXHour" value="'+hour+'">'+
-    '<button onclick="cSubmitXtra()" style="width:100%;padding:12px;border:none;border-radius:10px;background:var(--blue);color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer">Registrar Evento</button>';
+    '<button onclick="cSubmitXtra()" style="width:100%;padding:13px;border:none;border-radius:11px;background:var(--blue);color:#fff;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer">\u2713 Registrar evento</button>';
 }
 
 function buildEvtChip(prefix,val,lbl,selected){
@@ -5991,6 +6020,7 @@ function loadCurrentSup() {
     case 'fb': loadFeedbacks(); break;
     case 'wr': loadWritingCoord(); break;
     case 'pr': loadPronunciationCoord(); break;
+    case 'vocab': loadVocabularyCoord(); break;
   }
 }
 
@@ -6149,6 +6179,9 @@ function eaUserLayout(v){ window._userLayout=v; var ul=document.getElementById('
 // ═══ ACESSOS DE ALUNOS ═══
 let allAccessCache = [];
 let accessPeriodFilter = 'all';
+let accessShown = 20;
+const ACCESS_PAGE = 20;
+function eaAccessMore(){ accessShown += ACCESS_PAGE; applyAccessFilters(); }
 
 function startOfToday() {
   const d = new Date();
@@ -6167,6 +6200,7 @@ async function loadAccessLogs() {
     return;
   }
   renderAccessStats();
+  accessShown = ACCESS_PAGE;
   applyAccessFilters();
 }
 
@@ -6189,12 +6223,13 @@ function renderAccessStats() {
 
 function filterAccessByPeriod(period, btn) {
   accessPeriodFilter = period;
+  accessShown = ACCESS_PAGE;
   document.querySelectorAll('#sec-access .user-filter').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
   applyAccessFilters();
 }
 
-function filterAccessLogs() { applyAccessFilters(); }
+function filterAccessLogs() { accessShown = ACCESS_PAGE; applyAccessFilters(); }
 
 function applyAccessFilters() {
   const search = (document.getElementById('accessSearch')?.value || '').toLowerCase();
@@ -6221,7 +6256,7 @@ function applyAccessFilters() {
     return;
   }
 
-  div.innerHTML = filtered.map(a => {
+  div.innerHTML = filtered.slice(0, accessShown).map(a => {
     const name = a.full_name || 'Aluno';
     const initial = name[0] ? name[0].toUpperCase() : '?';
     const d = new Date(a.accessed_at);
@@ -6239,7 +6274,9 @@ function applyAccessFilters() {
         (ago ? '<div style="font-size:11px;color:var(--g400)">há ' + ago + '</div>' : '') +
       '</div>' +
     '</div>';
-  }).join('');
+  }).join('') + (filtered.length > accessShown
+      ? '<div style="text-align:center;padding:18px 0 4px"><button type="button" onclick="eaAccessMore()" style="padding:11px 26px;border:1.5px solid var(--mango);border-radius:10px;background:#fff;color:var(--mango);font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;transition:all .2s" onmouseover="this.style.background=\'var(--mango)\';this.style.color=\'#fff\'" onmouseout="this.style.background=\'#fff\';this.style.color=\'var(--mango)\'">Ver mais (' + (filtered.length - accessShown) + ' restantes)</button></div>'
+      : '');
 }
 
 // ═══ SIDEBAR NAV HOOKS ═══

@@ -3535,17 +3535,24 @@ function getSelectedMotiv(prefix){
 }
 
 function buildExtraPopup(day,hour){
-  return '<p style="font-size:12px;color:var(--g400);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700">Tipo de Evento</p>'+
-    '<div id="pXChips" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">'+
+  var lbl='display:block;font-size:11px;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:.4px;margin:0 0 6px';
+  var opt=' <span style="color:var(--g400);font-weight:600;text-transform:none;letter-spacing:0">(opcional)</span>';
+  var inp='width:100%;box-sizing:border-box;padding:11px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:14px';
+  return '<p style="font-size:12.5px;color:var(--g500);margin:0 0 16px;line-height:1.55">Registre um evento avulso neste horário — reposição, reunião pedagógica ou uma observação.</p>'+
+    '<label style="'+lbl+'">Tipo de evento</label>'+
+    '<div id="pXChips" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px">'+
       buildEvtChip('pX','replacement','\ud83d\udd04 Reposi\u00e7\u00e3o','replacement')+
       buildEvtChip('pX','meeting','\ud83d\udccb Reuni\u00e3o pedag.','replacement')+
       buildEvtChip('pX','note','\ud83d\udcdd Observa\u00e7\u00e3o','replacement')+
     '</div>'+
-    '<input type="text" id="pXStudent" placeholder="Aluno (se aplic\u00e1vel)" style="width:100%;box-sizing:border-box;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:10px">'+
-    '<input type="date" id="pXDate" style="width:100%;box-sizing:border-box;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:10px">'+
-    '<input type="text" id="pXNotes" placeholder="Descri\u00e7\u00e3o" style="width:100%;box-sizing:border-box;padding:10px 12px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;margin-bottom:14px">'+
+    '<label style="'+lbl+'">Data</label>'+
+    '<input type="date" id="pXDate" style="'+inp+'">'+
+    '<label style="'+lbl+'">Aluno'+opt+'</label>'+
+    '<input type="text" id="pXStudent" placeholder="Nome do aluno, se aplic\u00e1vel" style="'+inp+'">'+
+    '<label style="'+lbl+'">Descri\u00e7\u00e3o'+opt+'</label>'+
+    '<input type="text" id="pXNotes" placeholder="Ex.: reposi\u00e7\u00e3o da aula de ter\u00e7a" style="'+inp+'">'+
     '<input type="hidden" id="pXDay" value="'+day+'"><input type="hidden" id="pXHour" value="'+hour+'">'+
-    '<button onclick="submitXtra()" style="width:100%;padding:12px;border:none;border-radius:10px;background:var(--blue);color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer">Registrar Evento</button>';
+    '<button onclick="submitXtra()" style="width:100%;padding:13px;border:none;border-radius:11px;background:var(--blue);color:#fff;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer">\u2713 Registrar evento</button>';
 }
 
 async function chgDur(id,dur){try{await db.from('schedule_slots').update({duration_minutes:dur}).eq('id',id);popSnd();closePopup();showToast('Duração: '+dur+'min');loadSchedule();}catch(e){showToast('Erro','error');}}
@@ -3730,15 +3737,15 @@ async function loadProfEvents(){
   if(!events.length){div.innerHTML='<div class="empty-state"><div class="empty-icon">📅</div><p>Nenhum evento em '+MONTHS[m]+'.</p></div>';return;}
   var h='';for(var i=0;i<events.length;i++){
     var e=events[i];
-    var isCancellation=e.event_type==='cancellation';
-    var bgColor=isCancellation?'#fef2f2':'#eff6ff';
-    var borderColor=isCancellation?'#fca5a5':'#93c5fd';
-    var icon=isCancellation?'❌':'🔄';
-    var textColor=isCancellation?'#991b1b':'#1e40af';
-    h+='<div style="display:flex;align-items:center;gap:14px;padding:14px 18px;background:'+bgColor+';border:1px solid '+borderColor+';border-radius:12px;margin-bottom:8px">'+
-      '<div style="font-size:20px">'+icon+'</div>'+
-      '<div style="flex:1"><div style="font-weight:700;color:'+textColor+';font-size:13px">'+(e.student_name||'Geral')+'</div><div style="font-size:12px;color:var(--g500)">'+formatDate(e.event_date)+' — '+((e.notes||'').replace(/\[GRID:[^\]]+\]\s*/,''))+'</div></div>'+
-      '<button onclick="delEv('+e.id+')" style="border:none;background:rgba(0,0,0,0.05);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:12px">✕</button></div>';
+    var et=e.event_type;
+    var style;
+    if(et==='cancellation') style={bg:'#fef2f2',bd:'#fca5a5',ic:'\u274c',tx:'#991b1b',lb:'Cancelamento'};
+    else if(et==='replacement') style={bg:'#eff6ff',bd:'#93c5fd',ic:'\ud83d\udd04',tx:'#1e40af',lb:'Reposi\u00e7\u00e3o'};
+    else style={bg:'#fffbeb',bd:'#fcd34d',ic:'\ud83d\udcdd',tx:'#92400e',lb:'Observa\u00e7\u00e3o'};
+    h+='<div style="display:flex;align-items:center;gap:14px;padding:14px 18px;background:'+style.bg+';border:1px solid '+style.bd+';border-radius:12px;margin-bottom:8px">'+
+      '<div style="font-size:20px">'+style.ic+'</div>'+
+      '<div style="flex:1;min-width:0"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-weight:700;color:'+style.tx+';font-size:13px">'+(e.student_name||'Geral')+'</span><span style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;color:'+style.tx+';background:rgba(0,0,0,.05);padding:2px 8px;border-radius:999px">'+style.lb+'</span></div><div style="font-size:12px;color:var(--g500);margin-top:2px">'+formatDate(e.event_date)+' \u2014 '+((e.notes||'').replace(/\[GRID:[^\]]+\]\s*/,''))+'</div></div>'+
+      '<button onclick="delEv('+e.id+')" title="Remover evento" style="border:none;background:rgba(0,0,0,0.05);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:12px;flex-shrink:0">\u2715</button></div>';
   }
   div.innerHTML=h;
 }

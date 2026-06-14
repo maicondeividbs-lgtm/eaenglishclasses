@@ -981,12 +981,19 @@ body.sb-collapsed .main { margin-left: 92px !important; }
   border-radius: 99px;
 }
 /* polimento extra do "Meu Livro Atual" */
-.book-card { border: 1px solid rgba(255,255,255,0.14); }
+.book-card { border: 1px solid rgba(255,255,255,0.16); border-radius: 20px; box-shadow: 0 14px 38px rgba(0,0,0,0.18); }
 .book-info .b-name { overflow-wrap: anywhere; }
-.book-cover-img::after {
-  content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 7px;
-  background: linear-gradient(90deg, rgba(0,0,0,0.28), rgba(0,0,0,0.05) 60%, transparent);
+.book-info .b-cefr { box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+/* livro: lombada à esquerda + miolo de páginas à direita */
+.book-cover-img::before {
+  content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: 8px; z-index: 2;
+  background: linear-gradient(90deg, rgba(0,0,0,0.40), rgba(0,0,0,0.06) 70%, transparent);
   pointer-events: none;
+}
+.book-cover-img::after {
+  content: ''; position: absolute; top: 3px; bottom: 3px; right: 0; width: 5px; z-index: 2;
+  background: repeating-linear-gradient(90deg, rgba(255,255,255,0.92) 0 1px, rgba(0,0,0,0.12) 1px 2px);
+  border-radius: 0 3px 3px 0; pointer-events: none;
 }
 .book-empty {
   background: var(--g50);
@@ -1645,8 +1652,22 @@ body.sb-collapsed .main { margin-left: 92px !important; }
   padding-left: 56px;
 }
 .fb-card.ann .fb-content { padding-left: 56px; }
+/* prévia com "Ler mais" quando o conteúdo é longo */
+.fb-content.clamp {
+  display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.fb-content.expanded { -webkit-line-clamp: unset; overflow: visible; display: block; }
+.fb-readmore {
+  display: none; margin: 8px 0 0 56px; padding: 0;
+  background: none; border: none; cursor: pointer; font-family: inherit;
+  color: var(--blue); font-weight: 800; font-size: 13px;
+}
+.fb-readmore:hover { text-decoration: underline; }
+.fb-readmore.show { display: inline-block; }
 @media (max-width: 560px) {
   .fb-content { padding-left: 0; margin-top: 4px; }
+  .fb-readmore { margin-left: 0; }
 }
 
 /* === WRITING (REDAÇÃO): redesign completo === */
@@ -3454,6 +3475,25 @@ async function markDone(submissionId, btn) {
 }
 
 // ═══ FEEDBACKS ═══
+// ── "Ler mais" para feedbacks/avisos longos ──
+function eaToggleReadMore(btn){
+  var c = btn.previousElementSibling;
+  if(!c) return;
+  var exp = c.classList.toggle('expanded');
+  c.classList.toggle('clamp', !exp);
+  btn.textContent = exp ? 'Ler menos' : 'Ler mais';
+}
+function eaSetupReadMore(scope){
+  var nodes = (scope||document).querySelectorAll('.fb-content.clamp');
+  for(var i=0;i<nodes.length;i++){
+    var c = nodes[i], btn = c.nextElementSibling;
+    if(btn && btn.classList.contains('fb-readmore')){
+      if(c.scrollHeight > c.clientHeight + 4) btn.classList.add('show');
+      else btn.classList.remove('show');
+    }
+  }
+}
+
 async function loadFeedbacks() {
   const fbs = await getFeedbacksForStudent(currentUser.id);
   const div = document.getElementById('fbList');
@@ -3476,9 +3516,11 @@ async function loadFeedbacks() {
           '</div>' +
         '</div>' +
       '</div>' +
-      '<div class="fb-content">' + f.content + '</div>' +
+      '<div class="fb-content clamp">' + f.content + '</div>' +
+      '<button class="fb-readmore" type="button" onclick="eaToggleReadMore(this)">Ler mais</button>' +
     '</div>';
   }).join('');
+  eaSetupReadMore(div);
 }
 
 // ═══ MINHAS NOTAS (somente consulta) ═══
@@ -3799,9 +3841,11 @@ async function loadAnnouncements() {
           '</div>' +
         '</div>' +
       '</div>' +
-      '<div class="fb-content">' + a.content + '</div>' +
+      '<div class="fb-content clamp">' + a.content + '</div>' +
+      '<button class="fb-readmore" type="button" onclick="eaToggleReadMore(this)">Ler mais</button>' +
     '</div>';
   }).join('');
+  eaSetupReadMore(div);
 }
 
 // ═══ WRITING ═══

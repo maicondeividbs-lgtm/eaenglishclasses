@@ -283,9 +283,14 @@ export default async function handler(req, res) {
     if (!recipients.length) { res.status(200).json({ skipped: 'no recipient email' }); return; }
 
     let sent = 0; const errors = [];
+    // Assunto único por envio: evita que o Gmail agrupe e-mails diferentes
+    // na mesma conversa (thread). Mantém o assunto original de plan() intacto.
+    const finalSubject = (rec && rec.id)
+      ? `EA • ${p.subject} • ${String(rec.id).slice(0, 6).toUpperCase()}`
+      : p.subject;
     await Promise.all(recipients.map(async (rcpt) => {
       const html = template(p, rcpt.name);   // personalizado pelo nome
-      const out = await sendEmail(rcpt.email, p.subject, html);
+      const out = await sendEmail(rcpt.email, finalSubject, html);
       if (out.ok) sent++; else errors.push(out.status || 'err');
     }));
 

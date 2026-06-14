@@ -4576,13 +4576,29 @@ async function sendAnn() {
   finally { if(btn) { btn.classList.remove('loading'); btn.textContent = btn.dataset.text || 'Publicar Aviso'; } }
 }
 
+async function eaCancelSend(kind, id){
+  if(!confirm('Cancelar este aviso?\n\nEle deixar\u00e1 de aparecer para os destinat\u00e1rios. A a\u00e7\u00e3o fica registrada e pode ser revertida no banco.')) return;
+  try{
+    if(kind==='aviso') await cancelAnnouncement(id);
+    if(typeof popSnd==='function') popSnd();
+    showToast('Aviso cancelado');
+    loadAnnouncementList();
+  }catch(e){ showToast('Erro ao cancelar: '+((e&&e.message)||e),'error'); }
+}
+
 async function loadAnnouncementList() {
-  const anns = await getAnnouncements();
+  const anns = await getAllAnnouncements();
   const div = document.getElementById('annList');
   if (!anns.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📢</div><p>Nenhum aviso publicado.</p></div>'; return; }
   div.innerHTML = anns.map(a => {
     const target = a.target_role ? (a.target_role === 'student' ? 'Alunos' : 'Professores') : 'Todos';
-    return '<div class="list-item"><div><div class="list-title">📢 ' + a.title + '</div><div class="list-sub">' + (a.author?.full_name||'') + ' → ' + target + ' — ' + formatDateTime(a.created_at) + '</div></div><span class="badge badge-time">' + target + '</span></div>';
+    const cancelled = a.cancelled;
+    return '<div class="list-item" style="' + (cancelled ? 'opacity:.65' : '') + '"><div><div class="list-title">📢 ' + a.title + (cancelled ? ' <span class="badge" style="background:#fee2e2;color:#991b1b">🚫 Cancelado</span>' : '') + '</div><div class="list-sub">' + (a.author?.full_name||'') + ' → ' + target + ' — ' + formatDateTime(a.created_at) + '</div></div>' +
+      '<div style="display:flex;align-items:center;gap:8px;flex-shrink:0">' +
+        '<span class="badge badge-time">' + target + '</span>' +
+        (cancelled ? '' : '<button onclick="eaCancelSend(\'aviso\',\'' + a.id + '\')" title="Cancelar aviso" style="border:1px solid #fca5a5;background:#fff;color:#dc2626;padding:5px 11px;border-radius:8px;cursor:pointer;font-size:11px;font-weight:800;font-family:inherit">Cancelar</button>') +
+      '</div>' +
+    '</div>';
   }).join('');
 }
 

@@ -130,7 +130,22 @@ async function getTasksByTeacher(teacherId) {
 
 async function getTasksForStudent(studentId) {
   const { data } = await db.from('task_submissions').select('*, task:tasks(*)').eq('student_id',studentId).order('created_at',{ascending:false});
-  return data || [];
+  // não mostra ao aluno os homeworks cujo envio foi cancelado pelo professor
+  return (data || []).filter(s => !(s.task && s.task.cancelled));
+}
+
+// ═══ CANCELAMENTO DE ENVIOS (marca como cancelado; some para o destinatário) ═══
+async function cancelTask(taskId) {
+  const { error } = await db.from('tasks').update({ cancelled: true, cancelled_at: new Date().toISOString() }).eq('id', taskId);
+  if (error) throw error;
+}
+async function cancelFeedback(feedbackId) {
+  const { error } = await db.from('feedbacks').update({ cancelled: true, cancelled_at: new Date().toISOString() }).eq('id', feedbackId);
+  if (error) throw error;
+}
+async function cancelAnnouncement(announcementId) {
+  const { error } = await db.from('announcements').update({ cancelled: true, cancelled_at: new Date().toISOString() }).eq('id', announcementId);
+  if (error) throw error;
 }
 
 async function markTaskDone(submissionId) {
@@ -150,7 +165,7 @@ async function getFeedbacksByTeacher(teacherId) {
 }
 
 async function getFeedbacksForStudent(studentId) {
-  const { data } = await db.from('feedbacks').select('*, teacher:profiles!feedbacks_teacher_id_fkey(full_name)').eq('student_id',studentId).order('created_at',{ascending:false});
+  const { data } = await db.from('feedbacks').select('*, teacher:profiles!feedbacks_teacher_id_fkey(full_name)').eq('student_id',studentId).eq('cancelled',false).order('created_at',{ascending:false});
   return data || [];
 }
 
@@ -161,7 +176,13 @@ async function createAnnouncement(authorId, title, content, targetRole) {
 }
 
 async function getAnnouncements() {
-  const { data } = await db.from('announcements').select('*, author:profiles!announcements_author_id_fkey(full_name)').order('created_at',{ascending:false}).limit(20);
+  const { data } = await db.from('announcements').select('*, author:profiles!announcements_author_id_fkey(full_name)').eq('cancelled',false).order('created_at',{ascending:false}).limit(20);
+  return data || [];
+}
+
+// Versão para a equipe (professor/coordenação): inclui avisos cancelados, para gerir/auditar
+async function getAllAnnouncements() {
+  const { data } = await db.from('announcements').select('*, author:profiles!announcements_author_id_fkey(full_name)').order('created_at',{ascending:false}).limit(40);
   return data || [];
 }
 
@@ -365,10 +386,11 @@ async function getNotificationItems(userId, role) {
     if (role === 'student') {
       // Homework atribuído (task_submissions pending) — recent
       const subs = await db.from('task_submissions')
-        .select('id, status, created_at, task:tasks(title, teacher:profiles!tasks_teacher_id_fkey(full_name))')
+        .select('id, status, created_at, task:tasks(title, cancelled, teacher:profiles!tasks_teacher_id_fkey(full_name))')
         .eq('student_id', userId).gte('created_at', cutoff)
         .order('created_at', { ascending: false }).limit(10);
       (subs.data || []).forEach(s => {
+        if (s.task && s.task.cancelled) return; // envio cancelado: não notifica
         const isPending = s.status === 'pending';
         items.push({
           type: 'homework', icon: '📝',
@@ -394,7 +416,7 @@ async function getNotificationItems(userId, role) {
       // Feedbacks recebidos
       const fb = await db.from('feedbacks')
         .select('id, title, created_at, teacher:profiles!feedbacks_teacher_id_fkey(full_name)')
-        .eq('student_id', userId).gte('created_at', cutoff)
+        .eq('student_id', userId).eq('cancelled', false).gte('created_at', cutoff)
         .order('created_at', { ascending: false }).limit(10);
       (fb.data || []).forEach(f => {
         items.push({ type: 'feedback', icon: '💬', title: 'Feedback: ' + (f.title||''), sub: (f.teacher?.full_name||'Professor'), when: f.created_at, section: 'feedback' });
@@ -403,7 +425,7 @@ async function getNotificationItems(userId, role) {
       // Avisos (announcements) gerais
       const ann = await db.from('announcements')
         .select('id, title, created_at, author:profiles!announcements_author_id_fkey(full_name)')
-        .gte('created_at', cutoff)
+        .eq('cancelled', false).gte('created_at', cutoff)
         .order('created_at', { ascending: false }).limit(10);
       (ann.data || []).forEach(a => {
         items.push({ type: 'announcement', icon: '📢', title: 'Aviso: ' + (a.title||''), sub: (a.author?.full_name||'EA English'), when: a.created_at, section: 'announcements' });

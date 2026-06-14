@@ -856,6 +856,15 @@ body.sb-collapsed .main { margin-left: 92px !important; }
   display: flex; align-items: flex-start;
   gap: 12px; margin-bottom: 8px;
 }
+.sent-cancel-btn {
+  margin-left: auto; flex-shrink: 0; align-self: flex-start;
+  padding: 6px 13px; border: 1px solid #fca5a5; background: #fff;
+  color: #dc2626; border-radius: 8px; cursor: pointer;
+  font-size: 11px; font-weight: 800; font-family: inherit; transition: all .18s;
+}
+.sent-cancel-btn:hover { background: #dc2626; color: #fff; border-color: #dc2626; }
+.sent-card.sent-cancelled { opacity: .68; }
+.sent-card.sent-cancelled .sent-title { text-decoration: line-through; }
 .sent-icon {
   width: 38px; height: 38px; min-width: 38px;
   border-radius: 10px;
@@ -2430,6 +2439,22 @@ async function sendHomework() {
   }
 }
 
+// ── Cancelamento de envios (marca como cancelado; some para o aluno) ──
+async function eaCancelSend(kind, id){
+  var labels={homework:'este homework',feedback:'este feedback',aviso:'este aviso'};
+  if(!confirm('Cancelar o envio de '+(labels[kind]||'este item')+'?\n\nEle deixar\u00e1 de aparecer para o aluno. A a\u00e7\u00e3o fica registrada e pode ser revertida no banco.')) return;
+  try{
+    if(kind==='homework') await cancelTask(id);
+    else if(kind==='feedback') await cancelFeedback(id);
+    else if(kind==='aviso') await cancelAnnouncement(id);
+    if(typeof popSnd==='function') popSnd();
+    showToast('Envio cancelado');
+    if(kind==='homework') loadHomeworkList();
+    else if(kind==='feedback') loadFeedbackList();
+    else loadAnnouncementList();
+  }catch(e){ showToast('Erro ao cancelar: '+((e&&e.message)||e),'error'); }
+}
+
 async function loadHomeworkList() {
   const tasks = await getTasksByTeacher(currentUser.id);
   const div = document.getElementById('hwList');
@@ -2442,7 +2467,7 @@ async function loadHomeworkList() {
     const done = subs.filter(s => s.status !== 'pending').length;
     const names = subs.map(s => s.student?.full_name || '').filter(Boolean).join(', ') || 'Sem alunos vinculados';
     const totalStudents = subs.length;
-    return '<div class="sent-card">' +
+    return '<div class="sent-card' + (t.cancelled ? ' sent-cancelled' : '') + '">' +
       '<div class="sent-head">' +
         '<div class="sent-icon">' + hwIcon + '</div>' +
         '<div class="sent-body">' +
@@ -2452,10 +2477,12 @@ async function loadHomeworkList() {
             (t.due_date ? '<span class="sent-meta-sep">•</span><span style="display:inline-flex;align-items:center;gap:4px">' + calIcon + 'Prazo: ' + formatDate(t.due_date) + '</span>' : '') +
           '</div>' +
           '<div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">' +
+            (t.cancelled ? '<span class="sent-status" style="background:#fee2e2;color:#991b1b">🚫 Cancelado</span>' : '') +
             (done > 0 ? '<span class="sent-status done">✓ ' + done + ' de ' + totalStudents + ' feito(s)</span>' : '') +
             (pending > 0 ? '<span class="sent-status pending">⏳ ' + pending + ' pendente(s)</span>' : '') +
           '</div>' +
         '</div>' +
+        (t.cancelled ? '' : '<button onclick="eaCancelSend(\'homework\',\'' + t.id + '\')" class="sent-cancel-btn" title="Cancelar envio">Cancelar</button>') +
       '</div>' +
     '</div>';
   }).join('') + '</div>';
@@ -2590,17 +2617,18 @@ async function loadFeedbackList() {
   const fbIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>';
   div.innerHTML = '<div style="padding:12px 0 16px">' + fbs.map(f => {
     const studentName = f.student?.full_name || 'Aluno';
-    return '<div class="sent-card">' +
+    return '<div class="sent-card' + (f.cancelled ? ' sent-cancelled' : '') + '">' +
       '<div class="sent-head">' +
         '<div class="sent-icon">' + fbIcon + '</div>' +
         '<div class="sent-body">' +
-          '<div class="sent-title">' + f.title + '</div>' +
+          '<div class="sent-title">' + f.title + (f.cancelled ? ' <span class="sent-status" style="background:#fee2e2;color:#991b1b;vertical-align:middle">🚫 Cancelado</span>' : '') + '</div>' +
           '<div class="sent-meta">' +
             '<span class="sent-meta-author">Para: ' + studentName + '</span>' +
             '<span class="sent-meta-sep">•</span>' +
             '<span>' + formatDateTime(f.created_at) + '</span>' +
           '</div>' +
         '</div>' +
+        (f.cancelled ? '' : '<button onclick="eaCancelSend(\'feedback\',\'' + f.id + '\')" class="sent-cancel-btn" title="Cancelar envio">Cancelar</button>') +
       '</div>' +
       (f.content ? '<div class="sent-content">' + escapeHtml(f.content) + '</div>' : '') +
     '</div>';
@@ -2894,7 +2922,7 @@ async function sendAnnouncement() {
 }
 
 async function loadAnnouncementList() {
-  const anns = await getAnnouncements();
+  const anns = await getAllAnnouncements();
   const div = document.getElementById('annList');
   const mine = anns.filter(a => a.author_id === currentUser.id);
   if (!mine.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📢</div><p>Nenhum aviso publicado.</p></div>'; return; }
@@ -2902,17 +2930,18 @@ async function loadAnnouncementList() {
   div.innerHTML = '<div style="padding:12px 0 16px">' + mine.map(a => {
     const fullContent = a.content || '';
     const preview = fullContent.length > 140 ? fullContent.substring(0, 140) + '…' : fullContent;
-    return '<div class="sent-card ann">' +
+    return '<div class="sent-card ann' + (a.cancelled ? ' sent-cancelled' : '') + '">' +
       '<div class="sent-head">' +
         '<div class="sent-icon">' + annIcon + '</div>' +
         '<div class="sent-body">' +
-          '<div class="sent-title">' + a.title + '</div>' +
+          '<div class="sent-title">' + a.title + (a.cancelled ? ' <span class="sent-status" style="background:#fee2e2;color:#991b1b;vertical-align:middle">🚫 Cancelado</span>' : '') + '</div>' +
           '<div class="sent-meta">' +
-            '<span class="sent-meta-author">Publicado</span>' +
+            '<span class="sent-meta-author">' + (a.cancelled ? 'Cancelado' : 'Publicado') + '</span>' +
             '<span class="sent-meta-sep">•</span>' +
             '<span>' + formatDateTime(a.created_at) + '</span>' +
           '</div>' +
         '</div>' +
+        (a.cancelled ? '' : '<button onclick="eaCancelSend(\'aviso\',\'' + a.id + '\')" class="sent-cancel-btn" title="Cancelar aviso">Cancelar</button>') +
       '</div>' +
       '<div class="sent-content">' + escapeHtml(preview) + '</div>' +
     '</div>';

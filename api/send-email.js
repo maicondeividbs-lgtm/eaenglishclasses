@@ -175,7 +175,8 @@ function template(p, name) {
     '<meta name="color-scheme" content="light"><meta name="supported-color-schemes" content="light">' +
     '</head>' +
     '<body style="margin:0;padding:0;background:#eef1f7;-webkit-text-size-adjust:100%;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">' +
-    '<div style="display:none;max-height:0;overflow:hidden;opacity:0;mso-hide:all">' + esc(p.heading) + ' — EA English Classes</div>' +
+    '<div style="display:none;max-height:0;max-width:0;overflow:hidden;opacity:0;mso-hide:all;font-size:1px;line-height:1px;color:#eef1f7">' + esc(p.heading) + '</div>' +
+    '<div style="display:none;max-height:0;max-width:0;overflow:hidden;opacity:0;mso-hide:all">' + '&zwnj;&nbsp;'.repeat(70) + '</div>' +
     '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#eef1f7"><tr><td align="center" style="padding:30px 14px">' +
 
     '<table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;background:#ffffff;border-radius:20px;overflow:hidden;border:1px solid #e6e9f1">' +

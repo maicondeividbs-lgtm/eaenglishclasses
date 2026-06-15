@@ -4,8 +4,6 @@
             Ocean Water #c4e7e5 | Brilliant Blue #253c96 | 
             Oiler Navy #19244e
    ═══════════════════════════════════════════════════════ */
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;0,9..144,900;1,9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-
 :root {
   /* New Palette */
   --orange: #f36b2e;
@@ -780,3 +778,6 @@ body.menu-open { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) {
   .wa-float::after { animation: none; }
 }
+
+/* <picture> wrapper neutro: nao afeta layout (img tratado como filho direto) */
+picture{display:contents}

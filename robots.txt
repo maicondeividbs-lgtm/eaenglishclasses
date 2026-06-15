@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /login
+Disallow: /dashboard-aluno
+Disallow: /dashboard-professor
+Disallow: /dashboard-coordenacao
+Disallow: /teste-push
+Disallow: /supabase-email-reset
+Disallow: /api/
+
+Sitemap: https://www.eaenglishclasses.com.br/sitemap.xml

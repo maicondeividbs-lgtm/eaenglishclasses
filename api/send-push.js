@@ -23,7 +23,8 @@ const CAT = {
   pronuncia: { emoji: '🎙️', action: 'Praticar' },
   vocab:     { emoji: '📚', action: 'Estudar' },
   nivel:     { emoji: '🎯', action: 'Ver no painel' },
-  mensagem:  { emoji: '📨', action: 'Ver Mensagem' }
+  mensagem:  { emoji: '📨', action: 'Ver Mensagem' },
+  pergunta:  { emoji: '💬', action: 'Ver no painel' }
 };
 
 async function sbSelect(path) {
@@ -50,7 +51,7 @@ async function nameOf(userId) {
 }
 
 // Define destinatário + conteúdo (títulos claros, humanos e informativos).
-async function resolve(table, rec) {
+async function resolve(table, rec, old) {
   switch (table) {
     case 'task_submissions': {
       const t = await lookupTask(rec.task_id);
@@ -92,6 +93,20 @@ async function resolve(table, rec) {
     case 'announcements':
       return { byRole: rec.target_role || null, cat: 'aviso', title: '📢 ' + (rec.title || 'Novo aviso'),
         body: rec.content ? String(rec.content).slice(0, 120) : (rec.title || 'Há um novo comunicado no painel.') };
+    case 'help_requests': {
+      // Professor respondeu → notifica o ALUNO
+      if (rec.status === 'answered' && rec.answer) {
+        if (old && old.status === 'answered') return null;       // evita re-notificar (ex.: marcar como lido)
+        if (!rec.student_id) return null;
+        return { byUser: rec.student_id, cat: 'pergunta', title: '💬 Resposta do seu professor',
+          body: (rec.subject ? '“' + rec.subject + '” — ' : '') + 'seu professor respondeu sua pergunta.' };
+      }
+      // Nova pergunta (somente na criação) → notifica o PROFESSOR
+      if (old) return null;                                       // updates que não são resposta não notificam
+      if (!rec.teacher_id) return null;
+      return { byUser: rec.teacher_id, cat: 'pergunta', title: '❓ Nova pergunta de aluno',
+        body: (rec.subject ? '“' + rec.subject + '” — ' : '') + 'um aluno enviou uma pergunta para você.' };
+    }
     default:
       return null;
   }
@@ -161,9 +176,10 @@ export default async function handler(req, res) {
 
     const table = body.table || null;
     const rec = body.record || body.new || {};
+    const old = body.old_record || body.old || null;
     if (!table || !rec) { res.status(200).json({ skipped: 'no record' }); return; }
 
-    const r = await resolve(table, rec);
+    const r = await resolve(table, rec, old);
     if (!r) { res.status(200).json({ skipped: 'no mapping' }); return; }
 
     let subs = [];

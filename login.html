@@ -223,6 +223,14 @@
       </div>
       <button type="submit" id="loginBtn" class="btn btn-primary btn-full btn-lg" style="display:flex;align-items:center;justify-content:center;gap:10px"><span id="loginText">Entrar</span><div class="login-spinner" id="loginSpinner"></div></button>
       </form>
+
+      <!-- Definir nova senha (aparece só ao voltar pelo link de recuperação) -->
+      <div id="resetCard" style="display:none">
+        <div id="resetError" style="display:none;padding:12px;background:#fee2e2;border:2px solid #ef4444;border-radius:10px;color:#991b1b;font-size:13px;font-weight:600;text-align:center;margin-bottom:16px"></div>
+        <div class="form-group"><label>Nova senha</label><input type="password" id="newPassword" placeholder="••••••••" minlength="6" autocomplete="new-password"></div>
+        <div class="form-group"><label>Confirmar nova senha</label><input type="password" id="newPassword2" placeholder="••••••••" minlength="6" autocomplete="new-password"></div>
+        <button type="button" id="resetBtn" class="btn btn-primary btn-full btn-lg" style="display:flex;align-items:center;justify-content:center;gap:10px"><span id="resetText">Salvar nova senha</span><div class="login-spinner" id="resetSpinner"></div></button>
+      </div>
       
       
     </div>
@@ -276,6 +284,103 @@ document.getElementById('forgotLink')?.addEventListener('click', async function(
   }
 });
 
+// ═══ Recuperação de senha: definir nova senha ao voltar pelo link do e-mail ═══
+(function () {
+  function isRecoveryUrl() {
+    try {
+      var h = window.location.hash || '';
+      var q = window.location.search || '';
+      return /type=recovery/.test(h) || /type=recovery/.test(q);
+    } catch (e) { return false; }
+  }
+
+  function showResetForm() {
+    window.__eaRecovery = true;
+    var card = document.getElementById('resetCard');
+    var loginForm = document.getElementById('loginForm');
+    var welcome = document.querySelector('.login-welcome');
+    var h2 = document.querySelector('.login-card h2');
+    var sub = document.querySelector('.login-card > p');
+    if (card) card.style.display = 'block';
+    if (loginForm) loginForm.style.display = 'none';
+    if (welcome) welcome.style.display = 'none';
+    if (h2) h2.innerHTML = 'Definir <em>nova</em> senha';
+    if (sub) sub.textContent = 'Crie uma nova senha para acessar sua conta.';
+    setTimeout(function () { document.getElementById('newPassword')?.focus(); }, 60);
+  }
+
+  // 1) Marca a recuperação o quanto antes (síncrono) para impedir o auto-redirect.
+  if (isRecoveryUrl()) window.__eaRecovery = true;
+
+  // 2) Confirmação oficial do Supabase quando ele processa o token do link.
+  try {
+    db.auth.onAuthStateChange(function (event) {
+      if (event === 'PASSWORD_RECOVERY') {
+        if (document.readyState !== 'loading') showResetForm();
+        else document.addEventListener('DOMContentLoaded', showResetForm);
+      }
+    });
+  } catch (e) {}
+
+  // 3) Caso o evento não dispare mas a URL indique recuperação, mostra mesmo assim.
+  if (window.__eaRecovery) {
+    if (document.readyState !== 'loading') showResetForm();
+    else document.addEventListener('DOMContentLoaded', showResetForm);
+  }
+
+  // 4) Salvar a nova senha.
+  function bindReset() {
+    var btn = document.getElementById('resetBtn');
+    if (!btn || btn.dataset.bound) return;
+    btn.dataset.bound = '1';
+    btn.addEventListener('click', async function () {
+      var p1 = document.getElementById('newPassword').value;
+      var p2 = document.getElementById('newPassword2').value;
+      var errBox = document.getElementById('resetError');
+      errBox.style.display = 'none';
+      if (!p1 || p1.length < 6) {
+        errBox.textContent = 'A senha precisa ter pelo menos 6 caracteres.';
+        errBox.style.display = 'block'; return;
+      }
+      if (p1 !== p2) {
+        errBox.textContent = 'As senhas não coincidem. Digite novamente.';
+        errBox.style.display = 'block'; return;
+      }
+      btn.disabled = true;
+      document.getElementById('resetText').textContent = 'Salvando...';
+      document.getElementById('resetSpinner').style.display = 'block';
+      try {
+        var { error } = await db.auth.updateUser({ password: p1 });
+        if (error) throw error;
+        // Encerra a sessão de recuperação e devolve o usuário ao login normal.
+        try { await db.auth.signOut(); } catch (e) {}
+        window.__eaRecovery = false;
+        try { history.replaceState(null, '', window.location.pathname); } catch (e) {}
+        document.getElementById('resetCard').style.display = 'none';
+        var h2 = document.querySelector('.login-card h2');
+        var sub = document.querySelector('.login-card > p');
+        if (h2) h2.innerHTML = 'Bem-<em>vindo</em> de volta!';
+        if (sub) sub.textContent = 'Acesse sua área de membros para continuar.';
+        var loginForm = document.getElementById('loginForm');
+        if (loginForm) loginForm.style.display = '';
+        var ok = document.createElement('div');
+        ok.style.cssText = 'padding:12px;background:#d1fae5;border:2px solid #6ee7b7;border-radius:10px;color:#065f46;font-size:13px;font-weight:600;text-align:center;margin-bottom:16px';
+        ok.textContent = 'Senha atualizada com sucesso! Faça login com a nova senha.';
+        document.getElementById('loginError').insertAdjacentElement('beforebegin', ok);
+      } catch (err) {
+        errBox.textContent = 'Não foi possível atualizar a senha: ' + (err && err.message ? err.message : 'tente novamente.');
+        errBox.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        document.getElementById('resetText').textContent = 'Salvar nova senha';
+        document.getElementById('resetSpinner').style.display = 'none';
+      }
+    });
+  }
+  if (document.readyState !== 'loading') bindReset();
+  else document.addEventListener('DOMContentLoaded', bindReset);
+})();
+
 document.addEventListener('DOMContentLoaded', () => {
   const loginForm = document.getElementById('loginForm');
   const loginBtn = document.getElementById('loginBtn');
@@ -294,8 +399,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Check if already logged in
   (async () => {
+    if (window.__eaRecovery) return;   // em recuperação de senha: não redirecionar
     const profile = await getUserProfile();
     if (profile) {
+      if (window.__eaRecovery) return;
       console.log('[access_logs] Sessão já ativa, registrando acesso...');
       await logStudentAccess(profile.id, profile.full_name, profile.role);
       redirectByRole(profile.role);

@@ -37,6 +37,7 @@ const CATS = {
   vocab:     { color: C.orange, text: '#ffffff', emoji: '📚', label: 'Vocabulário' },
   nivel:     { color: C.navy,   text: '#ffffff', emoji: '🎯', label: 'Nivelamento' },
   mensagem:  { color: C.blue,   text: '#ffffff', emoji: '📨', label: 'Mensagem' },
+  pergunta:  { color: C.blue,   text: '#ffffff', emoji: '💬', label: 'Pergunta' },
   geral:     { color: C.orange, text: '#ffffff', emoji: '✉️', label: 'EA English Classes' }
 };
 
@@ -157,6 +158,24 @@ async function plan(table, rec, old) {
         heading: 'Nova solicitação de nivelamento',
         message: (rec.full_name ? rec.full_name + ' ' : 'Um novo lead ') + 'solicitou uma aula experimental. Confira os detalhes no painel.',
         ctaLabel: 'Ver solicitação', path: '/login' };
+    case 'help_requests': {
+      // Professor respondeu → e-mail para o ALUNO
+      if (rec.status === 'answered' && rec.answer) {
+        if (old && old.status === 'answered') return null;       // não reenviar (ex.: marcar como lido)
+        if (!rec.student_id) return null;
+        return { userIds: [rec.student_id], cat: 'pergunta', subject: '💬 Resposta do seu professor',
+          heading: 'Seu professor respondeu sua pergunta',
+          message: (rec.subject ? '“' + rec.subject + '”. ' : '') + 'A resposta já está disponível no seu painel.',
+          ctaLabel: 'Ver resposta', path: '/login' };
+      }
+      // Nova pergunta (INSERT) → e-mail para o PROFESSOR
+      if (old) return null;                                       // updates que não são resposta não enviam
+      if (!rec.teacher_id) return null;
+      return { userIds: [rec.teacher_id], cat: 'pergunta', subject: '❓ Nova pergunta de aluno',
+        heading: 'Um aluno enviou uma pergunta',
+        message: (rec.subject ? '“' + rec.subject + '”. ' : '') + 'Há uma nova pergunta aguardando a sua resposta no painel.',
+        ctaLabel: 'Responder', path: '/login' };
+    }
     default:
       return null;
   }

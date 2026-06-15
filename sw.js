@@ -4,7 +4,7 @@
    - Supabase/API/CDNs (cross-origin) e POST/PUT passam direto (dados e auth sempre ao vivo).
    - Páginas autenticadas (dashboards/login) nunca são armazenadas em cache.
 */
-const VERSION = 'ea-v9';
+const VERSION = 'ea-v10';
 const CACHE = 'ea-shell-' + VERSION;
 const PRECACHE = [
   '/offline',
@@ -12,6 +12,7 @@ const PRECACHE = [
   '/manifest.webmanifest',
   '/icons/icon-192.png',
   '/icons/icon-512.png',
+  '/icons/Logo_EA.jpg',
   '/icons/notif-icon.png',
   '/icons/notif-badge.png'
 ];
@@ -37,7 +38,7 @@ function eaShowNotification(d) {
   d = d || {};
   var opts = {
     body: d.body || '',
-    icon: '/icons/notif-icon.png',   // navy + EA (aparece bem no recorte circular)
+    icon: '/icons/Logo_EA.jpg',      // logo da escola (aparece grande, recortada em círculo)
     badge: '/icons/notif-badge.png', // monocromático para a barra de status
     vibrate: [60, 30, 60],
     tag: d.tag || 'ea-notif',        // mesma categoria agrupa/atualiza

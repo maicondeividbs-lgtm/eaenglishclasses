@@ -285,14 +285,31 @@ document.getElementById('forgotLink')?.addEventListener('click', async function(
 });
 
 // ═══ Recuperação de senha: definir nova senha ao voltar pelo link do e-mail ═══
+// Aceita os formatos que o Supabase pode enviar:
+//   a) ?token_hash=...&type=recovery   (template recomendado → verifyOtp)
+//   b) #access_token=...&type=recovery (link padrão/ConfirmationURL → fluxo implícito)
+//   c) ?error=...  / #error=...        (link expirado ou já usado → mensagem amigável)
 (function () {
-  function isRecoveryUrl() {
-    try {
-      var h = window.location.hash || '';
-      var q = window.location.search || '';
-      return /type=recovery/.test(h) || /type=recovery/.test(q);
-    } catch (e) { return false; }
+  function parseParams(str) {
+    var out = {};
+    (str || '').replace(/^[#?]/, '').split('&').forEach(function (kv) {
+      if (!kv) return;
+      var i = kv.indexOf('=');
+      var k = i < 0 ? kv : kv.slice(0, i);
+      var v = i < 0 ? '' : kv.slice(i + 1);
+      try { out[decodeURIComponent(k)] = decodeURIComponent(v.replace(/\+/g, ' ')); }
+      catch (e) { out[k] = v; }
+    });
+    return out;
   }
+  var qp = parseParams(window.location.search);
+  var hp = parseParams(window.location.hash);
+  var P = Object.assign({}, qp, hp);
+
+  var hasError = !!(P.error || P.error_code || P.error_description);
+  var isRecovery = (P.type === 'recovery') || !!P.token_hash || (!!P.access_token && P.type === 'recovery');
+
+  function cleanUrl() { try { history.replaceState(null, '', window.location.pathname); } catch (e) {} }
 
   function showResetForm() {
     window.__eaRecovery = true;
@@ -309,26 +326,64 @@ document.getElementById('forgotLink')?.addEventListener('click', async function(
     setTimeout(function () { document.getElementById('newPassword')?.focus(); }, 60);
   }
 
-  // 1) Marca a recuperação o quanto antes (síncrono) para impedir o auto-redirect.
-  if (isRecoveryUrl()) window.__eaRecovery = true;
+  function showLinkError(text) {
+    window.__eaRecovery = false;
+    function paint() {
+      var box = document.getElementById('loginError');
+      if (!box) return;
+      box.textContent = text || 'O link de recuperação expirou ou já foi usado. Clique em “Esqueci a senha” para receber um novo.';
+      box.style.display = 'block';
+    }
+    if (document.readyState !== 'loading') paint();
+    else document.addEventListener('DOMContentLoaded', paint);
+  }
 
-  // 2) Confirmação oficial do Supabase quando ele processa o token do link.
+  // Bloqueia o auto-redirect o quanto antes (síncrono) se há sinal de recuperação.
+  if (isRecovery && !hasError) window.__eaRecovery = true;
+
+  // (a) token_hash → troca explícita por sessão de recuperação (mais robusto).
+  if (P.token_hash && !hasError) {
+    window.__eaRecovery = true;
+    (async function () {
+      try {
+        var { error } = await db.auth.verifyOtp({ type: P.type || 'recovery', token_hash: P.token_hash });
+        if (error) throw error;
+        cleanUrl();
+        if (document.readyState !== 'loading') showResetForm();
+        else document.addEventListener('DOMContentLoaded', showResetForm);
+      } catch (e) {
+        cleanUrl();
+        showLinkError('O link de recuperação expirou ou já foi usado. Solicite um novo em “Esqueci a senha”.');
+      }
+    })();
+  }
+
+  // (c) Erro vindo na URL (ex.: otp_expired).
+  if (hasError) {
+    cleanUrl();
+    showLinkError(P.error_description
+      ? ('Não foi possível abrir o link: ' + P.error_description + '. Solicite um novo em “Esqueci a senha”.')
+      : null);
+  }
+
+  // (b) Fluxo implícito (#access_token...): o Supabase emite PASSWORD_RECOVERY.
   try {
     db.auth.onAuthStateChange(function (event) {
       if (event === 'PASSWORD_RECOVERY') {
+        cleanUrl();
         if (document.readyState !== 'loading') showResetForm();
         else document.addEventListener('DOMContentLoaded', showResetForm);
       }
     });
   } catch (e) {}
 
-  // 3) Caso o evento não dispare mas a URL indique recuperação, mostra mesmo assim.
-  if (window.__eaRecovery) {
+  // Se a URL já indica recuperação sem token_hash (hash implícito), mostra o form.
+  if (isRecovery && !hasError && !P.token_hash) {
     if (document.readyState !== 'loading') showResetForm();
     else document.addEventListener('DOMContentLoaded', showResetForm);
   }
 
-  // 4) Salvar a nova senha.
+  // Salvar a nova senha.
   function bindReset() {
     var btn = document.getElementById('resetBtn');
     if (!btn || btn.dataset.bound) return;

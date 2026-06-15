@@ -2261,6 +2261,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('userAvatar').textContent = (currentUser.full_name || 'P')[0];
   document.getElementById('greeting').textContent = 'Olá, ' + (currentUser.full_name || 'Professor') + '! 👨‍🏫';
 
+  // Registra o acesso do professor/coordenação para o controle de frequência da coordenação.
+  // Uma vez por sessão do navegador, para não inflar a contagem em recargas.
+  try {
+    if (typeof logStudentAccess === 'function' && !sessionStorage.getItem('ea_access_logged')) {
+      logStudentAccess(currentUser.id, currentUser.full_name, currentUser.role);
+      sessionStorage.setItem('ea_access_logged', '1');
+    }
+  } catch(e) { /* não bloqueia o painel */ }
+
   // Sidebar navigation
   document.querySelectorAll('.sb-link').forEach(btn => {
     btn.addEventListener('click', () => {

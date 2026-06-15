@@ -2572,6 +2572,11 @@ body.sb-collapsed .main { margin-left: 92px !important; }
         <span>Meu Perfil</span>
         <span class="tip">Meu Perfil</span>
       </button>
+      <a href="docs/manual-da-coordenacao.pdf" target="_blank" rel="noopener" class="sb-link" style="color:rgba(255,255,255,0.5);margin-bottom:8px">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-6 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm6 13H6v-1c0-2 4-3.1 6-3.1s6 1.1 6 3.1v1z"/></svg>
+        <span>Manual da Coordenação</span>
+        <span class="tip">Manual da Coordenação</span>
+      </a>
       <a href="#" class="sb-logout" onclick="signOut();return false;">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
         <span>Sair</span>
@@ -2737,8 +2742,8 @@ body.sb-collapsed .main { margin-left: 92px !important; }
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
           </div>
           <div class="section-head-text">
-            <h2>Acessos de Alunos</h2>
-            <p class="section-sub">Registro automático de cada vez que um aluno entra na plataforma. Acompanhe a frequência de uso do portal.</p>
+            <h2>Acessos e Frequência</h2>
+            <p class="section-sub">Controle de uso da plataforma: alunos sem acessar há mais de uma semana, professores pouco ativos, aniversariantes da semana e o histórico completo de acessos.</p>
           </div>
         </div>
 
@@ -2750,9 +2755,42 @@ body.sb-collapsed .main { margin-left: 92px !important; }
           <div class="stat-card"><div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg></div><div class="stat-label">Total registrado</div><div class="stat-value" id="accStatTotal">-</div></div>
         </div>
 
+        <!-- Painéis de controle: inativos, frequência de professores, aniversariantes -->
+        <div id="accessControl" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:18px">
+          <div class="panel" style="margin:0">
+            <div class="panel-head">
+              <div class="panel-title"><span class="panel-icon orange">⚠️</span>Alunos inativos (7+ dias)</div>
+              <span class="badge badge-time" id="ctrlInactiveCount">–</span>
+            </div>
+            <div id="ctrlInactiveList" style="max-height:320px;overflow-y:auto">
+              <div class="empty-state" style="padding:24px"><div class="empty-icon">⏳</div><p>Carregando...</p></div>
+            </div>
+          </div>
+
+          <div class="panel" style="margin:0">
+            <div class="panel-head">
+              <div class="panel-title"><span class="panel-icon blue">📉</span>Professores pouco ativos (&lt; 3x/semana)</div>
+              <span class="badge badge-time" id="ctrlTeacherCount">–</span>
+            </div>
+            <div id="ctrlTeacherList" style="max-height:320px;overflow-y:auto">
+              <div class="empty-state" style="padding:24px"><div class="empty-icon">⏳</div><p>Carregando...</p></div>
+            </div>
+          </div>
+
+          <div class="panel" style="margin:0">
+            <div class="panel-head">
+              <div class="panel-title"><span class="panel-icon mango">🎂</span>Aniversariantes da semana</div>
+              <span class="badge badge-time" id="ctrlBirthdayCount">–</span>
+            </div>
+            <div id="ctrlBirthdayList" style="max-height:320px;overflow-y:auto">
+              <div class="empty-state" style="padding:24px"><div class="empty-icon">⏳</div><p>Carregando...</p></div>
+            </div>
+          </div>
+        </div>
+
         <!-- Busca + período -->
         <div class="coord-search-bar">
-          <input type="text" id="accessSearch" placeholder="🔍 Buscar aluno pelo nome..." oninput="filterAccessLogs()">
+          <input type="text" id="accessSearch" placeholder="🔍 Buscar por nome..." oninput="filterAccessLogs()">
           <button onclick="filterAccessByPeriod('all',this)" class="user-filter active">Todos</button>
           <button onclick="filterAccessByPeriod('today',this)" class="user-filter">Hoje</button>
           <button onclick="filterAccessByPeriod('week',this)" class="user-filter">7 dias</button>
@@ -6218,6 +6256,7 @@ async function loadAccessLogs() {
   renderAccessStats();
   accessShown = ACCESS_PAGE;
   applyAccessFilters();
+  loadAccessControl();
 }
 
 function renderAccessStats() {
@@ -6228,7 +6267,7 @@ function renderAccessStats() {
   allAccessCache.forEach(a => {
     const t = new Date(a.accessed_at).getTime();
     if (t >= today0) today++;
-    if (t >= week0) { week++; if (a.user_id) uniqueWeek.add(a.user_id); }
+    if (t >= week0) { week++; if (a.user_id && a.role === 'student') uniqueWeek.add(a.user_id); }
   });
   const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
   set('accStatToday', today);
@@ -6279,11 +6318,12 @@ function applyAccessFilters() {
     const dateStr = d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
     const timeStr = d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
     const ago = (typeof timeAgo === 'function') ? timeAgo(a.accessed_at) : '';
+    const roleLabel = a.role === 'teacher' ? '👨‍🏫 Professor' : (a.role === 'coordinator' ? '🛠️ Coordenação' : '🎓 Aluno');
     return '<div class="list-item" style="display:flex;align-items:center;gap:14px;padding:14px 24px">' +
       '<div style="width:40px;height:40px;border-radius:50%;flex-shrink:0;background:var(--blue-soft);color:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px">' + initial + '</div>' +
       '<div style="flex:1;min-width:0">' +
         '<div style="font-weight:700;color:var(--navy);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + name + '</div>' +
-        '<div style="font-size:12px;color:var(--g500)">🎓 Aluno</div>' +
+        '<div style="font-size:12px;color:var(--g500)">' + roleLabel + '</div>' +
       '</div>' +
       '<div style="text-align:right;flex-shrink:0">' +
         '<div style="font-size:13px;font-weight:700;color:var(--navy)">' + dateStr + ' • ' + timeStr + '</div>' +
@@ -6293,6 +6333,153 @@ function applyAccessFilters() {
   }).join('') + (filtered.length > accessShown
       ? '<div style="text-align:center;padding:18px 0 4px"><button type="button" onclick="eaAccessMore()" style="padding:11px 26px;border:1.5px solid var(--mango);border-radius:10px;background:#fff;color:var(--mango);font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;transition:all .2s" onmouseover="this.style.background=\'var(--mango)\';this.style.color=\'#fff\'" onmouseout="this.style.background=\'#fff\';this.style.color=\'var(--mango)\'">Ver mais (' + (filtered.length - accessShown) + ' restantes)</button></div>'
       : '');
+}
+
+// ═══ CONTROLE: inativos, frequência de professores, aniversariantes ═══
+function eaDaysAgo(ms) {
+  const days = Math.floor((Date.now() - ms) / (24 * 60 * 60 * 1000));
+  if (days <= 0) return 'menos de 1 dia';
+  if (days === 1) return '1 dia';
+  return days + ' dias';
+}
+function eaParseMonthDay(birthday) {
+  // birthday: 'YYYY-MM-DD' — ignora o ano. Retorna {m, d} ou null.
+  if (!birthday || typeof birthday !== 'string') return null;
+  const parts = birthday.split('-');
+  if (parts.length < 3) return null;
+  const m = parseInt(parts[1], 10), d = parseInt(parts[2], 10);
+  if (!m || !d) return null;
+  return { m: m, d: d };
+}
+
+async function loadAccessControl() {
+  let profiles = [], logs = [];
+  try {
+    const res = await Promise.all([ getAllProfiles(), getAccessLogs(1000) ]);
+    profiles = res[0] || [];
+    logs = res[1] || [];
+  } catch (e) {
+    console.error('loadAccessControl error:', e);
+    return;
+  }
+
+  const now = Date.now();
+  const weekAgo = now - 7 * 24 * 60 * 60 * 1000;
+  const latest = {}, weekCount = {};
+  logs.forEach(l => {
+    if (!l.user_id) return;
+    const t = new Date(l.accessed_at).getTime();
+    if (isNaN(t)) return;
+    if (!latest[l.user_id] || t > latest[l.user_id]) latest[l.user_id] = t;
+    if (t >= weekAgo) weekCount[l.user_id] = (weekCount[l.user_id] || 0) + 1;
+  });
+  const isActive = p => p.active !== false;
+
+  // ── Alunos inativos (7+ dias sem acessar, ou nunca) ──
+  const students = profiles.filter(p => p.role === 'student' && isActive(p));
+  const inactive = students
+    .map(s => ({ name: s.full_name || 'Aluno', last: latest[s.id] || null }))
+    .filter(s => !s.last || s.last < weekAgo)
+    .sort((a, b) => (a.last || 0) - (b.last || 0));
+  renderCtrlInactive(inactive, students.length);
+
+  // ── Professores pouco ativos (< 3 acessos nos últimos 7 dias) ──
+  const teachers = profiles.filter(p => p.role === 'teacher' && isActive(p));
+  const lowTeachers = teachers
+    .map(t => ({ name: t.full_name || 'Professor', count: weekCount[t.id] || 0 }))
+    .filter(t => t.count < 3)
+    .sort((a, b) => a.count - b.count);
+  renderCtrlTeachers(lowTeachers, teachers.length);
+
+  // ── Aniversariantes da semana (hoje + 6 dias à frente) ──
+  const bdays = [];
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const weekdayNames = ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado'];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(today.getTime() + i * 24 * 60 * 60 * 1000);
+    const dm = d.getMonth() + 1, dd = d.getDate();
+    profiles.forEach(p => {
+      if (!isActive(p)) return;
+      const md = eaParseMonthDay(p.birthday);
+      if (md && md.m === dm && md.d === dd) {
+        bdays.push({
+          name: p.full_name || 'Usuário',
+          role: p.role,
+          when: i === 0 ? 'Hoje' : (i === 1 ? 'Amanhã' : weekdayNames[d.getDay()].charAt(0).toUpperCase() + weekdayNames[d.getDay()].slice(1)),
+          day: dd, month: dm
+        });
+      }
+    });
+  }
+  renderCtrlBirthdays(bdays);
+}
+
+function renderCtrlInactive(list, total) {
+  const c = document.getElementById('ctrlInactiveCount');
+  if (c) c.textContent = list.length + (total ? ' / ' + total : '');
+  const div = document.getElementById('ctrlInactiveList');
+  if (!div) return;
+  if (!list.length) {
+    div.innerHTML = '<div class="empty-state" style="padding:24px"><div class="empty-icon">✅</div><p>Todos os alunos acessaram nos últimos 7 dias.</p></div>';
+    return;
+  }
+  div.innerHTML = list.map(s => {
+    const initial = (s.name[0] || '?').toUpperCase();
+    const info = s.last ? ('Sem acessar há ' + eaDaysAgo(s.last)) : 'Nunca acessou';
+    return '<div class="list-item" style="display:flex;align-items:center;gap:12px;padding:12px 18px">' +
+      '<div style="width:34px;height:34px;border-radius:50%;flex-shrink:0;background:#fde8dd;color:var(--orange);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px">' + initial + '</div>' +
+      '<div style="flex:1;min-width:0">' +
+        '<div style="font-weight:700;color:var(--navy);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + s.name + '</div>' +
+        '<div style="font-size:11px;color:var(--orange);font-weight:600">' + info + '</div>' +
+      '</div></div>';
+  }).join('');
+}
+
+function renderCtrlTeachers(list, total) {
+  const c = document.getElementById('ctrlTeacherCount');
+  if (c) c.textContent = list.length + (total ? ' / ' + total : '');
+  const div = document.getElementById('ctrlTeacherList');
+  if (!div) return;
+  if (!list.length) {
+    div.innerHTML = '<div class="empty-state" style="padding:24px"><div class="empty-icon">✅</div><p>Todos os professores acessaram pelo menos 3× esta semana.</p></div>';
+    return;
+  }
+  div.innerHTML = list.map(t => {
+    const initial = (t.name[0] || '?').toUpperCase();
+    const lbl = t.count === 0 ? 'Nenhum acesso esta semana' : (t.count + (t.count === 1 ? ' acesso' : ' acessos') + ' esta semana');
+    const accent = t.count === 0 ? 'var(--orange)' : 'var(--g600)';
+    return '<div class="list-item" style="display:flex;align-items:center;gap:12px;padding:12px 18px">' +
+      '<div style="width:34px;height:34px;border-radius:50%;flex-shrink:0;background:var(--blue-soft);color:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px">' + initial + '</div>' +
+      '<div style="flex:1;min-width:0">' +
+        '<div style="font-weight:700;color:var(--navy);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + t.name + '</div>' +
+        '<div style="font-size:11px;color:' + accent + ';font-weight:600">' + lbl + '</div>' +
+      '</div>' +
+      '<div style="font-weight:800;font-size:17px;color:' + (t.count === 0 ? 'var(--orange)' : 'var(--mango)') + ';flex-shrink:0">' + t.count + '×</div>' +
+    '</div>';
+  }).join('');
+}
+
+function renderCtrlBirthdays(list) {
+  const c = document.getElementById('ctrlBirthdayCount');
+  if (c) c.textContent = list.length;
+  const div = document.getElementById('ctrlBirthdayList');
+  if (!div) return;
+  if (!list.length) {
+    div.innerHTML = '<div class="empty-state" style="padding:24px"><div class="empty-icon">🎈</div><p>Nenhum aniversariante nesta semana.</p></div>';
+    return;
+  }
+  const roleLabel = r => r === 'teacher' ? 'Professor' : (r === 'coordinator' ? 'Coordenação' : 'Aluno');
+  div.innerHTML = list.map(b => {
+    const dia = String(b.day).padStart(2, '0') + '/' + String(b.month).padStart(2, '0');
+    return '<div class="list-item" style="display:flex;align-items:center;gap:12px;padding:12px 18px">' +
+      '<div style="width:34px;height:34px;border-radius:50%;flex-shrink:0;background:#fff3e0;display:flex;align-items:center;justify-content:center;font-size:16px">🎂</div>' +
+      '<div style="flex:1;min-width:0">' +
+        '<div style="font-weight:700;color:var(--navy);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + b.name + '</div>' +
+        '<div style="font-size:11px;color:var(--g500)">' + roleLabel(b.role) + ' • ' + dia + '</div>' +
+      '</div>' +
+      '<span style="display:inline-block;background:var(--mango);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;flex-shrink:0">' + b.when + '</span>' +
+    '</div>';
+  }).join('');
 }
 
 // ═══ SIDEBAR NAV HOOKS ═══

@@ -82,7 +82,9 @@ async function getAllProfiles() {
 // Registra um acesso do aluno ao site. Chamado no momento do login.
 async function logStudentAccess(userId, fullName, role) {
   try {
-    if (!userId || role !== 'student') return; // só registramos alunos
+    // Registramos o acesso de alunos, professores e coordenação.
+    // (Professores/coordenação passaram a ser registrados para o controle de frequência.)
+    if (!userId || !role) return;
     const { error } = await db.from('access_logs').insert([{
       user_id: userId,
       full_name: fullName || null,

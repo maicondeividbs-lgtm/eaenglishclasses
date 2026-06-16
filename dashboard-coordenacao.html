@@ -2452,6 +2452,155 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 .user-grid.as-list { display:flex !important; flex-direction:column !important; gap:8px !important; }
 .as-list .user-card { padding:10px 14px !important; }
 .as-list .user-card-avatar { width:38px !important; height:38px !important; min-width:38px !important; }
+/* === HELP REQUESTS (perguntas alunos) === */
+.help-card {
+  background: #fff;
+  border: 1px solid var(--g100);
+  border-radius: 14px;
+  padding: 18px 22px;
+  margin: 0 16px 12px;
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+.help-card::before {
+  content: ''; position: absolute;
+  left: 0; top: 0; bottom: 0; width: 4px;
+  background: linear-gradient(180deg, #f59e0b, #fbbf24);
+  border-radius: 14px 0 0 14px;
+}
+.help-card.answered::before { background: linear-gradient(180deg, #10b981, #34d399); }
+.help-card:hover {
+  transform: translateY(-2px);
+  border-color: transparent;
+  box-shadow: 0 8px 22px rgba(25,36,78,0.07);
+}
+.help-head {
+  display: flex; align-items: flex-start; gap: 12px;
+  margin-bottom: 10px;
+}
+.help-avatar {
+  width: 38px; height: 38px; min-width: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 14px;
+}
+.help-card.answered .help-avatar { background: linear-gradient(135deg, #10b981, #34d399); }
+.help-head-text { flex: 1; min-width: 0; }
+.help-student-name {
+  font-size: 14px; font-weight: 700; color: var(--navy);
+  margin-bottom: 2px;
+}
+.help-meta {
+  font-size: 11.5px; color: var(--g500);
+  display: flex; gap: 8px; align-items: center;
+}
+.help-meta .sent-status { margin-left: auto; }
+.help-question {
+  font-size: 14px; color: var(--g700);
+  line-height: 1.65;
+  padding-left: 50px;
+  margin-bottom: 10px;
+}
+.help-answer {
+  margin-left: 50px;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, rgba(16,185,129,0.06), #fff);
+  border: 1px solid rgba(16,185,129,0.15);
+  border-radius: 12px;
+  font-size: 13.5px; color: var(--g700);
+  line-height: 1.6;
+  position: relative;
+}
+.help-answer::before {
+  content: 'Sua resposta';
+  display: block;
+  font-size: 10.5px; font-weight: 800;
+  color: #059669;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.help-reply-area {
+  margin-left: 50px;
+  margin-top: 8px;
+}
+.help-reply-area textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid var(--g200);
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 13.5px;
+  color: var(--navy);
+  background: var(--off-white);
+  outline: none;
+  resize: vertical;
+  min-height: 64px;
+  transition: all 0.2s;
+}
+.help-reply-area textarea:focus {
+  border-color: var(--orange);
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(243,107,46,0.08);
+}
+.help-reply-btn {
+  margin-top: 8px;
+  padding: 9px 16px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--orange), var(--mango));
+  color: #fff;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex; align-items: center; gap: 6px;
+  box-shadow: 0 4px 12px rgba(243,107,46,0.20);
+  transition: all 0.2s;
+}
+.help-reply-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(243,107,46,0.30);
+}
+.help-reply-btn svg { width: 14px; height: 14px; }
+
+/* === MINHAS TAREFAS — periodicidade / fixas === */
+.coord-todo-row select.todo-recur{
+  padding:11px 12px;border:1.5px solid var(--g100);border-radius:10px;
+  font-family:inherit;font-size:13px;background:#fff;color:var(--navy);
+  outline:none;cursor:pointer;transition:all 0.2s;max-width:170px;
+}
+.coord-todo-row select.todo-recur:focus{border-color:var(--orange);box-shadow:0 0 0 4px rgba(243,107,46,0.06);}
+.todo-chip{
+  display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:800;
+  padding:2px 8px;border-radius:20px;letter-spacing:.02em;white-space:nowrap;
+  background:rgba(37,60,150,0.10);color:var(--blue,#253c96);
+}
+.todo-chip.is-due{background:rgba(243,107,46,0.12);color:var(--orange);}
+.todo-next{font-size:10.5px;color:var(--g500);white-space:nowrap;}
+@media (max-width:440px){ .coord-todo-row select.todo-recur{max-width:100%;width:100%;} }
+
+/* === NIVELAMENTO — detalhes do agendamento === */
+.niv-sched{
+  margin-top:10px;padding:12px 14px;border:1px dashed rgba(37,60,150,0.25);
+  border-radius:12px;background:rgba(37,60,150,0.04);
+}
+.niv-sched-head{
+  display:flex;align-items:center;gap:6px;font-size:11px;font-weight:800;
+  text-transform:uppercase;letter-spacing:.05em;color:var(--blue,#253c96);margin-bottom:8px;
+}
+.niv-sched-head svg{width:14px;height:14px;}
+.niv-sched-chips{display:flex;flex-wrap:wrap;gap:8px;}
+.niv-sched-chip{
+  display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;
+  padding:4px 11px;border-radius:20px;background:#fff;border:1px solid var(--g100);color:var(--g700);
+}
+.niv-sched-chip svg{width:13px;height:13px;color:var(--g400);flex-shrink:0;}
+.niv-sched-notes{margin-top:8px;font-size:12.5px;color:var(--g600);line-height:1.5;font-style:italic;}
+.niv-act-btn.niv-act-detail{background:rgba(37,60,150,0.08);color:var(--blue,#253c96);border:1px solid rgba(37,60,150,0.18);}
+.niv-act-btn.niv-act-detail:hover{background:rgba(37,60,150,0.14);}
 </style>
 <!-- PWA / App -->
 <link rel="manifest" href="/manifest.webmanifest">
@@ -2512,6 +2661,12 @@ body.sb-collapsed .main { margin-left: 92px !important; }
             <span>Msg → Professor</span>
             <span id="msgCount" class="sb-count zero">0</span>
             <span class="tip">Msg → Professor</span>
+          </button>
+          <button class="sb-link" data-section="help-requests">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 12h-2v-2h2v2zm1.07-7.75-.9.92c-.5.51-.86.97-1.04 1.69-.08.32-.13.68-.13 1.14h-2v-.5c0-.46.08-.9.22-1.31.2-.58.53-1.1.95-1.52l1.24-1.26c.46-.44.68-1.1.55-1.8-.13-.72-.69-1.33-1.39-1.53-1.11-.31-2.14.32-2.47 1.27-.12.37-.43.65-.82.65h-.3C8.4 5 8 4.44 8.16 3.88c.43-1.47 1.68-2.59 3.23-2.83 1.52-.24 2.97.55 3.74 1.87.85 1.46.54 3.16-.8 4.33z"/></svg>
+            <span>Perguntas</span>
+            <span id="helpCount" class="sb-count zero">0</span>
+            <span class="tip">Perguntas dos Alunos</span>
           </button>
         </div>
       </div>
@@ -2635,6 +2790,13 @@ body.sb-collapsed .main { margin-left: 92px !important; }
           <div style="padding:18px 22px">
             <div class="coord-todo-row">
               <input type="text" id="todoInput" placeholder="Nova tarefa..." onkeydown="if(event.key==='Enter')addTodo()">
+              <select id="todoRecur" class="todo-recur" title="Periodicidade da tarefa">
+                <option value="none">Avulsa</option>
+                <option value="daily">🔁 Todo dia</option>
+                <option value="weekly">🔁 1x por semana</option>
+                <option value="biweekly">🔁 A cada 15 dias</option>
+                <option value="monthly">🔁 1x por mês</option>
+              </select>
               <button onclick="addTodo()">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 Adicionar
@@ -3350,6 +3512,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
         </div>
         <div class="form-card">
           <div class="f-group"><label>Professor</label><select id="msgTeacher"><option value="">Selecione o professor</option></select></div>
+          <div class="f-group"><label>Assunto</label><input type="text" id="msgTitle" placeholder="Ex: Aviso sobre horários"></div>
           <div class="f-group"><label>Mensagem</label><textarea id="msgContent" rows="3" placeholder="Escreva a mensagem..."></textarea></div>
           <button class="btn-send" onclick="sendMsg()">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
@@ -3359,6 +3522,29 @@ body.sb-collapsed .main { margin-left: 92px !important; }
         <div class="panel">
           <div class="panel-head"><div class="panel-title"><span class="panel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>Mensagens Enviadas</div></div>
           <div id="msgList"><div class="empty-state"><div class="empty-icon">📩</div><p>Nenhuma mensagem.</p></div></div>
+        </div>
+      </div>
+
+      <!-- ═══ PERGUNTAS DOS ALUNOS ═══ -->
+      <div class="section" id="sec-help-requests">
+        <div class="section-head">
+          <div class="section-head-icon pink">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/><circle cx="12" cy="12" r="10"/></svg>
+          </div>
+          <div class="section-head-text">
+            <h2>Perguntas dos Alunos</h2>
+            <p class="section-sub">Dúvidas enviadas pelos seus alunos pelo botão “Pedir ajuda”. Responda — eles são notificados automaticamente.</p>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title"><span class="panel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>Dúvidas recebidas</div>
+          </div>
+          <div style="padding:16px 24px;background:var(--cream);font-size:13px;color:var(--g700);border-bottom:1px solid var(--g100);display:flex;gap:10px;align-items:flex-start">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--mango)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><path d="M9 11H1l8-8 8 8h-8v8z"/><circle cx="18" cy="6" r="3"/></svg>
+            <span>Aparecem aqui as perguntas dos alunos que têm você como professor. Responda com calma — o aluno recebe a resposta na hora.</span>
+          </div>
+          <div id="coHelpList"><div class="empty-state"><div class="empty-icon">💬</div><p>Nenhuma pergunta recebida ainda.</p></div></div>
         </div>
       </div>
 
@@ -3721,7 +3907,7 @@ function recalcFinal(){const adj=toolAdjustments.reduce((s,a)=>s+a.val,0);const 
 <script src="app-fx.js" defer></script>
 <script>
 let currentUser = null;
-const sections = {"overview":"Visão Geral","users":"Usuários","access":"Acessos de Alunos","schedules":"Schedules","nivelamento":"Nivelamentos","supervision":"Supervisão","homework":"Homeworks","feedbacks":"Feedbacks","announcements":"Avisos","messages":"Msg → Professor","writing":"Redações","pronunciation-coord":"Pronúncias","documents":"Notas de Avaliações","testimonials":"Depoimentos","teach":"Área do Professor","tool":"Ferramenta","my-students":"Meus Alunos","my-profile":"Meu Perfil"};
+const sections = {"overview":"Visão Geral","users":"Usuários","access":"Acessos de Alunos","schedules":"Schedules","nivelamento":"Nivelamentos","supervision":"Supervisão","homework":"Homeworks","feedbacks":"Feedbacks","announcements":"Avisos","messages":"Msg → Professor","help-requests":"Perguntas","writing":"Redações","pronunciation-coord":"Pronúncias","documents":"Notas de Avaliações","testimonials":"Depoimentos","teach":"Área do Professor","tool":"Ferramenta","my-students":"Meus Alunos","my-profile":"Meu Perfil"};
 
 // ═══ INIT ═══
 // ═══ COLLAPSIBLE SIDEBAR ═══
@@ -3988,8 +4174,40 @@ async function sendTeachPr() {
 }
 
 // ═══ TO-DO LIST (localStorage) ═══
-function getTodos(){try{return JSON.parse(localStorage.getItem('ea_todos')||'[]');}catch(e){return [];}}
+// ── Minhas Tarefas (com periodicidade / tarefas fixas) ──
+var TODO_RECUR_LABEL={none:'',daily:'Todo dia',weekly:'1x/semana',biweekly:'A cada 15 dias',monthly:'1x/mês'};
+function todoPeriodDays(r){return {daily:1,weekly:7,biweekly:15,monthly:30}[r]||0;}
+function todoEsc(x){return String(x==null?'':x).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+// Tarefas fixas concluídas voltam a aparecer quando o período se cumpre.
+function todoRollover(list){
+  var now=Date.now(),changed=false;
+  list.forEach(function(t){
+    if(t&&t.recur&&t.recur!=='none'&&t.done&&t.doneAt){
+      var days=todoPeriodDays(t.recur);
+      if(days>0 && (now-new Date(t.doneAt).getTime())>=days*86400000){
+        t.done=false; t.doneAt=null; changed=true;
+      }
+    }
+  });
+  return changed;
+}
+function getTodos(){
+  var list;
+  try{list=JSON.parse(localStorage.getItem('ea_todos')||'[]');}catch(e){return [];}
+  if(!Array.isArray(list))return [];
+  if(todoRollover(list)){localStorage.setItem('ea_todos',JSON.stringify(list));}
+  return list;
+}
 function saveTodos(list){localStorage.setItem('ea_todos',JSON.stringify(list));}
+function todoNextLabel(t){
+  if(!t.recur||t.recur==='none'||!t.done||!t.doneAt)return '';
+  var days=todoPeriodDays(t.recur); if(!days)return '';
+  var next=new Date(new Date(t.doneAt).getTime()+days*86400000);
+  var d=Math.ceil((next.getTime()-Date.now())/86400000);
+  if(d<=0)return 'reaparece hoje';
+  if(d===1)return 'volta amanhã';
+  return 'volta em '+d+' dias';
+}
 function renderTodos(){
   var list=getTodos();
   document.getElementById('todoCount').textContent=list.filter(function(t){return !t.done;}).length;
@@ -3997,30 +4215,43 @@ function renderTodos(){
   if(!list.length){div.innerHTML='<div style="text-align:center;color:var(--g400);font-size:13px;padding:10px">Nenhuma tarefa ainda.</div>';return;}
   div.innerHTML=list.map(function(t,i){
     var style=t.done?'text-decoration:line-through;opacity:0.5':'';
+    var isFixed=t.recur&&t.recur!=='none';
+    var chip='';
+    if(isFixed){
+      var due=!t.done;
+      chip='<span class="todo-chip'+(due?' is-due':'')+'">🔁 '+todoEsc(TODO_RECUR_LABEL[t.recur]||'Fixa')+'</span>';
+    }
+    var nextLbl=todoNextLabel(t);
+    var nextHtml=nextLbl?'<span class="todo-next">'+todoEsc(nextLbl)+'</span>':'';
     return '<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--g100);'+style+'">'+
-    '<input type="checkbox" '+(t.done?'checked':'')+' onchange="toggleTodo('+i+')" style="width:18px;height:18px;cursor:pointer;accent-color:var(--mango)">'+
-    '<span style="flex:1;font-size:13px;color:var(--navy)">'+t.text+'</span>'+
-    '<button onclick="deleteTodo('+i+')" style="border:none;background:none;color:var(--g400);cursor:pointer;font-size:14px;padding:4px">✕</button></div>';
+    '<input type="checkbox" '+(t.done?'checked':'')+' onchange="toggleTodo('+i+')" style="width:18px;height:18px;cursor:pointer;accent-color:var(--mango);flex-shrink:0">'+
+    '<span style="flex:1;min-width:0;font-size:13px;color:var(--navy)">'+todoEsc(t.text)+'</span>'+
+    chip+nextHtml+
+    '<button onclick="deleteTodo('+i+')" title="Excluir" style="border:none;background:none;color:var(--g400);cursor:pointer;font-size:14px;padding:4px;flex-shrink:0">✕</button></div>';
   }).join('');
 }
 function addTodo(){
   var input=document.getElementById('todoInput');
   var text=input.value.trim();
   if(!text)return;
+  var rcEl=document.getElementById('todoRecur');
+  var recur=rcEl?rcEl.value:'none';
   var list=getTodos();
-  list.unshift({text:text,done:false,date:new Date().toISOString()});
+  list.unshift({text:text,done:false,recur:recur,doneAt:null,date:new Date().toISOString()});
   saveTodos(list);
   input.value='';
+  if(rcEl)rcEl.value='none';
   renderTodos();
-  
-
 }
-function toggleTodo(i){var list=getTodos();list[i].done=!list[i].done;saveTodos(list);renderTodos();
-  
+function toggleTodo(i){
+  var list=getTodos();
+  if(!list[i])return;
+  list[i].done=!list[i].done;
+  if(list[i].recur&&list[i].recur!=='none'){ list[i].doneAt=list[i].done?new Date().toISOString():null; }
+  saveTodos(list);
+  renderTodos();
 }
-function deleteTodo(i){var list=getTodos();list.splice(i,1);saveTodos(list);renderTodos();
-  
-}
+function deleteTodo(i){var list=getTodos();list.splice(i,1);saveTodos(list);renderTodos();}
 
 function showSkeleton(containerId, count) {
   var el = document.getElementById(containerId);
@@ -4344,6 +4575,9 @@ async function loadOverview() {
 // ═══ NIVELAMENTOS ═══
 // ═══ NIVELAMENTOS & LEADS ═══
 let _nivItems = [];
+
+let _nivTeachers = [];
+let _nivTeacherMap = {};
 let _nivFilter = 'all';
 let _nivSearch = '';
 
@@ -4355,6 +4589,11 @@ async function loadNivelamentos() {
   } catch(e) {
     _nivItems = [];
   }
+  try {
+    if (!_nivTeachers.length) _nivTeachers = await getAllTeachers() || [];
+  } catch(e) { _nivTeachers = _nivTeachers || []; }
+  _nivTeacherMap = {};
+  _nivTeachers.forEach(function(t){ _nivTeacherMap[t.id] = t.full_name; });
   nivUpdateStats();
   nivWireControls();
   renderNivList();
@@ -4511,6 +4750,9 @@ function nivCardHtml(p) {
       '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8.9-.9 1.1-.2.2-.3.2-.6.1-1.8-.9-3-1.6-4.2-3.6-.3-.5.3-.5.9-1.6.1-.2 0-.4 0-.5s-.7-1.6-.9-2.2c-.2-.6-.5-.5-.7-.5H8c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3 1.8.8 2.5.8 3.4.7.5-.1 1.8-.7 2-1.5.3-.8.3-1.4.2-1.5zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.2-1.3c1.4.7 3 1.1 4.8 1.1 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>WhatsApp</a>';
   }
   actions += '<a href="' + emailUrl + '" class="niv-act-btn niv-act-email">' + icoMail + 'E-mail</a>';
+  actions += '<button type="button" class="niv-act-btn niv-act-detail" onclick="openNivDetail(' + p.id + ')">' +
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>' +
+    (nivHasDetail(p) ? 'Editar detalhes' : 'Detalhes / Agendar') + '</button>';
   if (isPending) {
     actions += '<button type="button" class="niv-act-btn niv-act-contact" onclick="markContacted(' + p.id + ",'" + safeEmail + "','" + safeName + '\')">' +
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Marcar contatado</button>';
@@ -4519,6 +4761,8 @@ function nivCardHtml(p) {
     actions += '<button type="button" class="niv-act-btn niv-act-revert" onclick="revertContacted(' + p.id + ')">' +
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>Reabrir</button>';
   }
+
+  const schedRow = nivSchedHtml(p);
 
   return '<div class="niv-lead ' + (isPending ? 'is-pending' : 'is-contacted') + '">' +
     '<div class="niv-lead-body">' +
@@ -4532,10 +4776,87 @@ function nivCardHtml(p) {
         infoRow +
         chipsRow +
         msgRow +
+        schedRow +
       '</div>' +
       '<div class="niv-lead-actions">' + actions + '</div>' +
     '</div>' +
   '</div>';
+}
+
+// — Detalhes do nivelamento (agendamento interno da coordenação) —
+function nivHasDetail(p){
+  return !!(p && (p.scheduled_date || p.scheduled_time || p.assigned_teacher_id || p.assigned_book || p.assigned_level || p.coord_notes));
+}
+function nivSchedHtml(p){
+  if(!nivHasDetail(p)) return '';
+  var icoCal='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>';
+  var icoBook='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>';
+  var icoLvl='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>';
+  var icoTeach='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.66 4 3 6 3s6-1.34 6-3v-5"/></svg>';
+  var chips='';
+  if(p.scheduled_date || p.scheduled_time){
+    var dt=[p.scheduled_date?formatDate(p.scheduled_date):'', p.scheduled_time||''].filter(Boolean).join(' · ');
+    chips+='<span class="niv-sched-chip">'+icoCal+nivEsc(dt)+'</span>';
+  }
+  if(p.assigned_level) chips+='<span class="niv-sched-chip">'+icoLvl+nivEsc(p.assigned_level)+'</span>';
+  if(p.assigned_book)  chips+='<span class="niv-sched-chip">'+icoBook+nivEsc(p.assigned_book)+'</span>';
+  if(p.assigned_teacher_id){
+    var tn=_nivTeacherMap[p.assigned_teacher_id]||'Professor';
+    chips+='<span class="niv-sched-chip">'+icoTeach+'Prof. '+nivEsc(tn)+'</span>';
+  }
+  var notes=p.coord_notes?'<div class="niv-sched-notes">“'+nivEsc(p.coord_notes)+'”</div>':'';
+  return '<div class="niv-sched"><div class="niv-sched-head">'+icoCal+'Aula experimental agendada</div><div class="niv-sched-chips">'+chips+'</div>'+notes+'</div>';
+}
+
+function openNivDetail(id){
+  var p=_nivItems.find(function(x){return x.id===id;});
+  if(!p)return;
+  document.getElementById('nivDetailId').value=id;
+  document.getElementById('nivDetailWho').textContent=(p.full_name||'Lead')+(p.email?(' — '+p.email):'');
+  document.getElementById('nivDetailDate').value=p.scheduled_date?String(p.scheduled_date).slice(0,10):'';
+  document.getElementById('nivDetailTime').value=p.scheduled_time||'';
+  document.getElementById('nivDetailLevel').value=p.assigned_level||'';
+  document.getElementById('nivDetailBook').value=p.assigned_book||'';
+  document.getElementById('nivDetailNotes').value=p.coord_notes||'';
+  // popular professores
+  var sel=document.getElementById('nivDetailTeacher');
+  sel.innerHTML='<option value="">Selecione o professor</option>';
+  _nivTeachers.forEach(function(t){
+    var o=document.createElement('option'); o.value=t.id; o.textContent=t.full_name;
+    if(p.assigned_teacher_id===t.id)o.selected=true;
+    sel.appendChild(o);
+  });
+  document.getElementById('nivDetailModal').style.display='flex';
+}
+function closeNivDetail(){ document.getElementById('nivDetailModal').style.display='none'; }
+async function saveNivDetail(){
+  var id=document.getElementById('nivDetailId').value;
+  if(!id)return;
+  var payload={
+    scheduled_date: document.getElementById('nivDetailDate').value||null,
+    scheduled_time: document.getElementById('nivDetailTime').value||null,
+    assigned_level: document.getElementById('nivDetailLevel').value.trim()||null,
+    assigned_book:  document.getElementById('nivDetailBook').value||null,
+    assigned_teacher_id: document.getElementById('nivDetailTeacher').value||null,
+    coord_notes: document.getElementById('nivDetailNotes').value.trim()||null
+  };
+  // id pode ser numérico ou uuid — normaliza para o filtro
+  var idVal = (typeof id==='string' && /^[0-9]+$/.test(id)) ? Number(id) : id;
+  try{
+    const { error } = await db.from('placement_tests').update(payload).eq('id', idVal);
+    if(error) throw error;
+    var item=_nivItems.find(function(x){return String(x.id)===String(id);});
+    if(item){ for(var k in payload){ item[k]=payload[k]; } }
+    showToast('Detalhes do nivelamento salvos!');
+    closeNivDetail();
+    renderNivList();
+  }catch(e){
+    if(/column|does not exist|schema cache/i.test(e.message||'')){
+      showToast('Rode o SQL nivelamento_detalhes.sql no Supabase para criar os campos.','error');
+    }else{
+      showToast('Erro: '+e.message,'error');
+    }
+  }
 }
 
 // ═══ HOMEWORKS SUPERVISION ═══
@@ -4666,6 +4987,74 @@ async function loadMsgList() {
   if (!msgs || !msgs.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📩</div><p>Nenhuma mensagem enviada.</p></div>'; return; }
   div.innerHTML = msgs.map(m => '<div class="list-item"><div><div class="list-title">📩 ' + m.title + '</div><div class="list-sub">→ ' + (m.teacher?.full_name||'?') + ' — ' + formatDateTime(m.created_at) + '</div></div><span class="badge ' + (m.read ? 'badge-done' : 'badge-pending') + '">' + (m.read ? 'Lida' : 'Não lida') + '</span></div>').join('');
 }
+
+// ═══ PERGUNTAS DOS ALUNOS (coordenação como professor) ═══
+async function loadCoordHelp() {
+  const div = document.getElementById('coHelpList');
+  if (!div) return;
+  let items;
+  try {
+    items = await getHelpRequestsForTeacher(currentUser.id);
+  } catch(e) {
+    div.innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><p>Tabela <code>help_requests</code> ainda não foi criada no Supabase. Rode o arquivo <code>help_requests.sql</code>.</p></div>';
+    return;
+  }
+  // badge da sidebar = perguntas ainda sem resposta
+  const open = (items||[]).filter(h => h.status !== 'answered').length;
+  const badge = document.getElementById('helpCount');
+  if (badge) { badge.textContent = open; badge.classList.toggle('zero', open === 0); }
+
+  if (!items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">💬</div><p>Nenhuma pergunta recebida ainda.</p></div>'; return; }
+
+  div.innerHTML = '<div style="padding:12px 0 16px">' + items.map(h => {
+    const isAnswered = h.status === 'answered';
+    const studentName = (h.student && h.student.full_name) || 'Aluno';
+    const initial = studentName.charAt(0).toUpperCase();
+    const subjectTag = h.subject ? '<span class="sent-status pending" style="margin-left:8px">📌 ' + nivEsc(h.subject) + '</span>' : '';
+    const statusBadge = isAnswered
+      ? '<span class="sent-status done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Respondida</span>'
+      : '<span class="sent-status pending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Aguardando</span>';
+    const answerSection = isAnswered
+      ? '<div class="help-answer">' + nivEsc(h.answer || '') + (h.answered_at ? '<div style="font-size:11px;color:var(--g500);margin-top:6px;font-style:italic">Respondida em ' + formatDateTime(h.answered_at) + '</div>' : '') + '</div>'
+      : '<div class="help-reply-area">' +
+          '<textarea id="coHelpAns-' + h.id + '" rows="3" placeholder="Sua resposta..."></textarea>' +
+          '<button onclick="submitCoordHelpAnswer(\'' + h.id + '\')" class="help-reply-btn">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>' +
+            'Responder' +
+          '</button>' +
+        '</div>';
+
+    return '<div class="help-card' + (isAnswered ? ' answered' : '') + '">' +
+      '<div class="help-head">' +
+        '<div class="help-avatar">' + nivEsc(initial) + '</div>' +
+        '<div class="help-head-text">' +
+          '<div class="help-student-name">' + nivEsc(studentName) + subjectTag + '</div>' +
+          '<div class="help-meta">' +
+            '<span>' + formatDateTime(h.created_at) + '</span>' +
+            statusBadge +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="help-question">' + nivEsc(h.message) + '</div>' +
+      answerSection +
+    '</div>';
+  }).join('') + '</div>';
+}
+
+async function submitCoordHelpAnswer(requestId) {
+  const ta = document.getElementById('coHelpAns-' + requestId);
+  if (!ta) return;
+  const answer = ta.value.trim();
+  if (!answer) { showToast('Escreva uma resposta.', 'error'); return; }
+  try {
+    await answerHelpRequest(requestId, answer);
+    showToast('Resposta enviada! O aluno será notificado.');
+    loadCoordHelp();
+  } catch(e) {
+    showToast('Erro: ' + e.message, 'error');
+  }
+}
+
 
 
 
@@ -6502,6 +6891,7 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'announcements': loadAnnouncementList(); break;
       case 'announcements': loadAnnouncementList(); break;
       case 'messages': loadMsgList(); break;
+      case 'help-requests': loadCoordHelp(); break;
       case 'pronunciation-coord': loadPronunciationCoord(); break;
       case 'documents': loadDocStudents(); break;
       case 'testimonials': loadTestimonials(); break;
@@ -7040,5 +7430,42 @@ async function submitGrade() {
   if (m) m.addEventListener('click', function(e){ if (e.target === m) m.style.display = 'none'; });
 })();
 </script>
+
+<!-- Modal global (fora das seções) -->
+        <!-- Modal: Detalhes do Nivelamento -->
+        <div id="nivDetailModal" role="dialog" aria-modal="true" aria-label="Detalhes do nivelamento" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.5);align-items:center;justify-content:center">
+          <div style="background:#fff;border-radius:20px;padding:32px;max-width:520px;width:90%;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,0.2)">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+              <h3 style="font-size:20px;font-weight:800;color:var(--navy)">📅 Detalhes do Nivelamento</h3>
+              <button onclick="closeNivDetail()" style="border:none;background:var(--g100);width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:16px">✕</button>
+            </div>
+            <div id="nivDetailWho" style="font-size:13px;color:var(--g500);margin-bottom:18px"></div>
+            <input type="hidden" id="nivDetailId">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <div class="f-group"><label>Data da aula experimental</label><input type="date" id="nivDetailDate"></div>
+              <div class="f-group"><label>Horário</label><input type="time" id="nivDetailTime"></div>
+            </div>
+            <div class="f-group"><label>Nível do aluno</label>
+              <input type="text" id="nivDetailLevel" placeholder="Ex: A2 / Interchange 2" list="nivLevelOpts">
+              <datalist id="nivLevelOpts"><option value="A1"><option value="A2"><option value="B1"><option value="B2"><option value="C1"><option value="C2"></datalist>
+            </div>
+            <div class="f-group"><label>Livro / Curso</label>
+              <select id="nivDetailBook">
+                <option value="">A definir</option>
+                <option value="Interchange Intro">Interchange Intro</option>
+                <option value="Interchange 1">Interchange 1</option>
+                <option value="Interchange 2">Interchange 2</option>
+                <option value="Interchange 3">Interchange 3</option>
+                <option value="Evolve 5">Evolve 5</option>
+                <option value="Evolve 6">Evolve 6</option>
+              </select>
+            </div>
+            <div class="f-group"><label>Professor da aula experimental</label>
+              <select id="nivDetailTeacher"><option value="">Selecione o professor</option></select>
+            </div>
+            <div class="f-group"><label>Observações</label><textarea id="nivDetailNotes" rows="3" placeholder="Anotações internas sobre o lead / agendamento..."></textarea></div>
+            <button class="btn-send" style="background:var(--mango)" onclick="saveNivDetail()">Salvar Detalhes</button>
+          </div>
+        </div>
 </body>
 </html>

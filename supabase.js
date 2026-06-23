@@ -79,12 +79,26 @@ async function getAllProfiles() {
 }
 
 // ═══ ACCESS LOGS (Registro de acessos de alunos) ═══
-// Registra um acesso do aluno ao site. Chamado no momento do login.
+// Registra um acesso ao site. Chamado no login e ao abrir os painéis.
+// TRAVA CENTRAL: para não duplicar (login + dashboard + reaberturas do PWA),
+// registra no máximo 1 acesso por usuário a cada 30 min por dispositivo.
+// A trava fica AQUI (fonte única) usando localStorage — que persiste entre
+// abas e cold starts do PWA, ao contrário do sessionStorage usado nas páginas.
 async function logStudentAccess(userId, fullName, role) {
   try {
-    // Registramos o acesso de alunos, professores e coordenação.
-    // (Professores/coordenação passaram a ser registrados para o controle de frequência.)
     if (!userId || !role) return;
+
+    const WINDOW_MS = 30 * 60 * 1000; // 30 minutos
+    const key = 'ea_acc_ts_' + userId;
+
+    // Já registrou recentemente? Então ignora (evita o registro em duplicidade).
+    try {
+      const last = parseInt(localStorage.getItem(key) || '0', 10);
+      if (last && (Date.now() - last) < WINDOW_MS) {
+        return;
+      }
+    } catch (_) { /* localStorage indisponível: segue e registra mesmo assim */ }
+
     const { error } = await db.from('access_logs').insert([{
       user_id: userId,
       full_name: fullName || null,
@@ -93,9 +107,11 @@ async function logStudentAccess(userId, fullName, role) {
     if (error) {
       // Não bloqueia o login, mas deixa o erro claro no console para diagnóstico.
       console.error('[access_logs] Falha ao registrar acesso:', error.message, error);
-    } else {
-      console.log('[access_logs] Acesso registrado com sucesso.');
+      return;
     }
+    // Marca o horário SÓ após o insert dar certo (assim um erro não suprime o próximo).
+    try { localStorage.setItem(key, String(Date.now())); } catch (_) {}
+    console.log('[access_logs] Acesso registrado com sucesso.');
   } catch (e) {
     // Falha no registro não deve bloquear o login
     console.error('[access_logs] Exceção ao registrar acesso:', e);

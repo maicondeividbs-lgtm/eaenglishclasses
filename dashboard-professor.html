@@ -1708,6 +1708,10 @@ body.sb-collapsed .main { margin-left: 92px !important; }
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
         <span>Meus Alunos</span>
       </button>
+      <button class="sb-link" data-section="access" data-tip="Acessos dos Alunos">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5C21.27 7.61 17 4.5 12 4.5zm0 12a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9zm0-7A2.5 2.5 0 1 0 12 14a2.5 2.5 0 0 0 0-5z"/></svg>
+        <span>Acessos dos Alunos</span>
+      </button>
       <button class="sb-link" data-section="homework" data-tip="Homework">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
         <span>Homework</span>
@@ -1878,6 +1882,31 @@ body.sb-collapsed .main { margin-left: 92px !important; }
           <div id="studentsList" style="padding:20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px">
             <div class="empty-state" style="grid-column:1/-1;margin:0"><div class="empty-icon">👥</div><p>Carregando...</p></div>
           </div>
+        </div>
+      </div>
+
+      <!-- ═══ ACESSOS DOS ALUNOS ═══ -->
+      <div class="section" id="sec-access">
+        <div class="section-head">
+          <div class="section-head-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+          <div class="section-head-text">
+            <h2>Acessos dos Alunos</h2>
+            <p class="section-sub">Veja quando os seus alunos acessaram a plataforma. Aqui aparecem <strong>apenas os seus alunos vinculados</strong> — acessos de outros alunos e professores não são exibidos.</p>
+          </div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-card"><div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="stat-label">Acessos hoje</div><div class="stat-value" id="accStatTodayProf">-</div></div>
+          <div class="stat-card"><div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div class="stat-label">Acessos (7 dias)</div><div class="stat-value" id="accStatWeekProf">-</div></div>
+          <div class="stat-card"><div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg></div><div class="stat-label">Alunos ativos (7 dias)</div><div class="stat-value" id="accStatUniqueProf">-</div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title"><span class="panel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>Registros de Acesso</div><span class="badge badge-time" id="accCountProf">0</span></div>
+          <div style="padding:14px 20px 4px">
+            <input type="text" id="accSearchProf" oninput="renderStudentAccessLogs()" placeholder="Buscar por nome do aluno..." style="width:100%;padding:11px 14px;border:1.5px solid var(--g200);border-radius:10px;font-family:inherit;font-size:14px;color:var(--navy);outline:none;box-sizing:border-box">
+          </div>
+          <div id="accListProf"><div class="empty-state"><div class="empty-icon">⏳</div><p>Carregando acessos...</p></div></div>
         </div>
       </div>
 
@@ -2250,7 +2279,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 <script src="app-fx.js" defer></script>
 <script>
 let currentUser = null;
-const sections = {"overview":"Visão Geral","schedule":"Meu Schedule","students":"Meus Alunos","homework":"Homework","feedback":"Feedbacks","help-requests":"Perguntas dos Alunos","announcements":"Avisos","writing":"Redação","pronunciation":"Pronúncia","vocabulary":"Vocabulário","messages":"Mensagens","profile":"Meu Perfil"};
+const sections = {"overview":"Visão Geral","schedule":"Meu Schedule","students":"Meus Alunos","access":"Acessos dos Alunos","homework":"Homework","feedback":"Feedbacks","help-requests":"Perguntas dos Alunos","announcements":"Avisos","writing":"Redação","pronunciation":"Pronúncia","vocabulary":"Vocabulário","messages":"Mensagens","profile":"Meu Perfil"};
 
 // ═══ INIT ═══
 // Init collapsible sidebar immediately (independent of auth)
@@ -2479,6 +2508,21 @@ async function loadHomeworkList() {
     const done = subs.filter(s => s.status !== 'pending').length;
     const names = subs.map(s => s.student?.full_name || '').filter(Boolean).join(', ') || 'Sem alunos vinculados';
     const totalStudents = subs.length;
+    // Lista por aluno: permite ao professor marcar como feito quando o aluno esquece.
+    const studentRows = (t.cancelled || !subs.length) ? '' :
+      '<div style="margin-top:12px;border-top:1px solid var(--g100);padding-top:6px">' +
+      subs.map(s => {
+        const sname = (s.student && s.student.full_name) ? s.student.full_name : 'Aluno';
+        const sDone = s.status && s.status !== 'pending';
+        const right = sDone
+          ? '<span class="sent-status done" style="white-space:nowrap;margin:0">✓ Feito</span>'
+          : '<button onclick="eaTeacherMarkDone(\'' + s.id + '\',this)" style="padding:6px 12px;border:1.5px solid var(--orange);background:var(--orange);color:#fff;border-radius:8px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap" title="Marcar como feito em nome do aluno">Marcar como feita</button>';
+        return '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--g50)">' +
+          '<span style="flex:1;min-width:0;font-size:13px;color:var(--navy);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + escapeHtml(sname) + '</span>' +
+          right +
+        '</div>';
+      }).join('') +
+      '</div>';
     return '<div class="sent-card' + (t.cancelled ? ' sent-cancelled' : '') + '">' +
       '<div class="sent-head">' +
         '<div class="sent-icon">' + hwIcon + '</div>' +
@@ -2493,11 +2537,31 @@ async function loadHomeworkList() {
             (done > 0 ? '<span class="sent-status done">✓ ' + done + ' de ' + totalStudents + ' feito(s)</span>' : '') +
             (pending > 0 ? '<span class="sent-status pending">⏳ ' + pending + ' pendente(s)</span>' : '') +
           '</div>' +
+          studentRows +
         '</div>' +
         (t.cancelled ? '' : '<button onclick="eaCancelSend(\'homework\',\'' + t.id + '\')" class="sent-cancel-btn" title="Cancelar envio">Cancelar</button>') +
       '</div>' +
     '</div>';
   }).join('') + '</div>';
+}
+
+// Professor marca um homework como FEITO em nome do aluno (quando o aluno esquece).
+// Reutiliza markTaskDone (status 'submitted') para manter total consistência com o
+// fluxo do próprio aluno, painel da coordenação e contadores. A RLS no banco só
+// permite isto nas tarefas criadas pelo próprio professor.
+async function eaTeacherMarkDone(submissionId, btn) {
+  if (!submissionId) return;
+  if (!confirm('Marcar este homework como FEITO em nome do aluno?\n\nUse apenas quando o aluno esqueceu de marcar. O aluno passará a ver a tarefa como concluída.')) return;
+  if (btn) { btn.disabled = true; btn.textContent = 'Salvando...'; }
+  try {
+    await markTaskDone(submissionId);
+    if (typeof popSnd === 'function') popSnd();
+    showToast('Homework marcado como feito.');
+    loadHomeworkList();
+  } catch (e) {
+    showToast('Erro: ' + ((e && e.message) || e), 'error');
+    if (btn) { btn.disabled = false; btn.textContent = 'Marcar como feita'; }
+  }
 }
 
 // ═══ VOCABULÁRIO ═══
@@ -3982,6 +4046,77 @@ async function loadStudentsList() {
   const students = window._myStudents || await getMyStudents(currentUser.id);
   eaRenderStudentList('studentsList', students, profStudentCard, 'myStudentCount');
 }
+
+// ═══ ACESSOS DOS ALUNOS (somente os alunos vinculados a este professor) ═══
+// A função getAccessLogsForMyStudents já restringe os dados ao professor
+// (RLS no banco + filtro explícito por aluno). Aqui só montamos a tela.
+let _profAccessCache = [];
+let _profAccessShown = 20;
+async function loadStudentAccessLogs() {
+  const list = document.getElementById('accListProf');
+  if (list) list.innerHTML = '<div class="empty-state"><div class="empty-icon">⏳</div><p>Carregando acessos...</p></div>';
+  try {
+    _profAccessCache = await getAccessLogsForMyStudents(currentUser.id, 400);
+  } catch (e) {
+    console.error('loadStudentAccessLogs error:', e);
+    if (list) list.innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><p>Não foi possível carregar os acessos.</p></div>';
+    return;
+  }
+  _profAccessShown = 20;
+  renderStudentAccessStats();
+  renderStudentAccessLogs();
+}
+function renderStudentAccessStats() {
+  const now = new Date();
+  const startToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  const week0 = startToday - 6 * 24 * 60 * 60 * 1000;
+  let today = 0, week = 0;
+  const uniq = new Set();
+  _profAccessCache.forEach(a => {
+    const t = new Date(a.accessed_at).getTime();
+    if (t >= startToday) today++;
+    if (t >= week0) { week++; if (a.user_id) uniq.add(a.user_id); }
+  });
+  const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  set('accStatTodayProf', today);
+  set('accStatWeekProf', week);
+  set('accStatUniqueProf', uniq.size);
+}
+function renderStudentAccessLogs() {
+  const div = document.getElementById('accListProf');
+  if (!div) return;
+  const search = (document.getElementById('accSearchProf')?.value || '').toLowerCase();
+  let filtered = _profAccessCache.slice();
+  if (search) filtered = filtered.filter(a => (a.full_name || '').toLowerCase().includes(search));
+  const countEl = document.getElementById('accCountProf');
+  if (countEl) countEl.textContent = filtered.length + ' de ' + _profAccessCache.length;
+  if (!filtered.length) {
+    div.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>Nenhum acesso de aluno encontrado.</p></div>';
+    return;
+  }
+  div.innerHTML = filtered.slice(0, _profAccessShown).map(a => {
+    const name = a.full_name || 'Aluno';
+    const initial = name[0] ? name[0].toUpperCase() : '?';
+    const d = new Date(a.accessed_at);
+    const dateStr = d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    const timeStr = d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    const ago = (typeof timeAgo === 'function') ? timeAgo(a.accessed_at) : '';
+    return '<div class="list-item" style="display:flex;align-items:center;gap:14px;padding:14px 20px">' +
+      '<div style="width:40px;height:40px;border-radius:50%;flex-shrink:0;background:var(--ocean);color:var(--navy);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px">' + escapeHtml(initial) + '</div>' +
+      '<div style="flex:1;min-width:0">' +
+        '<div style="font-weight:700;color:var(--navy);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + escapeHtml(name) + '</div>' +
+        '<div style="font-size:12px;color:var(--g500)">🎓 Aluno</div>' +
+      '</div>' +
+      '<div style="text-align:right;flex-shrink:0">' +
+        '<div style="font-size:13px;font-weight:700;color:var(--navy)">' + dateStr + ' • ' + timeStr + '</div>' +
+        (ago ? '<div style="font-size:11px;color:var(--g400)">há ' + ago + '</div>' : '') +
+      '</div>' +
+    '</div>';
+  }).join('') + (filtered.length > _profAccessShown
+    ? '<div style="text-align:center;padding:16px 0 6px"><button type="button" onclick="eaProfAccessMore()" style="padding:11px 26px;border:1.5px solid var(--orange);border-radius:10px;background:#fff;color:var(--orange);font-size:13px;font-weight:800;cursor:pointer;font-family:inherit">Ver mais (' + (filtered.length - _profAccessShown) + ' restantes)</button></div>'
+    : '');
+}
+function eaProfAccessMore() { _profAccessShown += 20; renderStudentAccessLogs(); }
 document.addEventListener('DOMContentLoaded', function(){
   ['hwList','fbList','annList','wrList','prList','vocList','msgList'].forEach(function(id){ eaWatchVerMais(id, 5); });
 });
@@ -4083,6 +4218,7 @@ document.addEventListener('DOMContentLoaded', () => {
     switch(id) {
       case 'schedule': loadSchedule(); break;
       case 'students': loadStudentsList(); break;
+      case 'access': loadStudentAccessLogs(); break;
       case 'homework': loadHomeworkList(); break;
       case 'feedback': loadFeedbackList(); break;
       case 'help-requests': loadHelpRequests(); break;

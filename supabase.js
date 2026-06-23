@@ -112,6 +112,33 @@ async function getAccessLogs(limit) {
   return data || [];
 }
 
+// Busca os acessos SOMENTE dos alunos vinculados a um professor.
+// Dupla camada de segurança contra vazamento de dados:
+//   1) RLS no banco já restringe o professor aos acessos dos seus alunos;
+//   2) aqui filtramos explicitamente pelos ids dos próprios alunos e pelo
+//      papel 'student'. Assim o professor nunca vê acessos de outros alunos
+//      nem de outros professores/coordenação, mesmo que algo mude no banco.
+async function getAccessLogsForMyStudents(teacherId, limit) {
+  if (!teacherId) return [];
+  // Descobre quem são os alunos deste professor (matrículas ativas).
+  const students = await getMyStudents(teacherId);
+  const ids = (students || []).map(s => s && s.id).filter(Boolean);
+  if (!ids.length) return [];
+  // Lê os acessos somente desses alunos e apenas registros de papel 'student'.
+  const { data, error } = await db
+    .from('access_logs')
+    .select('id, user_id, full_name, role, accessed_at')
+    .in('user_id', ids)
+    .eq('role', 'student')
+    .order('accessed_at', { ascending: false })
+    .limit(limit || 400);
+  if (error) {
+    console.error('[access_logs] getAccessLogsForMyStudents:', error.message);
+    return [];
+  }
+  return data || [];
+}
+
 // ═══ TASKS (HOMEWORK) ═══
 async function createTask(title, description, teacherId, studentIds, dueDate) {
   const { data, error } = await db.from('tasks').insert([{

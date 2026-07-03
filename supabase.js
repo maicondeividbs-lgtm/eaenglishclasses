@@ -333,6 +333,164 @@ async function getMyStudents(teacherId) {
   return unique;
 }
 
+// ═══ PLANOS DE AULA (lesson_plans + lesson_plan_entries) ═══
+// plan_month é sempre o dia 1 do mês (string 'YYYY-MM-01').
+function lpMonthKey(year, month) {
+  return year + '-' + String(month).padStart(2, '0') + '-01';
+}
+
+// Busca o plano (cabeçalho + linhas) de um professor/aluno/mês.
+// Retorna null se ainda não existir.
+async function getLessonPlan(teacherId, studentId, monthKey) {
+  const { data: plan } = await db.from('lesson_plans')
+    .select('*')
+    .eq('teacher_id', teacherId)
+    .eq('student_id', studentId)
+    .eq('plan_month', monthKey)
+    .maybeSingle();
+  if (!plan) return null;
+  const { data: entries } = await db.from('lesson_plan_entries')
+    .select('*')
+    .eq('plan_id', plan.id)
+    .order('lesson_date', { ascending: true, nullsFirst: false })
+    .order('sort_order', { ascending: true });
+  plan.entries = entries || [];
+  return plan;
+}
+
+// Salva o plano inteiro de forma atômica-por-partes:
+//   1) upsert do cabeçalho (chave única teacher+student+month)
+//   2) troca completa das linhas (apaga as antigas, insere as atuais).
+// rows = [{lesson_date, topic, pages, homework, last_homework}]
+async function saveLessonPlan(teacherId, studentId, monthKey, header, rows) {
+  const { data: plan, error: upErr } = await db.from('lesson_plans')
+    .upsert([{
+      teacher_id: teacherId,
+      student_id: studentId,
+      plan_month: monthKey,
+      book:  header.book  || null,
+      level: header.level || null,
+      notes: header.notes || null,
+      updated_at: new Date().toISOString()
+    }], { onConflict: 'teacher_id,student_id,plan_month' })
+    .select()
+    .single();
+  if (upErr) throw upErr;
+
+  // Troca completa das linhas (planos são pequenos: poucas linhas por mês).
+  const { error: delErr } = await db.from('lesson_plan_entries').delete().eq('plan_id', plan.id);
+  if (delErr) throw delErr;
+
+  const clean = (rows || [])
+    .map((r, i) => ({
+      plan_id: plan.id,
+      lesson_date: r.lesson_date || null,
+      topic: (r.topic || '').trim() || null,
+      pages: (r.pages || '').trim() || null,
+      homework: (r.homework || '').trim() || null,
+      last_homework: (r.last_homework || '').trim() || null,
+      sort_order: i
+    }))
+    // ignora linhas totalmente vazias
+    .filter(r => r.lesson_date || r.topic || r.pages || r.homework || r.last_homework);
+
+  if (clean.length) {
+    const { error: insErr } = await db.from('lesson_plan_entries').insert(clean);
+    if (insErr) throw insErr;
+  }
+  return plan;
+}
+
+async function deleteLessonPlan(planId) {
+  const { error } = await db.from('lesson_plan_entries').delete().eq('plan_id', planId);
+  if (error) throw error;
+  const { error: e2 } = await db.from('lesson_plans').delete().eq('id', planId);
+  if (e2) throw e2;
+}
+
+// Coordenação: todos os planos (cabeçalho + nomes), do mais recente ao mais antigo.
+// As linhas são carregadas sob demanda por getLessonPlanEntries().
+async function getAllLessonPlans() {
+  const { data } = await db.from('lesson_plans')
+    .select('*, teacher:profiles!lesson_plans_teacher_id_fkey(full_name), student:profiles!lesson_plans_student_id_fkey(full_name)')
+    .order('plan_month', { ascending: false })
+    .order('updated_at', { ascending: false });
+  return data || [];
+}
+
+async function getLessonPlanEntries(planId) {
+  const { data } = await db.from('lesson_plan_entries')
+    .select('*')
+    .eq('plan_id', planId)
+    .order('lesson_date', { ascending: true, nullsFirst: false })
+    .order('sort_order', { ascending: true });
+  return data || [];
+}
+
+// Monta o HTML imprimível de um plano no layout da "Preparação de aulas".
+// Usado tanto no painel do professor quanto no da coordenação (via window.print()).
+// header = {student, book, level, monthLabel, teacher?}
+function eaBuildLessonPlanPrintHTML(header, rows) {
+  const e = (s) => String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const fmt = (d) => {
+    if (!d) return '';
+    const p = String(d).split('-');
+    return p.length === 3 ? (p[2] + '/' + p[1]) : e(d);
+  };
+  const body = (rows && rows.length ? rows : []).map(r =>
+    '<tr>' +
+      '<td class="lpp-c-date">' + fmt(r.lesson_date) + '</td>' +
+      '<td>' + e(r.topic) + '</td>' +
+      '<td class="lpp-c-pages">' + e(r.pages) + '</td>' +
+      '<td>' + e(r.homework).replace(/\n/g,'<br>') + '</td>' +
+      '<td class="lpp-c-last">' + e(r.last_homework) + '</td>' +
+    '</tr>'
+  ).join('');
+  const filler = Math.max(0, 6 - (rows ? rows.length : 0));
+  let fillerRows = '';
+  for (let i = 0; i < filler; i++) fillerRows += '<tr class="lpp-empty"><td></td><td></td><td></td><td></td><td></td></tr>';
+  return '' +
+    '<div class="lpp-doc">' +
+      '<div class="lpp-head">' +
+        '<div class="lpp-brand">EA<span>ENGLISH CLASSES</span></div>' +
+        '<div class="lpp-meta">' +
+          '<div><strong>Aluno</strong> ' + e(header.student) + '</div>' +
+          '<div><strong>Livro</strong> ' + e(header.book) + '</div>' +
+          '<div><strong>Nível de proficiência</strong> ' + e(header.level) + '</div>' +
+          (header.teacher ? '<div><strong>Professor</strong> ' + e(header.teacher) + '</div>' : '') +
+        '</div>' +
+      '</div>' +
+      '<div class="lpp-title">Preparação de aulas' + (header.monthLabel ? ' — ' + e(header.monthLabel) : '') + '</div>' +
+      '<table class="lpp-table">' +
+        '<thead><tr>' +
+          '<th class="lpp-c-date">DATA</th><th>TÓPICO</th><th class="lpp-c-pages">PÁGINAS (PREVISÃO)</th>' +
+          '<th>HOMEWORK</th><th class="lpp-c-last">LAST HOMEWORK</th>' +
+        '</tr></thead>' +
+        '<tbody>' + body + fillerRows + '</tbody>' +
+      '</table>' +
+    '</div>';
+}
+
+// Injeta o documento numa área imprimível (filha direta de <body>) e chama print().
+// A classe body.lp-printing (ver style.css) esconde o resto só durante a impressão.
+function eaPrintLessonPlan(header, rows) {
+  let area = document.getElementById('lpPrintArea');
+  if (!area) {
+    area = document.createElement('div');
+    area.id = 'lpPrintArea';
+    document.body.appendChild(area);
+  }
+  area.innerHTML = eaBuildLessonPlanPrintHTML(header, rows);
+  const cleanup = () => {
+    document.body.classList.remove('lp-printing');
+    window.removeEventListener('afterprint', cleanup);
+  };
+  window.addEventListener('afterprint', cleanup);
+  document.body.classList.add('lp-printing');
+  setTimeout(() => { window.print(); }, 60);
+}
+
 // ═══ UTILITIES ═══
 function formatDate(d) { return d ? new Date(d).toLocaleDateString('pt-BR') : '-'; }
 function formatDateTime(d) { return d ? new Date(d).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})+' '+new Date(d).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}) : '-'; }

@@ -3185,6 +3185,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
             <button class="sup-tab" data-sup="wr" onclick="switchSup('wr',this)">✍️ Redações</button>
             <button class="sup-tab" data-sup="pr" onclick="switchSup('pr',this)">🎙️ Pronúncias</button>
             <button class="sup-tab" data-sup="vocab" onclick="switchSup('vocab',this)">📚 Vocabulário</button>
+            <button class="sup-tab" data-sup="lp" onclick="switchSup('lp',this)">🗒️ Planos de Aula</button>
           </div>
         </div>
 
@@ -3233,6 +3234,14 @@ body.sb-collapsed .main { margin-left: 92px !important; }
           <div class="panel">
             <div class="panel-head"><div class="panel-title">Todo o Vocabulário</div></div>
             <div id="vocabCoordList"><div class="empty-state"><div class="empty-icon">📚</div><p>Nenhum vocabulário.</p></div></div>
+          </div>
+        </div>
+
+        <!-- Lesson plans pane (leitura) -->
+        <div class="sup-pane" id="sup-lp" style="display:none">
+          <div class="panel">
+            <div class="panel-head"><div class="panel-title">Planos de Aula</div><span class="badge badge-time" id="lpcCount">0</span></div>
+            <div id="lpCoordList"><div class="empty-state"><div class="empty-icon">🗒️</div><p>Nenhum plano de aula.</p></div></div>
           </div>
         </div>
       </div>
@@ -5702,6 +5711,103 @@ async function loadVocabularyCoord() {
   div.innerHTML = items.map(v => '<div class="list-item"><div><div class="list-title">📚 ' + (v.word || '') + (v.translation ? ' <span style="color:var(--g400);font-weight:400">— ' + v.translation + '</span>' : '') + '</div><div class="list-sub">Prof. ' + (v.teacher?.full_name||'?') + ' → ' + (v.student?.full_name||'?') + ' — ' + formatDateTime(v.created_at) + '</div></div><span class="badge ' + (v.enriched ? 'badge-done' : 'badge-pending') + '">' + (v.enriched ? 'Estudada' : 'Aguardando') + '</span></div>').join('');
 }
 
+// ═══ LESSON PLANS SUPERVISION (leitura) ═══
+// A coordenação enxerga os planos de todos os professores (RLS via is_coordinator()).
+// Filtro por professor reaproveita o supFilter da Supervisão. Cada plano abre em
+// acordeão (linhas carregadas sob demanda) e pode ser impresso/exportado em PDF.
+window._lpCoordPlans = {};
+
+function lpcMonthLabel(planMonth) {
+  if (!planMonth) return '';
+  var p = String(planMonth).split('-');
+  var m = parseInt(p[1], 10);
+  var names = (typeof MONTHS !== 'undefined') ? MONTHS
+    : ['','Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  return (names[m] || '') + ' de ' + p[0];
+}
+
+async function loadLessonPlansCoord() {
+  var filterTeacher = document.getElementById('supFilter') ? document.getElementById('supFilter').value : '';
+  var div = document.getElementById('lpCoordList');
+  var countEl = document.getElementById('lpcCount');
+  if (div) div.innerHTML = '<div class="empty-state"><div class="empty-icon">⏳</div><p>Carregando...</p></div>';
+  var plans = [];
+  try { plans = await getAllLessonPlans(); } catch(e){ console.error('getAllLessonPlans', e); }
+  if (filterTeacher) plans = plans.filter(function(p){ return p.teacher_id === filterTeacher; });
+  if (countEl) countEl.textContent = plans.length;
+  if (!div) return;
+  if (!plans.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">🗒️</div><p>Nenhum plano de aula ainda.</p></div>'; return; }
+  window._lpCoordPlans = {};
+  div.innerHTML = plans.map(function(p){
+    window._lpCoordPlans[p.id] = p;
+    var mLabel = lpcMonthLabel(p.plan_month);
+    var meta = [p.book, p.level].filter(Boolean).map(escapeHtml).join(' · ');
+    var stu = (p.student && p.student.full_name) || '—';
+    var tea = (p.teacher && p.teacher.full_name) || '?';
+    return '<div class="lpc-card" id="lpc-'+p.id+'">' +
+        '<div class="lpc-head" onclick="lpcToggle(\''+p.id+'\')">' +
+          '<div class="lpc-head-main">' +
+            '<div class="lpc-title">🗒️ '+escapeHtml(stu)+' <span class="lpc-month">'+escapeHtml(mLabel)+'</span></div>' +
+            '<div class="lpc-sub">Prof. '+escapeHtml(tea)+(meta ? ' — '+meta : '')+'</div>' +
+          '</div>' +
+          '<svg class="lpc-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>' +
+        '</div>' +
+        '<div class="lpc-body" id="lpc-body-'+p.id+'" style="display:none"></div>' +
+      '</div>';
+  }).join('');
+}
+
+async function lpcToggle(planId) {
+  var body = document.getElementById('lpc-body-'+planId);
+  var card = document.getElementById('lpc-'+planId);
+  if (!body) return;
+  var isOpen = body.style.display !== 'none';
+  if (isOpen) { body.style.display = 'none'; if (card) card.classList.remove('open'); return; }
+  if (card) card.classList.add('open');
+  body.style.display = '';
+  if (!body.dataset.loaded) {
+    body.innerHTML = '<div class="lpc-loading">Carregando linhas...</div>';
+    var entries = [];
+    try { entries = await getLessonPlanEntries(planId); } catch(e){ console.error(e); }
+    body.dataset.loaded = '1';
+    body.innerHTML = lpcRenderTable(entries) +
+      '<div class="lpc-body-actions"><button type="button" class="lp-btn-ghost" onclick="lpcPrint(\''+planId+'\')">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>' +
+        ' Imprimir / PDF</button></div>';
+  }
+}
+
+function lpcRenderTable(entries) {
+  if (!entries || !entries.length) return '<div class="lpc-empty">Plano sem linhas preenchidas.</div>';
+  var fmt = function(d){ if(!d) return ''; var p=String(d).split('-'); return p.length===3 ? (p[2]+'/'+p[1]) : escapeHtml(String(d)); };
+  var rows = entries.map(function(r){
+    return '<tr>' +
+      '<td class="lp-c-date" data-label="Data">'+fmt(r.lesson_date)+'</td>' +
+      '<td data-label="Tópico">'+escapeHtml(r.topic||'')+'</td>' +
+      '<td class="lp-c-pages" data-label="Páginas (previsão)">'+escapeHtml(r.pages||'')+'</td>' +
+      '<td data-label="Homework">'+escapeHtml(r.homework||'').replace(/\n/g,'<br>')+'</td>' +
+      '<td class="lp-c-last" data-label="Last homework">'+escapeHtml(r.last_homework||'')+'</td>' +
+    '</tr>';
+  }).join('');
+  return '<div class="lp-grid-wrap lpc-grid-wrap"><table class="lp-grid lp-grid-ro">' +
+    '<thead><tr><th class="lp-c-date">DATA</th><th>TÓPICO</th><th class="lp-c-pages">PÁGINAS (PREVISÃO)</th><th>HOMEWORK</th><th class="lp-c-last">LAST HOMEWORK</th></tr></thead>' +
+    '<tbody>'+rows+'</tbody></table></div>';
+}
+
+async function lpcPrint(planId) {
+  var p = window._lpCoordPlans[planId];
+  if (!p) return;
+  var entries = [];
+  try { entries = await getLessonPlanEntries(planId); } catch(e){ console.error(e); }
+  eaPrintLessonPlan({
+    student: (p.student && p.student.full_name) || '',
+    book: p.book || '',
+    level: p.level || '',
+    monthLabel: lpcMonthLabel(p.plan_month),
+    teacher: (p.teacher && p.teacher.full_name) || ''
+  }, entries);
+}
+
 // ═══ CREATE USER ═══
 function openCreateModal() {
   document.getElementById('createModal').style.display = 'flex';
@@ -6467,6 +6573,7 @@ function loadCurrentSup() {
     case 'wr': loadWritingCoord(); break;
     case 'pr': loadPronunciationCoord(); break;
     case 'vocab': loadVocabularyCoord(); break;
+    case 'lp': loadLessonPlansCoord(); break;
   }
 }
 

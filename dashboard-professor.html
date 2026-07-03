@@ -1708,6 +1708,10 @@ body.sb-collapsed .main { margin-left: 92px !important; }
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
         <span>Meus Alunos</span>
       </button>
+      <button class="sb-link" data-section="lesson-plans" data-tip="Planos de Aula">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-2h2v2zm0-4H7v-2h2v2zm0-4H7V7h2v2zm8 8h-6v-2h6v2zm0-4h-6v-2h6v2zm0-4h-6V7h6v2z"/></svg>
+        <span>Planos de Aula</span>
+      </button>
       <button class="sb-link" data-section="access" data-tip="Acessos dos Alunos">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5C21.27 7.61 17 4.5 12 4.5zm0 12a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9zm0-7A2.5 2.5 0 1 0 12 14a2.5 2.5 0 0 0 0-5z"/></svg>
         <span>Acessos dos Alunos</span>
@@ -2129,6 +2133,81 @@ body.sb-collapsed .main { margin-left: 92px !important; }
         </div>
       </div>
 
+      <!-- ═══ PLANOS DE AULA ═══ -->
+      <div class="section" id="sec-lesson-plans">
+        <div class="section-head">
+          <div class="section-head-icon blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18"/><path d="M8 3v4M16 3v4M7 13h5M7 17h8"/></svg>
+          </div>
+          <div class="section-head-text">
+            <h2>Planos de Aula</h2>
+            <p class="section-sub">Prepare suas aulas por aluno e por mês. As datas são geradas do seu schedule; você edita, adiciona ou remove linhas à vontade. A coordenação também visualiza.</p>
+          </div>
+        </div>
+
+        <div class="form-card">
+          <div class="f-row">
+            <div class="f-group"><label>Aluno</label><select id="lpStudent" onchange="lpOnPick()"><option value="">Carregando...</option></select></div>
+            <div class="f-group"><label>Mês</label><input type="month" id="lpMonth" onchange="lpOnPick()"></div>
+          </div>
+          <div id="lpPickHint" class="voc-count-hint" style="margin-top:-4px">Selecione o aluno e o mês para abrir o plano.</div>
+        </div>
+
+        <!-- Editor do plano (aparece após escolher aluno + mês) -->
+        <div id="lpEditor" style="display:none">
+          <div class="panel lp-doc-card">
+            <div class="lp-doc-head">
+              <div class="lp-doc-brand">EA<span>ENGLISH CLASSES</span></div>
+              <div class="lp-doc-meta">
+                <div class="lp-meta-row"><span class="lp-meta-lbl">Aluno</span><span id="lpHdrStudent" class="lp-meta-val">—</span></div>
+                <div class="lp-meta-row"><span class="lp-meta-lbl">Livro</span><input type="text" id="lpHdrBook" class="lp-meta-input" placeholder="Ex: Interchange 2"></div>
+                <div class="lp-meta-row"><span class="lp-meta-lbl">Nível de proficiência</span><input type="text" id="lpHdrLevel" class="lp-meta-input" placeholder="Ex: A2"></div>
+              </div>
+            </div>
+
+            <div class="lp-doc-title">Preparação de aulas <span id="lpMonthLabel" class="lp-doc-title-month"></span></div>
+
+            <!-- Grade (desktop = tabela) -->
+            <div class="lp-grid-wrap">
+              <table class="lp-grid">
+                <thead>
+                  <tr>
+                    <th class="lp-c-date">DATA</th>
+                    <th class="lp-c-topic">TÓPICO</th>
+                    <th class="lp-c-pages">PÁGINAS (PREVISÃO)</th>
+                    <th class="lp-c-hw">HOMEWORK</th>
+                    <th class="lp-c-last">LAST HOMEWORK</th>
+                    <th class="lp-c-act" aria-label="Ações"></th>
+                  </tr>
+                </thead>
+                <tbody id="lpRows"></tbody>
+              </table>
+            </div>
+
+            <div class="lp-actions">
+              <button type="button" class="lp-btn-ghost" onclick="lpAddRow()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Adicionar linha
+              </button>
+              <button type="button" class="lp-btn-ghost" onclick="lpRegenerate()" title="Refaz as linhas a partir do schedule do mês (mantém o que você já preencheu quando a data coincide)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                Gerar do schedule
+              </button>
+              <button type="button" class="lp-btn-ghost" onclick="lpExport()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                Imprimir / PDF
+              </button>
+              <div class="lp-actions-spacer"></div>
+              <span id="lpDirty" class="lp-dirty" style="display:none">alterações não salvas</span>
+              <button type="button" class="btn-send lp-btn-save" onclick="lpSave()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                Salvar plano
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- ═══ MESSAGES ═══ -->
       <div class="section" id="sec-messages">
         <div class="section-head">
@@ -2279,7 +2358,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 <script src="app-fx.js" defer></script>
 <script>
 let currentUser = null;
-const sections = {"overview":"Visão Geral","schedule":"Meu Schedule","students":"Meus Alunos","access":"Acessos dos Alunos","homework":"Homework","feedback":"Feedbacks","help-requests":"Perguntas dos Alunos","announcements":"Avisos","writing":"Redação","pronunciation":"Pronúncia","vocabulary":"Vocabulário","messages":"Mensagens","profile":"Meu Perfil"};
+const sections = {"overview":"Visão Geral","schedule":"Meu Schedule","students":"Meus Alunos","lesson-plans":"Planos de Aula","access":"Acessos dos Alunos","homework":"Homework","feedback":"Feedbacks","help-requests":"Perguntas dos Alunos","announcements":"Avisos","writing":"Redação","pronunciation":"Pronúncia","vocabulary":"Vocabulário","messages":"Mensagens","profile":"Meu Perfil"};
 
 // ═══ INIT ═══
 // Init collapsible sidebar immediately (independent of auth)
@@ -2386,7 +2465,7 @@ function initCollapsibleSidebar() {
 async function loadStudents() {
   const students = await getMyStudents(currentUser.id);
   window._myStudents = students; // store for reuse
-  const selects = ['hwStudent','fbStudent','wrStudent','prStudent','vocStudent'];
+  const selects = ['hwStudent','fbStudent','wrStudent','prStudent','vocStudent','lpStudent'];
   selects.forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
@@ -4208,6 +4287,254 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+// ═══════════════════════════════════════════════════════════
+// ═══ PLANOS DE AULA (professor) ═══
+// Datas geradas a partir do schedule recorrente do aluno; o professor
+// edita/adiciona/remove linhas e salva. Reaproveita getScheduleSlots,
+// getScheduleEvents, checkFeriado e fmtDateISO já definidos neste arquivo.
+// ═══════════════════════════════════════════════════════════
+var _lpState = { studentId:null, studentName:'', monthKey:null, dirty:false };
+
+// Entrada da seção: garante alunos carregados e mês padrão = mês atual.
+async function loadLessonPlansSection() {
+  if (!window._myStudents || !window._myStudents.length) {
+    try { await loadStudents(); } catch(e){}
+  }
+  var m = document.getElementById('lpMonth');
+  if (m && !m.value) {
+    var now = new Date();
+    m.value = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+  }
+}
+
+function lpFindStudent(id) {
+  var list = window._myStudents || [];
+  for (var i=0;i<list.length;i++) if (String(list[i].id)===String(id)) return list[i];
+  return null;
+}
+
+function lpMonthLabelFromValue(v) {
+  // v = 'YYYY-MM'
+  if (!v) return '';
+  var p = v.split('-');
+  var mes = parseInt(p[1],10);
+  var nomes = ['','Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  return (nomes[mes]||'') + ' de ' + p[0];
+}
+
+// Troca de aluno ou mês → carrega/gera o plano.
+async function lpOnPick() {
+  var sid = document.getElementById('lpStudent').value;
+  var mv  = document.getElementById('lpMonth').value; // 'YYYY-MM'
+  var editor = document.getElementById('lpEditor');
+  var hint = document.getElementById('lpPickHint');
+  if (!sid || !mv) {
+    editor.style.display = 'none';
+    hint.style.display = '';
+    hint.textContent = 'Selecione o aluno e o mês para abrir o plano.';
+    return;
+  }
+  if (_lpState.dirty) {
+    if (!confirm('Há alterações não salvas neste plano. Trocar de aluno/mês vai descartá-las. Continuar?')) {
+      // reverte os selects para o estado atual
+      if (_lpState.studentId) document.getElementById('lpStudent').value = _lpState.studentId;
+      if (_lpState.monthKey) {
+        var p = _lpState.monthKey.split('-');
+        document.getElementById('lpMonth').value = p[0]+'-'+p[1];
+      }
+      return;
+    }
+  }
+  var student = lpFindStudent(sid);
+  var mp = mv.split('-');
+  var monthKey = window.lpMonthKey ? lpMonthKey(parseInt(mp[0],10), parseInt(mp[1],10)) : (mv + '-01');
+
+  _lpState = { studentId:sid, studentName:(student&&student.full_name)||'', monthKey:monthKey, dirty:false };
+  hint.style.display = 'none';
+  editor.style.display = '';
+
+  document.getElementById('lpHdrStudent').textContent = _lpState.studentName || '—';
+  document.getElementById('lpMonthLabel').textContent = '— ' + lpMonthLabelFromValue(mv);
+
+  // Cabeçalho (Livro/Nível): auto da matrícula, editável.
+  var autoBook  = (student && student.course_name) || '';
+  var autoLevel = (student && (student.cefr || student.level)) || '';
+
+  var saved = null;
+  try { saved = await getLessonPlan(currentUser.id, sid, monthKey); } catch(e){ console.error('getLessonPlan', e); }
+
+  if (saved) {
+    document.getElementById('lpHdrBook').value  = saved.book  != null ? saved.book  : autoBook;
+    document.getElementById('lpHdrLevel').value = saved.level != null ? saved.level : autoLevel;
+    lpRenderRows(saved.entries || []);
+  } else {
+    document.getElementById('lpHdrBook').value  = autoBook;
+    document.getElementById('lpHdrLevel').value = autoLevel;
+    // Plano novo → gera do schedule automaticamente.
+    var gen = await lpGenerateRowsFromSchedule(_lpState.studentName, mv);
+    lpRenderRows(gen);
+  }
+  lpSetDirty(false);
+}
+
+// Gera as linhas do mês a partir do schedule recorrente do aluno.
+// Retorna [{lesson_date, topic, pages, homework, last_homework}] ordenado por data.
+// Regras: casa slots por NOME do aluno; enumera as datas do mês no dia da semana
+// do slot; pula cancelamentos do mês e feriados nacional/estadual/municipal.
+async function lpGenerateRowsFromSchedule(studentName, monthValue) {
+  var rows = [];
+  if (!studentName || !monthValue) return rows;
+  var mp = monthValue.split('-');
+  var year = parseInt(mp[0],10), month = parseInt(mp[1],10); // 1-12
+  var target = studentName.trim().toLowerCase();
+
+  var slots = [];
+  try { slots = await getScheduleSlots(currentUser.id); } catch(e){ slots = []; }
+  var mine = slots.filter(function(s){ return (s.student_name||'').trim().toLowerCase() === target; });
+  if (!mine.length) return rows;
+
+  // Cancelamentos do mês para este aluno (qualquer tipo "cancellation*").
+  var cancelledDates = {};
+  try {
+    var evts = await getScheduleEvents(currentUser.id, month, year);
+    for (var i=0;i<evts.length;i++){
+      var ev = evts[i];
+      var isCancel = (ev.event_type||'').indexOf('cancellation') === 0;
+      var sameStudent = !ev.student_name || (ev.student_name||'').trim().toLowerCase() === target;
+      if (isCancel && sameStudent && ev.event_date) cancelledDates[String(ev.event_date).substring(0,10)] = true;
+    }
+  } catch(e){}
+
+  var daysInMonth = new Date(year, month, 0).getDate();
+  for (var d=1; d<=daysInMonth; d++){
+    var dateObj = new Date(year, month-1, d);
+    var jsDow = dateObj.getDay(); // 0=Dom..6=Sáb
+    // nosso day_of_week: 0=Seg..5=Sáb  →  jsDow = dow+1
+    for (var si=0; si<mine.length; si++){
+      var slot = mine[si];
+      if ((slot.day_of_week + 1) !== jsDow) continue;
+      var iso = fmtDateISO(dateObj);
+      if (cancelledDates[iso]) continue;
+      var fer = (typeof checkFeriado === 'function') ? checkFeriado(iso) : null;
+      if (fer && (fer.tipo==='nacional' || fer.tipo==='estadual' || fer.tipo==='municipal')) continue;
+      rows.push({ lesson_date: iso, topic:'', pages:'', homework:'', last_homework:'', _time:(slot.time_slot||'') });
+    }
+  }
+  rows.sort(function(a,b){
+    if (a.lesson_date !== b.lesson_date) return a.lesson_date < b.lesson_date ? -1 : 1;
+    return (a._time||'') < (b._time||'') ? -1 : 1;
+  });
+  return rows;
+}
+
+function lpRenderRows(rows) {
+  var tb = document.getElementById('lpRows');
+  tb.innerHTML = '';
+  if (!rows || !rows.length) { lpAddRow(); return; }
+  for (var i=0;i<rows.length;i++) lpAppendRow(rows[i]);
+}
+
+function lpAppendRow(r) {
+  r = r || {};
+  var tr = document.createElement('tr');
+  tr.className = 'lp-row';
+  var dateVal = r.lesson_date ? String(r.lesson_date).substring(0,10) : '';
+  tr.innerHTML =
+    '<td class="lp-c-date" data-label="Data"><input type="date" class="lp-in lp-in-date" value="'+dateVal+'"></td>' +
+    '<td class="lp-c-topic" data-label="Tópico"><textarea rows="1" class="lp-in lp-ta lp-in-topic" placeholder="Ex: Imperatives for suggestions"></textarea></td>' +
+    '<td class="lp-c-pages" data-label="Páginas (previsão)"><input type="text" class="lp-in lp-in-pages" placeholder="Ex: 47, 48 & 121"></td>' +
+    '<td class="lp-c-hw" data-label="Homework"><textarea rows="1" class="lp-in lp-ta lp-in-hw" placeholder="Ex: Grammar plus, page 138 (ex. 2)"></textarea></td>' +
+    '<td class="lp-c-last" data-label="Last homework"><input type="text" class="lp-in lp-in-last" placeholder="*"></td>' +
+    '<td class="lp-c-act"><button type="button" class="lp-row-del" title="Remover linha" onclick="lpRemoveRow(this)">✕</button></td>';
+  document.getElementById('lpRows').appendChild(tr);
+  // valores (via .value para não quebrar HTML com aspas/quebras)
+  tr.querySelector('.lp-in-topic').value = r.topic || '';
+  tr.querySelector('.lp-in-pages').value = r.pages || '';
+  tr.querySelector('.lp-in-hw').value    = r.homework || '';
+  tr.querySelector('.lp-in-last').value  = r.last_homework || '';
+  // auto-resize + dirty
+  tr.querySelectorAll('.lp-ta').forEach(function(ta){ lpAutoGrow(ta); ta.addEventListener('input', function(){ lpAutoGrow(ta); }); });
+  tr.querySelectorAll('.lp-in').forEach(function(el){ el.addEventListener('input', function(){ lpSetDirty(true); }); el.addEventListener('change', function(){ lpSetDirty(true); }); });
+}
+
+function lpAutoGrow(ta){ ta.style.height='auto'; ta.style.height=(ta.scrollHeight)+'px'; }
+
+function lpAddRow() { lpAppendRow({}); lpSetDirty(true); }
+
+function lpRemoveRow(btn) {
+  var tr = btn.closest('tr');
+  if (tr) tr.remove();
+  if (!document.getElementById('lpRows').children.length) lpAppendRow({});
+  lpSetDirty(true);
+}
+
+function lpCollectRows() {
+  var out = [];
+  var trs = document.querySelectorAll('#lpRows .lp-row');
+  trs.forEach(function(tr){
+    out.push({
+      lesson_date: tr.querySelector('.lp-in-date').value || null,
+      topic: tr.querySelector('.lp-in-topic').value,
+      pages: tr.querySelector('.lp-in-pages').value,
+      homework: tr.querySelector('.lp-in-hw').value,
+      last_homework: tr.querySelector('.lp-in-last').value
+    });
+  });
+  return out;
+}
+
+function lpSetDirty(v) {
+  _lpState.dirty = !!v;
+  var tag = document.getElementById('lpDirty');
+  if (tag) tag.style.display = v ? '' : 'none';
+}
+
+async function lpRegenerate() {
+  if (!_lpState.studentName) return;
+  if (!confirm('Gerar as linhas a partir do schedule deste mês? As datas do schedule que você já preencheu serão mantidas; linhas avulsas sem data serão descartadas.')) return;
+  var mv = document.getElementById('lpMonth').value;
+  var gen = await lpGenerateRowsFromSchedule(_lpState.studentName, mv);
+  // Mescla: preserva conteúdo já digitado quando a data coincide.
+  var current = lpCollectRows();
+  var byDate = {};
+  current.forEach(function(r){ if (r.lesson_date) byDate[r.lesson_date] = r; });
+  var merged = gen.map(function(g){
+    var ex = byDate[g.lesson_date];
+    return ex ? { lesson_date:g.lesson_date, topic:ex.topic, pages:ex.pages, homework:ex.homework, last_homework:ex.last_homework } : g;
+  });
+  lpRenderRows(merged);
+  lpSetDirty(true);
+  showToast(merged.length ? ('Geradas '+merged.length+' aula(s) do schedule.') : 'Nenhuma aula recorrente encontrada neste mês.', merged.length ? 'success' : 'info');
+}
+
+async function lpSave() {
+  if (!_lpState.studentId || !_lpState.monthKey) { showToast('Selecione aluno e mês.','error'); return; }
+  var header = {
+    book:  document.getElementById('lpHdrBook').value.trim(),
+    level: document.getElementById('lpHdrLevel').value.trim(),
+    notes: ''
+  };
+  var rows = lpCollectRows();
+  try {
+    await saveLessonPlan(currentUser.id, _lpState.studentId, _lpState.monthKey, header, rows);
+    lpSetDirty(false);
+    showToast('Plano salvo!');
+  } catch(e) {
+    showToast('Erro ao salvar: ' + (e.message||e), 'error');
+  }
+}
+
+function lpExport() {
+  var header = {
+    student: _lpState.studentName,
+    book: document.getElementById('lpHdrBook').value,
+    level: document.getElementById('lpHdrLevel').value,
+    monthLabel: lpMonthLabelFromValue(document.getElementById('lpMonth').value),
+    teacher: (currentUser && currentUser.full_name) || ''
+  };
+  eaPrintLessonPlan(header, lpCollectRows());
+}
+
 // ═══ SIDEBAR NAVIGATION HOOKS ═══
 document.addEventListener('DOMContentLoaded', () => {
   // Load content when switching sections
@@ -4218,6 +4545,7 @@ document.addEventListener('DOMContentLoaded', () => {
     switch(id) {
       case 'schedule': loadSchedule(); break;
       case 'students': loadStudentsList(); break;
+      case 'lesson-plans': loadLessonPlansSection(); break;
       case 'access': loadStudentAccessLogs(); break;
       case 'homework': loadHomeworkList(); break;
       case 'feedback': loadFeedbackList(); break;

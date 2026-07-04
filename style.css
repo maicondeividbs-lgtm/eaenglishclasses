@@ -783,160 +783,188 @@ body.menu-open { overflow: hidden; }
 picture{display:contents}
 
 /* ═══════════════════════════════════════════════════════════════
-   PLANOS DE AULA (Preparação de aulas) — professor (editor) +
-   coordenação (leitura) + documento imprimível. Classes novas: não
-   alteram nada existente. Mobile empilha as linhas em cards rotulados.
+   PLANOS DE AULA — editor do professor (agenda em cartões, .lp2-*)
+   + leitura da coordenação (.lp-grid / .lpc-*) + documento imprimível
+   (.lpp-*). Prefixo lp2- evita colisão com as classes lp- de outras
+   features (ex.: Perguntas dos Alunos). Mobile empilha tudo.
    ═══════════════════════════════════════════════════════════════ */
 
-/* ── Cartão-documento (editor) ── */
-.lp-doc-card { padding: 0; overflow: hidden; }
-.lp-doc-head {
-  display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap;
-  padding: 22px 24px 16px; border-bottom: 1px solid var(--g100);
-}
-.lp-doc-brand {
-  font-family: 'Fraunces', Georgia, serif; font-weight: 900; font-size: 30px;
-  line-height: 0.9; color: var(--navy); letter-spacing: -1px;
-  display: flex; flex-direction: column;
-}
-.lp-doc-brand span { font-size: 8px; font-weight: 800; letter-spacing: 2px; color: var(--orange); margin-top: 3px; font-family: 'Plus Jakarta Sans', sans-serif; }
-.lp-doc-meta { flex: 1; min-width: 240px; display: flex; flex-direction: column; gap: 8px; }
-.lp-meta-row { display: flex; align-items: center; gap: 10px; }
-.lp-meta-lbl { font-size: 12px; font-weight: 800; color: var(--navy); min-width: 150px; }
-.lp-meta-val { font-size: 14px; color: var(--g700); font-weight: 600; }
-.lp-meta-input {
-  flex: 1; min-width: 0; border: 1px solid var(--g200); border-radius: 8px;
-  padding: 7px 10px; font: inherit; font-size: 13px; color: var(--g900);
-  background: var(--g50); transition: border-color .15s, background .15s;
-}
-.lp-meta-input:focus { outline: none; border-color: var(--orange); background: #fff; box-shadow: 0 0 0 3px var(--orange-soft); }
+.lp2-hidden{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.lp2-hint{font-size:13px;color:var(--g500);padding:10px 4px 2px}
 
-.lp-doc-title {
-  font-family: 'Fraunces', Georgia, serif; font-weight: 800; font-size: 20px;
-  color: var(--navy); text-align: center; padding: 16px 20px 4px;
+/* ── barra de contexto (aluno + mês) ── */
+.lp2-bar{display:flex;gap:14px;align-items:center;flex-wrap:wrap;background:#fff;border:1px solid var(--g100);border-radius:16px;padding:14px 16px;box-shadow:var(--shadow-sm);margin-bottom:6px}
+.lp2-field{display:flex;flex-direction:column;gap:5px;min-width:180px}
+.lp2-field>label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--g400)}
+.lp2-select{appearance:none;-webkit-appearance:none;border:1.5px solid var(--g200);border-radius:11px;padding:10px 34px 10px 13px;font:inherit;font-size:14px;font-weight:600;color:var(--navy);background:#fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.4' stroke-linecap='round'><polyline points='6 9 12 15 18 9'/></svg>") no-repeat right 11px center;cursor:pointer}
+.lp2-select:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px var(--orange-soft)}
+.lp2-month{display:flex;align-items:center;gap:2px;border:1.5px solid var(--g200);border-radius:11px;padding:3px;position:relative}
+.lp2-mnav{width:32px;height:32px;border:none;background:transparent;border-radius:8px;cursor:pointer;color:var(--navy);display:flex;align-items:center;justify-content:center}
+.lp2-mnav:hover{background:var(--g100)}
+.lp2-mlabel{border:none;background:transparent;font:inherit;font-weight:700;color:var(--navy);font-size:14px;min-width:120px;text-align:center;cursor:pointer;padding:6px 4px;border-radius:8px}
+.lp2-mlabel:hover{background:var(--g50)}
+.lp2-month-native{position:absolute;right:6px;bottom:2px;width:1px;height:1px;opacity:0;pointer-events:none}
+.lp2-spacer{flex:1}
+.lp2-count{font-size:12px;color:var(--g500);text-align:right;line-height:1.5;min-height:1px}
+.lp2-count b{color:var(--navy)}
+
+/* ── cabeçalho do plano ── */
+.lp2-plan-head{display:flex;align-items:center;gap:16px;padding:16px 4px 14px}
+.lp2-avatar{width:52px;height:52px;flex-shrink:0;border-radius:16px;background:linear-gradient(135deg,var(--orange),var(--mango));color:#fff;font-family:'Fraunces',serif;font-weight:800;font-size:24px;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(243,107,46,.28)}
+.lp2-plan-name{font-family:'Fraunces',serif;font-weight:800;font-size:22px;color:var(--navy);line-height:1.1}
+.lp2-chips{display:flex;gap:8px;margin-top:7px;flex-wrap:wrap}
+.lp2-chip{display:inline-flex;align-items:center;gap:6px;background:var(--cream);border:1px solid #f0e4cf;color:#8a6d2f;border-radius:999px;padding:4px 12px;font-size:12.5px;font-weight:700}
+.lp2-chip svg{width:14px;height:14px;flex-shrink:0}
+.lp2-chip.lvl{background:var(--ocean-light);border-color:#b6ddda;color:#1f6b66}
+.lp2-chip-in{border:none;background:transparent;font:inherit;font-weight:700;font-size:12.5px;color:inherit;padding:2px 0;outline:none;width:auto;max-width:150px}
+.lp2-chip-in::placeholder{color:currentColor;opacity:.55}
+
+/* ── lista de aulas ── */
+.lp2-list{display:flex;flex-direction:column;gap:12px}
+.lp2-card{display:flex;gap:16px;background:#fff;border:1px solid var(--g100);border-radius:16px;padding:14px 16px 14px 14px;position:relative;transition:box-shadow .18s,border-color .18s}
+.lp2-card:hover{border-color:var(--g200);box-shadow:var(--shadow-md)}
+.lp2-datewrap{position:relative;flex-shrink:0;align-self:flex-start;cursor:pointer}
+.lp2-date{width:66px;border-radius:14px;background:var(--cream);border:1px solid #f0e4cf;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:11px 0;pointer-events:none;transition:border-color .15s}
+.lp2-date .d{font-family:'Fraunces',serif;font-weight:800;font-size:26px;color:var(--navy);line-height:1}
+.lp2-date .m{font-size:10px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:var(--orange);margin-top:4px}
+.lp2-in-date{position:absolute;inset:0;width:100%;height:100%;opacity:0;border:0;padding:0;margin:0;cursor:pointer}
+.lp2-datewrap:hover .lp2-date{border-color:var(--orange)}
+.lp2-card.gen .lp2-date{background:var(--ocean-light);border-color:#b6ddda}
+.lp2-card.gen .lp2-date .m{color:#1f6b66}
+.lp2-body{flex:1;min-width:0}
+.lp2-topic{width:100%;border:none;background:transparent;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:16px;color:var(--navy);padding:2px 0 2px;outline:none}
+.lp2-topic::placeholder{color:var(--g300);font-weight:600}
+
+/* objetivo — linha de destaque logo abaixo do tópico */
+.lp2-obj{margin-top:6px}
+.lp2-obj label,.lp2-f label,.lp2-notes label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--g400);display:flex;align-items:center;gap:5px;margin-bottom:2px}
+.lp2-obj label svg,.lp2-f label svg,.lp2-notes label svg{width:12px;height:12px;flex-shrink:0}
+.lp2-obj label em,.lp2-f label em{font-style:normal;color:var(--orange);font-weight:800}
+.lp2-obj input{width:100%;border:none;border-bottom:1.5px solid var(--g100);background:transparent;padding:5px 2px;font:inherit;font-size:14px;color:var(--g900);outline:none;transition:border-color .15s}
+.lp2-obj input::placeholder{color:var(--g300)}
+.lp2-obj input:hover{border-bottom-color:var(--g300)}
+.lp2-obj input:focus{border-bottom-color:var(--orange)}
+
+/* trio: páginas (previsão) · homework · last homework */
+.lp2-fields{display:grid;grid-template-columns:170px 1fr 130px;gap:14px;margin-top:10px}
+.lp2-f{display:flex;flex-direction:column;min-width:0}
+.lp2-f input{border:none;border-bottom:1.5px solid var(--g100);background:transparent;padding:5px 2px;font:inherit;font-size:13.5px;color:var(--g900);outline:none;transition:border-color .15s}
+.lp2-f input::placeholder{color:var(--g300)}
+.lp2-f input:hover{border-bottom-color:var(--g300)}
+.lp2-f input:focus{border-bottom-color:var(--orange)}
+
+/* observações — nota discreta no rodapé */
+.lp2-notes{margin-top:12px;background:var(--g50);border:1px solid var(--g100);border-radius:12px;padding:9px 12px}
+.lp2-notes label{margin-bottom:4px}
+.lp2-ta{width:100%;border:none;background:transparent;resize:none;overflow:hidden;font:inherit;font-size:13.5px;color:var(--g900);line-height:1.45;outline:none;min-height:20px}
+.lp2-ta::placeholder{color:var(--g300)}
+
+.lp2-del{position:absolute;top:10px;right:10px;width:26px;height:26px;border:none;background:transparent;color:var(--g300);border-radius:8px;cursor:pointer;font-size:14px;opacity:0;transition:opacity .15s,background .15s,color .15s}
+.lp2-card:hover .lp2-del{opacity:1}
+.lp2-del:hover{background:#fee2e2;color:#dc2626}
+
+.lp2-add{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:2px dashed var(--g200);border-radius:16px;padding:15px;margin-top:12px;color:var(--g500);font:inherit;font-weight:700;font-size:14px;background:transparent;cursor:pointer;transition:all .15s}
+.lp2-add:hover{border-color:var(--orange);color:var(--orange);background:var(--orange-soft)}
+.lp2-add svg{width:18px;height:18px}
+
+/* ── barra de ações ── */
+.lp2-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:18px;padding:14px 16px;background:#fff;border:1px solid var(--g100);border-radius:16px;box-shadow:var(--shadow-sm);position:sticky;bottom:14px}
+.lp2-ghost{display:inline-flex;align-items:center;gap:7px;border:1.5px solid var(--g200);background:#fff;color:var(--navy);border-radius:11px;padding:10px 15px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s}
+.lp2-ghost svg{width:16px;height:16px}
+.lp2-ghost:hover{border-color:var(--orange);color:var(--orange);background:var(--orange-soft)}
+.lp2-actions-spacer{flex:1}
+.lp2-dirty{font-size:12px;font-weight:700;color:var(--mango);display:inline-flex;align-items:center;gap:6px}
+.lp2-dirty::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--mango)}
+.lp2-save{display:inline-flex;align-items:center;gap:8px;border:none;background:var(--orange);color:#fff;border-radius:11px;padding:12px 22px;font:inherit;font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 6px 16px rgba(243,107,46,.3)}
+.lp2-save svg{width:17px;height:17px}
+.lp2-save:hover{background:var(--orange-light)}
+
+/* ── mobile (≤900px = contexto app) ── */
+@media (max-width:900px){
+  .lp2-field{min-width:0;flex:1}
+  .lp2-count{width:100%;text-align:left;order:5}
+  .lp2-fields{grid-template-columns:1fr;gap:10px}
+  .lp2-date{width:58px}
+  .lp2-plan-name{font-size:20px}
+  .lp2-actions{flex-wrap:wrap}
+  .lp2-ghost{flex:1;justify-content:center}
+  .lp2-actions-spacer{display:none;width:100%}
+  .lp2-dirty{order:3;width:100%;justify-content:center;margin-top:2px}
+  .lp2-save{order:4;width:100%;justify-content:center}
+  .lp2-del{opacity:1}
 }
-.lp-doc-title-month { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700; color: var(--orange); }
 
-/* ── Grade (tabela) ── */
-.lp-grid-wrap { overflow-x: auto; padding: 8px 16px 4px; }
-.lp-grid { width: 100%; border-collapse: collapse; min-width: 720px; }
-.lp-grid thead th {
-  font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em;
-  color: var(--navy); text-align: left; padding: 10px 10px; border-bottom: 2px solid var(--g200);
-  background: var(--cream);
-}
-.lp-grid tbody td { padding: 6px 8px; border-bottom: 1px solid var(--g100); vertical-align: top; }
-.lp-grid tbody tr:nth-child(even) td { background: var(--g50); }
-.lp-c-date  { width: 110px; }
-.lp-c-pages { width: 150px; }
-.lp-c-last  { width: 130px; }
-.lp-c-act   { width: 40px; text-align: center; }
+/* ═══ COORDENAÇÃO — leitura (acordeão + tabela read-only) ═══ */
+.lpc-card{border:1px solid var(--g100);border-radius:14px;margin:0 0 12px;overflow:hidden;background:#fff}
+.lpc-head{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;transition:background .15s}
+.lpc-head:hover{background:var(--g50)}
+.lpc-head-main{flex:1;min-width:0}
+.lpc-title{font-size:14px;font-weight:800;color:var(--navy)}
+.lpc-month{font-size:12px;font-weight:700;color:var(--orange);margin-left:4px}
+.lpc-sub{font-size:12px;color:var(--g500);margin-top:2px}
+.lpc-chev{width:18px;height:18px;color:var(--g400);transition:transform .2s;flex-shrink:0}
+.lpc-card.open .lpc-chev{transform:rotate(180deg)}
+.lpc-body{border-top:1px solid var(--g100);background:var(--g50)}
+.lpc-loading,.lpc-empty{padding:18px;text-align:center;color:var(--g400);font-size:13px}
+.lpc-body-actions{padding:4px 16px 16px}
+.lpc-grid-wrap{padding:12px 16px}
 
-.lp-in {
-  width: 100%; box-sizing: border-box; border: 1px solid transparent; border-radius: 8px;
-  padding: 7px 8px; font: inherit; font-size: 13px; color: var(--g900); background: transparent;
-  transition: border-color .15s, background .15s;
-}
-.lp-in::placeholder { color: var(--g300); }
-.lp-in:hover { border-color: var(--g200); }
-.lp-in:focus { outline: none; border-color: var(--orange); background: #fff; box-shadow: 0 0 0 3px var(--orange-soft); }
-.lp-ta { resize: none; overflow: hidden; line-height: 1.4; min-height: 34px; font-family: inherit; }
-.lp-in-date { min-width: 128px; }
+.lp-grid-wrap{overflow-x:auto}
+.lp-grid{width:100%;border-collapse:collapse;min-width:640px}
+.lp-grid thead th{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--navy);text-align:left;padding:10px;border-bottom:2px solid var(--g200);background:var(--cream)}
+.lp-grid tbody td{padding:8px 10px;border-bottom:1px solid var(--g100);vertical-align:top;font-size:13px;color:var(--g700)}
+.lp-c-date{width:88px}
+.lp-c-pages{width:150px}
+.lp-c-last{width:120px}
+.lp-grid-ro .lp-c-date{color:var(--navy);font-weight:700}
+.lpc-topic{font-weight:700;color:var(--navy)}
+.lpc-obj{font-size:12px;color:var(--g500);margin-top:3px}
+.lpc-obj span{font-weight:700;color:var(--g700)}
+.lpc-obs-row td{background:var(--ocean-light);font-size:12px;color:#1f6b66;border-bottom:1px solid var(--g100)}
+.lpc-obs-row span{font-weight:800}
 
-.lp-row-del {
-  border: none; background: var(--g100); color: var(--g500); width: 26px; height: 26px;
-  border-radius: 8px; cursor: pointer; font-size: 13px; line-height: 1; font-weight: 700;
-  transition: background .15s, color .15s;
-}
-.lp-row-del:hover { background: #fee2e2; color: #dc2626; }
-
-/* ── Barra de ações ── */
-.lp-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding: 14px 20px 20px; }
-.lp-actions-spacer { flex: 1; }
-.lp-btn-ghost {
-  display: inline-flex; align-items: center; gap: 7px; border: 1.5px solid var(--g200);
-  background: #fff; color: var(--navy); border-radius: 10px; padding: 9px 14px;
-  font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; transition: all .15s;
-}
-.lp-btn-ghost svg { width: 16px; height: 16px; }
-.lp-btn-ghost:hover { border-color: var(--orange); color: var(--orange); background: var(--orange-soft); }
-.lp-btn-save { width: auto !important; padding: 11px 20px !important; }
-.lp-dirty { font-size: 12px; font-weight: 700; color: var(--mango); }
-
-/* ── Coordenação: acordeão (leitura) ── */
-.lpc-card { border: 1px solid var(--g100); border-radius: 14px; margin: 0 0 12px; overflow: hidden; background: #fff; }
-.lpc-head { display: flex; align-items: center; gap: 12px; padding: 14px 16px; cursor: pointer; transition: background .15s; }
-.lpc-head:hover { background: var(--g50); }
-.lpc-head-main { flex: 1; min-width: 0; }
-.lpc-title { font-size: 14px; font-weight: 800; color: var(--navy); }
-.lpc-month { font-size: 12px; font-weight: 700; color: var(--orange); margin-left: 4px; }
-.lpc-sub { font-size: 12px; color: var(--g500); margin-top: 2px; }
-.lpc-chev { width: 18px; height: 18px; color: var(--g400); transition: transform .2s; flex-shrink: 0; }
-.lpc-card.open .lpc-chev { transform: rotate(180deg); }
-.lpc-body { border-top: 1px solid var(--g100); background: var(--g50); }
-.lpc-loading, .lpc-empty { padding: 18px; text-align: center; color: var(--g400); font-size: 13px; }
-.lpc-body-actions { padding: 4px 16px 16px; }
-.lpc-grid-wrap { padding: 12px 16px; }
-.lp-grid-ro tbody td { padding: 8px 10px; font-size: 13px; color: var(--g700); }
-.lp-grid-ro .lp-c-date { color: var(--navy); font-weight: 700; }
-
-/* ── Mobile: linhas viram cards rotulados (≤900px = contexto app) ── */
-@media (max-width: 900px) {
-  .lp-doc-head { padding: 18px 16px 14px; }
-  .lp-meta-lbl { min-width: 132px; font-size: 11px; }
-  .lp-grid-wrap { padding: 8px 12px; overflow-x: visible; }
-  .lp-grid { min-width: 0; }
-  .lp-grid thead { display: none; }
-  .lp-grid tbody, .lp-grid tr, .lp-grid td { display: block; width: auto; }
-  .lp-grid tbody tr.lp-row {
-    position: relative; border: 1px solid var(--g200); border-radius: 12px;
-    padding: 10px 12px 8px; margin-bottom: 12px; background: #fff !important;
-  }
-  .lp-grid tbody tr:nth-child(even) td { background: transparent; }
-  .lp-grid tbody td { border: none; padding: 6px 0; }
-  .lp-grid tbody td::before {
-    content: attr(data-label); display: block; font-size: 10px; font-weight: 800;
-    text-transform: uppercase; letter-spacing: .04em; color: var(--navy); margin-bottom: 3px;
-  }
-  .lp-grid .lp-c-act { position: absolute; top: 8px; right: 10px; padding: 0; width: auto; }
-  .lp-grid .lp-c-act::before { display: none; }
-  .lp-in { border: 1px solid var(--g200); background: #fff; }
-  .lp-c-date, .lp-c-pages, .lp-c-last { width: auto; }
-  .lp-actions { padding: 12px 14px 18px; }
-  .lp-btn-ghost, .lp-btn-save { flex: 1; justify-content: center; }
-  .lp-actions-spacer { display: none; }
-  /* leitura (coord) também empilha */
-  .lp-grid-ro { min-width: 0; }
-  .lpc-grid-wrap { padding: 10px 12px; }
-  .lp-grid-ro tbody tr { border: 1px solid var(--g200); }
+@media (max-width:900px){
+  .lpc-grid-wrap{padding:10px 12px}
+  .lp-grid-wrap{overflow-x:visible}
+  .lp-grid{min-width:0}
+  .lp-grid thead{display:none}
+  .lp-grid tbody,.lp-grid tr,.lp-grid td{display:block;width:auto}
+  .lp-grid tbody tr{border:1px solid var(--g200);border-radius:12px;padding:8px 10px;margin-bottom:10px;background:#fff}
+  .lp-grid tbody td{border:none;padding:5px 0}
+  .lp-grid tbody td::before{content:attr(data-label);display:block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--navy);margin-bottom:2px}
+  .lpc-obs-row td{border-radius:10px}
 }
 
 /* ═══ DOCUMENTO IMPRIMÍVEL (window.print / salvar em PDF) ═══
-   #lpPrintArea é injetado como filho direto de <body>. As regras só
-   valem quando body.lp-printing está ativo — impressão de qualquer
-   outra página do site continua intacta. */
-#lpPrintArea { display: none; }
-.lpp-doc { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: #111; }
-.lpp-head { display: flex; gap: 24px; align-items: flex-start; border-bottom: 2px solid #19244e; padding-bottom: 12px; margin-bottom: 6px; }
-.lpp-brand { font-family: 'Fraunces', Georgia, serif; font-weight: 900; font-size: 34px; line-height: .9; color: #19244e; display: flex; flex-direction: column; letter-spacing: -1px; }
-.lpp-brand span { font-size: 8px; font-weight: 800; letter-spacing: 2px; color: #f36b2e; margin-top: 3px; font-family: 'Plus Jakarta Sans', sans-serif; }
-.lpp-meta { flex: 1; }
-.lpp-meta div { font-size: 13px; margin-bottom: 4px; color: #333; }
-.lpp-meta strong { color: #19244e; }
-.lpp-title { text-align: center; font-family: 'Fraunces', Georgia, serif; font-weight: 800; font-size: 18px; color: #19244e; margin: 14px 0 10px; }
-.lpp-table { width: 100%; border-collapse: collapse; }
-.lpp-table th { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: #19244e; text-align: center; border-bottom: 2px solid #cbd0da; padding: 8px 8px; }
-.lpp-table td { font-size: 12px; color: #222; padding: 10px 8px; border-bottom: 1px solid #e6e8ee; vertical-align: top; text-align: center; }
-.lpp-table td:nth-child(2), .lpp-table td:nth-child(4) { text-align: left; }
-.lpp-table .lpp-empty td { height: 34px; }
-.lpp-c-date { width: 80px; }
-.lpp-c-pages { width: 130px; }
-.lpp-c-last { width: 120px; }
+   #lpPrintArea é filho direto de <body>; regras valem só com
+   body.lp-printing ativo — impressão de outras páginas segue intacta. */
+#lpPrintArea{display:none}
+.lpp-doc{font-family:'Plus Jakarta Sans',Arial,sans-serif;color:#111}
+.lpp-head{display:flex;gap:24px;align-items:flex-start;border-bottom:2px solid #19244e;padding-bottom:12px;margin-bottom:6px}
+.lpp-brand{font-family:'Fraunces',Georgia,serif;font-weight:900;font-size:34px;line-height:.9;color:#19244e;display:flex;flex-direction:column;letter-spacing:-1px}
+.lpp-brand span{font-size:8px;font-weight:800;letter-spacing:2px;color:#f36b2e;margin-top:3px;font-family:'Plus Jakarta Sans',sans-serif}
+.lpp-meta{flex:1}
+.lpp-meta div{font-size:13px;margin-bottom:4px;color:#333}
+.lpp-meta strong{color:#19244e}
+.lpp-title{text-align:center;font-family:'Fraunces',Georgia,serif;font-weight:800;font-size:18px;color:#19244e;margin:14px 0 10px}
+.lpp-table{width:100%;border-collapse:collapse}
+.lpp-table th{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#19244e;text-align:center;border-bottom:2px solid #cbd0da;padding:8px}
+.lpp-table td{font-size:12px;color:#222;padding:10px 8px;border-bottom:1px solid #e6e8ee;vertical-align:top;text-align:center}
+.lpp-table td:nth-child(2),.lpp-table td:nth-child(4){text-align:left}
+.lpp-table .lpp-empty td{height:34px}
+.lpp-topic{font-weight:700}
+.lpp-obj{font-size:11px;color:#555;font-style:italic;margin-top:2px}
+.lpp-obj span{font-style:normal;font-weight:700;color:#19244e}
+.lpp-obs-row td{text-align:left;font-size:11px;color:#1f6b66;background:#f2fafa;padding:6px 8px}
+.lpp-obs-row span{font-weight:800}
+.lpp-c-date{width:80px}
+.lpp-c-pages{width:120px}
+.lpp-c-last{width:110px}
 
-@media print {
-  body.lp-printing { background: #fff !important; }
-  body.lp-printing > *:not(#lpPrintArea):not(script):not(style) { display: none !important; }
-  body.lp-printing #lpPrintArea { display: block !important; position: static; margin: 0; padding: 0; }
-  body.lp-printing #lpPrintArea .lpp-doc { padding: 8px 6px; }
-  @page { margin: 14mm; }
+@media print{
+  body.lp-printing{background:#fff!important}
+  body.lp-printing > *:not(#lpPrintArea):not(script):not(style){display:none!important}
+  body.lp-printing #lpPrintArea{display:block!important;position:static;margin:0;padding:0}
+  body.lp-printing #lpPrintArea .lpp-doc{padding:8px 6px}
+  @page{margin:14mm}
 }

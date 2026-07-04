@@ -386,13 +386,15 @@ async function saveLessonPlan(teacherId, studentId, monthKey, header, rows) {
       plan_id: plan.id,
       lesson_date: r.lesson_date || null,
       topic: (r.topic || '').trim() || null,
+      objective: (r.objective || '').trim() || null,
       pages: (r.pages || '').trim() || null,
       homework: (r.homework || '').trim() || null,
       last_homework: (r.last_homework || '').trim() || null,
+      notes: (r.notes || '').trim() || null,
       sort_order: i
     }))
     // ignora linhas totalmente vazias
-    .filter(r => r.lesson_date || r.topic || r.pages || r.homework || r.last_homework);
+    .filter(r => r.lesson_date || r.topic || r.objective || r.pages || r.homework || r.last_homework || r.notes);
 
   if (clean.length) {
     const { error: insErr } = await db.from('lesson_plan_entries').insert(clean);
@@ -438,15 +440,21 @@ function eaBuildLessonPlanPrintHTML(header, rows) {
     const p = String(d).split('-');
     return p.length === 3 ? (p[2] + '/' + p[1]) : e(d);
   };
-  const body = (rows && rows.length ? rows : []).map(r =>
-    '<tr>' +
-      '<td class="lpp-c-date">' + fmt(r.lesson_date) + '</td>' +
-      '<td>' + e(r.topic) + '</td>' +
-      '<td class="lpp-c-pages">' + e(r.pages) + '</td>' +
-      '<td>' + e(r.homework).replace(/\n/g,'<br>') + '</td>' +
-      '<td class="lpp-c-last">' + e(r.last_homework) + '</td>' +
-    '</tr>'
-  ).join('');
+  const body = (rows && rows.length ? rows : []).map(r => {
+    const topicCell = '<div class="lpp-topic">' + e(r.topic) + '</div>' +
+      (r.objective ? '<div class="lpp-obj"><span>Objetivo:</span> ' + e(r.objective) + '</div>' : '');
+    let tr = '<tr>' +
+        '<td class="lpp-c-date">' + fmt(r.lesson_date) + '</td>' +
+        '<td>' + topicCell + '</td>' +
+        '<td class="lpp-c-pages">' + e(r.pages) + '</td>' +
+        '<td>' + e(r.homework).replace(/\n/g,'<br>') + '</td>' +
+        '<td class="lpp-c-last">' + e(r.last_homework) + '</td>' +
+      '</tr>';
+    if (r.notes) {
+      tr += '<tr class="lpp-obs-row"><td></td><td colspan="4"><span>Obs.:</span> ' + e(r.notes).replace(/\n/g,'<br>') + '</td></tr>';
+    }
+    return tr;
+  }).join('');
   const filler = Math.max(0, 6 - (rows ? rows.length : 0));
   let fillerRows = '';
   for (let i = 0; i < filler; i++) fillerRows += '<tr class="lpp-empty"><td></td><td></td><td></td><td></td><td></td></tr>';

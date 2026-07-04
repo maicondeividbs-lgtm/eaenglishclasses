@@ -5771,7 +5771,7 @@ async function lpcToggle(planId) {
     try { entries = await getLessonPlanEntries(planId); } catch(e){ console.error(e); }
     body.dataset.loaded = '1';
     body.innerHTML = lpcRenderTable(entries) +
-      '<div class="lpc-body-actions"><button type="button" class="lp-btn-ghost" onclick="lpcPrint(\''+planId+'\')">' +
+      '<div class="lpc-body-actions"><button type="button" class="lp2-ghost" onclick="lpcPrint(\''+planId+'\')">' +
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>' +
         ' Imprimir / PDF</button></div>';
   }
@@ -5781,16 +5781,22 @@ function lpcRenderTable(entries) {
   if (!entries || !entries.length) return '<div class="lpc-empty">Plano sem linhas preenchidas.</div>';
   var fmt = function(d){ if(!d) return ''; var p=String(d).split('-'); return p.length===3 ? (p[2]+'/'+p[1]) : escapeHtml(String(d)); };
   var rows = entries.map(function(r){
-    return '<tr>' +
+    var topicCell = '<div class="lpc-topic">'+escapeHtml(r.topic||'')+'</div>' +
+      (r.objective ? '<div class="lpc-obj"><span>Objetivo:</span> '+escapeHtml(r.objective)+'</div>' : '');
+    var tr = '<tr>' +
       '<td class="lp-c-date" data-label="Data">'+fmt(r.lesson_date)+'</td>' +
-      '<td data-label="Tópico">'+escapeHtml(r.topic||'')+'</td>' +
+      '<td data-label="Tópico">'+topicCell+'</td>' +
       '<td class="lp-c-pages" data-label="Páginas (previsão)">'+escapeHtml(r.pages||'')+'</td>' +
       '<td data-label="Homework">'+escapeHtml(r.homework||'').replace(/\n/g,'<br>')+'</td>' +
       '<td class="lp-c-last" data-label="Last homework">'+escapeHtml(r.last_homework||'')+'</td>' +
     '</tr>';
+    if (r.notes) {
+      tr += '<tr class="lpc-obs-row"><td class="lp-c-date"></td><td colspan="4" data-label="Observações"><span>Obs.:</span> '+escapeHtml(r.notes).replace(/\n/g,'<br>')+'</td></tr>';
+    }
+    return tr;
   }).join('');
   return '<div class="lp-grid-wrap lpc-grid-wrap"><table class="lp-grid lp-grid-ro">' +
-    '<thead><tr><th class="lp-c-date">DATA</th><th>TÓPICO</th><th class="lp-c-pages">PÁGINAS (PREVISÃO)</th><th>HOMEWORK</th><th class="lp-c-last">LAST HOMEWORK</th></tr></thead>' +
+    '<thead><tr><th class="lp-c-date">DATA</th><th>TÓPICO / OBJETIVO</th><th class="lp-c-pages">PÁGINAS (PREVISÃO)</th><th>HOMEWORK</th><th class="lp-c-last">LAST HOMEWORK</th></tr></thead>' +
     '<tbody>'+rows+'</tbody></table></div>';
 }
 

@@ -796,16 +796,6 @@ picture{display:contents}
 .lp2-brand{width:48px;height:48px;flex-shrink:0;border-radius:13px;background:#fff;border:1px solid var(--g200);box-shadow:var(--shadow-sm);display:flex;align-items:center;justify-content:center;overflow:hidden}
 .lp2-brand img{width:100%;height:100%;object-fit:contain;padding:5px}
 
-/* rótulo com botão de IA */
-.lp2-flabel{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:3px}
-.lp2-flabel label{margin-bottom:0}
-.lp2-ai{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--blue-soft);background:var(--blue-soft);color:var(--blue);border-radius:999px;padding:2px 9px;font:inherit;font-size:10px;font-weight:800;letter-spacing:.03em;cursor:pointer;transition:background .15s,color .15s,border-color .15s;flex-shrink:0}
-.lp2-ai:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
-.lp2-ai:disabled{opacity:.55;cursor:default}
-.lp2-ai-spark{font-size:11px;line-height:1;display:inline-block}
-.lp2-ai.loading .lp2-ai-spark{animation:lp2spin .7s linear infinite}
-@keyframes lp2spin{to{transform:rotate(360deg)}}
-
 /* last homework herdado automaticamente da aula anterior */
 .lp2-in-last.lp2-auto{color:var(--g400);font-style:italic}
 

@@ -3599,6 +3599,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
             <button class="teach-tab" data-teach="t-wr" onclick="switchTeach('t-wr',this)">✍️ Redação</button>
             <button class="teach-tab" data-teach="t-pr" onclick="switchTeach('t-pr',this)">🎙️ Pronúncia</button>
             <button class="teach-tab" data-teach="t-vocab" onclick="switchTeach('t-vocab',this)">📚 Vocabulário</button>
+            <button class="teach-tab" data-teach="t-lp" onclick="switchTeach('t-lp',this)">🗒️ Planos de Aula</button>
           </div>
         </div>
 
@@ -3667,6 +3668,79 @@ body.sb-collapsed .main { margin-left: 92px !important; }
             <div class="panel-head"><div class="panel-title">📚 Vocabulário enviado</div></div>
             <div id="tVocList" style="padding:8px 16px 16px"><div class="empty-state"><div class="empty-icon">📚</div><p>Carregando...</p></div></div>
           </div>
+        </div>
+        <!-- LESSON PLANS pane (editor completo, módulo compartilhado) -->
+        <div class="teach-pane" id="t-lp" style="display:none">
+<!-- Barra de contexto: aluno + mês -->
+        <div class="lp2-bar">
+          <div class="lp2-field">
+            <label>Aluno</label>
+            <select id="lpStudent" class="lp2-select" onchange="lpOnPick()"><option value="">Carregando...</option></select>
+          </div>
+          <div class="lp2-field">
+            <label>Mês</label>
+            <div class="lp2-month">
+              <button type="button" class="lp2-mnav" onclick="lpMonthStep(-1)" aria-label="Mês anterior"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+              <button type="button" class="lp2-mlabel" id="lpMonthLabelTop" onclick="lpOpenMonthPicker()">—</button>
+              <button type="button" class="lp2-mnav" onclick="lpMonthStep(1)" aria-label="Próximo mês"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+              <input type="month" id="lpMonth" class="lp2-month-native" onchange="lpOnPick()" aria-label="Selecionar mês">
+            </div>
+          </div>
+          <div class="lp2-spacer"></div>
+          <div class="lp2-count" id="lpCount"></div>
+        </div>
+
+        <div id="lpPickHint" class="lp2-hint">Selecione o aluno e o mês para abrir o plano.</div>
+
+        <!-- Editor (aparece após escolher aluno + mês) -->
+        <div id="lpEditor" style="display:none">
+          <div class="lp2-plan-head">
+            <div class="lp2-avatar" id="lpAvatar">•</div>
+            <div class="lp2-plan-info">
+              <div class="lp2-plan-name" id="lpHdrStudent">—</div>
+              <div class="lp2-chips">
+                <span class="lp2-chip" title="Livro (vem da matrícula — pode ajustar)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                  <input type="text" id="lpHdrBook" class="lp2-chip-in" placeholder="Livro" size="12" oninput="lpUpdateBookCover();lpRenderAllLib()">
+                </span>
+                <span class="lp2-chip lvl" title="Nível (vem da matrícula — pode ajustar)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg>
+                  <input type="text" id="lpHdrLevel" class="lp2-chip-in" placeholder="Nível" size="6">
+                </span>
+              </div>
+            </div>
+            <div class="lp2-bookcover" id="lpBookCover" hidden>
+              <span class="lp2-bc-cap">Livro do aluno</span>
+              <img id="lpBookCoverImg" alt="Capa do livro" onerror="lpBookCoverErr()">
+            </div>
+          </div>
+
+          <span id="lpMonthLabel" class="lp2-hidden"></span>
+
+          <div id="lpRows" class="lp2-list"></div>
+
+          <button type="button" class="lp2-add" onclick="lpAddRow()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Adicionar aula avulsa
+          </button>
+
+          <div class="lp2-actions">
+            <button type="button" class="lp2-ghost" onclick="lpRegenerate()" title="Refaz as datas a partir do schedule do mês (mantém o que você já preencheu)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+              Gerar do schedule
+            </button>
+            <button type="button" class="lp2-ghost" onclick="lpExport()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+              Imprimir / PDF
+            </button>
+            <div class="lp2-actions-spacer"></div>
+            <span id="lpDirty" class="lp2-dirty" style="display:none">alterações não salvas</span>
+            <button type="button" class="lp2-save" onclick="lpSave()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+              Salvar plano
+            </button>
+          </div>
+        </div>
         </div>
       </div>
 
@@ -3913,6 +3987,8 @@ function recalcFinal(){const adj=toolAdjustments.reduce((s,a)=>s+a.val,0);const 
 <!-- Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase.js"></script>
+<script src="curriculum-index.js" defer></script>
+<script src="lesson-plan-editor.js" defer></script>
 <script src="app-fx.js" defer></script>
 <script>
 let currentUser = null;
@@ -4113,6 +4189,7 @@ function switchTeach(key, btn) {
   if(key==='t-fb') loadTeachFbList();
   if(key==='t-pr') loadTeachPrList();
   if(key==='t-vocab') loadTeachVocList();
+  if(key==='t-lp') loadLessonPlansSection();
 }
 
 var teachStudentsLoaded = false;

@@ -2170,18 +2170,22 @@ body.sb-collapsed .main { margin-left: 92px !important; }
         <div id="lpEditor" style="display:none">
           <div class="lp2-plan-head">
             <div class="lp2-avatar" id="lpAvatar">•</div>
-            <div>
+            <div class="lp2-plan-info">
               <div class="lp2-plan-name" id="lpHdrStudent">—</div>
               <div class="lp2-chips">
                 <span class="lp2-chip" title="Livro (vem da matrícula — pode ajustar)">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-                  <input type="text" id="lpHdrBook" class="lp2-chip-in" placeholder="Livro" size="12">
+                  <input type="text" id="lpHdrBook" class="lp2-chip-in" placeholder="Livro" size="12" oninput="lpUpdateBookCover()">
                 </span>
                 <span class="lp2-chip lvl" title="Nível (vem da matrícula — pode ajustar)">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg>
                   <input type="text" id="lpHdrLevel" class="lp2-chip-in" placeholder="Nível" size="6">
                 </span>
               </div>
+            </div>
+            <div class="lp2-bookcover" id="lpBookCover" hidden>
+              <span class="lp2-bc-cap">Livro do aluno</span>
+              <img id="lpBookCoverImg" alt="Capa do livro" onerror="lpBookCoverErr()">
             </div>
           </div>
 
@@ -4322,6 +4326,34 @@ function lpFindStudent(id) {
   return null;
 }
 
+// Capa do livro do aluno (assets reais em img/books/*.webp)
+function lpBookCover(name){
+  var s = (name||'').toLowerCase();
+  var file = null;
+  if (s.indexOf('evolve')>=0){
+    if (s.indexOf('6')>=0) file='evolve-6';
+    else if (s.indexOf('5')>=0) file='evolve-5';
+  } else if (s.indexOf('interchange')>=0 || s.indexOf('intro')>=0){
+    if (s.indexOf('intro')>=0) file='interchange-intro';
+    else if (s.indexOf('3')>=0) file='interchange-3';
+    else if (s.indexOf('2')>=0) file='interchange-2';
+    else if (s.indexOf('1')>=0) file='interchange-1';
+  }
+  return file ? ('img/books/'+file+'.webp') : null;
+}
+function lpUpdateBookCover(){
+  var wrap = document.getElementById('lpBookCover');
+  var img  = document.getElementById('lpBookCoverImg');
+  if (!wrap || !img) return;
+  var url = lpBookCover(document.getElementById('lpHdrBook').value);
+  if (url){ img.src = url; img.alt = 'Capa: ' + document.getElementById('lpHdrBook').value; wrap.hidden = false; }
+  else { wrap.hidden = true; img.removeAttribute('src'); }
+}
+function lpBookCoverErr(){
+  var wrap = document.getElementById('lpBookCover');
+  if (wrap) wrap.hidden = true;
+}
+
 function lpFmtMonthLabel(v) {            // 'YYYY-MM' -> 'Julho 2025'
   if (!v) return '—';
   var p = v.split('-');
@@ -4401,6 +4433,7 @@ async function lpOnPick() {
     var gen = await lpGenerateRowsFromSchedule(_lpState.studentName, mv);
     lpRenderRows(gen);
   }
+  lpUpdateBookCover();
   lpBindHeaderInputs();
   lpSetDirty(false);
 }

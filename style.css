@@ -810,6 +810,10 @@ picture{display:contents}
 
 /* ── cabeçalho do plano ── */
 .lp2-plan-head{display:flex;align-items:center;gap:16px;padding:16px 4px 14px}
+.lp2-plan-info{flex:1;min-width:0}
+.lp2-bookcover{flex-shrink:0;display:flex;align-items:center;gap:9px}
+.lp2-bookcover .lp2-bc-cap{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--g400);text-align:right;max-width:78px;line-height:1.3}
+.lp2-bookcover img{width:56px;height:76px;object-fit:cover;border-radius:9px;box-shadow:0 6px 16px rgba(25,36,78,.18);border:1px solid var(--g200);background:var(--g100);display:block}
 .lp2-avatar{width:52px;height:52px;flex-shrink:0;border-radius:16px;background:linear-gradient(135deg,var(--orange),var(--mango));color:#fff;font-family:'Fraunces',serif;font-weight:800;font-size:24px;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(243,107,46,.28)}
 .lp2-plan-name{font-family:'Fraunces',serif;font-weight:800;font-size:22px;color:var(--navy);line-height:1.1}
 .lp2-chips{display:flex;gap:8px;margin-top:7px;flex-wrap:wrap}
@@ -821,10 +825,10 @@ picture{display:contents}
 
 /* ── lista de aulas ── */
 .lp2-list{display:flex;flex-direction:column;gap:12px}
-.lp2-card{display:flex;gap:16px;background:#fff;border:1px solid var(--g100);border-radius:16px;padding:14px 16px 14px 14px;position:relative;transition:box-shadow .18s,border-color .18s}
+.lp2-card{display:flex;gap:18px;background:#fff;border:1px solid var(--g100);border-radius:18px;padding:16px 18px 16px 16px;position:relative;transition:box-shadow .18s,border-color .18s}
 .lp2-card:hover{border-color:var(--g200);box-shadow:var(--shadow-md)}
 .lp2-datewrap{position:relative;flex-shrink:0;align-self:flex-start;cursor:pointer}
-.lp2-date{width:66px;border-radius:14px;background:var(--cream);border:1px solid #f0e4cf;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:11px 0;pointer-events:none;transition:border-color .15s}
+.lp2-date{width:66px;border-radius:15px;background:var(--cream);border:1px solid #f0e4cf;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 0;pointer-events:none;transition:border-color .15s,box-shadow .15s;box-shadow:0 2px 6px rgba(25,36,78,.05)}
 .lp2-date .d{font-family:'Fraunces',serif;font-weight:800;font-size:26px;color:var(--navy);line-height:1}
 .lp2-date .m{font-size:10px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:var(--orange);margin-top:4px}
 .lp2-in-date{position:absolute;inset:0;width:100%;height:100%;opacity:0;border:0;padding:0;margin:0;cursor:pointer}
@@ -832,21 +836,22 @@ picture{display:contents}
 .lp2-card.gen .lp2-date{background:var(--ocean-light);border-color:#b6ddda}
 .lp2-card.gen .lp2-date .m{color:#1f6b66}
 .lp2-body{flex:1;min-width:0}
-.lp2-topic{width:100%;border:none;background:transparent;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:16px;color:var(--navy);padding:2px 0 2px;outline:none}
+.lp2-topic{width:100%;border:none;background:transparent;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:16.5px;letter-spacing:-.2px;color:var(--navy);padding:2px 0 2px;outline:none}
 .lp2-topic::placeholder{color:var(--g300);font-weight:600}
 
 /* objetivo — linha de destaque logo abaixo do tópico */
-.lp2-obj{margin-top:6px}
+.lp2-obj{margin-top:8px}
 .lp2-obj label,.lp2-f label,.lp2-notes label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--g400);display:flex;align-items:center;gap:5px;margin-bottom:2px}
 .lp2-obj label svg,.lp2-f label svg,.lp2-notes label svg{width:12px;height:12px;flex-shrink:0}
 .lp2-obj label em,.lp2-f label em{font-style:normal;color:var(--orange);font-weight:800}
-.lp2-obj input{width:100%;border:none;border-bottom:1.5px solid var(--g100);background:transparent;padding:5px 2px;font:inherit;font-size:14px;color:var(--g900);outline:none;transition:border-color .15s}
+.lp2-obj input{width:100%;border:none;border-bottom:1.5px solid var(--g100);background:transparent;padding:5px 2px;font:inherit;font-size:14px;font-weight:500;color:var(--g900);outline:none;transition:border-color .15s}
+.lp2-obj>label{color:var(--navy)}
 .lp2-obj input::placeholder{color:var(--g300)}
 .lp2-obj input:hover{border-bottom-color:var(--g300)}
 .lp2-obj input:focus{border-bottom-color:var(--orange)}
 
 /* trio: páginas (previsão) · homework · last homework */
-.lp2-fields{display:grid;grid-template-columns:170px 1fr 130px;gap:14px;margin-top:10px}
+.lp2-fields{display:grid;grid-template-columns:150px 1fr 1fr;gap:18px;margin-top:14px;padding-top:14px;border-top:1px solid var(--g100)}
 .lp2-f{display:flex;flex-direction:column;min-width:0}
 .lp2-f input{border:none;border-bottom:1.5px solid var(--g100);background:transparent;padding:5px 2px;font:inherit;font-size:13.5px;color:var(--g900);outline:none;transition:border-color .15s}
 .lp2-f input::placeholder{color:var(--g300)}
@@ -854,7 +859,7 @@ picture{display:contents}
 .lp2-f input:focus{border-bottom-color:var(--orange)}
 
 /* observações — nota discreta no rodapé */
-.lp2-notes{margin-top:12px;background:var(--g50);border:1px solid var(--g100);border-radius:12px;padding:9px 12px}
+.lp2-notes{margin-top:12px;padding-top:11px;border-top:1px dashed var(--g200)}
 .lp2-notes label{margin-bottom:4px}
 .lp2-ta{width:100%;border:none;background:transparent;resize:none;overflow:hidden;font:inherit;font-size:13.5px;color:var(--g900);line-height:1.45;outline:none;min-height:20px}
 .lp2-ta::placeholder{color:var(--g300)}
@@ -886,6 +891,8 @@ picture{display:contents}
   .lp2-fields{grid-template-columns:1fr;gap:10px}
   .lp2-date{width:58px}
   .lp2-plan-name{font-size:20px}
+  .lp2-bc-cap{display:none}
+  .lp2-bookcover img{width:44px;height:60px}
   .lp2-actions{flex-wrap:wrap}
   .lp2-ghost{flex:1;justify-content:center}
   .lp2-actions-spacer{display:none;width:100%}

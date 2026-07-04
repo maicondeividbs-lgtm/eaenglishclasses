@@ -161,3 +161,8 @@ create trigger trg_lpe_touch before update on public.lesson_plan_entries
 
 -- Pronto. Nenhum webhook/notificação é necessário — planos de aula são
 -- documentos internos (professor + coordenação), sem push/e-mail.
+
+-- Recarrega o schema cache do PostgREST para as colunas novas serem
+-- reconhecidas imediatamente (evita "Could not find the column ... in the
+-- schema cache" logo após adicionar objective/notes).
+notify pgrst, 'reload schema';

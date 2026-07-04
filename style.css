@@ -792,6 +792,39 @@ picture{display:contents}
 .lp2-hidden{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 .lp2-hint{font-size:13px;color:var(--g500);padding:10px 4px 2px}
 
+/* marca EA no cabeçalho da área */
+.lp2-brand{width:48px;height:48px;flex-shrink:0;border-radius:13px;background:#fff;border:1px solid var(--g200);box-shadow:var(--shadow-sm);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.lp2-brand img{width:100%;height:100%;object-fit:contain;padding:5px}
+
+/* rótulo com botão de IA */
+.lp2-flabel{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:3px}
+.lp2-flabel label{margin-bottom:0}
+.lp2-ai{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--blue-soft);background:var(--blue-soft);color:var(--blue);border-radius:999px;padding:2px 9px;font:inherit;font-size:10px;font-weight:800;letter-spacing:.03em;cursor:pointer;transition:background .15s,color .15s,border-color .15s;flex-shrink:0}
+.lp2-ai:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+.lp2-ai:disabled{opacity:.55;cursor:default}
+.lp2-ai-spark{font-size:11px;line-height:1;display:inline-block}
+.lp2-ai.loading .lp2-ai-spark{animation:lp2spin .7s linear infinite}
+@keyframes lp2spin{to{transform:rotate(360deg)}}
+
+/* last homework herdado automaticamente da aula anterior */
+.lp2-in-last.lp2-auto{color:var(--g400);font-style:italic}
+
+/* conexão com a biblioteca: exemplos casados pela página */
+.lp2-lib{margin-top:12px;border:1px solid var(--ocean);background:var(--ocean-light);border-radius:12px;padding:10px 12px}
+.lp2-lib-head{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:#1f6b66;margin-bottom:4px}
+.lp2-lib-head svg{width:13px;height:13px;flex-shrink:0}
+.lp2-lib-item{border-top:1px solid rgba(31,107,102,.16);padding:7px 0 5px}
+.lp2-lib-item:first-of-type{border-top:none}
+.lp2-lib-item>summary{cursor:pointer;font-size:13px;color:var(--navy);list-style:none;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.lp2-lib-item>summary::-webkit-details-marker{display:none}
+.lp2-lib-item>summary::before{content:"\25B8";color:#1f6b66;font-size:12px;transition:transform .15s;display:inline-block}
+.lp2-lib-item[open]>summary::before{transform:rotate(90deg)}
+.lp2-lib-pg{font-size:11px;font-weight:700;color:#1f6b66;background:#fff;border-radius:999px;padding:1px 8px}
+.lp2-lib-ex{list-style:none;margin:8px 0 2px;padding:0 0 0 18px;display:flex;flex-direction:column;gap:6px}
+.lp2-lib-ex li{font-size:13px;line-height:1.45}
+.lp2-lib-en{color:var(--navy);font-weight:600}
+.lp2-lib-pt{color:var(--g500)}
+
 /* ── barra de contexto (aluno + mês) ── */
 .lp2-bar{display:flex;gap:14px;align-items:center;flex-wrap:wrap;background:#fff;border:1px solid var(--g100);border-radius:16px;padding:14px 16px;box-shadow:var(--shadow-sm);margin-bottom:6px}
 .lp2-field{display:flex;flex-direction:column;gap:5px;min-width:180px}
@@ -845,7 +878,7 @@ picture{display:contents}
 .lp2-obj label svg,.lp2-f label svg,.lp2-notes label svg{width:12px;height:12px;flex-shrink:0}
 .lp2-obj label em,.lp2-f label em{font-style:normal;color:var(--orange);font-weight:800}
 .lp2-obj input{width:100%;border:none;border-bottom:1.5px solid var(--g100);background:transparent;padding:5px 2px;font:inherit;font-size:14px;font-weight:500;color:var(--g900);outline:none;transition:border-color .15s}
-.lp2-obj>label{color:var(--navy)}
+.lp2-obj label{color:var(--navy)}
 .lp2-obj input::placeholder{color:var(--g300)}
 .lp2-obj input:hover{border-bottom-color:var(--g300)}
 .lp2-obj input:focus{border-bottom-color:var(--orange)}

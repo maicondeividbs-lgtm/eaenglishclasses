@@ -1808,6 +1808,18 @@ body.sb-collapsed .main { margin-left: 92px !important; }
           <div class="stat-card clickable" data-goto="writing"><div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></div><div class="stat-label">Redações p/ Corrigir</div><div class="stat-value" id="statWriting">-</div></div>
           <div class="stat-card clickable" data-goto="feedback"><div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div class="stat-label">Feedbacks</div><div class="stat-value" id="statFeedbacks">-</div></div>
         </div>
+
+        <div class="today-grid">
+          <div class="panel today-panel">
+            <div class="today-head">📅 Aulas de hoje <span id="todayCount" class="today-badge">0</span></div>
+            <div id="todayClasses" class="today-list"><div class="today-empty">Carregando…</div></div>
+          </div>
+          <div class="panel today-panel">
+            <div class="today-head">⚡ Precisa de você <span id="pendCount" class="today-badge">0</span></div>
+            <div id="todayPending" class="today-list"><div class="today-empty">Carregando…</div></div>
+          </div>
+        </div>
+
         <div class="panel">
           <div class="panel-head"><div class="panel-title"><span class="panel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>Atividade Recente</div></div>
           <div id="recentActivity"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhuma atividade ainda. Comece enviando um homework!</p></div></div>
@@ -2495,47 +2507,78 @@ async function loadStudents() {
 // ═══ OVERVIEW ═══
 async function loadOverview() {
   try {
-    const [tasks, feedbacks, writing, announcements] = await Promise.all([
+    const [tasks, feedbacks, writing, announcements, slots, help] = await Promise.all([
       getTasksByTeacher(currentUser.id),
       getFeedbacksByTeacher(currentUser.id),
       getWritingByTeacher(currentUser.id),
       getAnnouncements(),
+      getScheduleSlots(currentUser.id).catch(function(){return[];}),
+      getHelpRequestsForTeacher(currentUser.id).catch(function(){return[];})
     ]);
+    var students = window._myStudents;
+    if(!students || !students.length){ students = await getMyStudents(currentUser.id).catch(function(){return[];}); window._myStudents = students; }
+
+    document.getElementById('statStudentCount').textContent = students.length;
     document.getElementById('statTasks').textContent = tasks.length;
     document.getElementById('statFeedbacks').textContent = feedbacks.length;
-    document.getElementById('statWriting').textContent = writing.filter(w => w.status === 'submitted').length;
-    // announcements stat removed from overview
+    document.getElementById('statWriting').textContent = writing.filter(function(w){return w.status==='submitted';}).length;
 
-    // Help requests pending count (best-effort — fails silently if table doesn't exist yet)
     try {
-      const helps = await getHelpRequestsForTeacher(currentUser.id);
-      const pending = helps.filter(h => h.status !== 'answered').length;
-      const badge = document.getElementById('helpBadge');
-      if (badge) {
-        if (pending > 0) {
-          badge.textContent = pending;
-          badge.style.display = '';
-          badge.classList.remove('zero');
-        } else {
-          badge.style.display = 'none';
-        }
-      }
-    } catch(e) { /* table may not exist yet */ }
+      var pendingH = help.filter(function(h){return h.status!=='answered';}).length;
+      var badge = document.getElementById('helpBadge');
+      if (badge){ if(pendingH>0){badge.textContent=pendingH;badge.style.display='';badge.classList.remove('zero');} else {badge.style.display='none';} }
+    } catch(e){}
 
-    // Recent activity
-    const recent = [];
-    tasks.slice(0,3).forEach(t => recent.push({title:'📝 ' + t.title, sub: formatDateTime(t.created_at), type:'homework'}));
-    feedbacks.slice(0,3).forEach(f => recent.push({title:'💬 ' + f.title, sub: (f.student?.full_name||'') + ' — ' + formatDateTime(f.created_at), type:'feedback'}));
+    var esc=function(x){return String(x==null?'':x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');};
+    var nameToId={}; students.forEach(function(s){ nameToId[(s.full_name||'').trim().toLowerCase()]=s.id; });
 
-    const actDiv = document.getElementById('recentActivity');
-    if (recent.length === 0) {
-      actDiv.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>Nenhuma atividade ainda. Comece enviando um homework!</p></div>';
-    } else {
-      actDiv.innerHTML = recent.map(r => { const map={homework:{t:'Tarefa',c:'badge-graded'},feedback:{t:'Feedback',c:'badge-done'}}; const m=map[r.type]||{t:r.type,c:'badge-time'}; return '<div class="list-item"><div><div class="list-title">' + r.title + '</div><div class="list-sub">' + r.sub + '</div></div><span class="badge ' + m.c + '">' + m.t + '</span></div>'; }).join('');
+    // ── Aulas de hoje ──
+    var jsDay=new Date().getDay();
+    var todaySched=(jsDay+6)%7;                 // seg=0 … sáb=5, dom=6 (sem aula)
+    var todays=(slots||[]).filter(function(s){return s.day_of_week===todaySched;})
+      .sort(function(a,b){return (a.time_slot||'')<(b.time_slot||'')?-1:1;});
+    var tc=document.getElementById('todayClasses'), tcount=document.getElementById('todayCount');
+    if(tcount)tcount.textContent=todays.length;
+    if(tc){
+      tc.innerHTML = todays.length ? todays.map(function(s){
+        var nm=s.student_name||'Aluno'; var sid=nameToId[nm.trim().toLowerCase()];
+        var t=(s.time_slot||'').slice(0,5);
+        var click = sid ? (' data-sid="'+esc(sid)+'" data-sname="'+esc(nm)+'" onclick="openStudentDetail(this.dataset.sid,this.dataset.sname)"') : '';
+        return '<div class="today-item"'+click+'><div class="today-time">'+esc(t)+'</div><div class="today-main"><div class="today-name">'+esc(nm)+'</div><div class="today-sub">'+(s.duration_minutes||60)+' min</div></div>'+(sid?'<span style="color:var(--g300);font-size:20px">\u203a</span>':'')+'</div>';
+      }).join('') : '<div class="today-empty">'+(jsDay===0?'Domingo — sem aulas 🎉':'Nenhuma aula recorrente hoje.')+'</div>';
     }
-  } catch(e) {
-    console.error('Overview error:', e);
-  }
+
+    // ── Precisa de você ──
+    var pend=[];
+    writing.filter(function(w){return w.status==='submitted';}).forEach(function(w){
+      pend.push({tag:'✍️',cls:'wr',label:'Redação a corrigir',name:(w.student&&w.student.full_name)||'Aluno',goto:'writing'});
+    });
+    tasks.forEach(function(t){
+      (t.task_submissions||[]).filter(function(su){return su.status==='submitted';}).forEach(function(su){
+        pend.push({tag:'📝',cls:'hw',label:'Homework entregue',name:(su.student&&su.student.full_name)||'Aluno',goto:'homework'});
+      });
+    });
+    help.filter(function(h){return h.status!=='answered';}).forEach(function(h){
+      pend.push({tag:'❓',cls:'q',label:'Pergunta aberta',name:(h.student&&h.student.full_name)||'Aluno',goto:'help-requests'});
+    });
+    var pc=document.getElementById('todayPending'), pcount=document.getElementById('pendCount');
+    if(pcount){ pcount.textContent=pend.length; pcount.classList.toggle('warn', pend.length>0); }
+    if(pc){
+      pc.innerHTML = pend.length ? pend.slice(0,8).map(function(p){
+        return '<div class="today-item" data-goto="'+p.goto+'" onclick="(document.querySelector(\'.sb-link[data-section=\\\''+p.goto+'\\\']\')||{click:function(){}}).click()"><div class="today-main"><div class="today-name">'+esc(p.name)+'</div><div class="today-sub">'+p.label+'</div></div><span class="today-tag '+p.cls+'">'+p.tag+'</span></div>';
+      }).join('') : '<div class="today-empty">Tudo em dia! ✅</div>';
+    }
+
+    // ── Atividade recente ──
+    const recent = [];
+    tasks.slice(0,3).forEach(function(t){ recent.push({title:'📝 ' + t.title, sub: formatDateTime(t.created_at), type:'homework'}); });
+    feedbacks.slice(0,3).forEach(function(f){ recent.push({title:'💬 ' + f.title, sub: ((f.student&&f.student.full_name)||'') + ' — ' + formatDateTime(f.created_at), type:'feedback'}); });
+    const actDiv = document.getElementById('recentActivity');
+    if(actDiv){
+      if (recent.length === 0) { actDiv.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>Nenhuma atividade ainda.</p></div>'; }
+      else { actDiv.innerHTML = recent.map(function(r){ var map={homework:{t:'Tarefa',c:'badge-graded'},feedback:{t:'Feedback',c:'badge-done'}}; var m=map[r.type]||{t:r.type,c:'badge-time'}; return '<div class="list-item"><div><div class="list-title">' + r.title + '</div><div class="list-sub">' + r.sub + '</div></div><span class="badge ' + m.c + '">' + m.t + '</span></div>'; }).join(''); }
+    }
+  } catch(e){ console.error('Overview error:', e); }
 }
 
 // ═══ SEND HOMEWORK ═══
@@ -3970,14 +4013,52 @@ function eaStuDetailStyles(){
   document.head.appendChild(s);
 }
 function eaStuClose(){var o=document.getElementById('stuOverlay');if(o){o.classList.remove('show');setTimeout(function(){o.remove();},200);} if(window.eaFx&&eaFx.close)eaFx.close();}
+// ── Perfil 360 do aluno: helpers de próxima aula + atalhos ──
+var EA_DOW_LONG=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+function eaNextClass(slots){
+  if(!slots||!slots.length) return null;
+  var now=new Date(); var todayJs=now.getDay(); var best=null;
+  slots.forEach(function(s){
+    var sjs=(s.day_of_week+1)%7;               // 0=Seg→1 … 5=Sáb→6 (schedule não usa domingo)
+    var delta=(sjs - todayJs + 7)%7;           // 0..6 dias até a próxima ocorrência
+    var d=new Date(now.getFullYear(),now.getMonth(),now.getDate()+delta);
+    var c={date:d,time:(s.time_slot||'')};
+    if(!best || d<best.date || (d.getTime()===best.date.getTime() && c.time<best.time)) best=c;
+  });
+  return best;
+}
+function eaFmtNextClass(nc){
+  if(!nc) return null;
+  var d=nc.date, now=new Date();
+  var dd=String(d.getDate()).padStart(2,'0'), mm=String(d.getMonth()+1).padStart(2,'0');
+  var lbl=(d.toDateString()===now.toDateString())?'Hoje':EA_DOW_LONG[d.getDay()];
+  return lbl+' '+dd+'/'+mm+(nc.time?' · '+String(nc.time).slice(0,5):'');
+}
+function eaStuGoPlan(){
+  var sid=(window._stuData&&window._stuData.sid); eaStuClose();
+  var l=document.querySelector('.sb-link[data-section="lesson-plans"]'); if(l)l.click();
+  if(sid) setTimeout(function(){ var s=document.getElementById('lpStudent'); if(s){ s.value=sid; if(window.lpOnPick)lpOnPick(); } },600);
+}
+function eaStuGoHw(){
+  var sid=(window._stuData&&window._stuData.sid); eaStuClose();
+  var l=document.querySelector('.sb-link[data-section="homework"]'); if(l)l.click();
+  if(sid) setTimeout(function(){ var s=document.getElementById('hwStudent'); if(s)s.value=sid; },400);
+}
+
 async function openStudentDetail(sid, sname){
   if(window.eaFx&&eaFx.open)eaFx.open();
   eaStuDetailStyles();
   var prev=document.getElementById('stuOverlay');if(prev)prev.remove();
-  var ov=document.createElement('div');ov.id='stuOverlay';ov.className='stu-overlay';
+  var stu=(window._myStudents||[]).find(function(x){return String(x.id)===String(sid);})||{};
   var initial=(sname||'?').charAt(0).toUpperCase();
+  var courseTxt=(stu.course_name||stu.level||'')+(stu.cefr?' • '+stu.cefr:'');
+  var subParts=[]; if(courseTxt)subParts.push(escapeHtml(courseTxt)); if(stu.email)subParts.push(escapeHtml(stu.email));
+  var ov=document.createElement('div');ov.id='stuOverlay';ov.className='stu-overlay';
   ov.innerHTML='<div class="stu-modal" onclick="event.stopPropagation()">'+
-    '<div class="stu-head"><div class="stu-av">'+escapeHtml(initial)+'</div><div><div style="font-weight:800;color:var(--navy);font-size:16px">'+escapeHtml(sname||'Aluno')+'</div><div style="font-size:12px;color:var(--g400)">Resumo do aluno</div></div><button class="stu-x" onclick="eaStuClose()" data-nofx>✕</button></div>'+
+    '<div class="stu-head"><div class="stu-av">'+escapeHtml(initial)+'</div>'+
+      '<div style="flex:1;min-width:0"><div style="font-weight:800;color:var(--navy);font-size:16px">'+escapeHtml(sname||'Aluno')+'</div>'+
+      '<div style="font-size:12px;color:var(--g500)">'+(subParts.join(' · ')||'Resumo do aluno')+'</div></div>'+
+      '<button class="stu-x" onclick="eaStuClose()" data-nofx>✕</button></div>'+
     '<div class="stu-tabs" id="stuTabs"></div>'+
     '<div class="stu-body" id="stuBody"><div class="stu-empty">Carregando…</div></div>'+
   '</div>';
@@ -3991,22 +4072,29 @@ async function openStudentDetail(sid, sname){
     getPronunciationForStudent(sid).catch(function(){return[];}),
     getVocabularyForStudent(sid).catch(function(){return[];}),
     getWritingForStudent(sid).catch(function(){return[];}),
-    getAssessmentGrades(sid).catch(function(){return null;})
+    getAssessmentGrades(sid).catch(function(){return null;}),
+    getHelpRequestsForTeacher(currentUser.id).catch(function(){return[];}),
+    getScheduleSlots(currentUser.id).catch(function(){return[];})
   ]);
   var tasks=(R[0]||[]).map(function(r){return {title:(r.task&&r.task.title)||'(tarefa)', due:(r.task&&r.task.due_date)||null, status:r.status};});
   var fbs=R[1]||[], pron=R[2]||[], vocab=R[3]||[], wr=R[4]||[], grades=R[5];
+  var help=(R[6]||[]).filter(function(h){return String(h.student_id)===String(sid);});
+  var slots=(R[7]||[]).filter(function(s){return (s.student_name||'').trim().toLowerCase()===(sname||'').trim().toLowerCase();});
+  var nextClass=eaNextClass(slots);
 
-  window._stuData={tasks:tasks,fbs:fbs,wr:wr,pron:pron,vocab:vocab,grades:grades};
+  window._stuData={sid:sid,sname:sname,stu:stu,tasks:tasks,fbs:fbs,wr:wr,pron:pron,vocab:vocab,grades:grades,help:help,nextClass:nextClass};
   var tabs=[
+    {k:'resumo',label:'✨ Resumo',n:null},
     {k:'tasks',label:'📝 Tarefas',n:tasks.length},
+    {k:'wr',label:'✍️ Redação',n:wr.length},
+    {k:'help',label:'❓ Perguntas',n:help.length},
     {k:'fbs',label:'💬 Feedbacks',n:fbs.length},
     {k:'pron',label:'🔊 Pronúncia',n:pron.length},
     {k:'vocab',label:'📚 Vocabulário',n:vocab.length},
-    {k:'wr',label:'✍️ Redação',n:wr.length},
     {k:'grades',label:'🎯 Notas',n:(grades&&grades.length)||0}
   ];
-  document.getElementById('stuTabs').innerHTML=tabs.map(function(t,i){return '<button class="stu-tab'+(i===0?' active':'')+'" data-nofx onclick="eaStuTab(this,\''+t.k+'\')">'+t.label+' ('+t.n+')</button>';}).join('');
-  eaStuRender('tasks');
+  document.getElementById('stuTabs').innerHTML=tabs.map(function(t,i){return '<button class="stu-tab'+(i===0?' active':'')+'" data-nofx onclick="eaStuTab(this,\''+t.k+'\')">'+t.label+(t.n!=null?' ('+t.n+')':'')+'</button>';}).join('');
+  eaStuRender('resumo');
 }
 function eaStuTab(btn,k){
   document.querySelectorAll('.stu-tab').forEach(function(b){b.classList.remove('active');});
@@ -4017,7 +4105,33 @@ function eaStuRender(k){
   var d=window._stuData||{};var b=document.getElementById('stuBody');if(!b)return;
   function empty(t){return '<div class="stu-empty">'+t+'</div>';}
   var h='';
-  if(k==='tasks'){
+  if(k==='resumo'){
+    var nc=eaFmtNextClass(d.nextClass);
+    var pend=(d.tasks||[]).filter(function(t){return t.status!=='submitted';}).length;
+    var corr=(d.wr||[]).filter(function(w){return w.status==='submitted';}).length;
+    var oh=(d.help||[]).filter(function(x){return x.status!=='answered';}).length;
+    h='<div class="stu-next">'+(nc
+        ? '<div class="stu-next-lbl">Próxima aula</div><div class="stu-next-val">'+escapeHtml(nc)+'</div>'
+        : '<div class="stu-next-lbl">Sem aula recorrente no schedule</div>')+'</div>'+
+      '<div class="stu-cards">'+
+        '<div class="stu-c'+(pend?' warn':'')+'"><div class="stu-c-n">'+pend+'</div><div class="stu-c-l">tarefas pendentes</div></div>'+
+        '<div class="stu-c'+(corr?' warn':'')+'"><div class="stu-c-n">'+corr+'</div><div class="stu-c-l">redações a corrigir</div></div>'+
+        '<div class="stu-c'+(oh?' warn':'')+'"><div class="stu-c-n">'+oh+'</div><div class="stu-c-l">perguntas abertas</div></div>'+
+      '</div>'+
+      '<div class="stu-acts">'+
+        '<button class="stu-act" onclick="eaStuGoPlan()"><span>📋</span> Plano de aula do mês</button>'+
+        '<button class="stu-act" onclick="eaStuGoHw()"><span>📝</span> Enviar homework</button>'+
+      '</div>';
+  } else if(k==='help'){
+    h=(d.help&&d.help.length)?d.help.map(function(q){
+      var ans=q.status==='answered';
+      var st=ans?'<span class="stu-pill" style="background:#dcfce7;color:#16a34a">respondida</span>':'<span class="stu-pill" style="background:#fef9c3;color:#a16207">aberta</span>';
+      return '<div class="stu-row"><b>'+escapeHtml(q.question||q.title||'(pergunta)')+'</b>'+st+
+        (q.answer?'<div style="font-size:12px;color:var(--g600);margin-top:4px">'+escapeHtml(q.answer)+'</div>':'')+
+        '<div style="font-size:11px;color:var(--g400);margin-top:4px">'+formatDate(q.created_at)+'</div></div>';
+    }).join(''):empty('Nenhuma pergunta deste aluno.');
+  } else if(k==='tasks'){
+
     h=(d.tasks&&d.tasks.length)?d.tasks.map(function(t){var st=t.status==='submitted'?'<span class="stu-pill" style="background:#dcfce7;color:#16a34a">entregue</span>':'<span class="stu-pill" style="background:#fff7ed;color:#d97706">pendente</span>';return '<div class="stu-row"><b>'+escapeHtml(t.title||'')+'</b>'+st+'<div style="font-size:12px;color:var(--g500);margin-top:4px">Prazo: '+formatDate(t.due)+'</div></div>';}).join(''):empty('Nenhuma tarefa para este aluno.');
   } else if(k==='fbs'){
     h=(d.fbs&&d.fbs.length)?d.fbs.map(function(f){return '<div class="stu-row"><b>'+escapeHtml(f.title||'')+'</b>'+(f.category?'<span class="stu-pill" style="background:var(--g100);color:var(--g600)">'+escapeHtml(f.category)+'</span>':'')+'<div style="font-size:12px;color:var(--g600);margin-top:4px">'+escapeHtml(f.content||'')+'</div><div style="font-size:11px;color:var(--g400);margin-top:4px">'+formatDate(f.created_at)+'</div></div>';}).join(''):empty('Nenhum feedback ainda.');

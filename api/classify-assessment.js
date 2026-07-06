@@ -17,40 +17,56 @@ function getKey() {
   return process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY || '';
 }
 
-const GUIDE = `Você classifica descrições de aulas particulares de inglês, para o cálculo de pagamento do professor.
-Para CADA descrição, escolha exatamente um status e diga se é meia aula (30 min).
-Definições dos status:
-- NORMAL: aula normalmente dada (qualquer conteúdo de aula). É o padrão.
-- CANCELED_NO_24H: o ALUNO cancelou SEM 24h de antecedência.
-- CANCELED_24H: o ALUNO cancelou COM 24h (ou mais) de antecedência.
-- HOLIDAY: feriado / holiday.
-- VACATION: férias / vacation.
-- RECESS: recesso / recess.
-- TEACHER_ABSENT: o PROFESSOR faltou ou cancelou a aula.
-- STUDENT_ABSENT: o aluno não compareceu sem avisar (no-show / falta do aluno).
-- MOVED_HERE: aula antecipada/remarcada que ACONTECEU nesta data.
-- MOVED_AWAY: aula que foi movida para OUTRA data (não acontece nesta).
-half = true SOMENTE quando a descrição indicar explicitamente duração curta: "30 min", "30 minutos", "meia hora", "meia aula", "metade", "aula reduzida" ou equivalente.
-ATENÇÃO: números em "Page 30", "p. 30", "pg 30", "Unit 5", "Exercise 2", "Lesson 3" são página/unidade/exercício/lição e NÃO indicam duração — NUNCA marque half por causa deles.
-Na dúvida entre NORMAL e um status especial, só use o status especial se houver indício claro no texto; senão use NORMAL.
+const GUIDE = `Você classifica descrições de aulas particulares de inglês para o cálculo do PAGAMENTO do professor. Para CADA descrição, escolha exatamente um status e diga se é meia aula (30 min). Como isto define salário, na dúvida entre "paga" e "não paga", prefira a interpretação mais literal do texto — não invente motivo de falta que não esteja escrito.
 
-MUITO IMPORTANTE — palavras que são TEMA da aula, e não motivo de falta:
-As unidades dos materiais (Interchange/Evolve) têm títulos como "Vacations", "Holidays", "Free time" etc. Quando "Vacation(s)", "Holiday(s)" ou "Recess" aparecem como TEMA/conteúdo da aula (junto de "Unit", "Page", "Exercise", "Lesson" ou de matéria dada), a aula ACONTECEU normalmente — NÃO use VACATION/HOLIDAY/RECESS nesses casos.
-Só use HOLIDAY/VACATION/RECESS quando a descrição disser que NÃO houve aula por esse motivo (ex.: "Feriado, sem aula", "Aluno de férias", "Recesso escolar - sem aula").
-"Reposição", "Repôs", "Aula reposta", "Reagendada/remarcada que aconteceu" indicam uma aula que ACONTECEU nesta data: use MOVED_HERE (é paga).
+STATUS E SE O PROFESSOR RECEBE:
+- NORMAL (recebe): aula normalmente dada. É o PADRÃO — use sempre que houver conteúdo de aula (Unit, Page, Exercise, gramática, conversação etc.).
+- CANCELED_NO_24H (recebe): o ALUNO cancelou/desmarcou SEM 24h de antecedência (em cima da hora, "menos de 24h", "sem avisar").
+- CANCELED_24H (NÃO recebe): o ALUNO cancelou/desmarcou COM 24h ou mais de antecedência.
+- STUDENT_ABSENT (recebe): falta PONTUAL do aluno no dia — não compareceu / no-show / não avisou.
+- MOVED_HERE (recebe): a aula de OUTRO dia foi TRAZIDA e dada HOJE. Ex.: "antecipação do dia 22", "antecipei a aula de sexta", "reposição", "repôs", "aula reposta".
+- RECESS (recebe): recesso/férias/pausa DA ESCOLA (a escola não teve aula naquele período).
+- VACATION (NÃO recebe): férias/ausência prolongada DO ALUNO. Ex.: "aluno em período de ausência", "aluno de férias", "aluno viajou", "aluno fora".
+- HOLIDAY (NÃO recebe): feriado (nacional, estadual ou municipal) sem aula.
+- TEACHER_ABSENT (NÃO recebe): o PROFESSOR faltou ou cancelou a aula.
+- MOVED_AWAY (NÃO recebe): a aula DESTE dia foi dada/ocorrerá em OUTRA data — este horário ficou vazio. Ex.: "aula antecipada em 15/03", "aula já antecipada", "remarcada com antecedência para o dia 20".
+
+REGRA-CHAVE (antecipação/remarcação) — decida pela DIREÇÃO, não pela palavra "antecipa":
+- "antecipada EM [data]" / "antecipada PARA [data]" / "já antecipada" / "remarcada/reagendada PARA o dia X" => a aula SAIU deste dia => MOVED_AWAY (NÃO recebe aqui; ela é paga na data em que aconteceu).
+- "antecipação DO dia X" / "antecipei ... hoje" / "reposição" / "repôs" / "aula reposta" => a aula VEIO para hoje e ACONTECEU => MOVED_HERE (recebe).
+Num par (linha vazia de origem + linha onde a aula foi dada), apenas UMA é paga: a que ACONTECEU.
+
+FÉRIAS/RECESSO — de QUEM?
+- Da ESCOLA (recesso escolar, pausa coletiva, feriado prolongado da escola) => RECESS (recebe).
+- Do ALUNO (aluno de férias, viajou, período de ausência) => VACATION (NÃO recebe).
+
+TEMA x MOTIVO DE FALTA:
+As unidades (Interchange/Evolve) têm títulos como "Vacations", "Holidays", "Free time". Quando "Vacation(s)", "Holiday(s)" ou "Recess" aparecem como TEMA/conteúdo (junto de Unit/Page/Exercise/Lesson/matéria dada), a aula ACONTECEU => use NORMAL, nunca VACATION/HOLIDAY/RECESS. Só use esses status quando o texto disser que NÃO houve aula por esse motivo.
+
+MEIA AULA (half=true) SOMENTE com indício EXPLÍCITO de duração curta: "30 min", "30 minutos", "meia hora", "meia aula", "metade", "aula reduzida", "aula de 30". NUNCA marque half por causa de "Page 30", "p. 30", "pg 30", "Unit 5", "Exercise 2", "Lesson 3" — são página/unidade/exercício/lição.
+
+Na dúvida entre NORMAL e um status especial, só use o especial se houver indício claro; senão use NORMAL.
 
 Exemplos:
 - "Conversation + Page 30 (Exercise 2) - Unit 5 - Mixed feelings" => {"status":"NORMAL","half":false}
 - "Unit 8 - Reading p. 30" => {"status":"NORMAL","half":false}
 - "Aula de 30 minutos (aluno chegou atrasado)" => {"status":"NORMAL","half":true}
+- "Aluno desmarcou com menos de 24 horas" => {"status":"CANCELED_NO_24H","half":false}
 - "Cancelou sem avisar, menos de 24h" => {"status":"CANCELED_NO_24H","half":false}
-- "Cancelada com antecedência (24h)" => {"status":"CANCELED_24H","half":false}
-- "Feriado nacional" => {"status":"HOLIDAY","half":false}
-- "Professor não pôde dar a aula" => {"status":"TEACHER_ABSENT","half":false}
+- "Aluno cancelou com 24 horas de antecedência" => {"status":"CANCELED_24H","half":false}
+- "Aula antecipada em 15/03" => {"status":"MOVED_AWAY","half":false}
+- "Aula já antecipada" => {"status":"MOVED_AWAY","half":false}
+- "Aula remarcada com antecedência para o dia 20/03" => {"status":"MOVED_AWAY","half":false}
+- "Antecipação do dia 22/03 - Unit 6" => {"status":"MOVED_HERE","half":false}
 - "Reposição dia 31/03 - Pages 28, 29 & 30 (Exercise 1) - Unit 5 - Vacations" => {"status":"MOVED_HERE","half":false}
-- "Unit 7 - Holidays around the world" => {"status":"NORMAL","half":false}
+- "Feriado nacional" => {"status":"HOLIDAY","half":false}
 - "Feriado de Tiradentes, sem aula" => {"status":"HOLIDAY","half":false}
-- "Aluno em férias esta semana, sem aula" => {"status":"VACATION","half":false}`;
+- "Professor não pôde dar a aula" => {"status":"TEACHER_ABSENT","half":false}
+- "Recesso escolar - sem aula" => {"status":"RECESS","half":false}
+- "Aluno em período de ausência" => {"status":"VACATION","half":false}
+- "Aluno de férias esta semana, sem aula" => {"status":"VACATION","half":false}
+- "Aluno faltou sem avisar" => {"status":"STUDENT_ABSENT","half":false}
+- "Unit 7 - Holidays around the world" => {"status":"NORMAL","half":false}`;
 
 async function callGemini(items, key, model) {
   const list = items.map((t, i) => i + ': ' + String(t).replace(/\s+/g, ' ').trim()).join('\n');

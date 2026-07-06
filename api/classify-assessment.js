@@ -31,13 +31,17 @@ STATUS E SE O PROFESSOR RECEBE:
 - TEACHER_ABSENT (NÃO recebe): o PROFESSOR faltou ou cancelou a aula.
 - MOVED_AWAY (NÃO recebe): a aula DESTE dia foi dada/ocorrerá em OUTRA data — este horário ficou vazio. Ex.: "aula antecipada em 15/03", "aula já antecipada", "remarcada com antecedência para o dia 20".
 
+REGRA CANCELAMENTO (CRÍTICA) — o que decide é SEM/MENOS versus COM/MAIS. A expressão "de antecedência" aparece nas DUAS frases e NÃO decide nada. Leia a preposição antes de "24":
+- "cancelada SEM 24h" / "sem 24h de antecedência" / "menos de 24h" / "em cima da hora" => CANCELED_NO_24H (RECEBE).
+- "cancelada COM 24h" / "com 24h de antecedência" / "com antecedência" / "24h ou mais" => CANCELED_24H (NÃO recebe).
+
 REGRA-CHAVE (antecipação/remarcação) — decida pela DIREÇÃO, não pela palavra "antecipa":
 - "antecipada EM [data]" / "antecipada PARA [data]" / "já antecipada" / "remarcada/reagendada PARA o dia X" => a aula SAIU deste dia => MOVED_AWAY (NÃO recebe aqui; ela é paga na data em que aconteceu).
 - "antecipação DO dia X" / "antecipei ... hoje" / "reposição" / "repôs" / "aula reposta" => a aula VEIO para hoje e ACONTECEU => MOVED_HERE (recebe).
 Num par (linha vazia de origem + linha onde a aula foi dada), apenas UMA é paga: a que ACONTECEU.
 
 FÉRIAS/RECESSO — de QUEM?
-- Da ESCOLA (recesso escolar, pausa coletiva, feriado prolongado da escola) => RECESS (recebe).
+- Da ESCOLA (recesso escolar, pausa coletiva, feriado prolongado da escola) => RECESS (recebe). "Recesso" sozinho = recesso da escola => RECESS.
 - Do ALUNO (aluno de férias, viajou, período de ausência) => VACATION (NÃO recebe).
 
 TEMA x MOTIVO DE FALTA:
@@ -49,10 +53,12 @@ Na dúvida entre NORMAL e um status especial, só use o especial se houver indí
 
 Exemplos:
 - "Conversation + Page 30 (Exercise 2) - Unit 5 - Mixed feelings" => {"status":"NORMAL","half":false}
-- "Unit 8 - Reading p. 30" => {"status":"NORMAL","half":false}
+- "Pages 2 & 3 (Exercise 2) - Unit 1.1 - Facing challenges" => {"status":"NORMAL","half":false}
 - "Aula de 30 minutos (aluno chegou atrasado)" => {"status":"NORMAL","half":true}
+- "Aula cancelada sem 24h de antecedência" => {"status":"CANCELED_NO_24H","half":false}
 - "Aluno desmarcou com menos de 24 horas" => {"status":"CANCELED_NO_24H","half":false}
 - "Cancelou sem avisar, menos de 24h" => {"status":"CANCELED_NO_24H","half":false}
+- "Aula cancelada com 24h de antecedência" => {"status":"CANCELED_24H","half":false}
 - "Aluno cancelou com 24 horas de antecedência" => {"status":"CANCELED_24H","half":false}
 - "Aula antecipada em 15/03" => {"status":"MOVED_AWAY","half":false}
 - "Aula já antecipada" => {"status":"MOVED_AWAY","half":false}
@@ -60,8 +66,8 @@ Exemplos:
 - "Antecipação do dia 22/03 - Unit 6" => {"status":"MOVED_HERE","half":false}
 - "Reposição dia 31/03 - Pages 28, 29 & 30 (Exercise 1) - Unit 5 - Vacations" => {"status":"MOVED_HERE","half":false}
 - "Feriado nacional" => {"status":"HOLIDAY","half":false}
-- "Feriado de Tiradentes, sem aula" => {"status":"HOLIDAY","half":false}
 - "Professor não pôde dar a aula" => {"status":"TEACHER_ABSENT","half":false}
+- "Recesso" => {"status":"RECESS","half":false}
 - "Recesso escolar - sem aula" => {"status":"RECESS","half":false}
 - "Aluno em período de ausência" => {"status":"VACATION","half":false}
 - "Aluno de férias esta semana, sem aula" => {"status":"VACATION","half":false}

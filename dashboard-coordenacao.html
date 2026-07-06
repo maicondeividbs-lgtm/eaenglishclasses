@@ -3888,7 +3888,8 @@ async function initToolProfessors() {
 function eaNorm(s){return String(s==null?'':s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim();}
 // Classificação por REGRAS (fallback determinístico). Em produção a IA
 // (toggle "Validar por IA", ligado por padrão) sobrescreve tudo via
-// /api/classify-assessment. Este mapa segue a mesma lógica do GUIDE do Gemini.
+// /api/classify-assessment; se a IA cair (ex.: 502), este mapa é o resultado.
+// Segue a mesma lógica do GUIDE do Gemini.
 // Pagas: NORMAL, CANCELED_NO_24H, STUDENT_ABSENT, RECESS, MOVED_HERE.
 function eaClassify(desc){
   const dl=eaNorm(desc);
@@ -3903,13 +3904,14 @@ function eaClassify(desc){
   else if(/antecipad\w*\s+(em|para|pro|pra)\b|\bja\s+antecipad|(remarcad\w*|reagendad\w*|remanejad\w*|movid\w*)\s*.*\b(para|pro|pra)\s+(o\s+)?dia|(remarcad\w*|reagendad\w*)\s+com\s+anteced/.test(dl))status='MOVED_AWAY';
   // 3) Aula TRAZIDA para hoje: "antecipação do dia X", "antecipei", reposição/repôs (paga)
   else if(/antecipa\w*\s+d[oa]\s+dia|antecipei|reposic|\brepos\b|repos(ta|to)|aula\s+repost|recuperad/.test(dl))status='MOVED_HERE';
-  // 4) Aluno cancelou SEM 24h (paga)
-  else if(/(cancel\w*|desmarc\w*|remarc\w*)\D{0,20}(sem\s*24|menos de 24|-?\s*24|em cima da hora)|sem\s+aviso|menos de 24|em cima da hora/.test(dl)&&!/com\s+(mais de\s+)?24|24\s*h?\s*(ou mais|de anteced|antes)|com\s+anteced/.test(dl))status='CANCELED_NO_24H';
-  // 4b) Aluno cancelou COM 24h ou mais (NÃO paga)
-  else if(/(cancel\w*|desmarc\w*)\D{0,20}(com\s*24|mais de 24|24\s*h?\s*(ou mais|de anteced|antes|de aviso))|(cancel\w*|desmarc\w*)\D{0,20}com\s+anteced/.test(dl))status='CANCELED_24H';
+  // 4) Aluno cancelou/desmarcou SEM 24h (PAGA). O que decide é SEM/MENOS/em cima
+  //    da hora — NUNCA "de antecedência" (aparece nos dois casos).
+  else if(/(cancel\w*|desmarc\w*)/.test(dl)&&/\bsem\s*24|menos de\s*24|em cima da hora|sem\s+aviso|sem\s+anteced|abaixo de\s*24/.test(dl))status='CANCELED_NO_24H';
+  // 4b) Aluno cancelou/desmarcou COM 24h ou mais (NÃO paga). Decide COM/MAIS.
+  else if(/(cancel\w*|desmarc\w*)/.test(dl)&&/\bcom\s*24|mais de\s*24|24\s*h?\s*(ou mais|de anteced|antes|de aviso)|com\s+anteced|com\s+aviso/.test(dl))status='CANCELED_24H';
   // 5) Feriado (NÃO paga) — ignora se for claramente tema de unidade
   else if(/feriad|holiday/.test(dl)&&(!hasContent||/sem aula|nao houve|feriad/.test(dl)))status='HOLIDAY';
-  // 6) Recesso/férias DA ESCOLA (paga)
+  // 6) Recesso/férias DA ESCOLA (paga) — inclui "Recesso" sozinho
   else if(/\brecess\w*|recesso|(recesso|feria\w*|vacation|pausa)\s+(escolar|da escola|coletiv)|escola\s+(fechad|em recesso|de feria|em feria)/.test(dl))status='RECESS';
   // 7) Férias/ausência prolongada DO ALUNO (NÃO paga)
   else if(/aluno\s+(de\s+feria|em\s+feria|viajou|viajando|em\s+viagem|fora|ausent|em\s+ausenc)|(periodo\s+de\s+ausenc|em\s+ausenc)|feria\w*\s+do\s+aluno|viagem\s+do\s+aluno/.test(dl))status='VACATION';

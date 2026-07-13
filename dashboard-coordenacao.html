@@ -2668,6 +2668,11 @@ body.sb-collapsed .main { margin-left: 92px !important; }
             <span id="helpCount" class="sb-count zero">0</span>
             <span class="tip">Perguntas dos Alunos</span>
           </button>
+          <button class="sb-link" data-section="satisfaction">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            <span>Satisfação</span>
+            <span class="tip">Pesquisa de Satisfação</span>
+          </button>
         </div>
       </div>
 
@@ -3558,6 +3563,9 @@ body.sb-collapsed .main { margin-left: 92px !important; }
       </div>
 
       
+      <!-- ═══ SATISFACTION SURVEY ═══ -->
+      <div class="section" id="sec-satisfaction"></div>
+
       <!-- ═══ TESTIMONIALS MANAGEMENT ═══ -->
       <div class="section" id="sec-testimonials">
         <div class="section-head">
@@ -4023,10 +4031,12 @@ function recalcFinal(){const adj=toolAdjustments.reduce((s,a)=>s+a.val,0);const 
 <script src="supabase.js"></script>
 <script src="curriculum-index.js" defer></script>
 <script src="lesson-plan-editor.js" defer></script>
+<script src="satisfaction.js" defer></script>
 <script src="app-fx.js" defer></script>
 <script>
 let currentUser = null;
-const sections = {"overview":"Visão Geral","users":"Usuários","access":"Acessos de Alunos","schedules":"Schedules","nivelamento":"Nivelamentos","supervision":"Supervisão","homework":"Homeworks","feedbacks":"Feedbacks","announcements":"Avisos","messages":"Msg → Professor","help-requests":"Perguntas","writing":"Redações","pronunciation-coord":"Pronúncias","documents":"Notas de Avaliações","testimonials":"Depoimentos","teach":"Área do Professor","tool":"Ferramenta","my-students":"Meus Alunos","my-profile":"Meu Perfil"};
+const sections = {"overview":"Visão Geral","users":"Usuários","access":"Acessos de Alunos","schedules":"Schedules","nivelamento":"Nivelamentos","supervision":"Supervisão","homework":"Homeworks","feedbacks":"Feedbacks","announcements":"Avisos","messages":"Msg → Professor","help-requests":"Perguntas","writing":"Redações","pronunciation-coord":"Pronúncias","documents":"Notas de Avaliações","testimonials":"Depoimentos","teach":"Área do Professor","tool":"Ferramenta","my-students":"Meus Alunos","my-profile":"Meu Perfil","satisfaction":"Satisfação"}
+function loadSatisfaction(){ if(window.EA_SAT) EA_SAT.mountCoord(document.getElementById('sec-satisfaction'), currentUser); };
 
 // ═══ INIT ═══
 // ═══ COLLAPSIBLE SIDEBAR ═══
@@ -7123,6 +7133,7 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'tool': initToolProfessors(); break;
       case 'my-students': loadCoMyStudents(); break;
       case 'my-profile': loadMyProfile(); break;
+      case 'satisfaction': loadSatisfaction(); break;
     }
   });
   document.querySelectorAll('.section').forEach(s => observer.observe(s, {attributes:true, attributeFilter:['class']}));

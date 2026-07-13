@@ -2650,6 +2650,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
       <button class="sb-link" data-section="grades" data-tip="Minhas Notas"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm-2 14l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg><span>Minhas Notas</span></button>
       <button class="sb-link" data-section="vocabulary" data-tip="Vocabulário"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h18a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H8l-5 4V4a1 1 0 0 1 1-1zm4 6v2h10V9H7zm0 4v2h7v-2H7z"/></svg><span>Vocabulário</span></button>
       <button class="sb-link" data-section="announcements" data-tip="Avisos"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg><span>Avisos</span></button>
+      <button class="sb-link" data-section="satisfaction" data-tip="Pesquisa de Satisfação"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Pesquisa</span></button>
       <button class="sb-link" data-section="writing" data-tip="Redação"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.996.996 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg><span>Redação</span></button>
       <button class="sb-link" data-section="pronunciation" data-tip="Pronúncia"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-2.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg><span>Pronúncia</span></button>
     </nav>
@@ -2827,6 +2828,8 @@ body.sb-collapsed .main { margin-left: 92px !important; }
       </div>
 
       <!-- WRITING -->
+      <div class="section" id="sec-satisfaction"></div>
+
       <div class="section" id="sec-writing">
         <div class="section-head">
           <div class="section-head-icon">
@@ -3094,9 +3097,11 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase.js"></script>
 <script src="app-fx.js" defer></script>
+<script src="satisfaction.js" defer></script>
 <script>
 let currentUser = null;
-const sections = {"overview":"Visão Geral","schedule":"Minha Grade","homework":"Homework","feedback":"Feedbacks","grades":"Minhas Notas","vocabulary":"Vocabulário","announcements":"Avisos","writing":"Redação","pronunciation":"Pronúncia","manual":"Manual do Aluno","profile":"Meu Perfil"};
+const sections = {"overview":"Visão Geral","schedule":"Minha Grade","homework":"Homework","feedback":"Feedbacks","grades":"Minhas Notas","vocabulary":"Vocabulário","announcements":"Avisos","writing":"Redação","pronunciation":"Pronúncia","manual":"Manual do Aluno","profile":"Meu Perfil","satisfaction":"Pesquisa"};
+function loadSatisfaction(){ if(window.EA_SAT) EA_SAT.mountStudent(document.getElementById('sec-satisfaction'), currentUser); }
 
 // Registra o acesso do aluno para a coordenação.
 // Chamado após a autenticação confirmar que é um aluno.
@@ -4582,6 +4587,7 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'schedule': loadStudentSchedule(); break;
       case 'homework': loadHomework(); break;
       case 'profile': loadProfile(); break;
+      case 'satisfaction': loadSatisfaction(); break;
       case 'feedback': loadFeedbacks(); break;
       case 'grades': loadGrades(); break;
       case 'vocabulary': loadVocabulary(); break;

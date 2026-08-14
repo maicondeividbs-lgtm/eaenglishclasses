@@ -1309,7 +1309,8 @@
 
   .teachers-grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    justify-content: center;
     gap: 22px;
     margin-bottom: 56px;
   }
@@ -1660,23 +1661,33 @@
   /* Laptop pequeno / tablet largo: 3 colunas */
   @media (max-width: 1180px) {
     .teachers-grid {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 22px;
+    }
+    /* Com 4 cards, o 4º fica sozinho na 2ª linha: centralizar */
+    .teachers-grid .teacher-card:last-child {
+      grid-column: 2 / 3;
     }
   }
   /* Tablet: 2 colunas */
   @media (max-width: 1024px) {
     .teachers-grid {
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 24px;
+    }
+    .teachers-grid .teacher-card:last-child {
+      grid-column: auto;
     }
   }
   /* Mobile: 1 coluna */
   @media (max-width: 560px) {
     .teachers { padding: 80px 0; }
     .teachers-grid {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
       gap: 20px;
+    }
+    .teachers-grid .teacher-card:last-child {
+      grid-column: auto;
     }
     .teachers-header { margin-bottom: 44px; }
     /* Em coluna única o card é largo: usar proporção retrato suave
@@ -2791,35 +2802,6 @@
           </div>
           <div class="teacher-skills">
             <span class="teacher-skill">Conversação</span>
-            <span class="teacher-skill">Grammar</span>
-            <span class="teacher-skill">Método EA</span>
-          </div>
-        </div>
-      </article>
-
-      <!-- João Matheus -->
-      <article class="teacher-card">
-        <div class="teacher-photo-wrap">
-          <div class="teacher-photo-bg"></div>
-          <picture><source type="image/webp" srcset="img/teachers/joao.webp"><img src="img/teachers/joao.jpg" alt="João Matheus — Professor de Inglês" class="teacher-photo" loading="lazy" width="1000" height="648"></picture>
-          <div class="teacher-badge">Professor</div>
-        </div>
-        <div class="teacher-content">
-          <h3 class="teacher-name">João Matheus</h3>
-          <p class="teacher-role">Professor de Inglês</p>
-          <div class="teacher-bio-wrap">
-            <p class="teacher-bio-text">Sou apaixonado por inglês desde cedo, tendo desenvolvido meu interesse pela língua através da escola e principalmente dos videogames.</p>
-            <button type="button" class="teacher-bio-toggle" data-bio-toggle
-              data-bio-name="João Matheus"
-              data-bio-role="Professor de Inglês"
-              data-bio-photo="img/teachers/joao.jpg"
-              data-bio-full="Sou apaixonado por inglês desde cedo, tendo desenvolvido meu interesse pela língua através da escola e principalmente dos videogames. Estudei na Wizard by Pearson e no CNA, e iniciei minha trajetória profissional como professor de inglês em 2023, na Times Idiomas, lecionando para adultos, adolescentes e idosos. Posteriormente, passei a atuar com aulas particulares, aprofundando meus conhecimentos em metodologias como Flipped Classroom e método Callahan, além de desenvolver ainda mais minha comunicação e didática como teacher. Minha última experiência antes da EA English Classes foi dando aulas para crianças. Sou extrovertido, comunicativo, apaixonado por conversar e jogar videogame, além de ser casado e pai de três crianças lindas.">
-              Ver biografia completa
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </button>
-          </div>
-          <div class="teacher-skills">
-            <span class="teacher-skill">Speaking</span>
             <span class="teacher-skill">Grammar</span>
             <span class="teacher-skill">Método EA</span>
           </div>

@@ -311,6 +311,13 @@ body { background: var(--g50); margin: 0; }
   display: block; font-size: 12px; font-weight: 700;
   color: var(--navy); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;
 }
+.help-modal-body select {
+  width: 100%; padding: 12px 14px;
+  border: 2px solid var(--g200); border-radius: 10px;
+  font-family: inherit; font-size: 14px; color: var(--navy);
+  background: #fff; outline: none; transition: border-color 0.2s;
+}
+.help-modal-body select:focus { border-color: var(--orange); }
 .help-modal-body input,
 .help-modal-body textarea {
   width: 100%; padding: 12px 14px;
@@ -4334,20 +4341,26 @@ async function loadProfile() {
 
   // Teacher info card
   try {
-    const info = await getStudentMainTeacher(currentUser.id);
-    if (info && info.teacher) {
+    const teachers = await getStudentTeachers(currentUser.id);
+    if (teachers.length) {
       const card = document.getElementById('profTeacherCard');
       const body = document.getElementById('profTeacherBody');
-      const tName = info.teacher.full_name || 'Professor';
-      const initial = tName[0].toUpperCase();
-      body.innerHTML =
-        '<div class="profile-teacher-info">' +
-          '<div class="profile-teacher-avatar">' + initial + '</div>' +
-          '<div>' +
-            '<div class="profile-teacher-name">' + wrEscapeHtml(tName) + '</div>' +
-            '<div class="profile-teacher-course">Use o botão "Pedir ajuda" no canto da tela para tirar dúvidas.</div>' +
-          '</div>' +
-        '</div>';
+      const hint = teachers.length > 1
+        ? 'Você tem ' + teachers.length + ' professores. Use o botão "Pedir ajuda" no canto da tela e escolha para quem enviar.'
+        : 'Use o botão "Pedir ajuda" no canto da tela para tirar dúvidas.';
+      body.innerHTML = teachers.map(function(t){
+        const tName = t.teacher_name || 'Professor';
+        const initial = tName.charAt(0).toUpperCase();
+        const sub = t.course_name ? wrEscapeHtml(t.course_name) : 'Professor de Inglês';
+        return '<div class="profile-teacher-info">' +
+            '<div class="profile-teacher-avatar">' + wrEscapeHtml(initial) + '</div>' +
+            '<div>' +
+              '<div class="profile-teacher-name">' + wrEscapeHtml(tName) + '</div>' +
+              '<div class="profile-teacher-course">' + sub + '</div>' +
+            '</div>' +
+          '</div>';
+      }).join('') +
+      '<div class="profile-teacher-course" style="margin-top:10px">' + wrEscapeHtml(hint) + '</div>';
       card.style.display = '';
     }
   } catch(e) { console.error('Teacher card:', e); }
@@ -4362,14 +4375,8 @@ async function loadNextClass() {
   const wrap = document.getElementById('nextClassWrap');
   if (!wrap) return;
   try {
-    const info = await getStudentMainTeacher(currentUser.id);
-    if (!info || !info.teacher_id) return;
-
-    const slots = await getScheduleSlots(info.teacher_id);
-    const myName = (currentUser.full_name || '').trim().toLowerCase();
-    const mine = (slots || []).filter(s =>
-      s.student_name && s.student_name.trim().toLowerCase() === myName
-    );
+    const sched = await getStudentScheduleSlots(currentUser.id, currentUser.full_name);
+    const mine = sched.slots;
     if (!mine.length) return;
 
     // Calcular qual slot ocorre primeiro a partir de agora
@@ -4393,6 +4400,7 @@ async function loadNextClass() {
     var dayNames = ['Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
     var hm = (best.time_slot || '').substring(0, 5);
     var dur = best.duration_minutes ? best.duration_minutes + ' min' : '60 min';
+    if (best.teacher_name) dur += ' · ' + best.teacher_name;
     var diff = best._diff;
 
     // Texto do countdown
@@ -4430,27 +4438,14 @@ async function loadMyClasses() {
   const dayNames = ['Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
   const dayAbbr = ['Seg','Ter','Qua','Qui','Sex','Sáb'];
   try {
-    // Find the student's main teacher
-    const info = await getStudentMainTeacher(currentUser.id);
-    if (!info || !info.teacher_id) {
-      body.innerHTML = '<p class="profile-help" style="margin:0">Nenhuma aula agendada ainda. Assim que a coordenação definir sua turma, seus horários aparecem aqui.</p>';
-      return;
-    }
-    // Read the teacher's schedule grid
-    const slots = await getScheduleSlots(info.teacher_id);
-    const myName = (currentUser.full_name || '').trim().toLowerCase();
-    const mine = (slots || []).filter(s =>
-      s.student_name && s.student_name.trim().toLowerCase() === myName
-    );
+    // Junta a grade de TODOS os professores do aluno (guarda compartilhada)
+    const sched = await getStudentScheduleSlots(currentUser.id, currentUser.full_name);
+    const mine = sched.slots;   // já vem ordenada por dia/horário
     if (mine.length === 0) {
       body.innerHTML = '<p class="profile-help" style="margin:0">Nenhuma aula agendada ainda. Assim que a coordenação definir sua turma, seus horários aparecem aqui.</p>';
       return;
     }
-    // Sort by day, then time
-    mine.sort((a, b) => {
-      if (a.day_of_week !== b.day_of_week) return a.day_of_week - b.day_of_week;
-      return (a.time_slot || '').localeCompare(b.time_slot || '');
-    });
+    const showTeacher = sched.teachers.length > 1;
     let html = '';
     mine.forEach(s => {
       const di = s.day_of_week;
@@ -4458,12 +4453,13 @@ async function loadMyClasses() {
       const abbr = (di >= 0 && di < dayAbbr.length) ? dayAbbr[di] : '?';
       const time = s.time_slot || '';
       const dur = s.duration_minutes ? (' · ' + s.duration_minutes + ' min') : '';
+      const who = (showTeacher && s.teacher_name) ? (' · 👨‍🏫 ' + wrEscapeHtml(s.teacher_name)) : '';
       html +=
         '<div class="class-item">' +
           '<div class="class-day"><span class="class-day-abbr">' + abbr + '</span></div>' +
           '<div>' +
             '<div class="class-info-day">' + dayFull + '</div>' +
-            '<div class="class-info-time">🕐 ' + wrEscapeHtml(time) + dur + '</div>' +
+            '<div class="class-info-time">🕐 ' + wrEscapeHtml(time) + dur + who + '</div>' +
           '</div>' +
         '</div>';
     });
@@ -4483,11 +4479,9 @@ async function loadStudentSchedule() {
   const dayAbbr = ['Seg','Ter','Qua','Qui','Sex','Sáb'];
   const emptyHtml = '<div class="empty-state"><div class="empty-icon">🗓️</div><p>Nenhuma aula agendada ainda. Assim que a coordenação definir sua turma, seus horários aparecem aqui.</p></div>';
   try {
-    const info = await getStudentMainTeacher(currentUser.id);
-    if (!info || !info.teacher_id) { if (banner) banner.style.display='none'; body.innerHTML = emptyHtml; return; }
-    const slots = await getScheduleSlots(info.teacher_id);
-    const myName = (currentUser.full_name || '').trim().toLowerCase();
-    const mine = (slots || []).filter(s => s.student_name && s.student_name.trim().toLowerCase() === myName);
+    const sched = await getStudentScheduleSlots(currentUser.id, currentUser.full_name);
+    const mine = sched.slots;
+    const showTeacher = sched.teachers.length > 1;
     if (!mine.length) { if (banner) banner.style.display='none'; body.innerHTML = emptyHtml; return; }
 
     // Próxima aula
@@ -4513,12 +4507,11 @@ async function loadStudentSchedule() {
           '<div style="font-size:30px">' + (best._diff === 0 ? '⚡' : '🗓️') + '</div>' +
           '<div><div style="font-size:12px;text-transform:uppercase;letter-spacing:.06em;opacity:.85;font-weight:700">Próxima aula</div>' +
           '<div style="font-size:18px;font-weight:800">' + when + ' · ' + hm + '</div>' +
-          '<div style="font-size:13px;opacity:.9">🕐 ' + dur + (info.teacher_name ? (' · ' + wrEscapeHtml(info.teacher_name)) : '') + '</div></div>' +
+          '<div style="font-size:13px;opacity:.9">🕐 ' + dur + (best.teacher_name ? (' · ' + wrEscapeHtml(best.teacher_name)) : '') + '</div></div>' +
         '</div>';
     } else if (banner) { banner.style.display = 'none'; }
 
-    // Grade semanal
-    mine.sort(function(a,b){ return a.day_of_week !== b.day_of_week ? a.day_of_week - b.day_of_week : (a.time_slot||'').localeCompare(b.time_slot||''); });
+    // Grade semanal (já vem ordenada por dia/horário)
     let html = '';
     mine.forEach(function(s){
       const di = s.day_of_week;
@@ -4531,7 +4524,7 @@ async function loadStudentSchedule() {
         '<div class="class-item"' + (isNext ? ' style="border-color:var(--blue)"' : '') + '>' +
           '<div class="class-day"><span class="class-day-abbr">' + abbr + '</span></div>' +
           '<div><div class="class-info-day">' + dayFull + (isNext ? ' <span style="color:var(--blue);font-size:11px;font-weight:700">• próxima</span>' : '') + '</div>' +
-            '<div class="class-info-time">🕐 ' + wrEscapeHtml(time) + dur + '</div></div>' +
+            '<div class="class-info-time">🕐 ' + wrEscapeHtml(time) + dur + ((showTeacher && s.teacher_name) ? (' · 👨‍🏫 ' + wrEscapeHtml(s.teacher_name)) : '') + '</div></div>' +
         '</div>';
     });
     body.innerHTML = '<div class="profile-card-body" style="padding:0">' + html + '</div>';
@@ -4600,33 +4593,57 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ═══ HELP REQUEST (Pedir ajuda ao professor) ═══
-let _helpTeacherId = null;
-let _helpTeacherName = '';
+let _helpTeachers = [];
+
+// Professor escolhido no seletor (ou o único, quando só há um).
+function helpSelectedTeacher() {
+  if (!_helpTeachers.length) return null;
+  if (_helpTeachers.length === 1) return _helpTeachers[0];
+  const sel = document.getElementById('helpTeacherSelect');
+  const id = sel ? sel.value : '';
+  return _helpTeachers.find(t => t.teacher_id === id) || null;
+}
 
 async function initHelpRequest() {
   const fab = document.getElementById('helpFab');
   if (!fab) return;
   fab.addEventListener('click', openHelpModal);
-  // Try to resolve teacher once at startup
+  // Resolve os professores do aluno uma vez, na inicialização
   if (!currentUser || !currentUser.id) return;
   try {
-    const info = await getStudentMainTeacher(currentUser.id);
-    if (info && info.teacher) {
-      _helpTeacherId = info.teacher.id;
-      _helpTeacherName = info.teacher.full_name;
-    }
-  } catch(e) { console.error('Help — fetch teacher:', e); }
+    _helpTeachers = await getStudentTeachers(currentUser.id);
+  } catch(e) { console.error('Help — fetch teachers:', e); }
 }
 
 async function openHelpModal() {
   const modal = document.getElementById('helpModal');
   modal.classList.add('open');
   const teacherInfo = document.getElementById('helpTeacherName');
-  if (_helpTeacherName) {
-    teacherInfo.textContent = 'Sua mensagem vai para ' + _helpTeacherName;
+  const pick = document.getElementById('helpTeacherPick');
+  const sel = document.getElementById('helpTeacherSelect');
+  const sendBtn = document.getElementById('helpSendBtn');
+
+  // Recarrega caso a coordenação tenha mudado o vínculo com a aba aberta
+  if (!_helpTeachers.length) {
+    try { _helpTeachers = await getStudentTeachers(currentUser.id); } catch(e) {}
+  }
+
+  if (_helpTeachers.length > 1) {
+    // Guarda compartilhada: o aluno escolhe o destinatário
+    teacherInfo.textContent = 'Escolha para qual professor enviar sua dúvida.';
+    sel.innerHTML = _helpTeachers.map(function(t){
+      return '<option value="' + escapeHtmlBasic(t.teacher_id) + '">' + escapeHtmlBasic(t.teacher_name || 'Professor') + '</option>';
+    }).join('');
+    pick.style.display = '';
+    sendBtn.disabled = false;
+  } else if (_helpTeachers.length === 1) {
+    teacherInfo.textContent = 'Sua mensagem vai para ' + (_helpTeachers[0].teacher_name || 'seu professor');
+    pick.style.display = 'none';
+    sendBtn.disabled = false;
   } else {
     teacherInfo.innerHTML = '<span style="color:var(--g500)">Nenhum professor atribuído. Fale com a coordenação.</span>';
-    document.getElementById('helpSendBtn').disabled = true;
+    pick.style.display = 'none';
+    sendBtn.disabled = true;
   }
   // Load history
   try {
@@ -4649,12 +4666,13 @@ async function sendHelpRequest() {
   const message = document.getElementById('helpMessage').value.trim();
   const btn = document.getElementById('helpSendBtn');
   if (!message) { showToast('Escreva sua dúvida antes de enviar.', 'error'); return; }
-  if (!_helpTeacherId) { showToast('Nenhum professor atribuído. Fale com a coordenação.', 'error'); return; }
+  const target = helpSelectedTeacher();
+  if (!target) { showToast('Nenhum professor atribuído. Fale com a coordenação.', 'error'); return; }
   btn.disabled = true;
   btn.textContent = 'Enviando...';
   try {
-    await createHelpRequest(currentUser.id, _helpTeacherId, subject, message);
-    showToast('Pergunta enviada para ' + _helpTeacherName + '!');
+    await createHelpRequest(currentUser.id, target.teacher_id, subject, message);
+    showToast('Pergunta enviada para ' + (target.teacher_name || 'seu professor') + '!');
     closeHelpModal();
   } catch(e) {
     showToast('Erro ao enviar: ' + e.message, 'error');
@@ -4672,9 +4690,12 @@ function renderHelpHistory(items) {
   list.innerHTML = items.slice(0, 5).map(h => {
     const statusLabel = h.status === 'answered' ? 'Respondida' : 'Aguardando';
     const subj = h.subject ? '<div class="h-subject">📌 ' + escapeHtmlBasic(h.subject) + '</div>' : '';
-    const answer = h.answer ? '<div class="h-answer"><strong>' + escapeHtmlBasic(_helpTeacherName || 'Professor') + ' respondeu:</strong><br>' + escapeHtmlBasic(h.answer) + '</div>' : '';
+    const who = (h.teacher && h.teacher.full_name) || 'Professor';
+    const answer = h.answer ? '<div class="h-answer"><strong>' + escapeHtmlBasic(who) + ' respondeu:</strong><br>' + escapeHtmlBasic(h.answer) + '</div>' : '';
+    const to = (_helpTeachers.length > 1 && h.teacher && h.teacher.full_name)
+      ? '<div class="h-subject" style="opacity:.75">👨‍🏫 Para: ' + escapeHtmlBasic(h.teacher.full_name) + '</div>' : '';
     return '<div class="help-history-item">' +
-      subj +
+      to + subj +
       '<div class="h-msg">' + escapeHtmlBasic(h.message) + '</div>' +
       '<span class="h-status ' + h.status + '">' + statusLabel + '</span>' +
       answer +
@@ -5061,6 +5082,10 @@ document.addEventListener('click', (ev) => {
       <div id="helpTeacherInfo" class="help-teacher-info">
         <span>👨‍🏫</span>
         <span id="helpTeacherName">Carregando seu professor...</span>
+      </div>
+      <div id="helpTeacherPick" style="display:none;margin-bottom:16px">
+        <label for="helpTeacherSelect">Enviar para</label>
+        <select id="helpTeacherSelect"></select>
       </div>
       <label for="helpSubject">Sobre o quê? (opcional)</label>
       <input id="helpSubject" type="text" placeholder="Ex: Unidade 5, Past Continuous, redação...">

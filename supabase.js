@@ -744,6 +744,33 @@ async function addScheduleSlot(teacherId, dayOfWeek, timeSlot, studentName, stud
   return data;
 }
 
+// Slots de vários professores de uma vez (guarda compartilhada).
+async function getScheduleSlotsMulti(teacherIds) {
+  const ids = (teacherIds || []).filter(Boolean);
+  if (!ids.length) return [];
+  const { data } = await db.from('schedule_slots').select('*')
+    .in('teacher_id', ids).order('day_of_week').order('time_slot');
+  return data || [];
+}
+
+// Grade semanal do aluno: junta os slots de TODOS os professores dele e
+// devolve já ordenada e com o nome do professor em cada aula.
+async function getStudentScheduleSlots(studentId, studentName) {
+  const teachers = await getStudentTeachers(studentId);
+  if (!teachers.length) return { teachers: [], slots: [] };
+  const nameById = {};
+  teachers.forEach(t => { nameById[t.teacher_id] = t.teacher_name; });
+  const all = await getScheduleSlotsMulti(teachers.map(t => t.teacher_id));
+  const mine = String(studentName || '').trim().toLowerCase();
+  const slots = (all || [])
+    .filter(s => s.student_name && s.student_name.trim().toLowerCase() === mine)
+    .map(s => Object.assign({}, s, { teacher_name: nameById[s.teacher_id] || '' }));
+  slots.sort((a, b) => a.day_of_week !== b.day_of_week
+    ? a.day_of_week - b.day_of_week
+    : String(a.time_slot || '').localeCompare(String(b.time_slot || '')));
+  return { teachers: teachers, slots: slots };
+}
+
 async function removeScheduleSlot(slotId) {
   const { error } = await db.from('schedule_slots').delete().eq('id', slotId);
   if (error) throw error;
@@ -976,17 +1003,57 @@ function showLastUpdate() {
   }
 }
 
-// ═══ HELP REQUESTS (Pedir ajuda ao professor) ═══
-async function getStudentMainTeacher(studentId) {
-  // Find first active enrollment with a teacher
+// ═══ GUARDA COMPARTILHADA — professores do aluno ═══
+// Um aluno pode ter MAIS DE UM professor regular (matrículas ativas em
+// enrollments). Esta é a única fonte de verdade para "quem ensina o aluno X".
+// O critério de "ativo" espelha exatamente a helper de RLS teaches_student():
+// coalesce(active, true) = true — ou seja, active NULL conta como ativo.
+async function getStudentTeachers(studentId) {
+  if (!studentId) return [];
   const { data, error } = await db
     .from('enrollments')
-    .select('teacher_id, teacher:profiles!enrollments_teacher_id_fkey(id, full_name)')
+    .select('teacher_id, course_id, active, teacher:profiles!enrollments_teacher_id_fkey(id, full_name, avatar_url), course:courses(name, cefr_level)')
     .eq('student_id', studentId)
-    .not('teacher_id', 'is', null)
-    .limit(1);
+    .not('teacher_id', 'is', null);
   if (error) throw error;
-  return (data && data[0]) ? data[0] : null;
+
+  const seen = new Set();
+  const out = [];
+  for (const r of (data || [])) {
+    if (r.active === false) continue;            // coalesce(active,true)=true
+    if (!r.teacher_id || seen.has(r.teacher_id)) continue;
+    seen.add(r.teacher_id);
+    out.push({
+      teacher_id: r.teacher_id,
+      teacher: r.teacher || null,
+      teacher_name: (r.teacher && r.teacher.full_name) || '',
+      course_id: r.course_id || null,
+      course_name: (r.course && r.course.name) || '',
+      cefr: (r.course && r.course.cefr_level) || ''
+    });
+  }
+  out.sort((a, b) => String(a.teacher_name).localeCompare(String(b.teacher_name), 'pt', { sensitivity: 'base' }));
+  return out;
+}
+
+// Compatibilidade: devolve o PRIMEIRO professor, no mesmo formato de antes
+// ({ teacher_id, teacher: { id, full_name } }). Mantida para não quebrar
+// nenhuma chamada existente — telas novas devem usar getStudentTeachers().
+async function getStudentMainTeacher(studentId) {
+  const list = await getStudentTeachers(studentId);
+  return list.length ? list[0] : null;
+}
+
+// Co-professores de um aluno, vistos por um professor/coordenação.
+// Usa a RPC SECURITY DEFINER student_teachers() (ver guarda-compartilhada.sql).
+// Se a RPC ainda não existir no banco, devolve [] sem quebrar a tela.
+async function getStudentCoTeachers(studentId, exceptTeacherId) {
+  if (!studentId) return [];
+  try {
+    const { data, error } = await db.rpc('student_teachers', { p_student: studentId });
+    if (error) return [];
+    return (data || []).filter(t => t.teacher_id && t.teacher_id !== exceptTeacherId);
+  } catch (e) { return []; }
 }
 
 async function createHelpRequest(studentId, teacherId, subject, message) {

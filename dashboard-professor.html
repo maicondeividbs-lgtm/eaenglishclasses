@@ -4239,6 +4239,7 @@ function profStudentCard(s){
     '<div class="student-info">'+
       '<div class="student-name">'+escapeHtml(s.full_name)+'</div>'+
       (courseTxt?'<div class="student-level">'+escapeHtml(courseTxt)+'</div>':'')+
+      '<div class="student-shared" data-shared-for="'+escapeHtml(s.id)+'" style="display:none;font-size:11px;font-weight:700;color:var(--blue);margin-top:4px"></div>'+
       (s.email?'<div style="font-size:11px;color:var(--g500);margin-top:4px">'+escapeHtml(s.email)+'</div>':'')+
     '</div>'+
     '<div style="margin-left:auto;align-self:center;color:var(--g300);font-size:24px;font-weight:700;line-height:1">\u203a</div>'+
@@ -4247,6 +4248,24 @@ function profStudentCard(s){
 async function loadStudentsList() {
   const students = window._myStudents || await getMyStudents(currentUser.id);
   eaRenderStudentList('studentsList', students, profStudentCard, 'myStudentCount');
+  markSharedStudents(students);
+}
+
+// GUARDA COMPARTILHADA: marca quais alunos também são atendidos por outro
+// professor. Roda depois da renderização e falha em silêncio — se a RPC
+// student_teachers() ainda não existir no banco, a lista segue normal.
+async function markSharedStudents(students) {
+  if (!students || !students.length) return;
+  for (const s of students) {
+    try {
+      const co = await getStudentCoTeachers(s.id, currentUser.id);
+      if (!co.length) continue;
+      const el = document.querySelector('.student-shared[data-shared-for="' + s.id + '"]');
+      if (!el) continue;
+      el.textContent = '\u{1F91D} Compartilhado com ' + co.map(function(t){ return t.full_name; }).join(', ');
+      el.style.display = '';
+    } catch (e) { /* silencioso */ }
+  }
 }
 
 // ═══ ACESSOS DOS ALUNOS (somente os alunos vinculados a este professor) ═══

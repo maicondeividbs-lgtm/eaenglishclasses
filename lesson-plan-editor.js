@@ -7,7 +7,8 @@
 // checkFeriado / fmtDateISO já presentes em cada dashboard. O markup do editor
 // (mesmos ids) fica em cada painel; aqui mora toda a lógica.
 // ═══════════════════════════════════════════════════════════════
-var _lpState = { studentId:null, studentName:'', monthKey:null, dirty:false };
+var _lpState = { studentId:null, studentName:'', monthKey:null, dirty:false,
+                 hw:[], history:[], speaking:[], speakOk:true, progress:null };
 var LP_WD = ['dom','seg','ter','qua','qui','sex','sáb'];   // JS getDay()
 var LP_MO = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
 var LP_MONTHS_FULL = ['','Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
@@ -131,29 +132,45 @@ async function lpOnPick() {
   var autoBook  = (student && student.course_name) || '';
   var autoLevel = (student && (student.cefr || student.level)) || '';
 
-  var saved = null;
-  try { saved = await getLessonPlan(currentUser.id, sid, monthKey); } catch(e){ console.error('getLessonPlan', e); }
+  // Carrega em paralelo: plano do mes + homework realmente enviado +
+  // historico de planos (completude) + observacoes de speaking.
+  var loaded = await Promise.all([
+    getLessonPlan(currentUser.id, sid, monthKey).catch(function(e){ console.error('getLessonPlan', e); return null; }),
+    lpLoadHomeworkSent(sid),
+    lpLoadHistory(sid),
+    lpLoadSpeaking(sid)
+  ]);
+  var saved = loaded[0];
 
   if (saved) {
     document.getElementById('lpHdrBook').value  = saved.book  != null ? saved.book  : autoBook;
     document.getElementById('lpHdrLevel').value = saved.level != null ? saved.level : autoLevel;
+    lpSetTotalPages(saved.book_pages);
     lpRenderRows(saved.entries || []);
   } else {
     document.getElementById('lpHdrBook').value  = autoBook;
     document.getElementById('lpHdrLevel').value = autoLevel;
+    lpSetTotalPages(null);
     var gen = await lpGenerateRowsFromSchedule(_lpState.studentName, mv);
     lpRenderRows(gen);
   }
   lpUpdateBookCover();
   lpBindHeaderInputs();
+  lpRenderSpeakPanel();
+  lpUpdateProgress();
   lpSetDirty(false);
 }
 
 function lpBindHeaderInputs(){
-  ['lpHdrBook','lpHdrLevel'].forEach(function(id){
+  ['lpHdrBook','lpHdrLevel','lpHdrPages'].forEach(function(id){
     var el=document.getElementById(id);
-    if (el && !el._lpBound){ el._lpBound=true; el.addEventListener('input', function(){ lpSetDirty(true); }); }
+    if (el && !el._lpBound){
+      el._lpBound=true;
+      el.addEventListener('input', function(){ lpSetDirty(true); if (id==='lpHdrPages') lpUpdateProgress(); });
+    }
   });
+  var sd = document.getElementById('lpSpDate');
+  if (sd && !sd._lpBound){ sd._lpBound=true; sd.addEventListener('change', function(){ lpSpSyncEditor(); }); }
 }
 
 async function lpGenerateRowsFromSchedule(studentName, monthValue) {
@@ -220,6 +237,7 @@ function lpAppendRow(r) {
   var card = document.createElement('div');
   card.className = 'lp2-card' + (r._gen ? ' gen' : '');
   card.innerHTML =
+    '<button type="button" class="lp2-spbtn" title="Observa\u00e7\u00f5es de speaking desta aula" onclick="lpSpFromCard(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.1A8.4 8.4 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5z"/></svg></button>' +
     '<button type="button" class="lp2-del" title="Remover aula" onclick="lpRemoveRow(this)">✕</button>' +
     '<div class="lp2-datewrap" onclick="lpDateClick(this)">' +
       '<div class="lp2-date">'+lpDateChipHTML(iso)+'</div>' +
@@ -234,9 +252,10 @@ function lpAppendRow(r) {
       '<div class="lp2-fields">' +
         '<div class="lp2-f"><label title="Estimativa — pode mudar durante a aula"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg>Páginas <em>(previsão)</em></label><input class="lp2-in-pages" placeholder="Estimativa — ex: 47, 48"></div>' +
         '<div class="lp2-f"><label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Homework</label><input class="lp2-in-hw" placeholder="O que passar de tarefa"></div>' +
-        '<div class="lp2-f"><label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>Last homework</label><input class="lp2-in-last" placeholder="—"></div>' +
+        '<div class="lp2-f"><label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>Last homework</label><input class="lp2-in-last" placeholder="—"><span class="lp2-src" hidden></span></div>' +
       '</div>' +
       '<div class="lp2-lib" hidden></div>' +
+      '<div class="lp2-spnote" hidden></div>' +
       '<div class="lp2-notes">' +
         '<label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/><path d="M9 13h6M9 17h4"/></svg>Observações</label>' +
         '<textarea rows="1" class="lp2-ta lp2-in-notes" placeholder="Anotações sobre esta aula (opcional)"></textarea>' +
@@ -249,8 +268,13 @@ function lpAppendRow(r) {
   card.querySelector('.lp2-in-hw').value    = r.homework || '';
   var lastEl = card.querySelector('.lp2-in-last');
   lastEl.value = r.last_homework || '';
-  // last homework salvo = manual (preserva); vazio = elegível a herdar da aula anterior
-  lastEl.dataset.auto = (r.last_homework ? '' : '1');
+  // last_auto (coluna v2) manda: true = recalcula do homework real; false = manual.
+  // Sem a coluna (banco antigo), mantém o comportamento anterior.
+  var isAuto;
+  if (r.last_auto === true)       isAuto = true;
+  else if (r.last_auto === false) isAuto = false;
+  else                            isAuto = !r.last_homework;
+  lastEl.dataset.auto = isAuto ? '1' : '';
   card.querySelector('.lp2-in-notes').value = r.notes || '';
   var ta = card.querySelector('.lp2-ta'); lpAutoGrow(ta); ta.addEventListener('input', function(){ lpAutoGrow(ta); });
   card.querySelectorAll('input,textarea').forEach(function(el){
@@ -261,8 +285,9 @@ function lpAppendRow(r) {
   // ao digitar no last, ele vira manual (não é mais sobrescrito).
   card.querySelector('.lp2-in-hw').addEventListener('input', function(){ lpChainLast(); });
   lastEl.addEventListener('input', function(){ this.dataset.auto=''; this.classList.remove('lp2-auto'); });
-  card.querySelector('.lp2-in-pages').addEventListener('input', function(){ lpRenderLib(card); });
+  card.querySelector('.lp2-in-pages').addEventListener('input', function(){ lpRenderLib(card); lpUpdateProgress(); });
   lpRenderLib(card);
+  lpRenderSpeakCard(card);
 }
 
 function lpAutoGrow(ta){ if(!ta) return; ta.style.height='auto'; ta.style.height=(ta.scrollHeight)+'px'; }
@@ -273,20 +298,34 @@ function lpDateClick(wrap){
   if (i) i.focus();
 }
 
-// "Last homework" automático: cada aula herda o Homework da aula anterior
-// enquanto o campo estiver em modo auto (não editado manualmente).
+// "Last homework" automático, em ordem de prioridade:
+//   1. manual  → o professor digitou; nunca sobrescrito (badge "manual ↺")
+//   2. real    → último homework REALMENTE enviado antes do dia da aula
+//   3. plano   → herda o Homework planejado na aula anterior (comportamento antigo)
 function lpChainLast(){
   var cards = document.querySelectorAll('#lpRows .lp2-card');
   var prevHw = '';
   cards.forEach(function(card, i){
     var last = card.querySelector('.lp2-in-last');
     var hw   = card.querySelector('.lp2-in-hw');
-    var isAuto = (last.dataset.auto === '1') || (last.value||'').trim() === '';
-    if (isAuto){
-      var val = (i > 0) ? prevHw : '';
-      last.value = val;
+    var manual = (last.dataset.auto !== '1') && (last.value||'').trim() !== '';
+    if (manual){
+      last.classList.remove('lp2-auto');
+      last.dataset.auto = '';
+      lpSrcBadge(last, 'manual');
+    } else {
+      var real = lpHwBefore(card.querySelector('.lp2-in-date').value);
+      if (real && real.title){
+        last.value = real.title;
+        last.classList.add('lp2-auto');
+        lpSrcBadge(last, 'real', lpFmtShort(real.sent_at));
+      } else {
+        var val = (i > 0) ? prevHw : '';
+        last.value = val;
+        last.classList.toggle('lp2-auto', !!val);
+        lpSrcBadge(last, val ? 'plan' : '');
+      }
       last.dataset.auto = '1';
-      last.classList.toggle('lp2-auto', !!val);
     }
     prevHw = (hw.value||'').trim();
   });
@@ -356,7 +395,9 @@ document.addEventListener('change', function(ev){
       var chip = card.querySelector('.lp2-date');
       if (chip) chip.innerHTML = lpDateChipHTML(t.value);
       card.classList.remove('gen');
+      lpRenderSpeakCard(card);
     }
+    lpChainLast();
     lpUpdateCount();
   }
 });
@@ -371,6 +412,7 @@ function lpCollectRows() {
       pages: card.querySelector('.lp2-in-pages').value,
       homework: card.querySelector('.lp2-in-hw').value,
       last_homework: card.querySelector('.lp2-in-last').value,
+      last_auto: card.querySelector('.lp2-in-last').dataset.auto === '1',
       notes: card.querySelector('.lp2-in-notes').value
     });
   });
@@ -390,6 +432,7 @@ function lpUpdateCount(){
   });
   el.innerHTML = '<b>'+filled+'</b> de <b>'+total+'</b> aula'+(total===1?'':'s')+' preenchida'+(filled===1?'':'s')+
     (gen ? '<br>'+gen+' do schedule deste mês' : '');
+  lpUpdateProgress();
 }
 
 function lpSetDirty(v) {
@@ -419,9 +462,11 @@ async function lpRegenerate() {
 
 async function lpSave() {
   if (!_lpState.studentId || !_lpState.monthKey) { showToast('Selecione aluno e mês.','error'); return; }
+  var pgEl = document.getElementById('lpHdrPages');
   var header = {
     book:  document.getElementById('lpHdrBook').value.trim(),
     level: document.getElementById('lpHdrLevel').value.trim(),
+    book_pages: pgEl ? (parseInt(pgEl.value, 10) || null) : null,
     notes: ''
   };
   try {
@@ -434,14 +479,394 @@ async function lpSave() {
 }
 
 function lpExport() {
+  var mv = document.getElementById('lpMonth').value || '';
+  var pr = lpComputeProgress();
+  var sp = (_lpState.speaking || [])
+    .filter(function(n){ return String(n.note_date||'').substring(0,7) === mv; })
+    .slice()
+    .sort(function(a,b){ return String(a.note_date) < String(b.note_date) ? -1 : 1; });
   var header = {
     student: _lpState.studentName,
     book: document.getElementById('lpHdrBook').value,
     level: document.getElementById('lpHdrLevel').value,
-    monthLabel: lpMonthLabelFromValue(document.getElementById('lpMonth').value),
-    teacher: (currentUser && currentUser.full_name) || ''
+    monthLabel: lpMonthLabelFromValue(mv),
+    teacher: (currentUser && currentUser.full_name) || '',
+    progress: pr.total ? ('p\u00e1g. ' + pr.maxPage + ' de ' + pr.total + ' (' + pr.pct + '%)') : '',
+    speaking: sp
   };
   eaPrintLessonPlan(header, lpCollectRows());
 }
 
 
+
+// ═══════════════════════════════════════════════════════════════
+// 1) HOMEWORK REAL  →  "Last homework" automático
+//    Cruza a lista de homeworks realmente enviados (tabela tasks) com a
+//    data de cada aula do plano. O enviado NO DIA da aula pertence àquela
+//    aula, então vale como "last homework" só a partir da aula seguinte.
+// ═══════════════════════════════════════════════════════════════
+async function lpLoadHomeworkSent(studentId){
+  _lpState.hw = [];
+  try { _lpState.hw = (await getTasksSentToStudent(currentUser.id, studentId)) || []; }
+  catch(e){ console.error('getTasksSentToStudent', e); _lpState.hw = []; }
+  return _lpState.hw;
+}
+
+function lpHwBefore(iso){
+  var list = _lpState.hw || [];
+  var cut  = String(iso || '').substring(0,10);
+  if (!cut || !list.length) return null;
+  var found = null;                       // lista já vem em ordem cronológica
+  for (var i=0;i<list.length;i++){
+    var d = String(list[i].sent_at || '').substring(0,10);
+    if (!d) continue;
+    if (d < cut) found = list[i]; else break;
+  }
+  return found;
+}
+
+function lpFmtShort(iso){
+  var p = String(iso || '').substring(0,10).split('-');
+  return p.length === 3 ? (p[2] + '/' + p[1]) : '';
+}
+
+// selo discreto ao lado do campo indicando de onde veio o valor
+function lpSrcBadge(input, kind, meta){
+  var box = input.parentNode.querySelector('.lp2-src');
+  if (!box) return;
+  if (kind === 'real'){
+    box.className = 'lp2-src real';
+    box.textContent = 'enviado ' + meta;
+    box.title = 'Puxado da lista de homework — foi o último enviado antes desta aula.';
+  } else if (kind === 'plan'){
+    box.className = 'lp2-src plan';
+    box.textContent = 'do plano';
+    box.title = 'Herdado do Homework planejado na aula anterior.';
+  } else if (kind === 'manual'){
+    box.className = 'lp2-src manual';
+    box.textContent = 'manual ↺';
+    box.title = 'Digitado por você. Clique para voltar ao automático.';
+  } else {
+    box.hidden = true; box.textContent = ''; box.className = 'lp2-src'; return;
+  }
+  box.hidden = false;
+}
+
+// clique no selo "manual" devolve o campo ao modo automático
+document.addEventListener('click', function(ev){
+  var b = ev.target && ev.target.closest ? ev.target.closest('.lp2-src.manual') : null;
+  if (!b) return;
+  var f = b.parentNode.querySelector('.lp2-in-last');
+  if (!f) return;
+  f.value = ''; f.dataset.auto = '1';
+  lpChainLast(); lpSetDirty(true);
+});
+
+// ═══════════════════════════════════════════════════════════════
+// 2) COMPLETUDE DO CURSO
+//    Total de páginas do livro × páginas planejadas em TODOS os meses
+//    do mesmo livro (o mês aberto entra ao vivo, direto do editor).
+// ═══════════════════════════════════════════════════════════════
+async function lpLoadHistory(studentId){
+  _lpState.history = [];
+  try { _lpState.history = (await getStudentPlanHistory(currentUser.id, studentId)) || []; }
+  catch(e){ console.error('getStudentPlanHistory', e); _lpState.history = []; }
+  return _lpState.history;
+}
+
+// Padrão = última página mapeada na biblioteca (curriculum-index.js).
+// É uma referência do próprio material da escola; o professor ajusta e o
+// valor fica salvo no plano, sendo herdado nos meses seguintes.
+function lpDefaultBookPages(book){
+  var lvl = lpLibLevel(book);
+  var idx = window.EA_CURRICULUM_INDEX;
+  if (!lvl || !idx || !idx[lvl]) return null;
+  var max = 0;
+  idx[lvl].forEach(function(t){ if (t.page > max) max = t.page; });
+  return max || null;
+}
+
+function lpSameBook(a, b){
+  var la = lpLibLevel(a), lb = lpLibLevel(b);
+  if (la && lb) return la === lb;
+  return String(a||'').trim().toLowerCase() === String(b||'').trim().toLowerCase();
+}
+
+function lpSetTotalPages(saved){
+  var el = document.getElementById('lpHdrPages');
+  if (!el) return;
+  var bookEl = document.getElementById('lpHdrBook');
+  var book = bookEl ? bookEl.value : '';
+  var v = (saved != null && saved !== '') ? (parseInt(saved,10) || 0) : 0;
+  if (!v){                                   // herda o último total do mesmo livro
+    var h = _lpState.history || [];
+    for (var i=h.length-1;i>=0;i--){
+      if (h[i].book_pages && lpSameBook(h[i].book, book)){ v = parseInt(h[i].book_pages,10) || 0; break; }
+    }
+  }
+  if (!v) v = lpDefaultBookPages(book) || 0;
+  el.value = v ? v : '';
+  el.placeholder = String(lpDefaultBookPages(book) || '—');
+}
+
+function lpTotalPages(){
+  var el = document.getElementById('lpHdrPages');
+  var v  = el ? parseInt(el.value,10) : 0;
+  if (v > 0) return v;
+  var bookEl = document.getElementById('lpHdrBook');
+  return lpDefaultBookPages(bookEl ? bookEl.value : '') || 0;
+}
+
+function lpAddPages(set, text){
+  var p = lpParsePages(text);
+  for (var k in p) if (Object.prototype.hasOwnProperty.call(p,k)) set[k] = 1;
+}
+
+function lpComputeProgress(){
+  var bookEl = document.getElementById('lpHdrBook');
+  var book   = bookEl ? bookEl.value : '';
+  var total  = lpTotalPages();
+  var set = {}, lessons = 0, lessonsWithPages = 0;
+
+  (_lpState.history || []).forEach(function(pl){
+    if (String(pl.plan_month||'').substring(0,10) === String(_lpState.monthKey)) return;  // mês aberto vem do editor
+    if (!lpSameBook(pl.book, book)) return;
+    (pl.entries || []).forEach(function(e){
+      if (e.lesson_date) lessons++;
+      if ((e.pages||'').trim()){ lessonsWithPages++; lpAddPages(set, e.pages); }
+    });
+  });
+
+  document.querySelectorAll('#lpRows .lp2-card').forEach(function(c){
+    if (c.querySelector('.lp2-in-date').value) lessons++;
+    var pg = c.querySelector('.lp2-in-pages').value;
+    if ((pg||'').trim()){ lessonsWithPages++; lpAddPages(set, pg); }
+  });
+
+  var keys = Object.keys(set).map(Number).filter(function(n){
+    return n > 0 && (!total || n <= total + 40);       // descarta números soltos absurdos
+  });
+  var covered = keys.length;
+  var maxPage = keys.length ? Math.max.apply(null, keys) : 0;
+  var pct  = (total && maxPage) ? Math.min(100, Math.round(maxPage * 100 / total)) : 0;
+  var pace = lessonsWithPages ? (covered / lessonsWithPages) : 0;
+  var left = (total && maxPage) ? Math.max(0, total - maxPage) : 0;
+  var lessonsLeft = (pace > 0 && left > 0) ? Math.ceil(left / pace) : 0;
+
+  return { total:total, covered:covered, maxPage:maxPage, pct:pct,
+           pace:pace, left:left, lessonsLeft:lessonsLeft, lessons:lessons, book:book };
+}
+
+function lpUpdateProgress(){
+  var box = document.getElementById('lpProg');
+  if (!box) return;
+  var pr = lpComputeProgress();
+  _lpState.progress = pr;
+  if (!pr.total){ box.hidden = true; return; }
+  box.hidden = false;
+
+  var pctEl = document.getElementById('lpProgPct');
+  if (pctEl) pctEl.textContent = pr.pct + '%';
+  var fill = document.getElementById('lpProgFill');
+  if (fill) fill.style.width = pr.pct + '%';
+
+  var parts = [];
+  parts.push('pág. <b>' + pr.maxPage + '</b> de <b>' + pr.total + '</b>');
+  parts.push('<b>' + pr.covered + '</b> págs. planejadas');
+  if (pr.pace)        parts.push('ritmo <b>' + pr.pace.toFixed(1).replace('.', ',') + '</b> pág/aula');
+  if (pr.lessonsLeft) parts.push('≈ <b>' + pr.lessonsLeft + '</b> aula' + (pr.lessonsLeft > 1 ? 's' : '') + ' p/ concluir');
+  var st = document.getElementById('lpProgStats');
+  if (st) st.innerHTML = parts.join('<span class="lp2-prog-sep">·</span>');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 3) SPEAKING — observações do professor por data
+//    Mesmo formato do bloco de notas: uma data + uma linha por observação.
+// ═══════════════════════════════════════════════════════════════
+async function lpLoadSpeaking(studentId){
+  _lpState.speaking = []; _lpState.speakOk = true;
+  try { _lpState.speaking = (await getSpeakingNotes(currentUser.id, studentId)) || []; }
+  catch(e){ console.error('getSpeakingNotes', e); _lpState.speaking = []; _lpState.speakOk = false; }
+  return _lpState.speaking;
+}
+
+function lpSpBullets(content){
+  return String(content || '').split('\n')
+    .map(function(l){ return l.replace(/^\s*[-•*]\s*/, '').replace(/\s*;\s*$/, '').trim(); })
+    .filter(Boolean);
+}
+
+function lpSpNoteFor(iso){
+  var d = String(iso || '').substring(0,10);
+  if (!d) return null;
+  var list = _lpState.speaking || [];
+  for (var i=0;i<list.length;i++){
+    if (String(list[i].note_date || '').substring(0,10) === d) return list[i];
+  }
+  return null;
+}
+
+function lpSpNorm(s){
+  return String(s || '').toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9\/ ]+/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+// pontos que se repetem em 2+ blocos — o que merece reforço no plano
+function lpSpFocus(){
+  var count = {}, label = {};
+  (_lpState.speaking || []).forEach(function(n){
+    var seen = {};
+    lpSpBullets(n.content).forEach(function(b){
+      var k = lpSpNorm(b);
+      if (!k || k.length < 4 || seen[k]) return;
+      seen[k] = 1;
+      count[k] = (count[k] || 0) + 1;
+      if (!label[k]) label[k] = b;
+    });
+  });
+  return Object.keys(count)
+    .filter(function(k){ return count[k] >= 2; })
+    .sort(function(a,b){ return count[b] - count[a]; })
+    .slice(0, 6)
+    .map(function(k){ return { text: label[k], n: count[k] }; });
+}
+
+function lpSpDefaultDate(){
+  var t = new Date();
+  var today = t.getFullYear() + '-' + String(t.getMonth()+1).padStart(2,'0') + '-' + String(t.getDate()).padStart(2,'0');
+  var best = '';
+  document.querySelectorAll('#lpRows .lp2-in-date').forEach(function(i){
+    var v = i.value;
+    if (v && v <= today && v > best) best = v;
+  });
+  return best || today;
+}
+
+function lpSpSyncEditor(){
+  var di = document.getElementById('lpSpDate'), ta = document.getElementById('lpSpText');
+  if (!di || !ta) return;
+  var n = lpSpNoteFor(di.value);
+  ta.value = n ? (n.content || '') : '';
+  var hint = document.getElementById('lpSpEditing');
+  if (hint){
+    if (n){ hint.textContent = 'editando o bloco de ' + lpFmtShort(n.note_date); hint.hidden = false; }
+    else   { hint.hidden = true; }
+  }
+}
+
+function lpSpOpen(iso){
+  var body = document.getElementById('lpSpBody');
+  if (body && body.hidden) lpSpToggle();
+  var di = document.getElementById('lpSpDate');
+  if (di && iso) di.value = String(iso).substring(0,10);
+  lpSpSyncEditor();
+  var box = document.getElementById('lpSpeak');
+  if (box && box.scrollIntoView) box.scrollIntoView({ behavior:'smooth', block:'center' });
+  var ta = document.getElementById('lpSpText');
+  if (ta) setTimeout(function(){ ta.focus(); }, 250);
+}
+
+function lpSpFromCard(btn){
+  var card = btn.closest('.lp2-card');
+  if (!card) return;
+  lpSpOpen(card.querySelector('.lp2-in-date').value || lpSpDefaultDate());
+}
+
+function lpSpToggle(){
+  var body = document.getElementById('lpSpBody');
+  var box  = document.getElementById('lpSpeak');
+  if (!body) return;
+  body.hidden = !body.hidden;
+  if (box) box.classList.toggle('open', !body.hidden);
+}
+
+async function lpSpSave(){
+  if (!_lpState.studentId){ showToast('Selecione um aluno.', 'error'); return; }
+  var di = document.getElementById('lpSpDate'), ta = document.getElementById('lpSpText');
+  if (!di || !ta) return;
+  var d = di.value;
+  if (!d){ showToast('Escolha a data das observações.', 'error'); return; }
+  var btn = document.getElementById('lpSpSaveBtn');
+  if (btn) btn.disabled = true;
+  try {
+    var saved = await saveSpeakingNote(currentUser.id, _lpState.studentId, d, ta.value);
+    var list = (_lpState.speaking || []).filter(function(n){
+      return String(n.note_date || '').substring(0,10) !== d;
+    });
+    if (saved) list.push(saved);
+    list.sort(function(a,b){ return String(a.note_date) < String(b.note_date) ? 1 : -1; });
+    _lpState.speaking = list;
+    _lpState.speakOk = true;
+    lpRenderSpeakPanel();
+    showToast(saved ? 'Observações salvas!' : 'Observações removidas.');
+  } catch(e){
+    showToast('Erro ao salvar observações: ' + (e.message || e), 'error');
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
+function lpRenderSpeakPanel(){
+  var box = document.getElementById('lpSpeak');
+  if (!box) return;
+  box.hidden = false;
+  var list = _lpState.speaking || [];
+
+  var cnt = document.getElementById('lpSpCount');
+  if (cnt){
+    cnt.textContent = (_lpState.speakOk === false)
+      ? 'indisponível'
+      : (list.length ? (list.length + (list.length > 1 ? ' registros' : ' registro')) : 'nenhum registro ainda');
+  }
+
+  var f = document.getElementById('lpSpFocus');
+  if (f){
+    var foc = lpSpFocus();
+    if (foc.length){
+      f.innerHTML = '<span class="lp2-sp-flab">Focos recorrentes</span>' + foc.map(function(x){
+        return '<span class="lp2-sp-tag">' + lpLibEsc(x.text) + '<i>' + x.n + '\u00d7</i></span>';
+      }).join('');
+      f.hidden = false;
+    } else { f.hidden = true; f.innerHTML = ''; }
+  }
+
+  var ul = document.getElementById('lpSpList');
+  if (ul){
+    if (_lpState.speakOk === false){
+      ul.innerHTML = '<div class="lp2-sp-empty">Não foi possível carregar as observações. Rode <b>lesson_plans_v2.sql</b> no Supabase.</div>';
+    } else if (!list.length){
+      ul.innerHTML = '<div class="lp2-sp-empty">Nenhuma observação registrada para este aluno ainda.</div>';
+    } else {
+      ul.innerHTML = list.map(function(n){
+        var d = String(n.note_date || '').substring(0,10);
+        return '<div class="lp2-sp-item">' +
+            '<div class="lp2-sp-d">' + lpFmtShort(d) + '</div>' +
+            '<ul>' + lpSpBullets(n.content).map(function(x){ return '<li>' + lpLibEsc(x) + '</li>'; }).join('') + '</ul>' +
+            '<button type="button" class="lp2-sp-edit" onclick="lpSpOpen(\'' + d + '\')">editar</button>' +
+          '</div>';
+      }).join('');
+    }
+  }
+
+  var di = document.getElementById('lpSpDate');
+  if (di && !di.value) di.value = lpSpDefaultDate();
+  lpSpSyncEditor();
+  document.querySelectorAll('#lpRows .lp2-card').forEach(lpRenderSpeakCard);
+}
+
+// bloco compacto dentro do cartão da aula, quando há observações naquela data
+function lpRenderSpeakCard(card){
+  var box = card.querySelector('.lp2-spnote');
+  if (!box) return;
+  var n = lpSpNoteFor(card.querySelector('.lp2-in-date').value);
+  if (!n){ box.hidden = true; box.innerHTML = ''; return; }
+  var b = lpSpBullets(n.content);
+  if (!b.length){ box.hidden = true; box.innerHTML = ''; return; }
+  box.innerHTML = '<details class="lp2-spnote-d"><summary>' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.1A8.4 8.4 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5z"/></svg>' +
+      'Speaking desta aula <span>' + b.length + '</span></summary>' +
+      '<ul>' + b.map(function(x){ return '<li>' + lpLibEsc(x) + '</li>'; }).join('') + '</ul>' +
+    '</details>';
+  box.hidden = false;
+}

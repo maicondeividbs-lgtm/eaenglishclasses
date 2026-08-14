@@ -440,9 +440,17 @@ async function getLessonPlan(teacherId, studentId, monthKey) {
 //   1) upsert do cabeçalho (chave única teacher+student+month)
 //   2) troca completa das linhas (apaga as antigas, insere as atuais).
 // rows = [{lesson_date, topic, pages, homework, last_homework}]
+// Colunas da v2 (lesson_plans_v2.sql): book_pages + last_auto. Enquanto o SQL
+// não for rodado no Supabase, o app degrada com elegância e salva sem elas.
+let _lpHasV2 = true;
+function _lpMissingV2Column(err) {
+  const m = ((err && (err.message || err.details || err.hint)) || '').toLowerCase();
+  return m.indexOf('book_pages') >= 0 || m.indexOf('last_auto') >= 0;
+}
+
 async function saveLessonPlan(teacherId, studentId, monthKey, header, rows) {
-  const { data: plan, error: upErr } = await db.from('lesson_plans')
-    .upsert([{
+  const buildHeader = (v2) => {
+    const h = {
       teacher_id: teacherId,
       student_id: studentId,
       plan_month: monthKey,
@@ -450,33 +458,54 @@ async function saveLessonPlan(teacherId, studentId, monthKey, header, rows) {
       level: header.level || null,
       notes: header.notes || null,
       updated_at: new Date().toISOString()
-    }], { onConflict: 'teacher_id,student_id,plan_month' })
-    .select()
-    .single();
-  if (upErr) throw upErr;
+    };
+    if (v2) h.book_pages = (header.book_pages != null && header.book_pages !== '') ? parseInt(header.book_pages, 10) || null : null;
+    return h;
+  };
+
+  let up = await db.from('lesson_plans')
+    .upsert([buildHeader(_lpHasV2)], { onConflict: 'teacher_id,student_id,plan_month' })
+    .select().single();
+  if (up.error && _lpHasV2 && _lpMissingV2Column(up.error)) {
+    _lpHasV2 = false;
+    up = await db.from('lesson_plans')
+      .upsert([buildHeader(false)], { onConflict: 'teacher_id,student_id,plan_month' })
+      .select().single();
+  }
+  if (up.error) throw up.error;
+  const plan = up.data;
 
   // Troca completa das linhas (planos são pequenos: poucas linhas por mês).
   const { error: delErr } = await db.from('lesson_plan_entries').delete().eq('plan_id', plan.id);
   if (delErr) throw delErr;
 
-  const clean = (rows || [])
-    .map((r, i) => ({
-      plan_id: plan.id,
-      lesson_date: r.lesson_date || null,
-      topic: (r.topic || '').trim() || null,
-      objective: (r.objective || '').trim() || null,
-      pages: (r.pages || '').trim() || null,
-      homework: (r.homework || '').trim() || null,
-      last_homework: (r.last_homework || '').trim() || null,
-      notes: (r.notes || '').trim() || null,
-      sort_order: i
-    }))
+  const buildRows = (v2) => (rows || [])
+    .map((r, i) => {
+      const o = {
+        plan_id: plan.id,
+        lesson_date: r.lesson_date || null,
+        topic: (r.topic || '').trim() || null,
+        objective: (r.objective || '').trim() || null,
+        pages: (r.pages || '').trim() || null,
+        homework: (r.homework || '').trim() || null,
+        last_homework: (r.last_homework || '').trim() || null,
+        notes: (r.notes || '').trim() || null,
+        sort_order: i
+      };
+      if (v2) o.last_auto = (r.last_auto !== false);
+      return o;
+    })
     // ignora linhas totalmente vazias
     .filter(r => r.lesson_date || r.topic || r.objective || r.pages || r.homework || r.last_homework || r.notes);
 
+  const clean = buildRows(_lpHasV2);
   if (clean.length) {
-    const { error: insErr } = await db.from('lesson_plan_entries').insert(clean);
-    if (insErr) throw insErr;
+    let ins = await db.from('lesson_plan_entries').insert(clean);
+    if (ins.error && _lpHasV2 && _lpMissingV2Column(ins.error)) {
+      _lpHasV2 = false;
+      ins = await db.from('lesson_plan_entries').insert(buildRows(false));
+    }
+    if (ins.error) throw ins.error;
   }
   return plan;
 }
@@ -505,6 +534,98 @@ async function getLessonPlanEntries(planId) {
     .order('lesson_date', { ascending: true, nullsFirst: false })
     .order('sort_order', { ascending: true });
   return data || [];
+}
+
+// Histórico completo de planos de um aluno com o professor (todos os meses),
+// já com as linhas embutidas. Base do cálculo de completude do curso.
+async function getStudentPlanHistory(teacherId, studentId) {
+  const cols = _lpHasV2 ? 'id, plan_month, book, level, book_pages' : 'id, plan_month, book, level';
+  let res = await db.from('lesson_plans')
+    .select(cols)
+    .eq('teacher_id', teacherId)
+    .eq('student_id', studentId)
+    .order('plan_month', { ascending: true });
+  if (res.error && _lpHasV2 && _lpMissingV2Column(res.error)) {
+    _lpHasV2 = false;
+    res = await db.from('lesson_plans')
+      .select('id, plan_month, book, level')
+      .eq('teacher_id', teacherId)
+      .eq('student_id', studentId)
+      .order('plan_month', { ascending: true });
+  }
+  const plans = res.data || [];
+  if (!plans.length) return [];
+
+  const { data: entries } = await db.from('lesson_plan_entries')
+    .select('plan_id, lesson_date, pages, homework')
+    .in('plan_id', plans.map(p => p.id));
+
+  const byPlan = {};
+  (entries || []).forEach(e => { (byPlan[e.plan_id] = byPlan[e.plan_id] || []).push(e); });
+  plans.forEach(p => { p.entries = byPlan[p.id] || []; });
+  return plans;
+}
+
+// Homeworks REALMENTE enviados a um aluno por este professor, em ordem
+// cronológica. Usado para descobrir qual foi o último homework antes de
+// cada aula do plano (campo "Last homework").
+async function getTasksSentToStudent(teacherId, studentId) {
+  const { data } = await db.from('task_submissions')
+    .select('id, status, submitted_at, created_at, task:tasks!inner(id, title, description, due_date, created_at, teacher_id, cancelled)')
+    .eq('student_id', studentId)
+    .order('created_at', { ascending: true });
+  return (data || [])
+    .filter(s => s.task && String(s.task.teacher_id) === String(teacherId) && !s.task.cancelled)
+    .map(s => ({
+      id: s.task.id,
+      title: (s.task.title || '').trim(),
+      description: s.task.description || '',
+      due_date: s.task.due_date || null,
+      sent_at: s.task.created_at || s.created_at || null,
+      status: s.status || 'pending',
+      submitted_at: s.submitted_at || null
+    }))
+    .filter(t => t.sent_at)
+    .sort((a, b) => (a.sent_at < b.sent_at ? -1 : a.sent_at > b.sent_at ? 1 : 0));
+}
+
+// ═══ SPEAKING — observações do professor por aluno/data ═══
+// Um bloco de texto por data (mesmo formato do bloco de notas do professor).
+async function getSpeakingNotes(teacherId, studentId) {
+  const { data, error } = await db.from('speaking_notes')
+    .select('*')
+    .eq('teacher_id', teacherId)
+    .eq('student_id', studentId)
+    .order('note_date', { ascending: false });
+  if (error) throw error;
+  return data || [];
+}
+
+// Salva (upsert) o bloco de uma data. Conteúdo vazio remove o bloco.
+async function saveSpeakingNote(teacherId, studentId, noteDate, content) {
+  const txt = (content || '').trim();
+  if (!txt) {
+    const { error } = await db.from('speaking_notes').delete()
+      .eq('teacher_id', teacherId).eq('student_id', studentId).eq('note_date', noteDate);
+    if (error) throw error;
+    return null;
+  }
+  const { data, error } = await db.from('speaking_notes')
+    .upsert([{
+      teacher_id: teacherId,
+      student_id: studentId,
+      note_date: noteDate,
+      content: txt,
+      updated_at: new Date().toISOString()
+    }], { onConflict: 'teacher_id,student_id,note_date' })
+    .select().single();
+  if (error) throw error;
+  return data;
+}
+
+async function deleteSpeakingNote(noteId) {
+  const { error } = await db.from('speaking_notes').delete().eq('id', noteId);
+  if (error) throw error;
 }
 
 // Monta o HTML imprimível de um plano no layout da "Preparação de aulas".
@@ -545,6 +666,7 @@ function eaBuildLessonPlanPrintHTML(header, rows) {
           '<div><strong>Livro</strong> ' + e(header.book) + '</div>' +
           '<div><strong>Nível de proficiência</strong> ' + e(header.level) + '</div>' +
           (header.teacher ? '<div><strong>Professor</strong> ' + e(header.teacher) + '</div>' : '') +
+          (header.progress ? '<div><strong>Avan\u00e7o no livro</strong> ' + e(header.progress) + '</div>' : '') +
         '</div>' +
       '</div>' +
       '<div class="lpp-title">Preparação de aulas' + (header.monthLabel ? ' — ' + e(header.monthLabel) : '') + '</div>' +
@@ -555,7 +677,28 @@ function eaBuildLessonPlanPrintHTML(header, rows) {
         '</tr></thead>' +
         '<tbody>' + body + fillerRows + '</tbody>' +
       '</table>' +
+      eaBuildSpeakingPrintHTML(header.speaking, e) +
     '</div>';
+}
+
+// Bloco opcional de observa\u00e7\u00f5es de speaking no fim do documento imprim\u00edvel.
+// speaking = [{note_date:'YYYY-MM-DD', content:'- item;\\n- item;'}]
+function eaBuildSpeakingPrintHTML(speaking, e) {
+  if (!speaking || !speaking.length) return '';
+  const esc = e || ((s) => String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'));
+  const blocks = speaking.map(n => {
+    const p = String(n.note_date || '').split('-');
+    const d = p.length === 3 ? (p[2] + '/' + p[1]) : '';
+    const items = String(n.content || '').split('\n')
+      .map(l => l.replace(/^\s*[-\u2022*]\s*/, '').replace(/\s*;\s*$/, '').trim())
+      .filter(Boolean)
+      .map(l => '<li>' + esc(l) + '</li>').join('');
+    if (!items) return '';
+    return '<div class="lpp-sp-block"><div class="lpp-sp-date">' + esc(d) + '</div><ul>' + items + '</ul></div>';
+  }).join('');
+  if (!blocks) return '';
+  return '<div class="lpp-sp"><div class="lpp-sp-title">Speaking \u2014 observa\u00e7\u00f5es</div>' + blocks + '</div>';
 }
 
 // Injeta o documento numa área imprimível (filha direta de <body>) e chama print().

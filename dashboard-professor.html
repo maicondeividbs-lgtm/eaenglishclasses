@@ -3191,7 +3191,7 @@ async function loadWritingList() {
           '<div class="prof-wr-header-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg></div>' +
           '<div class="prof-wr-header-info">' +
             '<h4>' + escapeHtml(w.title) + '</h4>' +
-            '<div class="prof-wr-header-meta">' + escapeHtml(studentName) + ' · Prazo: ' + formatDate(w.due_date) + '</div>' +
+            '<div class="prof-wr-header-meta">' + escapeHtml(studentName) + ' · Prazo: ' + formatDate(w.due_date) + wrAuthorTag(w) + '</div>' +
           '</div>' +
           '<span class="sent-status pending">⏳ Aguardando aluno</span>' +
         '</div>' +
@@ -3209,7 +3209,7 @@ async function loadWritingList() {
           '<div class="prof-wr-header-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg></div>' +
           '<div class="prof-wr-header-info">' +
             '<h4>' + escapeHtml(w.title) + '</h4>' +
-            '<div class="prof-wr-header-meta">' + escapeHtml(studentName) + ' · Enviada em ' + formatDateTime(w.submitted_at) + '</div>' +
+            '<div class="prof-wr-header-meta">' + escapeHtml(studentName) + ' · Enviada em ' + formatDateTime(w.submitted_at) + wrAuthorTag(w) + '</div>' +
           '</div>' +
           '<span class="sent-status submitted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Corrigir agora</span>' +
         '</div>' +
@@ -3249,7 +3249,7 @@ async function loadWritingList() {
           '<div class="prof-wr-header-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>' +
           '<div class="prof-wr-header-info">' +
             '<h4>' + escapeHtml(w.title) + '</h4>' +
-            '<div class="prof-wr-header-meta">' + escapeHtml(studentName) + ' · Corrigida em ' + formatDateTime(w.reviewed_at) + '</div>' +
+            '<div class="prof-wr-header-meta">' + escapeHtml(studentName) + ' · Corrigida em ' + formatDateTime(w.reviewed_at) + wrReviewerTag(w) + wrAuthorTag(w) + '</div>' +
           '</div>' +
           '<span class="sent-status graded"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Nota: ' + (w.grade||'') + '</span>' +
           '<button type="button" class="prof-wr-toggle-btn" aria-label="Expandir ou minimizar redação"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>' +
@@ -3419,7 +3419,7 @@ async function gradeWritingActivity(activityId) {
   // Always store as JSON so the student dashboard can render highlights
   const feedback = JSON.stringify({ general, inline });
   try {
-    await gradeWriting(activityId, feedback, grade);
+    await gradeWriting(activityId, feedback, grade, currentUser.id);
     showToast('Correção enviada! O aluno verá os comentários inline.');
     delete _wrInlineComments[activityId];
     loadWritingList();
@@ -4202,6 +4202,19 @@ function eaStudentControlsHtml(sort, layout){
       '<button data-v="list" class="'+(layout==='list'?'active':'')+'">☰ Lista</button>'+
     '</div>';
 }
+// Selo "tema proposto pelo co-professor" — só aparece quando NÃO foi você.
+function wrAuthorTag(w){
+  if (!w || !w.teacher_id || w.teacher_id === currentUser.id) return '';
+  var who = (w.teacher && w.teacher.full_name) || 'outro professor';
+  return '<span style="display:inline-block;background:var(--blue-soft);color:var(--blue);font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;margin-left:8px">\u{1F91D} Tema de '+escapeHtml(who)+'</span>';
+}
+// Selo "corrigido por" — só quando o corretor não foi você.
+function wrReviewerTag(w){
+  if (!w || !w.reviewed_by || w.reviewed_by === currentUser.id) return '';
+  var who = (w.reviewer && w.reviewer.full_name) || 'outro professor';
+  return ' \u00b7 Corrigida por '+escapeHtml(who);
+}
+
 function eaRenderStudentList(containerId, students, renderCard, countElId){
   var c = document.getElementById(containerId); if(!c) return;
   c._students = students||[]; c._renderCard = renderCard;
@@ -4239,7 +4252,9 @@ function profStudentCard(s){
     '<div class="student-info">'+
       '<div class="student-name">'+escapeHtml(s.full_name)+'</div>'+
       (courseTxt?'<div class="student-level">'+escapeHtml(courseTxt)+'</div>':'')+
-      '<div class="student-shared" data-shared-for="'+escapeHtml(s.id)+'" style="display:none;font-size:11px;font-weight:700;color:var(--blue);margin-top:4px"></div>'+
+      ((s.co_teachers && s.co_teachers.length)
+        ? '<div class="student-shared" style="font-size:11px;font-weight:700;color:var(--blue);margin-top:4px">\u{1F91D} Compartilhado com '+escapeHtml(s.co_teachers.join(', '))+'</div>'
+        : '')+
       (s.email?'<div style="font-size:11px;color:var(--g500);margin-top:4px">'+escapeHtml(s.email)+'</div>':'')+
     '</div>'+
     '<div style="margin-left:auto;align-self:center;color:var(--g300);font-size:24px;font-weight:700;line-height:1">\u203a</div>'+
@@ -4247,25 +4262,22 @@ function profStudentCard(s){
 }
 async function loadStudentsList() {
   const students = window._myStudents || await getMyStudents(currentUser.id);
+  // GUARDA COMPARTILHADA: anexa os co-professores AO OBJETO do aluno antes
+  // de renderizar. O badge precisa fazer parte do card porque
+  // eaPaintStudents() refaz o innerHTML a cada troca de ordenação/layout —
+  // qualquer coisa pintada no DOM depois seria apagada.
+  await attachCoTeachers(students);
   eaRenderStudentList('studentsList', students, profStudentCard, 'myStudentCount');
-  markSharedStudents(students);
 }
 
-// GUARDA COMPARTILHADA: marca quais alunos também são atendidos por outro
-// professor. Roda depois da renderização e falha em silêncio — se a RPC
-// student_teachers() ainda não existir no banco, a lista segue normal.
-async function markSharedStudents(students) {
+// Uma única chamada para todos os alunos. Falha em silêncio: se a RPC
+// student_teachers_bulk() ainda não existir no banco, a lista segue normal.
+async function attachCoTeachers(students) {
   if (!students || !students.length) return;
-  for (const s of students) {
-    try {
-      const co = await getStudentCoTeachers(s.id, currentUser.id);
-      if (!co.length) continue;
-      const el = document.querySelector('.student-shared[data-shared-for="' + s.id + '"]');
-      if (!el) continue;
-      el.textContent = '\u{1F91D} Compartilhado com ' + co.map(function(t){ return t.full_name; }).join(', ');
-      el.style.display = '';
-    } catch (e) { /* silencioso */ }
-  }
+  try {
+    const map = await getCoTeachersMap(students.map(function(s){ return s.id; }), currentUser.id);
+    students.forEach(function(s){ s.co_teachers = map[s.id] || []; });
+  } catch (e) { /* silencioso */ }
 }
 
 // ═══ ACESSOS DOS ALUNOS (somente os alunos vinculados a este professor) ═══

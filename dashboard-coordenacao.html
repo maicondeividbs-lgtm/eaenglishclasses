@@ -5302,10 +5302,21 @@ async function saveUserEdit() {
       if (teacherId2) wanted.push(teacherId2);
       const course = parseInt(courseId);
 
+      // Traduz o erro de trava de unicidade antiga numa instrução acionável,
+      // em vez de mostrar o texto cru do Postgres para a coordenação.
+      function enrollErr(err, acao) {
+        const msg = (err && err.message) || '';
+        if (/student_id_course_id_key|duplicate key/i.test(msg)) {
+          return 'A guarda compartilhada ainda não foi liberada no banco. '
+               + 'Rode o arquivo guarda-compartilhada.sql no Supabase → SQL Editor e tente de novo.';
+        }
+        return 'Erro ao ' + acao + ' matrícula: ' + msg;
+      }
+
       const { data: existing, error: exErr } = await db.from('enrollments')
         .select('teacher_id, course_id')
         .eq('student_id', userId);
-      if (exErr) { console.error('Read enrollments error:', exErr); showToast('Erro ao ler matrículas: ' + exErr.message, 'error'); return; }
+      if (exErr) { console.error('Read enrollments error:', exErr); showToast(enrollErr(exErr, 'ler'), 'error'); return; }
 
       const have = (existing || []).map(r => r.teacher_id);
 
@@ -5314,7 +5325,7 @@ async function saveUserEdit() {
       if (toRemove.length) {
         const { error: delErr } = await db.from('enrollments')
           .delete().eq('student_id', userId).in('teacher_id', toRemove);
-        if (delErr) { console.error('Delete enrollment error:', delErr); showToast('Erro ao remover vínculo: ' + delErr.message, 'error'); return; }
+        if (delErr) { console.error('Delete enrollment error:', delErr); showToast(enrollErr(delErr, 'remover'), 'error'); return; }
       }
       // 2) Insere os que faltam
       const toAdd = wanted.filter(t => have.indexOf(t) === -1);
@@ -5322,7 +5333,7 @@ async function saveUserEdit() {
         const { error: insErr } = await db.from('enrollments').insert(
           toAdd.map(t => ({ student_id: userId, teacher_id: t, course_id: course, active: true }))
         );
-        if (insErr) { console.error('Insert enrollment error:', insErr); showToast('Erro na matrícula: ' + insErr.message, 'error'); return; }
+        if (insErr) { console.error('Insert enrollment error:', insErr); showToast(enrollErr(insErr, 'criar'), 'error'); return; }
       }
       // 3) Atualiza curso/ativo dos que já existiam
       const toKeep = wanted.filter(t => have.indexOf(t) !== -1);
@@ -5330,7 +5341,7 @@ async function saveUserEdit() {
         const { error: updErr } = await db.from('enrollments')
           .update({ course_id: course, active: true })
           .eq('student_id', userId).in('teacher_id', toKeep);
-        if (updErr) { console.error('Update enrollment error:', updErr); showToast('Erro ao atualizar matrícula: ' + updErr.message, 'error'); return; }
+        if (updErr) { console.error('Update enrollment error:', updErr); showToast(enrollErr(updErr, 'atualizar'), 'error'); return; }
       }
     } else if (teacherId && !courseId) {
       showToast('Selecione o curso também', 'error'); return;
@@ -5426,7 +5437,7 @@ async function saveWrCorrect(){
   var fb=document.getElementById('wrFeedback').value.trim();
   if(g===''){ showToast('Informe a nota','error'); return; }
   try{
-    await gradeWriting(id, fb, Number(g));
+    await gradeWriting(id, fb, Number(g), currentUser.id);
     showToast('Correção salva!');
     eaStuClose();
     if(document.getElementById('tWrList')) loadTeachWriting();
@@ -5720,7 +5731,7 @@ async function gradeWritingActivity(activityId) {
   if (!general && !inline.length) { showToast('Adicione pelo menos um comentário ou feedback geral.','error'); return; }
   const feedback = JSON.stringify({ general, inline });
   try {
-    await gradeWriting(activityId, feedback, grade);
+    await gradeWriting(activityId, feedback, grade, currentUser.id);
     showToast('Correção enviada! O aluno verá os comentários inline.');
     delete _wrInlineComments[activityId];
     loadTeachWriting();

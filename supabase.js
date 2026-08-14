@@ -231,15 +231,81 @@ async function getAllAnnouncements() {
   return data || [];
 }
 
+// ═══ GUARDA COMPARTILHADA — helpers de escopo do professor ═══
+// IDs dos alunos que o professor atende hoje (matrícula ativa).
+async function teacherStudentIds(teacherId) {
+  try {
+    const mine = await getMyStudents(teacherId);
+    return (mine || []).map(s => s.id).filter(Boolean);
+  } catch (e) { return []; }
+}
+
+// Conta redações num status, cobrindo os alunos compartilhados.
+async function countTeacherWritings(teacherId, status) {
+  const ids = await teacherStudentIds(teacherId);
+  let q = db.from('writing_activities').select('id', { count: 'exact', head: true });
+  q = ids.length
+    ? q.or('teacher_id.eq.' + teacherId + ',student_id.in.(' + ids.join(',') + ')')
+    : q.eq('teacher_id', teacherId);
+  return await q.eq('status', status);
+}
+
+// Co-professores de VÁRIOS alunos numa única chamada (evita N requisições
+// ao pintar a lista de alunos). Devolve { student_id: [nomes] }.
+async function getCoTeachersMap(studentIds, exceptTeacherId) {
+  const ids = (studentIds || []).filter(Boolean);
+  if (!ids.length) return {};
+  try {
+    const { data, error } = await db.rpc('student_teachers_bulk', { p_students: ids });
+    if (error) return {};
+    const map = {};
+    (data || []).forEach(function (r) {
+      if (!r.student_id || !r.teacher_id) return;
+      if (r.teacher_id === exceptTeacherId) return;
+      (map[r.student_id] = map[r.student_id] || []).push(r.full_name);
+    });
+    Object.keys(map).forEach(function (k) {
+      map[k].sort(function (a, b) { return String(a).localeCompare(String(b), 'pt', { sensitivity: 'base' }); });
+    });
+    return map;
+  } catch (e) { return {}; }
+}
+
 // ═══ WRITING ═══
 async function createWritingActivity(teacherId, studentId, title, prompt, dueDate) {
   const { error } = await db.from('writing_activities').insert([{teacher_id:teacherId,student_id:studentId,title,prompt,due_date:dueDate||null,status:'pending'}]);
   if (error) throw error;
 }
 
+// GUARDA COMPARTILHADA: o professor vê (e corrige) as redações de TODOS os
+// alunos que ele atende — inclusive os temas propostos pelo co-professor.
+// Mantém também as redações que ele mesmo criou, mesmo que o vínculo com o
+// aluno tenha sido encerrado depois (não some histórico da tela).
 async function getWritingByTeacher(teacherId) {
-  const { data } = await db.from('writing_activities').select('*, student:profiles!writing_activities_student_id_fkey(full_name)').eq('teacher_id',teacherId).order('created_at',{ascending:false});
-  return data || [];
+  const cols = '*, student:profiles!writing_activities_student_id_fkey(full_name), teacher:profiles!writing_activities_teacher_id_fkey(full_name), reviewer:profiles!writing_activities_reviewed_by_fkey(full_name)';
+  const fallbackCols = '*, student:profiles!writing_activities_student_id_fkey(full_name), teacher:profiles!writing_activities_teacher_id_fkey(full_name)';
+
+  let ids = [];
+  try {
+    const mine = await getMyStudents(teacherId);
+    ids = (mine || []).map(s => s.id).filter(Boolean);
+  } catch (e) { ids = []; }
+
+  const orFilter = ids.length
+    ? 'teacher_id.eq.' + teacherId + ',student_id.in.(' + ids.join(',') + ')'
+    : null;
+
+  async function run(select) {
+    let q = db.from('writing_activities').select(select);
+    q = orFilter ? q.or(orFilter) : q.eq('teacher_id', teacherId);
+    return await q.order('created_at', { ascending: false });
+  }
+
+  // A coluna reviewed_by é criada por guarda-compartilhada.sql. Se ainda não
+  // existir no banco, cai para o select sem ela em vez de quebrar a tela.
+  let r = await run(cols);
+  if (r.error) r = await run(fallbackCols);
+  return r.data || [];
 }
 
 async function getWritingForStudent(studentId) {
@@ -252,9 +318,21 @@ async function submitWritingResponse(activityId, responseText) {
   if (error) throw error;
 }
 
-async function gradeWriting(activityId, feedback, grade) {
-  const { error } = await db.from('writing_activities').update({feedback,grade,status:'graded',reviewed_at:new Date().toISOString()}).eq('id',activityId);
-  if (error) throw error;
+// Registra QUEM corrigiu — com dois professores por aluno, o autor do tema
+// e o corretor podem ser pessoas diferentes.
+async function gradeWriting(activityId, feedback, grade, reviewerId) {
+  const base = { feedback, grade, status: 'graded', reviewed_at: new Date().toISOString() };
+  const who = reviewerId || (window.currentUser && window.currentUser.id) || null;
+
+  let r = who
+    ? await db.from('writing_activities').update(Object.assign({ reviewed_by: who }, base)).eq('id', activityId)
+    : await db.from('writing_activities').update(base).eq('id', activityId);
+
+  // Se a coluna reviewed_by ainda não existe no banco, grava sem ela.
+  if (r.error && /reviewed_by/.test(r.error.message || '')) {
+    r = await db.from('writing_activities').update(base).eq('id', activityId);
+  }
+  if (r.error) throw r.error;
 }
 
 // ═══ PRONUNCIATION ═══
@@ -574,7 +652,7 @@ async function getUnreadCount(userId, role) {
       count = (tasks.count||0) + (writing.count||0);
     } else if (role === 'teacher') {
       const [writing, msgs] = await Promise.all([
-        db.from('writing_activities').select('id',{count:'exact',head:true}).eq('teacher_id',userId).eq('status','submitted'),
+        countTeacherWritings(userId, 'submitted'),
         db.from('coord_messages').select('id',{count:'exact',head:true}).eq('teacher_id',userId).eq('read',false)
       ]);
       count = (writing.count||0) + (msgs.count||0);
@@ -655,9 +733,13 @@ async function getNotificationItems(userId, role) {
 
     } else if (role === 'teacher') {
       // Redações submitted (aluno enviou)
-      const wr = await db.from('writing_activities')
-        .select('id, title, submitted_at, student:profiles!writing_activities_student_id_fkey(full_name)')
-        .eq('teacher_id', userId).eq('status','submitted').gte('submitted_at', cutoff)
+      const wrIds = await teacherStudentIds(userId);
+      let wrQ = db.from('writing_activities')
+        .select('id, title, submitted_at, student:profiles!writing_activities_student_id_fkey(full_name)');
+      wrQ = wrIds.length
+        ? wrQ.or('teacher_id.eq.' + userId + ',student_id.in.(' + wrIds.join(',') + ')')
+        : wrQ.eq('teacher_id', userId);
+      const wr = await wrQ.eq('status','submitted').gte('submitted_at', cutoff)
         .order('submitted_at', { ascending: false }).limit(10);
       (wr.data || []).forEach(w => {
         items.push({ type: 'writing', icon: '✍️', title: 'Redação aguardando correção: ' + (w.title||''), sub: (w.student?.full_name||'Aluno'), when: w.submitted_at, section: 'writing', isNew: true });

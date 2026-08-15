@@ -2178,7 +2178,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 
         <!-- Editor (aparece após escolher aluno + mês) -->
         <div id="lpEditor" style="display:none">
-          <div class="lp2-plan-head">
+          <div class="lp2-hero">
             <div class="lp2-avatar" id="lpAvatar">•</div>
             <div class="lp2-plan-info">
               <div class="lp2-plan-name" id="lpHdrStudent">—</div>
@@ -2191,51 +2191,25 @@ body.sb-collapsed .main { margin-left: 92px !important; }
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg>
                   <input type="text" id="lpHdrLevel" class="lp2-chip-in" placeholder="Nível" size="6">
                 </span>
+                <span class="lp2-chip pg" title="Total de páginas do livro. O padrão vem da biblioteca — ajuste se o seu exemplar tiver outra numeração. Fica salvo e é herdado nos meses seguintes.">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 4h16v16H4z"/><path d="M4 9h16M9 4v16"/></svg>
+                  <input type="number" id="lpHdrPages" class="lp2-chip-in" min="1" max="999" step="1" inputmode="numeric" placeholder="—" aria-label="Total de páginas do livro"><em>págs.</em>
+                </span>
               </div>
             </div>
+            <button type="button" class="lp2-spopen" onclick="lpSpToggle()" title="Observações de speaking deste aluno">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.1A8.4 8.4 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5z"/></svg>
+              Speaking<span class="lp2-spbadge" id="lpSpBadge" hidden></span>
+            </button>
             <div class="lp2-bookcover" id="lpBookCover" hidden>
-              <span class="lp2-bc-cap">Livro do aluno</span>
               <img id="lpBookCoverImg" alt="Capa do livro" onerror="lpBookCoverErr()">
             </div>
-          </div>
-
-          <!-- Completude do curso: páginas planejadas x total do livro -->
-          <div class="lp2-prog" id="lpProg" hidden>
-            <div class="lp2-prog-top">
-              <span class="lp2-prog-lab">Avanço no livro</span>
-              <span class="lp2-prog-pct" id="lpProgPct">—</span>
-            </div>
-            <div class="lp2-prog-bar"><span id="lpProgFill"></span></div>
-            <div class="lp2-prog-foot">
-              <div class="lp2-prog-stats" id="lpProgStats"></div>
-              <label class="lp2-prog-total" title="Total de páginas do livro. O padrão vem da biblioteca — ajuste se o seu exemplar tiver outra numeração. O valor fica salvo e é herdado nos meses seguintes.">Total de páginas
-                <input type="number" id="lpHdrPages" min="1" max="999" step="1" inputmode="numeric" placeholder="—" aria-label="Total de páginas do livro">
-              </label>
-            </div>
-          </div>
-
-          <!-- Speaking: observações do professor, por data -->
-          <div class="lp2-sp" id="lpSpeak" hidden>
-            <div class="lp2-sp-head" onclick="lpSpToggle()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.1A8.4 8.4 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5z"/></svg>
-              <b>Speaking</b>
-              <span class="lp2-sp-count" id="lpSpCount"></span>
-              <svg class="lp2-sp-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-            </div>
-            <div class="lp2-sp-body" id="lpSpBody" hidden>
-              <div class="lp2-sp-focus" id="lpSpFocus" hidden></div>
-              <div class="lp2-sp-new">
-                <div class="lp2-sp-top">
-                  <input type="date" id="lpSpDate" class="lp2-sp-date" aria-label="Data das observações">
-                  <span class="lp2-sp-editing" id="lpSpEditing" hidden></span>
-                </div>
-                <textarea id="lpSpText" class="lp2-sp-ta" placeholder="- Dificuldade em separar understand / understood;&#10;- All days / every day;&#10;- Bom uso do simple past tense;&#10;- Pronúncia satisfatória / ritmo a melhorar."></textarea>
-                <div class="lp2-sp-actions">
-                  <span class="lp2-sp-hint">Uma observação por linha. Salvar na mesma data substitui o bloco; salvar em branco apaga.</span>
-                  <button type="button" class="lp2-sp-save" id="lpSpSaveBtn" onclick="lpSpSave()">Salvar observações</button>
-                </div>
+            <div class="lp2-prog" id="lpProg" hidden>
+              <div class="lp2-prog-bar"><span id="lpProgFill"></span></div>
+              <div class="lp2-prog-foot">
+                <span class="lp2-prog-pct" id="lpProgPct">—</span>
+                <div class="lp2-prog-stats" id="lpProgStats"></div>
               </div>
-              <div class="lp2-sp-list" id="lpSpList"></div>
             </div>
           </div>
 
@@ -2263,6 +2237,34 @@ body.sb-collapsed .main { margin-left: 92px !important; }
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
               Salvar plano
             </button>
+          </div>
+
+          <!-- Gaveta: observações de speaking, por data -->
+          <div class="lp2-sp" id="lpSpeak" aria-hidden="true">
+            <div class="lp2-sp-back" onclick="lpSpClose()"></div>
+            <div class="lp2-sp-panel" role="dialog" aria-label="Observações de speaking">
+              <div class="lp2-sp-head">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.1A8.4 8.4 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5z"/></svg>
+                <b>Speaking</b>
+                <span class="lp2-sp-count" id="lpSpCount"></span>
+                <button type="button" class="lp2-sp-x" onclick="lpSpClose()" aria-label="Fechar">✕</button>
+              </div>
+              <div class="lp2-sp-body" id="lpSpBody">
+                <div class="lp2-sp-focus" id="lpSpFocus" hidden></div>
+                <div class="lp2-sp-new">
+                  <div class="lp2-sp-top">
+                    <input type="date" id="lpSpDate" class="lp2-sp-date" aria-label="Data das observações">
+                    <span class="lp2-sp-editing" id="lpSpEditing" hidden></span>
+                  </div>
+                  <textarea id="lpSpText" class="lp2-sp-ta" placeholder="- Dificuldade em separar understand / understood;&#10;- All days / every day;&#10;- Bom uso do simple past tense;&#10;- Pronúncia satisfatória / ritmo a melhorar."></textarea>
+                  <div class="lp2-sp-actions">
+                    <span class="lp2-sp-hint">Uma observação por linha. Salvar na mesma data substitui o bloco; salvar em branco apaga.</span>
+                    <button type="button" class="lp2-sp-save" id="lpSpSaveBtn" onclick="lpSpSave()">Salvar observações</button>
+                  </div>
+                </div>
+                <div class="lp2-sp-list" id="lpSpList"></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

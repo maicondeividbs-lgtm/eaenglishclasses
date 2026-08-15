@@ -118,6 +118,7 @@ async function lpOnPick() {
       return;
     }
   }
+  lpCancelAutosave();
   var student = lpFindStudent(sid);
   var mp = mv.split('-');
   var monthKey = (typeof lpMonthKey==='function') ? lpMonthKey(parseInt(mp[0],10), parseInt(mp[1],10)) : (mv + '-01');
@@ -229,6 +230,7 @@ function lpRenderRows(rows) {
   for (var i=0;i<rows.length;i++) lpAppendRow(rows[i]);
   lpChainLast();
   lpUpdateCount();
+  lpAutoOpen();
 }
 
 function lpAppendRow(r) {
@@ -237,28 +239,43 @@ function lpAppendRow(r) {
   var card = document.createElement('div');
   card.className = 'lp2-card' + (r._gen ? ' gen' : '');
   card.innerHTML =
-    '<button type="button" class="lp2-spbtn" title="Observa\u00e7\u00f5es de speaking desta aula" onclick="lpSpFromCard(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.1A8.4 8.4 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5z"/></svg></button>' +
-    '<button type="button" class="lp2-del" title="Remover aula" onclick="lpRemoveRow(this)">✕</button>' +
-    '<div class="lp2-datewrap" onclick="lpDateClick(this)">' +
-      '<div class="lp2-date">'+lpDateChipHTML(iso)+'</div>' +
-      '<input type="date" class="lp2-in-date" value="'+iso+'" aria-label="Data da aula">' +
+    // ── linha fechada: sempre visível, resume a aula ──
+    '<div class="lp2-sum" onclick="lpCardToggle(this)">' +
+      '<span class="lp2-dot" title=""></span>' +
+      '<div class="lp2-datewrap" onclick="lpDateClick(this);event.stopPropagation()">' +
+        '<div class="lp2-date">' + lpDateChipHTML(iso) + '</div>' +
+        '<input type="date" class="lp2-in-date" value="' + iso + '" aria-label="Data da aula">' +
+      '</div>' +
+      '<div class="lp2-sum-main">' +
+        '<div class="lp2-sum-topic"></div>' +
+        '<div class="lp2-sum-meta"></div>' +
+      '</div>' +
+      '<svg class="lp2-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>' +
     '</div>' +
-    '<div class="lp2-body">' +
+    // ── detalhe: só quando a aula está aberta ──
+    '<div class="lp2-det">' +
       '<input class="lp2-topic lp2-in-topic" placeholder="Tópico da aula">' +
       '<div class="lp2-obj">' +
         '<label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/></svg>Objetivo</label>' +
         '<input class="lp2-in-obj" placeholder="O que o aluno vai aprender / conseguir fazer">' +
       '</div>' +
       '<div class="lp2-fields">' +
-        '<div class="lp2-f"><label title="Estimativa — pode mudar durante a aula"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg>Páginas <em>(previsão)</em></label><input class="lp2-in-pages" placeholder="Estimativa — ex: 47, 48"></div>' +
+        '<div class="lp2-f"><label title="Estimativa — pode mudar durante a aula"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg>Páginas <em>(previsão)</em></label><input class="lp2-in-pages" placeholder="ex: 47, 48"></div>' +
         '<div class="lp2-f"><label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Homework</label><input class="lp2-in-hw" placeholder="O que passar de tarefa"></div>' +
         '<div class="lp2-f"><label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>Last homework</label><input class="lp2-in-last" placeholder="—"><span class="lp2-src" hidden></span></div>' +
       '</div>' +
+      '<div class="lp2-sugg" hidden></div>' +
       '<div class="lp2-lib" hidden></div>' +
       '<div class="lp2-spnote" hidden></div>' +
       '<div class="lp2-notes">' +
         '<label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/><path d="M9 13h6M9 17h4"/></svg>Observações</label>' +
         '<textarea rows="1" class="lp2-ta lp2-in-notes" placeholder="Anotações sobre esta aula (opcional)"></textarea>' +
+      '</div>' +
+      '<div class="lp2-cardbar">' +
+        '<button type="button" class="lp2-mini" onclick="lpCopyPrev(this)" title="Copia tópico e objetivo da aula anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copiar anterior</button>' +
+        '<button type="button" class="lp2-mini" onclick="lpSpFromCard(this)" title="Observações de speaking desta aula"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.1A8.4 8.4 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5z"/></svg>Speaking</button>' +
+        '<div class="lp2-cardbar-sp"></div>' +
+        '<button type="button" class="lp2-mini danger" onclick="lpRemoveRow(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>Remover</button>' +
       '</div>' +
     '</div>';
   document.getElementById('lpRows').appendChild(card);
@@ -276,18 +293,23 @@ function lpAppendRow(r) {
   else                            isAuto = !r.last_homework;
   lastEl.dataset.auto = isAuto ? '1' : '';
   card.querySelector('.lp2-in-notes').value = r.notes || '';
-  var ta = card.querySelector('.lp2-ta'); lpAutoGrow(ta); ta.addEventListener('input', function(){ lpAutoGrow(ta); });
+  var ta = card.querySelector('.lp2-ta');
+  ta.addEventListener('input', function(){ lpAutoGrow(ta); });
   card.querySelectorAll('input,textarea').forEach(function(el){
     el.addEventListener('input', function(){ lpSetDirty(true); });
     el.addEventListener('change', function(){ lpSetDirty(true); });
   });
   // encadeamento do "last homework": ao editar o homework, atualiza o last da próxima aula;
   // ao digitar no last, ele vira manual (não é mais sobrescrito).
-  card.querySelector('.lp2-in-hw').addEventListener('input', function(){ lpChainLast(); });
+  card.querySelector('.lp2-in-hw').addEventListener('input', function(){ lpChainLast(); lpCardSummary(card); lpSuggest(card); });
   lastEl.addEventListener('input', function(){ this.dataset.auto=''; this.classList.remove('lp2-auto'); });
-  card.querySelector('.lp2-in-pages').addEventListener('input', function(){ lpRenderLib(card); lpUpdateProgress(); });
+  card.querySelector('.lp2-in-pages').addEventListener('input', function(){ lpRenderLib(card); lpUpdateProgress(); lpCardSummary(card); lpSuggest(card); });
+  card.querySelector('.lp2-in-topic').addEventListener('input', function(){ lpCardSummary(card); lpSuggest(card); });
+  card.querySelector('.lp2-in-obj').addEventListener('input', function(){ lpCardSummary(card); });
   lpRenderLib(card);
   lpRenderSpeakCard(card);
+  lpCardSummary(card);
+  lpSuggest(card);
 }
 
 function lpAutoGrow(ta){ if(!ta) return; ta.style.height='auto'; ta.style.height=(ta.scrollHeight)+'px'; }
@@ -376,7 +398,12 @@ function lpRenderLib(card){
 }
 function lpRenderAllLib(){ document.querySelectorAll('#lpRows .lp2-card').forEach(lpRenderLib); }
 
-function lpAddRow() { lpAppendRow({}); lpChainLast(); lpSetDirty(true); lpUpdateCount(); }
+function lpAddRow() {
+  lpAppendRow({});
+  lpChainLast(); lpSetDirty(true); lpUpdateCount();
+  var all = document.querySelectorAll('#lpRows .lp2-card');
+  if (all.length) lpCardOpen(all[all.length-1], true);
+}
 
 function lpRemoveRow(btn) {
   var card = btn.closest('.lp2-card');
@@ -396,6 +423,8 @@ document.addEventListener('change', function(ev){
       if (chip) chip.innerHTML = lpDateChipHTML(t.value);
       card.classList.remove('gen');
       lpRenderSpeakCard(card);
+      lpCardSummary(card);
+      lpSuggest(card);
     }
     lpChainLast();
     lpUpdateCount();
@@ -437,9 +466,31 @@ function lpUpdateCount(){
 
 function lpSetDirty(v) {
   _lpState.dirty = !!v;
-  var tag = document.getElementById('lpDirty');
-  if (tag) tag.style.display = v ? '' : 'none';
+  lpSetSaveState(v ? 'dirty' : 'saved');
+  if (v) lpScheduleAutosave();
   lpUpdateCount();
+}
+
+// ── salvamento automático ──
+// Grava sozinho ~2s depois da última tecla. O botão "Salvar plano" continua
+// existindo para quem prefere confirmar — e força a gravação na hora.
+var _lpAutoTimer = null;
+function lpScheduleAutosave(){
+  if (_lpAutoTimer) clearTimeout(_lpAutoTimer);
+  if (!_lpState.studentId || !_lpState.monthKey) return;
+  _lpAutoTimer = setTimeout(function(){ lpSave(true); }, 2000);
+}
+function lpCancelAutosave(){
+  if (_lpAutoTimer){ clearTimeout(_lpAutoTimer); _lpAutoTimer = null; }
+}
+function lpSetSaveState(state){
+  var tag = document.getElementById('lpDirty');
+  if (!tag) return;
+  tag.className = 'lp2-dirty ' + state;
+  if (state === 'dirty')       { tag.textContent = 'altera\u00e7\u00f5es n\u00e3o salvas'; tag.style.display = ''; }
+  else if (state === 'saving') { tag.textContent = 'salvando\u2026';                       tag.style.display = ''; }
+  else if (state === 'saved')  { tag.textContent = 'tudo salvo';                            tag.style.display = _lpState.studentId ? '' : 'none'; }
+  else                         { tag.style.display = 'none'; }
 }
 
 async function lpRegenerate() {
@@ -460,8 +511,14 @@ async function lpRegenerate() {
   showToast(merged.length ? ('Geradas '+merged.length+' aula(s) do schedule.') : 'Nenhuma aula recorrente encontrada neste mês.', merged.length ? 'success' : 'info');
 }
 
-async function lpSave() {
-  if (!_lpState.studentId || !_lpState.monthKey) { showToast('Selecione aluno e mês.','error'); return; }
+async function lpSave(silent) {
+  lpCancelAutosave();
+  if (!_lpState.studentId || !_lpState.monthKey) {
+    if (!silent) showToast('Selecione aluno e mês.','error');
+    return;
+  }
+  if (silent && !_lpState.dirty) return;
+  lpSetSaveState('saving');
   var pgEl = document.getElementById('lpHdrPages');
   var header = {
     book:  document.getElementById('lpHdrBook').value.trim(),
@@ -471,9 +528,12 @@ async function lpSave() {
   };
   try {
     await saveLessonPlan(currentUser.id, _lpState.studentId, _lpState.monthKey, header, lpCollectRows());
-    lpSetDirty(false);
-    showToast('Plano salvo!');
+    _lpState.dirty = false;
+    lpSetSaveState('saved');
+    lpUpdateCount();
+    if (!silent) showToast('Plano salvo!');
   } catch(e) {
+    lpSetSaveState('dirty');
     showToast('Erro ao salvar: ' + (e.message||e), 'error');
   }
 }
@@ -756,29 +816,19 @@ function lpSpSyncEditor(){
 }
 
 function lpSpOpen(iso){
-  var body = document.getElementById('lpSpBody');
-  if (body && body.hidden) lpSpToggle();
   var di = document.getElementById('lpSpDate');
-  if (di && iso) di.value = String(iso).substring(0,10);
-  lpSpSyncEditor();
+  if (di) di.value = iso ? String(iso).substring(0,10) : (di.value || lpSpDefaultDate());
   var box = document.getElementById('lpSpeak');
-  if (box && box.scrollIntoView) box.scrollIntoView({ behavior:'smooth', block:'center' });
+  if (box && !box.classList.contains('open')) lpSpToggle();
+  lpSpSyncEditor();
   var ta = document.getElementById('lpSpText');
-  if (ta) setTimeout(function(){ ta.focus(); }, 250);
+  if (ta) setTimeout(function(){ ta.focus(); }, 220);
 }
 
 function lpSpFromCard(btn){
   var card = btn.closest('.lp2-card');
   if (!card) return;
   lpSpOpen(card.querySelector('.lp2-in-date').value || lpSpDefaultDate());
-}
-
-function lpSpToggle(){
-  var body = document.getElementById('lpSpBody');
-  var box  = document.getElementById('lpSpeak');
-  if (!body) return;
-  body.hidden = !body.hidden;
-  if (box) box.classList.toggle('open', !body.hidden);
 }
 
 async function lpSpSave(){
@@ -810,7 +860,6 @@ async function lpSpSave(){
 function lpRenderSpeakPanel(){
   var box = document.getElementById('lpSpeak');
   if (!box) return;
-  box.hidden = false;
   var list = _lpState.speaking || [];
 
   var cnt = document.getElementById('lpSpCount');
@@ -818,6 +867,12 @@ function lpRenderSpeakPanel(){
     cnt.textContent = (_lpState.speakOk === false)
       ? 'indisponível'
       : (list.length ? (list.length + (list.length > 1 ? ' registros' : ' registro')) : 'nenhum registro ainda');
+  }
+  // contador no botão do cabeçalho (abre a gaveta)
+  var badge = document.getElementById('lpSpBadge');
+  if (badge){
+    badge.textContent = list.length ? String(list.length) : '';
+    badge.hidden = !list.length;
   }
 
   var f = document.getElementById('lpSpFocus');
@@ -863,6 +918,8 @@ function lpRenderSpeakCard(card){
   if (!n){ box.hidden = true; box.innerHTML = ''; return; }
   var b = lpSpBullets(n.content);
   if (!b.length){ box.hidden = true; box.innerHTML = ''; return; }
+  var mark = card.querySelector('.lp2-cardbar-sp');
+  if (mark) mark.textContent = '';
   box.innerHTML = '<details class="lp2-spnote-d"><summary>' +
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.1A8.4 8.4 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5z"/></svg>' +
       'Speaking desta aula <span>' + b.length + '</span></summary>' +
@@ -870,3 +927,192 @@ function lpRenderSpeakCard(card){
     '</details>';
   box.hidden = false;
 }
+
+// ═══════════════════════════════════════════════════════════════
+// 4) ACORDEÃO — uma aula aberta por vez
+//    A linha fechada resume a aula; a aula relevante abre sozinha.
+// ═══════════════════════════════════════════════════════════════
+function lpTodayISO(){
+  var t = new Date();
+  return t.getFullYear() + '-' + String(t.getMonth()+1).padStart(2,'0') + '-' + String(t.getDate()).padStart(2,'0');
+}
+
+function lpCardOpen(card, scroll){
+  document.querySelectorAll('#lpRows .lp2-card.open').forEach(function(c){
+    if (c !== card) c.classList.remove('open');
+  });
+  card.classList.add('open');
+  lpAutoGrow(card.querySelector('.lp2-ta'));
+  lpSuggest(card);
+  if (scroll && card.scrollIntoView) {
+    setTimeout(function(){ card.scrollIntoView({ behavior:'smooth', block:'center' }); }, 60);
+  }
+}
+
+function lpCardToggle(sum){
+  var card = sum.closest('.lp2-card');
+  if (!card) return;
+  if (card.classList.contains('open')) card.classList.remove('open');
+  else lpCardOpen(card, false);
+}
+
+// Abre a aula mais relevante: a próxima a acontecer; se o mês já passou
+// inteiro, a última. Se nenhuma tem data, abre a primeira.
+function lpAutoOpen(){
+  var cards = Array.prototype.slice.call(document.querySelectorAll('#lpRows .lp2-card'));
+  if (!cards.length) return;
+  var today = lpTodayISO(), pick = null;
+  for (var i=0;i<cards.length;i++){
+    var d = cards[i].querySelector('.lp2-in-date').value;
+    if (d && d >= today){ pick = cards[i]; break; }
+  }
+  if (!pick){
+    for (var j=cards.length-1;j>=0;j--){
+      if (cards[j].querySelector('.lp2-in-date').value){ pick = cards[j]; break; }
+    }
+  }
+  lpCardOpen(pick || cards[0], false);
+}
+
+// Resumo da linha fechada + ponto de status.
+function lpCardSummary(card){
+  var topic = (card.querySelector('.lp2-in-topic').value || '').trim();
+  var obj   = (card.querySelector('.lp2-in-obj').value   || '').trim();
+  var pages = (card.querySelector('.lp2-in-pages').value || '').trim();
+  var hw    = (card.querySelector('.lp2-in-hw').value    || '').trim();
+  var date  = card.querySelector('.lp2-in-date').value;
+
+  var t = card.querySelector('.lp2-sum-topic');
+  if (t){
+    t.textContent = topic || 'Sem tópico';
+    t.classList.toggle('empty', !topic);
+  }
+
+  var bits = [];
+  if (pages) bits.push('págs. ' + pages);
+  if (hw)    bits.push('hw: ' + (hw.length > 34 ? hw.substring(0,34) + '…' : hw));
+  if (!bits.length && obj) bits.push(obj.length > 46 ? obj.substring(0,46) + '…' : obj);
+  var m = card.querySelector('.lp2-sum-meta');
+  if (m){ m.textContent = bits.join(' · '); m.hidden = !bits.length; }
+
+  var planned = !!(topic || obj);
+  var past    = !!date && date < lpTodayISO();
+  var dot = card.querySelector('.lp2-dot');
+  if (dot){
+    dot.className = 'lp2-dot ' + (planned ? 'ok' : (past ? 'late' : 'todo'));
+    dot.title = planned ? 'Aula planejada' : (past ? 'Aula já passou e ficou sem planejamento' : 'Ainda sem planejamento');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 5) MENOS DIGITAÇÃO — sugestões de um toque
+//    Páginas seguem de onde a aula anterior parou; o tópico vem da
+//    biblioteca; o homework reaproveita o formato dos últimos enviados.
+// ═══════════════════════════════════════════════════════════════
+function lpPrevCard(card){
+  var prev = card.previousElementSibling;
+  return (prev && prev.classList.contains('lp2-card')) ? prev : null;
+}
+
+function lpSuggestPages(card){
+  var prev = lpPrevCard(card);
+  if (!prev) return '';
+  var keys = Object.keys(lpParsePages(prev.querySelector('.lp2-in-pages').value)).map(Number);
+  if (!keys.length) return '';
+  var last = Math.max.apply(null, keys);
+  var total = lpTotalPages();
+  if (total && last >= total) return '';
+  return (last + 1) + ', ' + (last + 2);
+}
+
+function lpSuggestTopic(card){
+  var m = lpLibMatchesForCard(card);
+  return m.length ? m[0].topic : '';
+}
+
+function lpSuggestHw(card){
+  var list = _lpState.hw || [];
+  if (!list.length) return '';
+  var used = {};
+  document.querySelectorAll('#lpRows .lp2-in-hw').forEach(function(i){ used[(i.value||'').trim()] = 1; });
+  for (var i=list.length-1;i>=0;i--){
+    var t = (list[i].title || '').trim();
+    if (t && !used[t]) return t;
+  }
+  return '';
+}
+
+function lpSugChip(kind, label, value){
+  return '<button type="button" class="lp2-sug" data-k="' + kind + '" data-v="' + lpLibEsc(value) + '" onclick="lpApplySug(this)">' +
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>' +
+    lpLibEsc(label) + '</button>';
+}
+
+function lpSuggest(card){
+  var box = card.querySelector('.lp2-sugg');
+  if (!box) return;
+  var html = '';
+  if (!(card.querySelector('.lp2-in-pages').value || '').trim()){
+    var pg = lpSuggestPages(card);
+    if (pg) html += lpSugChip('pages', 'Páginas ' + pg, pg);
+  }
+  if (!(card.querySelector('.lp2-in-topic').value || '').trim()){
+    var tp = lpSuggestTopic(card);
+    if (tp) html += lpSugChip('topic', 'Tópico: ' + (tp.length > 40 ? tp.substring(0,40) + '…' : tp), tp);
+  }
+  if (!(card.querySelector('.lp2-in-hw').value || '').trim()){
+    var hw = lpSuggestHw(card);
+    if (hw) html += lpSugChip('hw', 'Homework: ' + (hw.length > 34 ? hw.substring(0,34) + '…' : hw), hw);
+  }
+  if (!html){ box.hidden = true; box.innerHTML = ''; return; }
+  box.innerHTML = '<span class="lp2-sugg-lab">Sugestões</span>' + html;
+  box.hidden = false;
+}
+
+function lpApplySug(btn){
+  var card = btn.closest('.lp2-card');
+  if (!card) return;
+  var k = btn.dataset.k, v = btn.dataset.v;
+  var sel = k === 'pages' ? '.lp2-in-pages' : (k === 'topic' ? '.lp2-in-topic' : '.lp2-in-hw');
+  var el = card.querySelector(sel);
+  el.value = v;
+  el.dispatchEvent(new Event('input', { bubbles: true }));
+  el.focus();
+}
+
+function lpCopyPrev(btn){
+  var card = btn.closest('.lp2-card');
+  var prev = card ? lpPrevCard(card) : null;
+  if (!prev){ showToast('Esta é a primeira aula do mês.', 'info'); return; }
+  ['.lp2-in-topic', '.lp2-in-obj'].forEach(function(sel){
+    var v = prev.querySelector(sel).value;
+    if (v) card.querySelector(sel).value = v;
+  });
+  card.querySelector('.lp2-in-topic').dispatchEvent(new Event('input', { bubbles: true }));
+  card.querySelector('.lp2-in-obj').dispatchEvent(new Event('input', { bubbles: true }));
+  showToast('Tópico e objetivo copiados da aula anterior.');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 6) SPEAKING EM GAVETA — sai do fluxo da página
+// ═══════════════════════════════════════════════════════════════
+function lpSpToggle(){
+  var box = document.getElementById('lpSpeak');
+  if (!box) return;
+  var open = !box.classList.contains('open');
+  box.classList.toggle('open', open);
+  box.setAttribute('aria-hidden', open ? 'false' : 'true');
+  document.body.classList.toggle('lp2-noscroll', open);
+  if (open){
+    var d = document.getElementById('lpSpDate');
+    if (d && !d.value) d.value = lpSpDefaultDate();
+    lpSpSyncEditor();
+  }
+}
+function lpSpClose(){
+  var box = document.getElementById('lpSpeak');
+  if (box && box.classList.contains('open')) lpSpToggle();
+}
+document.addEventListener('keydown', function(ev){
+  if (ev.key === 'Escape') lpSpClose();
+});

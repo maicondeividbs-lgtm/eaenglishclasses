@@ -831,14 +831,21 @@ picture{display:contents}
 .lp2-count{font-size:12px;color:var(--g500);text-align:right;line-height:1.5;min-height:1px}
 .lp2-count b{color:var(--navy)}
 
-/* ── cabeçalho do plano ── */
-.lp2-plan-head{display:flex;align-items:center;gap:16px;padding:16px 4px 14px}
-.lp2-plan-info{flex:1;min-width:0}
-.lp2-bookcover{flex-shrink:0;display:flex;align-items:center;gap:9px}
-.lp2-bookcover .lp2-bc-cap{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--g400);text-align:right;max-width:78px;line-height:1.3}
-.lp2-bookcover img{width:56px;height:76px;object-fit:cover;border-radius:9px;box-shadow:0 6px 16px rgba(25,36,78,.18);border:1px solid var(--g200);background:var(--g100);display:block}
-.lp2-avatar{width:52px;height:52px;flex-shrink:0;border-radius:16px;background:linear-gradient(135deg,var(--orange),var(--mango));color:#fff;font-family:'Fraunces',serif;font-weight:800;font-size:24px;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(243,107,46,.28)}
-.lp2-plan-name{font-family:'Fraunces',serif;font-weight:800;font-size:22px;color:var(--navy);line-height:1.1}
+/* ── cabeçalho do plano: aluno, livro, avanço e speaking num painel só ── */
+.lp2-hero{display:flex;align-items:center;gap:13px;flex-wrap:wrap;background:#fff;border:1px solid var(--g100);border-radius:16px;padding:13px 15px;box-shadow:var(--shadow-sm);margin:10px 0 14px}
+.lp2-plan-info{flex:1;min-width:150px}
+.lp2-bookcover{flex-shrink:0}
+.lp2-bookcover img{width:40px;height:54px;object-fit:cover;border-radius:7px;box-shadow:0 4px 12px rgba(25,36,78,.16);border:1px solid var(--g200);background:var(--g100);display:block}
+.lp2-avatar{width:42px;height:42px;flex-shrink:0;border-radius:13px;background:linear-gradient(135deg,var(--orange),var(--mango));color:#fff;font-family:'Fraunces',serif;font-weight:800;font-size:19px;display:flex;align-items:center;justify-content:center;box-shadow:0 5px 13px rgba(243,107,46,.26)}
+.lp2-plan-name{font-family:'Fraunces',serif;font-weight:800;font-size:19px;color:var(--navy);line-height:1.15}
+.lp2-chip.pg{background:var(--g50);border-color:var(--g200);color:var(--g500)}
+.lp2-chip.pg em{font-style:normal;opacity:.65;font-size:11.5px}
+#lpHdrPages{width:40px;text-align:right;-moz-appearance:textfield}
+#lpHdrPages::-webkit-outer-spin-button,#lpHdrPages::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.lp2-spopen{display:inline-flex;align-items:center;gap:7px;flex-shrink:0;border:1.5px solid var(--g200);background:#fff;color:var(--navy);border-radius:11px;padding:9px 14px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s}
+.lp2-spopen svg{width:15px;height:15px}
+.lp2-spopen:hover{border-color:var(--orange);color:var(--orange);background:var(--orange-soft)}
+.lp2-spbadge{background:var(--orange);color:#fff;border-radius:999px;min-width:18px;padding:1px 6px;font-size:11px;font-weight:800;text-align:center}
 .lp2-chips{display:flex;gap:8px;margin-top:7px;flex-wrap:wrap}
 .lp2-chip{display:inline-flex;align-items:center;gap:6px;background:var(--cream);border:1px solid #f0e4cf;color:#8a6d2f;border-radius:999px;padding:4px 12px;font-size:12.5px;font-weight:700}
 .lp2-chip svg{width:14px;height:14px;flex-shrink:0}
@@ -848,17 +855,37 @@ picture{display:contents}
 
 /* ── lista de aulas ── */
 .lp2-list{display:flex;flex-direction:column;gap:12px}
-.lp2-card{display:flex;gap:18px;background:#fff;border:1px solid var(--g100);border-radius:18px;padding:16px 18px 16px 16px;position:relative;transition:box-shadow .18s,border-color .18s}
-.lp2-card:hover{border-color:var(--g200);box-shadow:var(--shadow-md)}
-.lp2-datewrap{position:relative;flex-shrink:0;align-self:flex-start;cursor:pointer}
-.lp2-date{width:66px;border-radius:15px;background:var(--cream);border:1px solid #f0e4cf;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 0;pointer-events:none;transition:border-color .15s,box-shadow .15s;box-shadow:0 2px 6px rgba(25,36,78,.05)}
-.lp2-date .d{font-family:'Fraunces',serif;font-weight:800;font-size:26px;color:var(--navy);line-height:1}
-.lp2-date .m{font-size:10px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:var(--orange);margin-top:4px}
+.lp2-card{background:#fff;border:1px solid var(--g100);border-radius:16px;overflow:hidden;transition:box-shadow .18s,border-color .18s}
+.lp2-card:hover{border-color:var(--g200)}
+.lp2-card.open{border-color:var(--g200);box-shadow:var(--shadow-md)}
+
+/* linha fechada: resume a aula em uma linha */
+.lp2-sum{display:flex;align-items:center;gap:12px;padding:9px 14px 9px 12px;cursor:pointer;transition:background .15s}
+.lp2-sum:hover{background:var(--g50)}
+.lp2-card.open .lp2-sum{background:var(--g50);border-bottom:1px solid var(--g100)}
+.lp2-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;background:var(--g200)}
+.lp2-dot.ok{background:#1f6b66}
+.lp2-dot.late{background:var(--orange)}
+.lp2-dot.todo{background:var(--g200);box-shadow:inset 0 0 0 1.5px var(--g300)}
+.lp2-sum-main{flex:1;min-width:0}
+.lp2-sum-topic{font-size:14.5px;font-weight:700;color:var(--navy);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lp2-sum-topic.empty{color:var(--g300);font-weight:600;font-style:italic}
+.lp2-sum-meta{font-size:12px;color:var(--g400);line-height:1.4;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lp2-chev{width:17px;height:17px;color:var(--g300);flex-shrink:0;transition:transform .2s}
+.lp2-card.open .lp2-chev{transform:rotate(180deg)}
+
+/* detalhe: só aparece na aula aberta */
+.lp2-det{display:none;padding:14px 16px 15px}
+.lp2-card.open .lp2-det{display:block}
+
+.lp2-datewrap{position:relative;flex-shrink:0;cursor:pointer}
+.lp2-date{width:50px;border-radius:12px;background:var(--cream);border:1px solid #f0e4cf;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 0;pointer-events:none;transition:border-color .15s}
+.lp2-date .d{font-family:'Fraunces',serif;font-weight:800;font-size:19px;color:var(--navy);line-height:1}
+.lp2-date .m{font-size:9px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:var(--orange);margin-top:2px}
 .lp2-in-date{position:absolute;inset:0;width:100%;height:100%;opacity:0;border:0;padding:0;margin:0;cursor:pointer}
 .lp2-datewrap:hover .lp2-date{border-color:var(--orange)}
 .lp2-card.gen .lp2-date{background:var(--ocean-light);border-color:#b6ddda}
 .lp2-card.gen .lp2-date .m{color:#1f6b66}
-.lp2-body{flex:1;min-width:0}
 .lp2-topic{width:100%;border:none;background:transparent;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:16.5px;letter-spacing:-.2px;color:var(--navy);padding:2px 0 2px;outline:none}
 .lp2-topic::placeholder{color:var(--g300);font-weight:600}
 
@@ -887,9 +914,20 @@ picture{display:contents}
 .lp2-ta{width:100%;border:none;background:transparent;resize:none;overflow:hidden;font:inherit;font-size:13.5px;color:var(--g900);line-height:1.45;outline:none;min-height:20px}
 .lp2-ta::placeholder{color:var(--g300)}
 
-.lp2-del{position:absolute;top:10px;right:10px;width:26px;height:26px;border:none;background:transparent;color:var(--g300);border-radius:8px;cursor:pointer;font-size:14px;opacity:0;transition:opacity .15s,background .15s,color .15s}
-.lp2-card:hover .lp2-del{opacity:1}
-.lp2-del:hover{background:#fee2e2;color:#dc2626}
+/* sugestões de um toque — menos digitação repetitiva */
+.lp2-sugg{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:13px}
+.lp2-sugg-lab{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--g400)}
+.lp2-sug{display:inline-flex;align-items:center;gap:5px;max-width:100%;border:1px dashed var(--g300);background:#fff;color:var(--g500);border-radius:999px;padding:4px 11px;font:inherit;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;text-align:left}
+.lp2-sug svg{width:11px;height:11px;flex-shrink:0}
+.lp2-sug:hover{border-style:solid;border-color:var(--orange);color:var(--orange);background:var(--orange-soft)}
+
+/* rodapé do cartão aberto */
+.lp2-cardbar{display:flex;align-items:center;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--g100)}
+.lp2-cardbar-sp{flex:1}
+.lp2-mini{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--g200);background:#fff;color:var(--g500);border-radius:9px;padding:6px 11px;font:inherit;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s}
+.lp2-mini svg{width:13px;height:13px}
+.lp2-mini:hover{border-color:var(--orange);color:var(--orange);background:var(--orange-soft)}
+.lp2-mini.danger:hover{border-color:#fca5a5;color:#dc2626;background:#fee2e2}
 
 .lp2-add{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:2px dashed var(--g200);border-radius:16px;padding:15px;margin-top:12px;color:var(--g500);font:inherit;font-weight:700;font-size:14px;background:transparent;cursor:pointer;transition:all .15s}
 .lp2-add:hover{border-color:var(--orange);color:var(--orange);background:var(--orange-soft)}
@@ -902,26 +940,26 @@ picture{display:contents}
 .lp2-ghost:hover{border-color:var(--orange);color:var(--orange);background:var(--orange-soft)}
 .lp2-actions-spacer{flex:1}
 .lp2-dirty{font-size:12px;font-weight:700;color:var(--mango);display:inline-flex;align-items:center;gap:6px}
-.lp2-dirty::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--mango)}
+.lp2-dirty::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--mango);flex-shrink:0}
+.lp2-dirty.saved{color:var(--g400)}
+.lp2-dirty.saved::before{background:#1f6b66}
+.lp2-dirty.saving{color:var(--g400)}
+.lp2-dirty.saving::before{background:var(--g300);animation:lp2Pulse 1s ease-in-out infinite}
+@keyframes lp2Pulse{0%,100%{opacity:1}50%{opacity:.3}}
 .lp2-save{display:inline-flex;align-items:center;gap:8px;border:none;background:var(--orange);color:#fff;border-radius:11px;padding:12px 22px;font:inherit;font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 6px 16px rgba(243,107,46,.3)}
 .lp2-save svg{width:17px;height:17px}
 .lp2-save:hover{background:var(--orange-light)}
 
 
 /* ── completude do curso (barra de avanço no livro) ── */
-.lp2-prog{background:#fff;border:1px solid var(--g100);border-radius:16px;padding:14px 18px 15px;box-shadow:var(--shadow-sm);margin:0 0 14px}
-.lp2-prog-top{display:flex;align-items:baseline;gap:10px}
-.lp2-prog-lab{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--g400)}
-.lp2-prog-pct{margin-left:auto;font-family:'Fraunces',serif;font-weight:800;font-size:26px;line-height:1;color:var(--navy)}
-.lp2-prog-bar{height:9px;border-radius:999px;background:var(--g100);overflow:hidden;margin:9px 0 10px}
+.lp2-prog{flex-basis:100%;border-top:1px solid var(--g100);padding-top:11px;margin-top:1px}
+.lp2-prog-bar{height:7px;border-radius:999px;background:var(--g100);overflow:hidden}
 .lp2-prog-bar span{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,var(--blue),var(--orange));transition:width .35s ease}
-.lp2-prog-foot{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.lp2-prog-stats{flex:1;min-width:0;font-size:12.5px;color:var(--g500);line-height:1.6}
+.lp2-prog-foot{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap;margin-top:8px}
+.lp2-prog-pct{font-family:'Fraunces',serif;font-weight:800;font-size:19px;line-height:1;color:var(--navy);flex-shrink:0}
+.lp2-prog-stats{flex:1;min-width:0;font-size:12px;color:var(--g500);line-height:1.6}
 .lp2-prog-stats b{color:var(--navy);font-weight:800}
-.lp2-prog-sep{color:var(--g300);margin:0 8px}
-.lp2-prog-total{display:inline-flex;align-items:center;gap:7px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--g400);white-space:nowrap}
-.lp2-prog-total input{width:64px;border:1.5px solid var(--g200);border-radius:9px;padding:6px 8px;font:inherit;font-size:13px;font-weight:700;color:var(--navy);text-align:center;outline:none;text-transform:none;letter-spacing:0}
-.lp2-prog-total input:focus{border-color:var(--orange);box-shadow:0 0 0 3px var(--orange-soft)}
+.lp2-prog-sep{color:var(--g300);margin:0 7px}
 
 /* ── selo de origem do "Last homework" ── */
 .lp2-src{align-self:flex-start;margin-top:5px;font-size:10px;font-weight:800;letter-spacing:.02em;border-radius:999px;padding:2px 8px;line-height:1.6}
@@ -929,12 +967,6 @@ picture{display:contents}
 .lp2-src.plan{background:var(--g50);color:var(--g500);border:1px solid var(--g200)}
 .lp2-src.manual{background:var(--cream);color:#8a6d2f;border:1px solid #f0e4cf;cursor:pointer}
 .lp2-src.manual:hover{border-color:var(--orange);color:var(--orange)}
-
-/* ── botão de speaking no cartão da aula ── */
-.lp2-spbtn{position:absolute;top:10px;right:40px;width:26px;height:26px;border:none;background:transparent;color:var(--g300);border-radius:8px;cursor:pointer;opacity:0;transition:opacity .15s,background .15s,color .15s;display:flex;align-items:center;justify-content:center}
-.lp2-spbtn svg{width:15px;height:15px}
-.lp2-card:hover .lp2-spbtn{opacity:1}
-.lp2-spbtn:hover{background:var(--cream);color:var(--orange)}
 
 /* ── bloco de speaking dentro do cartão ── */
 .lp2-spnote{margin-top:12px}
@@ -947,16 +979,20 @@ picture{display:contents}
 .lp2-spnote-d li{font-size:13px;line-height:1.45;color:var(--g900);position:relative;padding-left:14px}
 .lp2-spnote-d li::before{content:"";position:absolute;left:2px;top:8px;width:5px;height:5px;border-radius:50%;background:var(--mango)}
 
-/* ── painel Speaking (observações por data) ── */
-.lp2-sp{background:#fff;border:1px solid var(--g100);border-radius:16px;box-shadow:var(--shadow-sm);margin:0 0 14px;overflow:hidden}
-.lp2-sp-head{display:flex;align-items:center;gap:10px;padding:14px 18px;cursor:pointer}
-.lp2-sp-head:hover{background:var(--g50)}
+/* ── Speaking: gaveta lateral (sai do fluxo da página) ── */
+.lp2-sp{position:fixed;inset:0;z-index:200;display:none}
+.lp2-sp.open{display:block}
+.lp2-sp-back{position:absolute;inset:0;background:rgba(25,36,78,.34)}
+.lp2-sp-panel{position:absolute;top:0;right:0;bottom:0;width:min(460px,100%);background:#fff;box-shadow:-16px 0 44px rgba(25,36,78,.22);display:flex;flex-direction:column;animation:lp2SpIn .22s cubic-bezier(.16,1,.3,1)}
+@keyframes lp2SpIn{from{transform:translateX(28px);opacity:.5}to{transform:none;opacity:1}}
+body.lp2-noscroll{overflow:hidden}
+.lp2-sp-head{display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid var(--g100);flex-shrink:0}
 .lp2-sp-head>svg{width:17px;height:17px;color:var(--orange);flex-shrink:0}
-.lp2-sp-head b{font-family:'Fraunces',serif;font-size:16px;font-weight:800;color:var(--navy)}
+.lp2-sp-head b{font-family:'Fraunces',serif;font-size:17px;font-weight:800;color:var(--navy)}
 .lp2-sp-count{font-size:12px;color:var(--g400);font-weight:600}
-.lp2-sp-chev{margin-left:auto;width:17px;height:17px;color:var(--g400);transition:transform .2s;flex-shrink:0}
-.lp2-sp.open .lp2-sp-chev{transform:rotate(180deg)}
-.lp2-sp-body{border-top:1px solid var(--g100);padding:14px 18px 16px;background:var(--g50)}
+.lp2-sp-x{margin-left:auto;width:30px;height:30px;border:none;background:transparent;color:var(--g400);border-radius:9px;cursor:pointer;font-size:15px;flex-shrink:0}
+.lp2-sp-x:hover{background:var(--g100);color:var(--navy)}
+.lp2-sp-body{flex:1;overflow-y:auto;padding:14px 18px 20px;background:var(--g50)}
 
 .lp2-sp-focus{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:13px}
 .lp2-sp-flab{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--g400);margin-right:2px}
@@ -1000,13 +1036,20 @@ picture{display:contents}
   .lp2-actions-spacer{display:none;width:100%}
   .lp2-dirty{order:3;width:100%;justify-content:center;margin-top:2px}
   .lp2-save{order:4;width:100%;justify-content:center}
-  .lp2-del{opacity:1}
-  .lp2-spbtn{opacity:1}
-  .lp2-prog{padding:13px 14px 14px}
-  .lp2-prog-pct{font-size:23px}
-  .lp2-prog-foot{gap:10px}
+  .lp2-hero{padding:12px 13px;gap:10px;align-items:flex-start}
+  .lp2-plan-info{min-width:0}
+  .lp2-bookcover{display:none}
+  .lp2-chips{gap:6px;margin-top:6px}
+  .lp2-chip{padding:4px 10px;font-size:12px}
+  .lp2-spopen{order:5;width:100%;justify-content:center}
   .lp2-prog-stats{width:100%;flex:none}
-  .lp2-prog-total{width:100%;justify-content:space-between}
+  .lp2-sum{padding:8px 11px}
+  .lp2-det{padding:13px 13px 14px}
+  .lp2-cardbar{flex-wrap:wrap}
+  .lp2-cardbar-sp{display:none}
+  .lp2-mini{flex:1;justify-content:center}
+  .lp2-sug{max-width:100%;white-space:normal}
+  .lp2-sp-panel{width:100%}
   .lp2-sp-head,.lp2-sp-body{padding-left:14px;padding-right:14px}
   .lp2-sp-save{width:100%}
   .lp2-sp-hint{width:100%;flex:none}

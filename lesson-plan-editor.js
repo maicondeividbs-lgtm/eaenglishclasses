@@ -216,11 +216,13 @@ async function lpGenerateRowsFromSchedule(studentName, monthValue) {
 }
 
 // selo de data (dia grande + "qui · jul"); vazio => convite a definir
+// O mês já aparece no seletor acima — repeti-lo no chip só forçava quebra
+// de linha. Fica dia da semana em cima e o dia embaixo, em bloco fixo.
 function lpDateChipHTML(iso){
-  if (!iso) return '<span class="d">＋</span><span class="m">data</span>';
+  if (!iso) return '<span class="w">data</span><span class="d">＋</span>';
   var p = String(iso).substring(0,10).split('-');
   var dt = new Date(parseInt(p[0],10), parseInt(p[1],10)-1, parseInt(p[2],10));
-  return '<span class="d">'+p[2]+'</span><span class="m">'+LP_WD[dt.getDay()]+' · '+LP_MO[parseInt(p[1],10)-1]+'</span>';
+  return '<span class="w">' + LP_WD[dt.getDay()] + '</span><span class="d">' + p[2] + '</span>';
 }
 
 function lpRenderRows(rows) {
@@ -386,15 +388,40 @@ function lpRenderLib(card){
   var box = card.querySelector('.lp2-lib'); if (!box) return;
   var matches = lpLibMatchesForCard(card);
   if (!matches.length){ box.hidden = true; box.innerHTML = ''; return; }
-  var html = '<div class="lp2-lib-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Da biblioteca &middot; ' +
-    matches.length + ' tópico' + (matches.length>1?'s':'') + ' nas páginas desta aula</div>';
+  var html = '<div class="lp2-lib-head">' +
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>' +
+    'Da biblioteca<span class="lp2-lib-n">' + matches.length + ' tópico' + (matches.length>1?'s':'') + ' nestas páginas</span></div>';
   matches.forEach(function(t, i){
-    var exs = (t.ex||[]).map(function(p){
-      return '<li><span class="lp2-lib-en">' + lpLibEsc(p.en) + '</span>' + (p.pt ? ' <span class="lp2-lib-pt">(' + lpLibEsc(p.pt) + ')</span>' : '') + '</li>';
+    var exs = (t.ex||[]).map(function(x){
+      return '<li>' +
+        '<span class="lp2-lib-en">' + lpLibEsc(x.en) + '</span>' +
+        (x.pt ? '<span class="lp2-lib-pt">' + lpLibEsc(x.pt) + '</span>' : '') +
+      '</li>';
     }).join('');
-    html += '<details class="lp2-lib-item"' + (i===0?' open':'') + '><summary><b>' + lpLibEsc(t.topic) + '</b> <span class="lp2-lib-pg">pg ' + t.page + (t.unit ? ' &middot; Unit ' + t.unit : '') + '</span></summary><ul class="lp2-lib-ex">' + exs + '</ul></details>';
+    html += '<details class="lp2-lib-item"' + (i===0?' open':'') + '>' +
+      '<summary>' +
+        '<span class="lp2-lib-tt">' + lpLibEsc(t.topic) + '</span>' +
+        '<span class="lp2-lib-tags"><span class="lp2-lib-pg">pág. ' + t.page + '</span>' +
+        (t.unit ? '<span class="lp2-lib-un">Unit ' + t.unit + '</span>' : '') + '</span>' +
+      '</summary>' +
+      '<div class="lp2-lib-panel">' +
+        (exs ? '<ul class="lp2-lib-ex">' + exs + '</ul>' : '') +
+        '<button type="button" class="lp2-lib-use" data-t="' + lpLibEsc(t.topic) + '" onclick="lpLibUse(this)">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>' +
+          'Usar como tópico da aula</button>' +
+      '</div></details>';
   });
   box.innerHTML = html; box.hidden = false;
+}
+
+// Preenche o tópico da aula com o título do conteúdo casado na biblioteca.
+function lpLibUse(btn){
+  var card = btn.closest('.lp2-card');
+  if (!card) return;
+  var el = card.querySelector('.lp2-in-topic');
+  el.value = btn.dataset.t || '';
+  el.dispatchEvent(new Event('input', { bubbles: true }));
+  el.focus();
 }
 function lpRenderAllLib(){ document.querySelectorAll('#lpRows .lp2-card').forEach(lpRenderLib); }
 

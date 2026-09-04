@@ -2448,7 +2448,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   document.getElementById('userName').textContent = currentUser.full_name || 'Professor';
   document.getElementById('userAvatar').textContent = (currentUser.full_name || 'P')[0];
-  document.getElementById('greeting').textContent = 'Olá, ' + (currentUser.full_name || 'Professor') + '! 👨‍🏫';
+  // a saudação passou para o hero "Seu dia" (#diaOla, em seu-dia.js)
 
   // Registra o acesso do professor/coordenação para o controle de frequência da coordenação.
   // Uma vez por sessão do navegador, para não inflar a contagem em recargas.

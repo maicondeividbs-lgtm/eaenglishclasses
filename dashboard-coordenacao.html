@@ -4144,9 +4144,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     avatarEl.textContent = (currentUser.full_name || 'C')[0];
   }
   // Greeting by time of day
-  const hour = new Date().getHours();
-  const greetText = hour < 12 ? 'Bom dia' : hour < 18 ? 'Boa tarde' : 'Boa noite';
-  document.getElementById('greeting').textContent = greetText + ', ' + (currentUser.full_name || 'Coordenador') + '! 📊';
+  // a saudação passou para o hero "Seu dia" (#diaOla, em seu-dia.js)
   
   // Show current date — versão longa (desktop) + curta (mobile)
   const now = new Date();

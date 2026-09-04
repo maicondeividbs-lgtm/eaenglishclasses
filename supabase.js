@@ -1328,3 +1328,54 @@ async function markHelpRead(requestId) {
     .is('read_at', null);
   if (error) throw error;
 }
+
+// ═══════════════════════════════════════════════════════════════
+// "SEU DIA" — dados do painel de visão geral (seu-dia.js)
+// ═══════════════════════════════════════════════════════════════
+
+// Linhas de plano de aula de uma data específica, para um ou vários
+// professores. Alimenta o "tópico + páginas" de cada aula da agenda.
+async function getLessonEntriesForDate(teacherIds, dateISO) {
+  const ids = (Array.isArray(teacherIds) ? teacherIds : [teacherIds]).filter(Boolean);
+  if (!ids.length || !dateISO) return [];
+  const { data, error } = await db.from('lesson_plan_entries')
+    .select('lesson_date, topic, objective, pages, homework, plan:lesson_plans!inner(teacher_id, student_id, book, level)')
+    .eq('lesson_date', dateISO)
+    .in('plan.teacher_id', ids);
+  if (error) { console.error('getLessonEntriesForDate', error); return []; }
+  return (data || []).map(e => ({
+    lesson_date: e.lesson_date,
+    topic: e.topic || '',
+    objective: e.objective || '',
+    pages: e.pages || '',
+    homework: e.homework || '',
+    teacher_id: e.plan ? e.plan.teacher_id : null,
+    student_id: e.plan ? e.plan.student_id : null,
+    book: e.plan ? e.plan.book : ''
+  }));
+}
+
+// Eventos de agenda num intervalo de datas, para um ou vários professores.
+// Usado tanto para "o que mudou hoje" quanto para achar a última aula efetiva.
+async function getScheduleEventsRange(teacherIds, startISO, endISO) {
+  const ids = (Array.isArray(teacherIds) ? teacherIds : [teacherIds]).filter(Boolean);
+  if (!ids.length || !startISO || !endISO) return [];
+  const { data, error } = await db.from('schedule_events')
+    .select('*')
+    .in('teacher_id', ids)
+    .gte('event_date', startISO)
+    .lte('event_date', endISO)
+    .order('event_date');
+  if (error) { console.error('getScheduleEventsRange', error); return []; }
+  return data || [];
+}
+
+// Perfis com aniversário e contrato — para os blocos de aniversariantes
+// e de contratos vencendo. Aceita lista de ids (professor) ou nada (coordenação).
+async function getProfilesForDayPanel(ids) {
+  let q = db.from('profiles').select('id, full_name, role, birthday, contract_end, active, email, phone');
+  if (ids && ids.length) q = q.in('id', ids);
+  const { data, error } = await q;
+  if (error) { console.error('getProfilesForDayPanel', error); return []; }
+  return (data || []).filter(p => p.active !== false);
+}

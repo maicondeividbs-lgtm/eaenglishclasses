@@ -2782,8 +2782,32 @@ body.sb-collapsed .main { margin-left: 92px !important; }
     <div class="content" role="main">
       <!-- ═══ OVERVIEW ═══ -->
       <div class="section active" id="sec-overview">
-        <h2 class="overview-greeting" id="greeting">Olá, <em>Coordenador</em>! 📊</h2>
-        <p class="overview-subline">Visão geral de todas as atividades da escola.</p>
+        <div class="dia-hero">
+          <div class="dia-hero-main">
+            <div class="dia-data" id="diaData">—</div>
+            <h2 class="dia-ola" id="diaOla">Olá</h2>
+            <div class="dia-resumo" id="diaResumo"></div>
+          </div>
+          <div class="dia-feriado" id="diaFeriado" hidden></div>
+        </div>
+
+        <div class="dia-grid">
+          <div class="panel dia-panel">
+            <div class="panel-head">
+              <div class="panel-title"><span class="panel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>A escola hoje</div>
+              <span class="badge badge-time" id="diaAgendaCount">0</span>
+            </div>
+            <div id="diaAgenda" class="dia-lista"><div class="dia-vazio">Carregando…</div></div>
+          </div>
+
+          <div class="dia-col">
+            <div class="panel dia-panel">
+              <div id="diaAniver" class="dia-lista" hidden></div>
+            </div>
+            <div class="dia-atencao" id="diaAtencao" hidden></div>
+          </div>
+        </div>
+
         <div id="contractAlerts"></div>
 
         <!-- To-Do List -->
@@ -4073,6 +4097,7 @@ function recalcFinal(){const adj=toolAdjustments.reduce((s,a)=>s+a.val,0);const 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase.js"></script>
 <script src="curriculum-index.js" defer></script>
+<script src="seu-dia.js" defer></script>
 <script src="lesson-plan-editor.js" defer></script>
 <script src="satisfaction.js" defer></script>
 <script src="app-fx.js" defer></script>
@@ -4672,6 +4697,9 @@ async function loadOverview() {
     } else {
       div.innerHTML = recent.map(r => '<div class="list-item"><div><div class="list-title">' + r.title + '</div><div class="list-sub">' + r.sub + '</div></div><span class="badge ' + r.cls + '">' + r.badge + '</span></div>').join('');
     }
+    // ── Seu dia (módulo compartilhado seu-dia.js) ──
+    if (typeof EA_DIA !== 'undefined') EA_DIA.mount('coord');
+
   // Check for expiring contracts (30 days)
     const today = new Date();
     const in30Days = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);

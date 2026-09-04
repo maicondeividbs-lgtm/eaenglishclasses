@@ -1370,10 +1370,12 @@ async function getScheduleEventsRange(teacherIds, startISO, endISO) {
   return data || [];
 }
 
-// Perfis com aniversário e contrato — para os blocos de aniversariantes
-// e de contratos vencendo. Aceita lista de ids (professor) ou nada (coordenação).
+// Perfis para o bloco de aniversariantes. Aceita lista de ids (professor)
+// ou nada (coordenação).
+// Nao traz contract_end de propósito: informação contratual é assunto da
+// coordenação e tem painel próprio (contractAlerts) no painel dela.
 async function getProfilesForDayPanel(ids) {
-  let q = db.from('profiles').select('id, full_name, role, birthday, contract_end, active, email, phone');
+  let q = db.from('profiles').select('id, full_name, role, birthday, active');
   if (ids && ids.length) q = q.in('id', ids);
   const { data, error } = await q;
   if (error) { console.error('getProfilesForDayPanel', error); return []; }

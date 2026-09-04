@@ -2801,10 +2801,20 @@ body.sb-collapsed .main { margin-left: 92px !important; }
           </div>
 
           <div class="dia-col">
-            <div class="panel dia-panel">
-              <div id="diaAniver" class="dia-lista" hidden></div>
+            <div class="panel dia-panel" id="diaAniverPanel" hidden>
+              <div class="panel-head">
+                <div class="panel-title"><span class="panel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8H4v8"/><path d="M2 21h20"/><path d="M7 13V9a5 5 0 0 1 10 0v4"/><path d="M12 4V2"/></svg></span>Aniversários</div>
+                <span class="badge badge-time" id="diaAniverCount">0</span>
+              </div>
+              <div id="diaAniver" class="dia-lista"></div>
             </div>
-            <div class="dia-atencao" id="diaAtencao" hidden></div>
+            <div class="panel dia-panel" id="diaSemAulaPanel" hidden>
+              <div class="panel-head">
+                <div class="panel-title"><span class="panel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg></span>Sem aula há tempo</div>
+                <span class="badge badge-time" id="diaSemAulaCount">0</span>
+              </div>
+              <div id="diaAtencao" class="dia-lista"></div>
+            </div>
           </div>
         </div>
 

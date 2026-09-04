@@ -20,7 +20,6 @@ var EA_DIA = (function(){
   var WD = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
   var MO = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
   var DIAS_SEM_AULA = 21;   // limite para considerar um aluno "sem aula há tempo"
-  var DIAS_CONTRATO = 30;   // janela de aviso de contrato vencendo
   var DIAS_ANIVER   = 14;   // janela de aniversários próximos
 
   var S = { mode:'teacher', today:'', data:null };
@@ -52,6 +51,16 @@ var EA_DIA = (function(){
 
   function el(id){ return document.getElementById(id); }
   function setHTML(id, html){ var e = el(id); if (e) e.innerHTML = html; }
+
+  // Acende ou apaga um painel inteiro e atualiza o contador do cabeçalho.
+  // Os blocos usam o mesmo .panel/.panel-head do resto do dashboard, então
+  // quem some é o painel, não só a lista de dentro.
+  function painel(panelId, listId, countId, itens, html){
+    var pan = el(panelId), lst = el(listId), cnt = el(countId);
+    if (lst) lst.innerHTML = itens ? html : '';
+    if (cnt) cnt.textContent = itens;
+    if (pan) pan.hidden = !itens;
+  }
 
   // ── carga de dados ────────────────────────────────────────────
   async function load(){
@@ -238,22 +247,6 @@ var EA_DIA = (function(){
     return out.sort(function(x,y){ return y.dias - x.dias; }).slice(0, 6);
   }
 
-  // ── contratos vencendo ────────────────────────────────────────
-  function contratos(){
-    var d = S.data, out = [];
-    d.profiles.forEach(function(p){
-      if (!p.contract_end) return;
-      var dias = daysBetween(S.today, p.contract_end);
-      if (dias <= DIAS_CONTRATO) out.push({ nome: p.full_name, dias: dias, role: p.role, id: p.id });
-    });
-    // vencidos primeiro (do mais recente para o mais antigo), depois os a vencer
-    return out.sort(function(a,b){
-      var va = a.dias < 0, vb = b.dias < 0;
-      if (va !== vb) return va ? -1 : 1;
-      return va ? (b.dias - a.dias) : (a.dias - b.dias);
-    }).slice(0, 6);
-  }
-
   // ── aniversários (alunos e equipe) ────────────────────────────
   function aniversarios(){
     var d = S.data, hoje = parseISO(S.today), out = [];
@@ -362,64 +355,27 @@ var EA_DIA = (function(){
     }).join('');
   }
 
+  // Contratos ficam fora daqui de propósito: são assunto da coordenação,
+  // que tem o painel próprio (contractAlerts). O professor não vê.
   function renderAtencao(){
-    var d = S.data;
-    var ctr = contratos(), sem = semAula();
-    var box = el('diaAtencao');
-    if (!box) return;
-    var html = '';
-
-    // na coordenacao os contratos ja tem painel proprio, mais rico (contractAlerts)
-    if (!d.isCoord && ctr.length) {
-      html += '<div class="dia-bloco"><div class="dia-bloco-h">' +
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>' +
-        'Contratos' + '<span class="dia-n">' + ctr.length + '</span></div>' +
-        ctr.map(function(c){
-          var venc = c.dias < 0;
-          return '<div class="dia-li"><span class="dia-li-n">' + esc(c.nome) + '</span>' +
-            '<span class="dia-li-t ' + (venc ? 'bad' : (c.dias <= 7 ? 'warn' : '')) + '">' +
-            (venc ? ('vencido há ' + plural(Math.abs(c.dias), 'dia', 'dias'))
-                  : (c.dias === 0 ? 'vence hoje' : 'em ' + plural(c.dias, 'dia', 'dias'))) +
-            '</span></div>';
-        }).join('') + '</div>';
-    }
-
-    if (sem.length) {
-      html += '<div class="dia-bloco"><div class="dia-bloco-h">' +
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>' +
-        'Sem aula há tempo<span class="dia-n">' + sem.length + '</span></div>' +
-        sem.map(function(a){
-          return '<div class="dia-li"><span class="dia-li-n">' + esc(a.nome) + '</span>' +
-            '<span class="dia-li-t warn">' + (a.nunca ? 'nenhuma registrada' : 'há ' + plural(a.dias, 'dia', 'dias')) + '</span></div>';
-        }).join('') + '</div>';
-    }
-
-    box.innerHTML = html;
-    box.hidden = !html;
+    var sem = semAula();
+    painel('diaSemAulaPanel', 'diaAtencao', 'diaSemAulaCount', sem.length,
+      sem.map(function(a){
+        return '<div class="dia-li"><span class="dia-li-n">' + esc(a.nome) + '</span>' +
+          '<span class="dia-li-t warn">' + (a.nunca ? 'nenhuma registrada' : 'há ' + plural(a.dias, 'dia', 'dias')) + '</span></div>';
+      }).join(''));
   }
 
   function renderAniver(){
     var lista = aniversarios();
-    var box = el('diaAniver');
-    if (!box) return;
-    var wrap = box.closest ? box.closest('.dia-panel') : null;
-    if (!lista.length) {
-      box.hidden = true; box.innerHTML = '';
-      if (wrap) wrap.hidden = true;
-      return;
-    }
-    box.hidden = false;
-    if (wrap) wrap.hidden = false;
-    box.innerHTML = '<div class="dia-bloco-h">' +
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8H4v8"/><path d="M2 21h20"/><path d="M7 13V9a5 5 0 0 1 10 0v4"/><path d="M12 4V2"/></svg>' +
-      'Aniversários<span class="dia-n">' + lista.length + '</span></div>' +
+    painel('diaAniverPanel', 'diaAniver', 'diaAniverCount', lista.length,
       lista.map(function(a){
         var q = a.dias === 0 ? 'hoje' : (a.dias === 1 ? 'amanhã' : 'em ' + a.dias + ' dias');
         var papel = a.role === 'student' ? 'aluno' : (a.role === 'coordinator' ? 'coordenação' : 'professor');
         return '<div class="dia-li' + (a.dias === 0 ? ' hoje' : '') + '">' +
           '<span class="dia-li-n">' + esc(a.nome) + '<em>' + papel + '</em></span>' +
           '<span class="dia-li-t' + (a.dias === 0 ? ' hoje' : '') + '">' + q + '</span></div>';
-      }).join('');
+      }).join(''));
   }
 
   // ── público ───────────────────────────────────────────────────

@@ -1183,33 +1183,38 @@ body.lp2-noscroll{overflow:hidden}
 .today-empty{font-size:13px;color:var(--g400);text-align:center;padding:14px 0}
 @media(max-width:760px){.today-grid{grid-template-columns:1fr}}
 
-/* ═══════════════════════════════════════════════════════════════
+/* ════════════════════════════════════════════════════════════
    SEU DIA — painel de visão geral (professor e coordenação)
-   Módulo seu-dia.js. Prefixo dia- para não colidir com lp2-/today-.
-   ═══════════════════════════════════════════════════════════════ */
-/* o atributo hidden vem da folha do navegador: qualquer display do autor o anula */
-.dia-feriado[hidden],.dia-atencao[hidden],.dia-lista[hidden],.dia-bloco[hidden],.dia-panel[hidden]{display:none!important}
-.dia-hero{display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap;background:var(--navy);border-radius:20px;padding:20px 24px;margin:0 0 18px;box-shadow:0 10px 28px rgba(25,36,78,.18)}
-.dia-hero-main{flex:1;min-width:220px}
-.dia-data{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--ocean)}
-.dia-hero .dia-ola{font-family:'Fraunces',serif!important;font-weight:800!important;font-size:27px!important;color:#fff!important;line-height:1.1!important;margin:5px 0 0!important;padding:0!important;border:none!important}
-.dia-hero .dia-ola::after{display:none!important;content:none!important}
-.dia-resumo{font-size:13.5px;color:rgba(255,255,255,.78);margin-top:9px;line-height:1.6}
-.dia-resumo b{color:#fff;font-weight:800}
-.dia-sep{color:var(--g300);margin:0 8px}
-.dia-resumo .dia-sep{color:rgba(255,255,255,.35)}
-.dia-feriado{display:inline-flex;align-items:center;gap:8px;flex-shrink:0;background:var(--mango);color:#3a2606;border-radius:999px;padding:8px 15px;font-size:12.5px;font-weight:800}
-.dia-feriado svg{width:15px;height:15px}
-.dia-feriado em{font-style:normal;opacity:.65;font-weight:700}
+   Módulo seu-dia.js. Os blocos usam .panel/.panel-head do próprio
+   dashboard; aqui só mora o que é específico do "Seu dia".
+   ════════════════════════════════════════════════════════════ */
 
-.dia-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:16px;align-items:start;margin-bottom:18px}
-.dia-col{display:flex;flex-direction:column;gap:16px}
-.dia-panel{margin-bottom:0!important}
-.dia-lista{padding:8px 10px 10px}
-.dia-vazio{padding:22px 12px;text-align:center;font-size:13.5px;color:var(--g400)}
+/* conteúdo da visão geral centralizado na largura da página */
+#sec-overview{max-width:1180px;margin-left:auto;margin-right:auto}
+
+/* o atributo hidden vem da folha do navegador: qualquer display do autor o anula */
+.dia-feriado[hidden],.dia-lista[hidden],.dia-panel[hidden]{display:none!important}
+
+/* cabeçalho do dia — mesmo cartão dos demais painéis, distinção pela tipografia */
+.dia-hero{display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:#fff;border:1px solid var(--g100);border-radius:16px;padding:20px 24px;margin:0 0 20px}
+.dia-hero-main{flex:1;min-width:220px}
+.dia-data{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--orange)}
+.dia-hero .dia-ola{font-family:'Fraunces',serif!important;font-weight:800!important;font-size:26px!important;color:var(--navy)!important;line-height:1.15!important;margin:6px 0 0!important;padding:0!important;border:none!important}
+.dia-hero .dia-ola::after{display:none!important;content:none!important}
+.dia-resumo{font-size:13.5px;color:var(--g500);margin-top:8px;line-height:1.6}
+.dia-resumo b{color:var(--navy);font-weight:800}
+.dia-sep{color:var(--g300);margin:0 8px}
+.dia-feriado{display:inline-flex;align-items:center;gap:8px;flex-shrink:0;background:var(--cream);border:1px solid #f0e4cf;color:#8a6d2f;border-radius:999px;padding:8px 15px;font-size:12.5px;font-weight:800}
+.dia-feriado svg{width:15px;height:15px;color:var(--mango)}
+.dia-feriado em{font-style:normal;opacity:.7;font-weight:700}
+
+.dia-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:20px;align-items:start}
+.dia-col{display:flex;flex-direction:column}
+.dia-lista{padding:8px 12px 12px}
+.dia-vazio{padding:24px 12px;text-align:center;font-size:13.5px;color:var(--g400)}
 
 /* linha de aula */
-.dia-aula{display:flex;align-items:center;gap:13px;padding:11px 12px;border-radius:13px;transition:background .15s}
+.dia-aula{display:flex;align-items:center;gap:13px;padding:11px 12px;border-radius:12px;transition:background .15s}
 .dia-aula+.dia-aula{border-top:1px solid var(--g100)}
 .dia-aula[data-sid]{cursor:pointer}
 .dia-aula[data-sid]:hover{background:var(--g50)}
@@ -1223,8 +1228,8 @@ body.lp2-noscroll{overflow:hidden}
 .dia-pgs{color:var(--g500)}
 .dia-nada{color:var(--g300);font-style:italic}
 .dia-motivo{color:var(--g400)}
-.dia-aula.cancelada .dia-hora,.dia-aula.cancelada .dia-nome{text-decoration:line-through;color:var(--g400)}
 .dia-aula.cancelada{opacity:.62}
+.dia-aula.cancelada .dia-hora,.dia-aula.cancelada .dia-nome{text-decoration:line-through;color:var(--g400)}
 
 .dia-tag{flex-shrink:0;font-size:10.5px;font-weight:800;border-radius:999px;padding:3px 10px;white-space:nowrap}
 .dia-tag.ok{background:var(--ocean-light);color:#1f6b66;border:1px solid #b6ddda}
@@ -1233,34 +1238,26 @@ body.lp2-noscroll{overflow:hidden}
 .dia-tag.rep{background:var(--blue-soft);color:var(--blue);border:1px solid #c3cdf0}
 .dia-tag.nota{background:var(--g50);color:var(--g500);border:1px solid var(--g200)}
 
-/* blocos laterais: contratos, sem aula, aniversários */
-.dia-atencao{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-bottom:18px}
-.dia-bloco{background:#fff;border:1px solid var(--g100);border-radius:16px;padding:14px 16px 12px;box-shadow:var(--shadow-sm)}
-.dia-col .dia-atencao{display:flex;flex-direction:column;margin-bottom:0}
-.dia-bloco-h{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--g400);margin-bottom:9px}
-.dia-bloco-h svg{width:14px;height:14px;color:var(--orange);flex-shrink:0}
-.dia-n{background:var(--g50);border-radius:999px;padding:1px 8px;font-size:10.5px;color:var(--g500)}
-.dia-li{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px solid var(--g100)}
-.dia-li:first-of-type{border-top:none}
+/* linhas simples: aniversarios e sem aula */
+.dia-li{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:12px}
+.dia-li+.dia-li{border-top:1px solid var(--g100)}
 .dia-li-n{flex:1;min-width:0;font-size:13.5px;font-weight:600;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .dia-li-n em{font-style:normal;font-size:11px;font-weight:700;color:var(--g300);margin-left:7px;text-transform:uppercase;letter-spacing:.03em}
 .dia-li-t{flex-shrink:0;font-size:11.5px;font-weight:700;color:var(--g400)}
 .dia-li-t.warn{color:var(--orange)}
-.dia-li-t.bad{color:#dc2626}
 .dia-li-t.hoje{color:var(--orange)}
 .dia-li.hoje .dia-li-n{color:var(--orange)}
-.dia-aniver-wrap:empty{display:none}
 
 @media (max-width:900px){
-  .dia-hero{padding:16px 17px;border-radius:16px;gap:12px}
-  .dia-ola{font-size:22px!important}
+  #sec-overview{max-width:none}
+  .dia-hero{padding:16px 17px;gap:12px}
+  .dia-hero .dia-ola{font-size:22px!important}
   .dia-resumo{font-size:12.5px}
   .dia-feriado{width:100%;justify-content:center}
-  .dia-grid{grid-template-columns:1fr;gap:14px}
-  .dia-atencao{grid-template-columns:1fr;gap:14px}
+  .dia-grid{grid-template-columns:1fr;gap:16px}
   .dia-aula{gap:10px;padding:10px 8px}
   .dia-hora{width:46px;font-size:15px}
-  .dia-nome{white-space:normal}
-  .dia-det{white-space:normal}
+  .dia-nome,.dia-det{white-space:normal}
   .dia-prof{display:inline-block;margin:3px 0 0}
+  .dia-li{padding:9px 8px}
 }

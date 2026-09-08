@@ -1381,3 +1381,78 @@ async function getProfilesForDayPanel(ids) {
   if (error) { console.error('getProfilesForDayPanel', error); return []; }
   return (data || []).filter(p => p.active !== false);
 }
+
+// ═══════════════════════════════════════════════════════════════
+// ATIVIDADES DE MÚSICA (music_activities + bucket público "music")
+// Coordenação envia as duas versões; a Biblioteca lista e baixa.
+// ═══════════════════════════════════════════════════════════════
+const MUSIC_BUCKET = 'music';
+
+function musicFileUrl(path) {
+  if (!path) return '';
+  return db.storage.from(MUSIC_BUCKET).getPublicUrl(path).data.publicUrl;
+}
+
+async function getMusicActivities() {
+  const { data, error } = await db.from('music_activities')
+    .select('*')
+    .eq('active', true)
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+  return data || [];
+}
+
+// Sobe um arquivo Word para o bucket. kind = 'professor' | 'aluno'.
+// O nome no bucket é higienizado; o nome original fica no banco.
+async function uploadMusicFile(file, kind) {
+  if (!file) return null;
+  const limpo = (file.name || 'arquivo.docx')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z0-9._-]+/g, '-')
+    .replace(/-+/g, '-').slice(-80);
+  const path = kind + '/' + Date.now() + '-' + Math.random().toString(36).slice(2, 8) + '-' + limpo;
+  const { error } = await db.storage.from(MUSIC_BUCKET).upload(path, file, { upsert: false });
+  if (error) throw error;
+  return { path: path, name: file.name || limpo };
+}
+
+async function saveMusicActivity(row) {
+  const payload = {
+    title: (row.title || '').trim(),
+    artist: (row.artist || '').trim() || null,
+    level: (row.level || '').trim() || null,
+    grammar_focus: (row.grammar_focus || '').trim() || null,
+    updated_at: new Date().toISOString()
+  };
+  ['teacher_path','teacher_name','student_path','student_name'].forEach(k => {
+    if (row[k] !== undefined) payload[k] = row[k];
+  });
+
+  if (row.id) {
+    const { data, error } = await db.from('music_activities')
+      .update(payload).eq('id', row.id).select().single();
+    if (error) throw error;
+    return data;
+  }
+  payload.created_by = row.created_by || null;
+  const { data, error } = await db.from('music_activities')
+    .insert([payload]).select().single();
+  if (error) throw error;
+  return data;
+}
+
+// Exclusão lógica, no mesmo padrão dos agendamentos: some da lista,
+// fica no banco para auditoria e pode ser revertida.
+async function deleteMusicActivity(id) {
+  const { error } = await db.from('music_activities')
+    .update({ active: false, updated_at: new Date().toISOString() })
+    .eq('id', id);
+  if (error) throw error;
+}
+
+// Remove o arquivo do bucket quando a coordenação troca uma versão.
+async function removeMusicFile(path) {
+  if (!path) return;
+  try { await db.storage.from(MUSIC_BUCKET).remove([path]); }
+  catch (e) { console.error('removeMusicFile', e); }
+}

@@ -377,6 +377,56 @@
 }
 
 /* Section intro */
+
+/* ── Atividades de música ── */
+.mus-load { text-align:center; padding:48px 16px; color:var(--g400); font-size:14px; }
+.mus-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:18px; }
+.mus-card {
+  display:flex; flex-direction:column; gap:14px;
+  background:#fff; border:1px solid var(--g100); border-radius:18px;
+  padding:18px 20px; box-shadow:0 6px 20px rgba(25,36,78,0.05);
+  opacity:0; transform:translateY(20px);
+  transition:transform .18s cubic-bezier(.16,1,.3,1), box-shadow .18s, border-color .18s, opacity .4s ease;
+}
+.mus-top { display:flex; align-items:flex-start; gap:14px; }
+.mus-card:hover { transform:translateY(-3px); border-color:var(--g200); box-shadow:0 14px 34px rgba(25,36,78,0.10); }
+.mus-card.in-view { opacity:1; transform:translateY(0); }
+.mus-ico {
+  flex-shrink:0; width:42px; height:42px; border-radius:13px;
+  background:var(--mango-soft); color:var(--orange);
+  display:flex; align-items:center; justify-content:center;
+}
+.mus-ico svg { width:20px; height:20px; }
+.mus-body { flex:1; min-width:0; }
+.mus-body h3 {
+  font-family:'Fraunces',serif; font-size:18px; font-weight:800;
+  color:var(--navy); line-height:1.25; margin:0;
+}
+.mus-artista { font-size:13px; color:var(--g500); margin-top:3px; }
+.mus-chips { display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+.mus-chip {
+  font-size:11px; font-weight:700; border-radius:999px; padding:3px 10px;
+  background:var(--g50); color:var(--g500); border:1px solid var(--g200);
+}
+.mus-chip.gram { background:var(--cream); color:#8a6d2f; border-color:#f0e4cf; }
+.mus-dls { display:flex; gap:8px; margin-top:auto; padding-top:2px; }
+.mus-dl {
+  flex:1; display:inline-flex; align-items:center; justify-content:center; gap:7px;
+  min-width:0; padding:10px 12px; border-radius:11px;
+  font-size:12.5px; font-weight:800; text-decoration:none;
+  border:1.5px solid transparent; transition:all .15s; white-space:nowrap;
+}
+.mus-dl svg { width:14px; height:14px; }
+.mus-dl.prof { background:var(--navy); color:#fff; }
+.mus-dl.prof:hover { background:var(--blue); }
+.mus-dl.alu { background:#fff; color:var(--navy); border-color:var(--g200); }
+.mus-dl.alu:hover { border-color:var(--orange); color:var(--orange); }
+.mus-dl--off { background:var(--g50); color:var(--g300); border-color:var(--g100); cursor:default; font-weight:700; }
+@media (max-width:640px){
+  .mus-grid { grid-template-columns:1fr; }
+  .mus-card { padding:16px; }
+}
+
 .view-intro {
   text-align: center;
   margin-bottom: 56px;
@@ -1759,6 +1809,10 @@
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
       <span>Gramática</span>
     </button>
+    <button class="bib-tab" data-view="music" type="button">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+      <span>Música</span>
+    </button>
     <button class="bib-tab" data-view="conversation" type="button">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
       <span>Conversação</span>
@@ -1772,10 +1826,21 @@
   <div class="bib-view" id="v-worksheets"></div>
   <div class="bib-view" id="v-examples"></div>
   <div class="bib-view" id="v-conversation"></div>
+  <div class="bib-view" id="v-music"></div>
 </div>
 
 <script>
 const STORAGE = 'https://ktdrgvlyrotqpzlunlqs.supabase.co/storage/v1/object/public/worksheets';
+
+// ── Atividades de música ──
+// Catálogo público. Lemos a tabela direto pela REST do Supabase, sem SDK:
+// a página é estática e não precisa carregar mais nada por causa disso.
+// A anon key é pública por design e a RLS só permite leitura de ativos.
+const MUSIC_API = 'https://ktdrgvlyrotqpzlunlqs.supabase.co/rest/v1/music_activities';
+const MUSIC_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt0ZHJndmx5cm90cXB6bHVubHFzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0MDA2NTEsImV4cCI6MjA5MTk3NjY1MX0.Hb8e7YV-tCS89Sj7PuAUn_M1movtSGArvQXtWLdlmdQ';
+const MUSIC_FILES = 'https://ktdrgvlyrotqpzlunlqs.supabase.co/storage/v1/object/public/music/';
+let musicData = null;      // null = ainda não carregado
+let musicError = false;
 
 // === DATA: curriculum (mantida idêntica da versão anterior) ===
 const curriculum = {
@@ -2116,6 +2181,9 @@ function setLevel(level) {
 function setView(view) {
   currentView = view;
   document.querySelectorAll('.bib-tab').forEach(t => t.classList.toggle('active', t.dataset.view === view));
+  // Música é catálogo único: o seletor de nível não se aplica
+  const jw = document.querySelector('.journey-wrap');
+  if (jw) jw.style.display = (view === 'music') ? 'none' : '';
   document.querySelectorAll('.bib-view').forEach(v => v.classList.remove('active'));
   document.getElementById('v-' + view).classList.add('active');
   render();
@@ -2131,7 +2199,7 @@ function setupObserver() {
       }
     });
   }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
-  document.querySelectorAll('.ws-card, .gram-item').forEach(el => scrollObserver.observe(el));
+  document.querySelectorAll('.ws-card, .gram-item, .mus-card').forEach(el => scrollObserver.observe(el));
 }
 
 function renderConversation(search) {
@@ -2197,6 +2265,7 @@ function render() {
   const search = (document.getElementById('searchInput').value || '').toLowerCase();
   if (currentView === 'curriculum') renderCurriculum(search);
   else if (currentView === 'worksheets') renderWorksheets();
+  else if (currentView === 'music') renderMusic(search);
   else if (currentView === 'conversation') renderConversation(search);
   else renderExamples(search);
   // Small delay so DOM is ready
@@ -2426,6 +2495,91 @@ function renderWorksheets() {
   }
 
   div.innerHTML = intro + '<div class="ws-timeline' + (multi ? ' ws-timeline--multi' : '') + '">' + cards + '</div>';
+}
+
+// === MÚSICA: catálogo único com as duas versões para download ===
+function musicEsc(x){
+  return String(x==null?'':x).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+async function loadMusicData(){
+  if (musicData !== null) return musicData;
+  try {
+    const r = await fetch(MUSIC_API + '?select=id,title,artist,level,grammar_focus,teacher_path,teacher_name,student_path,student_name&active=eq.true&order=title.asc', {
+      headers: { apikey: MUSIC_KEY, Authorization: 'Bearer ' + MUSIC_KEY }
+    });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    musicData = await r.json();
+  } catch(e){
+    console.error('m\u00fasica', e);
+    musicData = []; musicError = true;
+  }
+  return musicData;
+}
+
+function renderMusic(search){
+  const div = document.getElementById('v-music');
+  const intro = '<div class="view-intro">' +
+    '<div class="view-intro-eyebrow">Atividades de m\u00fasica</div>' +
+    '<h2>M\u00fasica em <em>sala de aula</em></h2>' +
+    '<p>Cada atividade traz duas vers\u00f5es em Word: a do <strong>professor</strong>, com condu\u00e7\u00e3o e gabarito, e a do <strong>aluno</strong>, para imprimir ou enviar.</p>' +
+  '</div>';
+
+  if (musicData === null){
+    div.innerHTML = intro + '<div class="mus-load">Carregando atividades\u2026</div>';
+    loadMusicData().then(function(){ if (currentView === 'music') renderMusic(search); });
+    return;
+  }
+  if (musicError){
+    div.innerHTML = intro + emptyState('\ud83d\udce1', 'N\u00e3o foi poss\u00edvel carregar as atividades agora. Tente recarregar a p\u00e1gina.');
+    return;
+  }
+
+  const termo = (search || '').trim().toLowerCase();
+  const lista = termo
+    ? musicData.filter(function(m){
+        return ((m.title||'') + ' ' + (m.artist||'') + ' ' + (m.level||'') + ' ' + (m.grammar_focus||''))
+          .toLowerCase().includes(termo);
+      })
+    : musicData;
+
+  if (!lista.length){
+    div.innerHTML = intro + emptyState('\ud83c\udfb5', termo
+      ? 'Nenhuma atividade encontrada com esses termos.'
+      : 'Ainda n\u00e3o h\u00e1 atividades de m\u00fasica publicadas.');
+    return;
+  }
+
+  const cards = lista.map(function(m){
+    let chips = '';
+    if (m.level) chips += '<span class="mus-chip">' + musicEsc(m.level) + '</span>';
+    if (m.grammar_focus) chips += '<span class="mus-chip gram">' + musicEsc(m.grammar_focus) + '</span>';
+
+    const dl = function(path, nome, cls, rotulo){
+      if (!path) return '<span class="mus-dl mus-dl--off">' + rotulo + ' indispon\u00edvel</span>';
+      return '<a class="mus-dl ' + cls + '" href="' + musicEsc(MUSIC_FILES + path) + '" download' +
+        (nome ? ' title="' + musicEsc(nome) + '"' : '') + '>' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>' +
+        rotulo + '</a>';
+    };
+
+    return '<article class="mus-card">' +
+        '<div class="mus-top">' +
+        '<div class="mus-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>' +
+        '<div class="mus-body">' +
+          '<h3>' + musicEsc(m.title) + '</h3>' +
+          (m.artist ? '<div class="mus-artista">' + musicEsc(m.artist) + '</div>' : '') +
+          (chips ? '<div class="mus-chips">' + chips + '</div>' : '') +
+        '</div></div>' +
+        '<div class="mus-dls">' +
+          dl(m.teacher_path, m.teacher_name, 'prof', 'Professor') +
+          dl(m.student_path, m.student_name, 'alu', 'Aluno') +
+        '</div>' +
+      '</article>';
+  }).join('');
+
+  div.innerHTML = intro + '<div class="mus-grid">' + cards + '</div>';
 }
 
 // === EXAMPLES: timeline vertical com cards ===

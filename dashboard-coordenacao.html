@@ -2711,6 +2711,11 @@ body.sb-collapsed .main { margin-left: 92px !important; }
       <!-- Ferramentas -->
       <div class="sb-group">
         <div class="sb-group-items">
+          <button class="sb-link" data-section="music">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg>
+            <span>Música</span>
+            <span class="tip">Atividades de Música</span>
+          </button>
           <button class="sb-link" data-section="testimonials">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
             <span>Depoimentos</span>
@@ -3600,6 +3605,61 @@ body.sb-collapsed .main { margin-left: 92px !important; }
       
       <!-- ═══ SATISFACTION SURVEY ═══ -->
       <div class="section" id="sec-satisfaction"></div>
+
+      <!-- ═══ MÚSICA ═══ -->
+      <div class="section" id="sec-music">
+        <div class="section-head">
+          <div class="section-head-icon ocean">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+          </div>
+          <div class="section-head-text">
+            <h2>Atividades de Música</h2>
+            <p class="section-sub">Envie as duas versões em Word. Os professores baixam pela Biblioteca.</p>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-bottom:20px">
+          <div class="panel-head">
+            <div class="panel-title"><span class="panel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span><span id="muFormTitle">Nova atividade</span></div>
+            <button type="button" class="mu-cancel" id="muCancelBtn" onclick="muResetForm()" hidden>Cancelar edição</button>
+          </div>
+          <div class="mu-form">
+            <input type="hidden" id="muId">
+            <div class="mu-grid">
+              <label class="mu-f"><span>Música <em>*</em></span><input type="text" id="muTitle" placeholder="Ex: Let It Be" maxlength="120"></label>
+              <label class="mu-f"><span>Artista</span><input type="text" id="muArtist" placeholder="Ex: The Beatles" maxlength="120"></label>
+              <label class="mu-f"><span>Nível</span><input type="text" id="muLevel" placeholder="Ex: Interchange 2 / B1" maxlength="60"></label>
+              <label class="mu-f"><span>Foco gramatical</span><input type="text" id="muFocus" placeholder="Ex: Past simple; used to" maxlength="160"></label>
+            </div>
+            <div class="mu-files">
+              <label class="mu-file" for="muTeacherFile">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+                <b>Versão do professor</b>
+                <span id="muTeacherName">Escolher arquivo Word</span>
+                <input type="file" id="muTeacherFile" accept=".doc,.docx" onchange="muPickFile('teacher')">
+              </label>
+              <label class="mu-file" for="muStudentFile">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+                <b>Versão do aluno</b>
+                <span id="muStudentName">Escolher arquivo Word</span>
+                <input type="file" id="muStudentFile" accept=".doc,.docx" onchange="muPickFile('student')">
+              </label>
+            </div>
+            <div class="mu-actions">
+              <span class="mu-hint" id="muHint">Aceita .doc e .docx, até 20 MB por arquivo.</span>
+              <button type="button" class="mu-save" id="muSaveBtn" onclick="muSave()">Publicar na Biblioteca</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title"><span class="panel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></span>Publicadas</div>
+            <span class="badge badge-time" id="muCount">0</span>
+          </div>
+          <div id="muList" class="mu-list"><div class="mu-vazio">Carregando…</div></div>
+        </div>
+      </div>
 
       <!-- ═══ TESTIMONIALS MANAGEMENT ═══ -->
       <div class="section" id="sec-testimonials">
@@ -6112,6 +6172,160 @@ async function confirmDeleteUser() {
 }
 
 // ═══ TESTIMONIALS ═══
+// ═══ ATIVIDADES DE MÚSICA ═══
+// A coordenação publica; a Biblioteca só lê. Arquivos vão para o bucket
+// público "music", mesma abordagem já usada nos worksheets.
+var _muFiles = { teacher: null, student: null };
+var _muList = [];
+
+function muEsc(x){ return String(x==null?'':x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function muPickFile(kind){
+  var input = document.getElementById(kind === 'teacher' ? 'muTeacherFile' : 'muStudentFile');
+  var label = document.getElementById(kind === 'teacher' ? 'muTeacherName' : 'muStudentName');
+  var f = input.files && input.files[0];
+  if (!f){ _muFiles[kind] = null; label.textContent = 'Escolher arquivo Word'; return; }
+  if (f.size > 20 * 1024 * 1024){
+    showToast('Arquivo acima de 20 MB.', 'error');
+    input.value = ''; _muFiles[kind] = null; label.textContent = 'Escolher arquivo Word'; return;
+  }
+  if (!/\.(docx?|DOCX?)$/.test(f.name)){
+    showToast('Envie um arquivo .doc ou .docx.', 'error');
+    input.value = ''; _muFiles[kind] = null; label.textContent = 'Escolher arquivo Word'; return;
+  }
+  _muFiles[kind] = f;
+  label.textContent = f.name;
+}
+
+function muResetForm(){
+  ['muId','muTitle','muArtist','muLevel','muFocus'].forEach(function(id){
+    var e = document.getElementById(id); if (e) e.value = '';
+  });
+  ['teacher','student'].forEach(function(k){
+    _muFiles[k] = null;
+    var i = document.getElementById(k === 'teacher' ? 'muTeacherFile' : 'muStudentFile');
+    var l = document.getElementById(k === 'teacher' ? 'muTeacherName' : 'muStudentName');
+    if (i) i.value = '';
+    if (l) l.textContent = 'Escolher arquivo Word';
+  });
+  document.getElementById('muFormTitle').textContent = 'Nova atividade';
+  document.getElementById('muSaveBtn').textContent = 'Publicar na Biblioteca';
+  document.getElementById('muCancelBtn').hidden = true;
+  document.getElementById('muHint').textContent = 'Aceita .doc e .docx, até 20 MB por arquivo.';
+}
+
+function muEdit(id){
+  var m = _muList.filter(function(x){ return x.id === id; })[0];
+  if (!m) return;
+  muResetForm();
+  document.getElementById('muId').value = m.id;
+  document.getElementById('muTitle').value = m.title || '';
+  document.getElementById('muArtist').value = m.artist || '';
+  document.getElementById('muLevel').value = m.level || '';
+  document.getElementById('muFocus').value = m.grammar_focus || '';
+  if (m.teacher_name) document.getElementById('muTeacherName').textContent = m.teacher_name;
+  if (m.student_name) document.getElementById('muStudentName').textContent = m.student_name;
+  document.getElementById('muFormTitle').textContent = 'Editando: ' + (m.title || '');
+  document.getElementById('muSaveBtn').textContent = 'Salvar alterações';
+  document.getElementById('muCancelBtn').hidden = false;
+  document.getElementById('muHint').textContent = 'Deixe um arquivo em branco para manter o que já está publicado.';
+  document.querySelector('#sec-music .panel').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+async function muSave(){
+  var id = document.getElementById('muId').value;
+  var title = document.getElementById('muTitle').value.trim();
+  if (!title){ showToast('Informe o nome da música.', 'error'); return; }
+  var atual = id ? (_muList.filter(function(x){ return x.id === id; })[0] || {}) : {};
+  if (!id && !_muFiles.teacher && !_muFiles.student){
+    showToast('Envie ao menos uma das versões.', 'error'); return;
+  }
+
+  var btn = document.getElementById('muSaveBtn');
+  btn.disabled = true; btn.textContent = 'Enviando…';
+  try {
+    var row = {
+      id: id || null,
+      title: title,
+      artist: document.getElementById('muArtist').value,
+      level: document.getElementById('muLevel').value,
+      grammar_focus: document.getElementById('muFocus').value,
+      created_by: currentUser.id
+    };
+    if (_muFiles.teacher){
+      var t = await uploadMusicFile(_muFiles.teacher, 'professor');
+      row.teacher_path = t.path; row.teacher_name = t.name;
+      if (atual.teacher_path) await removeMusicFile(atual.teacher_path);
+    }
+    if (_muFiles.student){
+      var a = await uploadMusicFile(_muFiles.student, 'aluno');
+      row.student_path = a.path; row.student_name = a.name;
+      if (atual.student_path) await removeMusicFile(atual.student_path);
+    }
+    await saveMusicActivity(row);
+    showToast(id ? 'Atividade atualizada!' : 'Atividade publicada na Biblioteca!');
+    muResetForm();
+    await loadMusic();
+  } catch(e){
+    showToast('Erro ao publicar: ' + (e.message || e), 'error');
+  } finally {
+    btn.disabled = false;
+    if (!document.getElementById('muId').value) btn.textContent = 'Publicar na Biblioteca';
+  }
+}
+
+async function muRemove(id){
+  var m = _muList.filter(function(x){ return x.id === id; })[0];
+  if (!m) return;
+  if (!confirm('Remover "' + (m.title || '') + '" da Biblioteca?')) return;
+  try {
+    await deleteMusicActivity(id);
+    showToast('Atividade removida da Biblioteca.');
+    await loadMusic();
+  } catch(e){ showToast('Erro ao remover: ' + (e.message || e), 'error'); }
+}
+
+async function loadMusic(){
+  var box = document.getElementById('muList');
+  if (!box) return;
+  try {
+    _muList = await getMusicActivities();
+  } catch(e){
+    console.error('loadMusic', e);
+    box.innerHTML = '<div class="mu-vazio">Não foi possível carregar. Rode <b>music_activities.sql</b> no Supabase.</div>';
+    return;
+  }
+  var cnt = document.getElementById('muCount');
+  if (cnt) cnt.textContent = _muList.length;
+  if (!_muList.length){
+    box.innerHTML = '<div class="mu-vazio">Nenhuma atividade publicada ainda.</div>';
+    return;
+  }
+  box.innerHTML = _muList.map(function(m){
+    var chips = '';
+    if (m.level) chips += '<span class="mu-chip">' + muEsc(m.level) + '</span>';
+    if (m.grammar_focus) chips += '<span class="mu-chip gram">' + muEsc(m.grammar_focus) + '</span>';
+    var arq = '';
+    arq += m.teacher_path
+      ? '<a class="mu-dl prof" href="' + muEsc(musicFileUrl(m.teacher_path)) + '" download>Professor</a>'
+      : '<span class="mu-dl falta">Sem versão do professor</span>';
+    arq += m.student_path
+      ? '<a class="mu-dl alu" href="' + muEsc(musicFileUrl(m.student_path)) + '" download>Aluno</a>'
+      : '<span class="mu-dl falta">Sem versão do aluno</span>';
+    return '<div class="mu-item">' +
+        '<div class="mu-main">' +
+          '<div class="mu-t">' + muEsc(m.title) + (m.artist ? '<em>' + muEsc(m.artist) + '</em>' : '') + '</div>' +
+          (chips ? '<div class="mu-chips">' + chips + '</div>' : '') +
+        '</div>' +
+        '<div class="mu-dls">' + arq + '</div>' +
+        '<div class="mu-ops">' +
+          '<button type="button" class="mu-op" onclick="muEdit(\'' + m.id + '\')" title="Editar">Editar</button>' +
+          '<button type="button" class="mu-op danger" onclick="muRemove(\'' + m.id + '\')" title="Remover">Remover</button>' +
+        '</div>' +
+      '</div>';
+  }).join('');
+}
+
 async function loadTestimonials() {
   const items = await getAllTestimonials();
   const div = document.getElementById('testimonialsList');
@@ -7254,6 +7468,7 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'help-requests': loadCoordHelp(); break;
       case 'pronunciation-coord': loadPronunciationCoord(); break;
       case 'documents': loadDocStudents(); break;
+      case 'music': loadMusic(); break;
       case 'testimonials': loadTestimonials(); break;
       case 'teach': loadTeachStudents(); loadTeachHwList(); break;
       case 'tool': initToolProfessors(); break;

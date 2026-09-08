@@ -2528,7 +2528,7 @@ function renderMusic(search){
 
   if (musicData === null){
     div.innerHTML = intro + '<div class="mus-load">Carregando atividades\u2026</div>';
-    loadMusicData().then(function(){ if (currentView === 'music') renderMusic(search); });
+    loadMusicData().then(function(){ if (currentView === 'music') render(); });
     return;
   }
   if (musicError){
@@ -2580,6 +2580,14 @@ function renderMusic(search){
   }).join('');
 
   div.innerHTML = intro + '<div class="mus-grid">' + cards + '</div>';
+
+  // Garantia: a anima\u00e7\u00e3o de entrada depende do IntersectionObserver.
+  // Se por qualquer motivo ele n\u00e3o observar estes cart\u00f5es, eles aparecem
+  // do mesmo jeito \u2014 conte\u00fado nunca fica invis\u00edvel por quest\u00e3o de timing.
+  setTimeout(function(){
+    document.querySelectorAll('#v-music .mus-card:not(.in-view)')
+      .forEach(function(c){ c.classList.add('in-view'); });
+  }, 900);
 }
 
 // === EXAMPLES: timeline vertical com cards ===

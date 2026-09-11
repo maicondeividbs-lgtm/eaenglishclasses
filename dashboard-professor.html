@@ -1700,6 +1700,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
         <span>Visão Geral</span>
       </button>
+      <div class="sb-group">Ensino</div>
       <button class="sb-link" data-section="schedule" data-tip="Schedule">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
         <span>Meu Schedule</span>
@@ -1716,6 +1717,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5C21.27 7.61 17 4.5 12 4.5zm0 12a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9zm0-7A2.5 2.5 0 1 0 12 14a2.5 2.5 0 0 0 0-5z"/></svg>
         <span>Acessos dos Alunos</span>
       </button>
+      <div class="sb-group">Acompanhamento</div>
       <button class="sb-link" data-section="homework" data-tip="Homework">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
         <span>Homework</span>
@@ -1728,6 +1730,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/></svg>
         <span>Perguntas <span id="helpBadge" class="sb-count zero" style="margin-left:auto;background:var(--orange);color:#fff;border-radius:10px;padding:1px 7px;font-size:10px;font-weight:800;display:none">0</span></span>
       </button>
+      <div class="sb-group">Comunicação</div>
       <button class="sb-link" data-section="announcements" data-tip="Avisos">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
         <span>Avisos</span>
@@ -1752,6 +1755,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
         <span>Mensagens</span>
       </button>
+      <div class="sb-group">Conta</div>
       <button class="sb-link" data-section="profile" data-tip="Meu Perfil">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
         <span>Meu Perfil</span>
@@ -2334,7 +2338,234 @@ body.sb-collapsed .main { margin-left: 92px !important; }
           .ea-cfg-row.dim{opacity:.5}
           .ea-cfg-soon{font-size:11px;font-weight:700;color:var(--g500);background:var(--g50);padding:4px 10px;border-radius:999px}
         </style>
-        <style id="eaCfgVis">#eaCfgCard{display:none}@media (max-width:900px){#eaCfgCard{display:block}}@media (display-mode:standalone){#eaCfgCard{display:block}}</style>
+        <style id="eaCfgVis">#eaCfgCard{display:none}@media (max-width:900px){#eaCfgCard{display:block}}@media (display-mode:standalone){#eaCfgCard{display:block}}
+/* ═══════════════════════════════════════════════════════════════
+   REFRESH VISUAL 2026 — ÁREA DO PROFESSOR
+   Camada de superfície: reescreve cartões, navegação, tabelas e
+   formulários. Não toca em markup nem em JavaScript, então as 14
+   seções herdam o novo visual sem risco para as funcionalidades.
+   Paleta e tipografia da EA preservadas: navy, laranja, mango,
+   ocean, cream, Fraunces + Plus Jakarta Sans.
+   ═══════════════════════════════════════════════════════════════ */
+
+.dash{
+  --r-sm:12px; --r-md:16px; --r-lg:22px; --r-pill:999px;
+  --sh-1:0 1px 2px rgba(25,36,78,.04), 0 4px 16px rgba(25,36,78,.05);
+  --sh-2:0 2px 4px rgba(25,36,78,.04), 0 12px 32px rgba(25,36,78,.07);
+  --sh-up:0 -2px 24px rgba(25,36,78,.06);
+  --line:#edeff5;
+}
+
+/* ── fundo: leve gradiente em vez de cinza chapado ───────────── */
+.dash .main{ background:linear-gradient(180deg,#f6f7fc 0%,#f9f9fb 340px,#f8f9fb 100%)!important; }
+.dash .content{ padding:22px 40px 56px!important; }
+
+/* ── barra lateral ───────────────────────────────────────────── */
+.dash .sb{ background:linear-gradient(168deg,#1b2755 0%,var(--navy) 58%,#141d40 100%)!important; padding:18px 12px!important; }
+.dash .sb-nav{ gap:1px!important; }
+.sb-group{
+  font-size:9.5px; font-weight:800; letter-spacing:.12em; text-transform:uppercase;
+  color:rgba(255,255,255,.32); padding:16px 14px 6px; user-select:none;
+}
+.dash .sb-link{
+  border-radius:var(--r-sm)!important; padding:10px 13px!important; gap:12px!important;
+  font-size:13.5px!important; font-weight:600!important; color:rgba(255,255,255,.68)!important;
+  position:relative; transition:background .16s, color .16s, transform .16s!important;
+}
+.dash .sb-link svg{ opacity:.78; transition:opacity .16s, transform .16s; }
+.dash .sb-link:hover{ background:rgba(255,255,255,.07)!important; color:#fff!important; transform:translateX(2px); }
+.dash .sb-link:hover svg{ opacity:1; }
+.dash .sb-link.active{
+  background:linear-gradient(100deg,var(--orange),var(--mango))!important; color:#fff!important;
+  font-weight:800!important; box-shadow:0 6px 18px rgba(243,107,46,.34)!important; transform:none;
+}
+.dash .sb-link.active svg{ opacity:1; }
+.dash .sb-badge{ border-radius:var(--r-pill)!important; }
+.dash .sb-bottom{ border-top:1px solid rgba(255,255,255,.09)!important; padding-top:10px!important; }
+
+/* ── topo ────────────────────────────────────────────────────── */
+.dash .topbar{
+  background:rgba(249,249,251,.86)!important; backdrop-filter:blur(16px)!important;
+  border-bottom:1px solid var(--line)!important; padding:0 40px!important; height:76px!important;
+}
+.dash .topbar-title{ font-family:'Fraunces',serif!important; font-weight:800!important; font-size:21px!important; color:var(--navy)!important; }
+.dash .topbar-user{
+  background:#fff; border:1px solid var(--line); border-radius:var(--r-pill);
+  padding:5px 6px 5px 15px; gap:11px!important; box-shadow:var(--sh-1);
+}
+.dash .topbar-name{ font-size:13px!important; font-weight:700!important; color:var(--navy)!important; }
+.dash .topbar-avatar{ border-radius:var(--r-pill)!important; box-shadow:0 3px 10px rgba(243,107,46,.28)!important; }
+.dash .notif-bell-btn{ width:40px!important; height:40px!important; border-radius:var(--r-pill)!important; background:#fff!important; border:1px solid var(--line)!important; box-shadow:var(--sh-1)!important; }
+.dash .notif-bell-btn:hover{ border-color:var(--orange)!important; }
+.dash .notif-dropdown{ border-radius:var(--r-lg)!important; border:1px solid var(--line)!important; box-shadow:var(--sh-2)!important; overflow:hidden; }
+
+/* ── cabeçalho de seção ──────────────────────────────────────── */
+.dash .section-head{ gap:16px!important; margin-bottom:22px!important; }
+.dash .section-head-icon{
+  width:50px!important; height:50px!important; border-radius:var(--r-md)!important;
+  box-shadow:0 6px 18px rgba(25,36,78,.10)!important;
+}
+.dash .section-head h2{ font-size:26px!important; letter-spacing:-.4px!important; }
+.dash .section-head h2::after{ display:none!important; }
+.dash .section-sub{ font-size:13.5px!important; color:var(--g500)!important; }
+
+/* ── painéis ─────────────────────────────────────────────────── */
+.dash .panel{
+  border-radius:var(--r-lg)!important; border:1px solid var(--line)!important;
+  box-shadow:var(--sh-1)!important; overflow:hidden;
+  transition:box-shadow .2s, border-color .2s!important;
+}
+.dash .panel:hover{ box-shadow:var(--sh-2)!important; }
+.dash .panel-head{ padding:17px 22px!important; border-bottom:1px solid var(--line)!important; background:transparent!important; }
+.dash .panel-title{ font-size:15.5px!important; font-weight:800!important; gap:11px!important; }
+.dash .panel-icon{ width:34px!important; height:34px!important; border-radius:11px!important; }
+.dash .panel-body{ padding:18px 22px!important; }
+
+/* ── cartões de número: cada um com sua cor de apoio ─────────── */
+.dash .stat-row{ gap:16px!important; }
+.dash .stat-card{
+  border-radius:var(--r-lg)!important; border:1px solid var(--line)!important;
+  box-shadow:var(--sh-1)!important; padding:20px!important;
+  transition:transform .18s cubic-bezier(.16,1,.3,1), box-shadow .18s!important;
+}
+.dash .stat-card:hover{ transform:translateY(-3px)!important; box-shadow:var(--sh-2)!important; }
+.dash .stat-icon{ width:46px!important; height:46px!important; border-radius:14px!important; box-shadow:none!important; }
+.dash .stat-value{ font-size:28px!important; letter-spacing:-.6px!important; }
+.dash .stat-label{ font-size:12px!important; font-weight:700!important; color:var(--g400)!important; }
+.dash .stat-card:nth-child(4n+1) .stat-icon{ background:var(--blue-soft)!important; color:var(--blue)!important; }
+.dash .stat-card:nth-child(4n+2) .stat-icon{ background:var(--ocean-light)!important; color:#1f6b66!important; }
+.dash .stat-card:nth-child(4n+3) .stat-icon{ background:var(--mango-soft)!important; color:var(--mango)!important; }
+.dash .stat-card:nth-child(4n+4) .stat-icon{ background:var(--orange-soft)!important; color:var(--orange)!important; }
+
+/* ── listas e cartões de conteúdo ────────────────────────────── */
+.dash .list-item,.dash .student-card,.dash .sent-card,.dash .msg-card,
+.dash .help-card,.dash .voc-word-card,.dash .prof-pron-card,.dash .prof-wr-card{
+  border-radius:var(--r-md)!important; border-color:var(--line)!important;
+}
+.dash .student-card,.dash .sent-card,.dash .msg-card,.dash .help-card{ box-shadow:var(--sh-1)!important; transition:transform .16s, box-shadow .16s, border-color .16s!important; }
+.dash .student-card:hover,.dash .sent-card:hover,.dash .msg-card:hover,.dash .help-card:hover{
+  transform:translateY(-2px)!important; box-shadow:var(--sh-2)!important; border-color:var(--g200)!important;
+}
+.dash .student-avatar,.dash .help-avatar{ border-radius:14px!important; }
+.dash .badge,.dash .badge-time,.dash .badge-done,.dash .badge-pending,.dash .badge-graded{
+  border-radius:var(--r-pill)!important; font-weight:800!important; letter-spacing:.01em!important;
+}
+
+/* ── formulários ─────────────────────────────────────────────── */
+.dash input[type=text],.dash input[type=email],.dash input[type=date],.dash input[type=time],
+.dash input[type=number],.dash input[type=month],.dash input[type=password],
+.dash select,.dash textarea,.dash .profile-input{
+  border-radius:var(--r-sm)!important; border:1.5px solid var(--g200)!important;
+  transition:border-color .15s, box-shadow .15s!important;
+}
+.dash input:focus,.dash select:focus,.dash textarea:focus{
+  border-color:var(--orange)!important; box-shadow:0 0 0 3px var(--orange-soft)!important; outline:none!important;
+}
+.dash button:focus-visible,.dash .sb-link:focus-visible,.dash a:focus-visible{
+  outline:2px solid var(--orange)!important; outline-offset:2px!important;
+}
+.dash .btn-send,.dash .profile-btn-primary,.dash .help-reply-btn{
+  border-radius:var(--r-sm)!important; font-weight:800!important;
+  box-shadow:0 5px 16px rgba(243,107,46,.26)!important; transition:transform .15s, box-shadow .15s, background .15s!important;
+}
+.dash .btn-send:hover,.dash .profile-btn-primary:hover,.dash .help-reply-btn:hover{ transform:translateY(-1px)!important; }
+.dash .form-card{ border-radius:var(--r-lg)!important; border-color:var(--line)!important; box-shadow:var(--sh-1)!important; }
+.dash .ea-seg{ border-radius:var(--r-pill)!important; }
+.dash .ea-seg button{ border-radius:var(--r-pill)!important; }
+
+/* ── grade de horários ───────────────────────────────────────── */
+.dash .sched-desktop-grid{ border-radius:var(--r-lg)!important; overflow:hidden; border:1px solid var(--line)!important; box-shadow:var(--sh-1)!important; }
+.dash .sched-th{ background:var(--navy)!important; font-size:11px!important; letter-spacing:.06em!important; }
+.dash .sched-cell:hover{ background:var(--orange-soft)!important; }
+.dash .sched-filled{ border-radius:10px!important; }
+.dash .sched-day-card{ border-radius:var(--r-md)!important; border-color:var(--line)!important; box-shadow:var(--sh-1)!important; }
+
+/* ── estado vazio: mais leve e acolhedor ─────────────────────── */
+.dash .empty-state{
+  border:1.5px dashed var(--g200)!important; background:var(--g50)!important;
+  border-radius:var(--r-lg)!important; padding:44px 24px!important; color:var(--g400)!important;
+}
+
+/* ── perfil ──────────────────────────────────────────────────── */
+.dash .profile-hero,.dash .profile-card{ border-radius:var(--r-lg)!important; border-color:var(--line)!important; box-shadow:var(--sh-1)!important; }
+.dash .profile-stat{ border-radius:var(--r-md)!important; border-color:var(--line)!important; }
+.dash .profile-avatar{ border-radius:26px!important; }
+
+/* ── "Seu dia": hero acolhedor com fundo suave ───────────────── */
+.dash .dia-hero{
+  position:relative; overflow:hidden;
+  background:linear-gradient(120deg,#fff 0%,var(--cream) 62%,var(--mango-soft) 100%)!important;
+  border:1px solid #f3e7d4!important; border-radius:var(--r-lg)!important;
+  padding:24px 28px!important; box-shadow:var(--sh-1)!important;
+}
+.dash .dia-hero::after{
+  content:''; position:absolute; right:-70px; top:-90px; width:250px; height:250px;
+  border-radius:50%; background:radial-gradient(circle at 30% 30%, rgba(243,107,46,.16), rgba(245,154,30,0) 68%);
+  pointer-events:none;
+}
+.dash .dia-hero-main{ position:relative; z-index:1; }
+.dash .dia-hero .dia-ola{ font-size:29px!important; letter-spacing:-.5px!important; }
+.dash .dia-feriado{ position:relative; z-index:1; background:#fff!important; }
+.dash .dia-panel{ border-radius:var(--r-lg)!important; }
+.dash .dia-aula{ border-radius:14px!important; }
+.dash .dia-grid{ gap:18px!important; }
+
+@media (max-width:900px){
+  .dash .content{ padding:16px 14px 44px!important; }
+  .dash .topbar{ padding:0 14px!important; height:64px!important; }
+  .dash .section-head h2{ font-size:22px!important; }
+  .dash .dia-hero{ padding:18px 18px!important; }
+  .dash .dia-hero .dia-ola{ font-size:23px!important; }
+  .dash .topbar-user{ padding:4px 4px 4px 10px; }
+}
+
+/* ── avatares com cor por posição: lista fica mais fácil de varrer ── */
+.dash .student-card:nth-child(5n+1) .student-avatar{ background:linear-gradient(135deg,var(--orange),var(--mango))!important; }
+.dash .student-card:nth-child(5n+2) .student-avatar{ background:linear-gradient(135deg,var(--blue),var(--blue-light))!important; }
+.dash .student-card:nth-child(5n+3) .student-avatar{ background:linear-gradient(135deg,#1f6b66,#3aa79f)!important; }
+.dash .student-card:nth-child(5n+4) .student-avatar{ background:linear-gradient(135deg,var(--mango),#f7c46c)!important; }
+.dash .student-card:nth-child(5n+5) .student-avatar{ background:linear-gradient(135deg,var(--navy),var(--navy-light))!important; }
+
+/* ── chip de papel na barra lateral, na paleta da casa ── */
+.dash .sb-badge{
+  background:rgba(255,255,255,.09)!important; border:1px solid rgba(255,255,255,.14)!important;
+}
+.dash .sb-badge-text{ color:rgba(255,255,255,.86)!important; font-weight:800!important; letter-spacing:.07em!important; }
+.dash .sb-badge-icon{ color:var(--mango)!important; }
+
+/* ── ilustração do hero: livro aberto, em SVG inline (sem novo asset) ── */
+.dash .dia-hero::before{
+  content:''; position:absolute; right:26px; bottom:-6px; width:210px; height:150px;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 210 150'><g fill='none' stroke='%2319244e' stroke-width='3' stroke-linecap='round' stroke-linejoin='round' opacity='.5'><path d='M105 44c-14-11-33-14-52-11v72c19-3 38 0 52 11 14-11 33-14 52-11V33c-19-3-38 0-52 11z'/><path d='M105 44v72'/></g><g stroke='%23f36b2e' stroke-width='3' stroke-linecap='round' opacity='.55'><path d='M66 58h26M66 72h22M118 58h26M118 72h22'/></g><circle cx='44' cy='30' r='6' fill='%23f59a1e' opacity='.5'/><circle cx='170' cy='112' r='8' fill='%23c4e7e5' opacity='.75'/><circle cx='186' cy='40' r='4.5' fill='%23f36b2e' opacity='.4'/></svg>") no-repeat center/contain;
+  pointer-events:none; opacity:.9;
+}
+.dash .dia-hero-main{ padding-right:180px; }
+@media (max-width:900px){
+  .dash .dia-hero::before{ display:none; }
+  .dash .dia-hero-main{ padding-right:0; }
+}
+
+/* ── correção: 14 itens + 4 rótulos não cabiam em telas de ~900px,
+      e o último link ("Meu Perfil") ficava cortado. A navegação passa
+      a rolar sozinha e os itens ficam mais compactos. ────────────── */
+.dash .sb-nav{ overflow-y:auto; overflow-x:hidden; min-height:0; scrollbar-width:thin; scrollbar-color:rgba(255,255,255,.18) transparent; padding-right:2px; }
+.dash .sb-nav::-webkit-scrollbar{ width:5px; }
+.dash .sb-nav::-webkit-scrollbar-thumb{ background:rgba(255,255,255,.16); border-radius:999px; }
+.dash .sb-nav::-webkit-scrollbar-track{ background:transparent; }
+.dash .sb-link{ padding:8px 13px!important; scroll-margin:8px; }
+.sb-group{ padding:11px 14px 4px; }
+.dash .sb-logo{ margin-bottom:10px!important; }
+
+/* ── cabeçalho de seção: "Visão Geral" e "Meu Perfil" usam <h2> solto,
+      as outras 12 usam .section-head. Uniformiza os dois formatos. ── */
+.dash .section>h2{
+  font-family:'Fraunces',serif!important; font-weight:800!important;
+  font-size:26px!important; color:var(--navy)!important; letter-spacing:-.4px!important;
+  margin:0 0 6px!important; padding:0!important; border:none!important;
+}
+.dash .section>h2::after{ display:none!important; content:none!important; }
+.dash .section>p{ font-size:13.5px!important; color:var(--g500)!important; margin:0 0 22px!important; }
+</style>
         <div class="ea-cfg" id="eaCfgCard">
           <div class="ea-cfg-head">⚙️ Configurações</div>
           <div class="ea-cfg-sub">Preferências do app neste dispositivo.</div>

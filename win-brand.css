@@ -71,10 +71,10 @@ h1, h2 { letter-spacing: -0.02em; }
 }
 .btn-outline:hover, .btn-secondary:hover { background: var(--win-azul-profundo) !important; color: var(--win-off-white) !important; }
 /* sobre fundo escuro o contorno fica branco */
-:is(.about, .coord-cta, .app-cta, footer, .footer, .bib-hero) :is(.btn-outline, .btn-secondary) {
+:is(.about, .app-cta, footer, .footer, .bib-hero) :is(.btn-outline, .btn-secondary) {
   color: var(--win-off-white) !important; border-color: var(--win-off-white) !important;
 }
-:is(.about, .coord-cta, .app-cta, footer, .footer, .bib-hero) :is(.btn-outline, .btn-secondary):hover {
+:is(.about, .app-cta, footer, .footer, .bib-hero) :is(.btn-outline, .btn-secondary):hover {
   background: var(--win-off-white) !important; color: var(--win-azul-profundo) !important;
 }
 
@@ -109,9 +109,9 @@ h1, h2 { letter-spacing: -0.02em; }
   content: ''; width: 48px; height: 3px; background: var(--win-vermelho);
   border-radius: 2px; flex-shrink: 0;
 }
-:is(.about, .coord-cta, .app-cta) .section-label { color: var(--win-off-white) !important; }
+:is(.about, .app-cta) .section-label { color: var(--win-off-white) !important; }
 .section-title { font-family: var(--font-main) !important; font-weight: 800 !important; color: var(--win-azul-profundo); }
-:is(.about, .coord-cta, .app-cta) .section-title { color: var(--win-off-white); }
+:is(.about, .app-cta) .section-title { color: var(--win-off-white); }
 
 /* ── hero: sem manchas vermelhas grandes (vermelho é pontual) ── */
 [class*="hero-blob"], .blob { background: var(--win-azul-aco) !important; opacity: 0.14 !important; }

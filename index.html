@@ -2264,6 +2264,9 @@
 <meta name="twitter:image" content="https://www.eaenglishclasses.com.br/img/og-cover.jpg">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "EducationalOrganization", "@id": "https://www.eaenglishclasses.com.br/#org", "name": "WIN", "description": "Escola de inglês online com aulas individuais ao vivo, do nível A1 ao C1.", "url": "https://www.eaenglishclasses.com.br/", "logo": "https://www.eaenglishclasses.com.br/icons/icon-512.png", "image": "https://www.eaenglishclasses.com.br/img/og-cover.jpg", "inLanguage": "pt-BR", "address": {"@type": "PostalAddress", "addressLocality": "São Paulo", "addressRegion": "SP", "addressCountry": "BR"}, "areaServed": "BR", "sameAs": ["https://www.instagram.com/contatoea"]}</script>
 <link rel="stylesheet" href="/win-brand.css">
+<link rel="stylesheet" href="/win-home.css">
+<link rel="preload" as="image" href="/img/brand/anim/lobo.png">
+<link rel="preload" as="image" href="/img/brand/anim/win.png">
 </head>
 <body>
 <a href="#main-content" class="skip-link" style="position:absolute;top:-40px;left:0;background:var(--navy);color:#fff;padding:8px 16px;z-index:10000;transition:top 0.3s;font-size:14px;font-weight:700;border-radius:0 0 8px 0" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">Pular para o conteúdo</a>
@@ -2307,7 +2310,6 @@
           <span class="hero-badge-dot"></span>
           +10 anos transformando vidas pelo inglês
         </div>
-        <p class="win-slogan">English is just the beginning</p>
         <h1>
           Fluência em inglês<br>
           é mais <span class="highlight">simples</span> do que parece
@@ -2338,35 +2340,19 @@
         </div>
       </div>
       <div class="hero-visual">
-        <div class="hero-video-card">
-          <div class="hero-video-header">
-            <div class="hero-video-title">
-              <span class="hero-video-dot"></span>
-              Aula ao Vivo
-            </div>
-            <span class="hero-video-live">● Online</span>
-          </div>
-          <div class="hero-video-player">
-            <video src="https://i.imgur.com/wawSBLv.mp4" autoplay muted loop playsinline preload="auto" disablepictureinpicture disableremoteplayback controlslist="nodownload noremoteplayback noplaybackrate" oncontextmenu="return false" tabindex="-1" aria-hidden="true"></video>
-          </div>
-        </div>
-        <div class="hero-float-card hero-float-1">
-          <div class="hero-float-icon" style="background: var(--mango-soft)">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 15c2.21 0 4-1.79 4-4V5c0-2.21-1.79-4-4-4S8 2.79 8 5v6c0 2.21 1.79 4 4 4zm-7-4c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2c0 2.76-2.24 5-5 5s-5-2.24-5-5H5z" fill="#6F8FA8"/></svg>
-          </div>
-          <div class="hero-float-text">
-            Speaking fluente
-            <small>Conversação real</small>
-          </div>
-        </div>
-        <div class="hero-float-card hero-float-2">
-          <div class="hero-float-icon" style="background: var(--blue-soft)">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z" fill="#0B1F33"/></svg>
-          </div>
-          <div class="hero-float-text">
-            Progresso real
-            <small>Acompanhamento 100%</small>
-          </div>
+        <!-- Animacao do logo WIN: as camadas sao recortes do logo oficial,
+             sem redesenho nem recoloracao. Montagem: lobo, estrelas, WIN, slogan. -->
+        <div class="win-anim" role="img" aria-label="WIN – English is just the beginning">
+          <span class="win-anim-glow" aria-hidden="true"></span>
+          <img class="wa-l wa-lobo" src="/img/brand/anim/lobo.png" alt="" aria-hidden="true" decoding="async">
+          <img class="wa-l wa-s wa-s1" src="/img/brand/anim/estrela1.png" alt="" aria-hidden="true" decoding="async">
+          <img class="wa-l wa-s wa-s2" src="/img/brand/anim/estrela2.png" alt="" aria-hidden="true" decoding="async">
+          <img class="wa-l wa-s wa-s3" src="/img/brand/anim/estrela3.png" alt="" aria-hidden="true" decoding="async">
+          <img class="wa-l wa-s wa-s4" src="/img/brand/anim/estrela4.png" alt="" aria-hidden="true" decoding="async">
+          <img class="wa-l wa-s wa-s5" src="/img/brand/anim/estrela5.png" alt="" aria-hidden="true" decoding="async">
+          <img class="wa-l wa-win" src="/img/brand/anim/win.png" alt="" aria-hidden="true" decoding="async">
+          <img class="wa-l wa-slogan" src="/img/brand/anim/slogan.png" alt="" aria-hidden="true" decoding="async">
+          <span class="win-anim-line" aria-hidden="true"></span>
         </div>
       </div>
     </div>

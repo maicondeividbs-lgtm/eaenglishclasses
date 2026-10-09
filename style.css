@@ -52,8 +52,8 @@
   --g100: #eef0f4;
   --g200: #dde0e8;
   --g300: #c3c7d0;
-  --g400: #9ca3af;
-  --g500: #6b7280;
+  --g400: #646B78;   /* AA em todo fundo claro (era #646B78, 2,54:1) */
+  --g500: #565E6B;
   --g700: #374151;
   --g900: var(--win-quase-preto);
   

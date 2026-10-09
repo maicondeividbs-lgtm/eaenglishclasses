@@ -69,10 +69,10 @@
         'display:flex;align-items:center;justify-content:center;font-family:Montserrat,system-ui,sans-serif;font-weight:800;font-size:20px;flex-shrink:0}' +
         '#eaInstall .ea-i-icon i{color:#D71920;font-style:normal}' +
         '#eaInstall .ea-i-title{font-weight:800;font-size:14px;line-height:1.2}' +
-        '#eaInstall .ea-i-sub{font-size:12px;color:#6b7280;margin-top:2px;line-height:1.35}' +
+        '#eaInstall .ea-i-sub{font-size:12px;color:#565E6B;margin-top:2px;line-height:1.35}' +
         '#eaInstall .ea-i-btn{background:#D71920;color:#fff;border:none;border-radius:10px;' +
         'padding:9px 14px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;min-height:40px;white-space:nowrap}' +
-        '#eaInstall .ea-i-close{background:none;border:none;color:#9ca3af;font-size:18px;cursor:pointer;' +
+        '#eaInstall .ea-i-close{background:none;border:none;color:#646B78;font-size:18px;cursor:pointer;' +
         'padding:4px 8px;line-height:1;align-self:flex-start}';
       document.head.appendChild(s);
     }
@@ -140,7 +140,7 @@
         '<div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">' +
           '<div style="width:48px;height:48px;border-radius:13px;background:#0B1F33;color:#fff;display:flex;align-items:center;justify-content:center;font-family:Montserrat,system-ui,sans-serif;font-weight:800;font-size:22px">WIN<span style="color:#D71920">.</span></div>' +
           '<div><div style="font-family:Montserrat,system-ui,sans-serif;font-weight:800;font-size:19px;color:#0B1F33">Instalar o app</div>' +
-          '<div style="font-size:13px;color:#6b7280">' + (kind === 'ios' ? 'No iPhone/iPad (Safari)' : 'No computador') + '</div></div>' +
+          '<div style="font-size:13px;color:#565E6B">' + (kind === 'ios' ? 'No iPhone/iPad (Safari)' : 'No computador') + '</div></div>' +
         '</div>' + steps +
         '<button type="button" data-ea-close-modal style="margin-top:22px;width:100%;background:#D71920;color:#fff;border:none;' +
           'border-radius:13px;padding:14px;font-weight:700;font-size:15px;cursor:pointer;font-family:inherit;min-height:48px">Entendi</button>' +

@@ -221,3 +221,108 @@ h1, h2 { letter-spacing: -0.02em; }
   background: rgba(245, 247, 250, 0.08) !important;
   border: 1px solid rgba(245, 247, 250, 0.22) !important;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   DETALHES — ícones, contraste, degradês e movimento
+   (resultado de auditoria medida: WCAG, degradês e animações em uso)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── ícones: uma só linguagem, de linha, traço 2 ─────────────── */
+.win-ico { width: 1.15em; height: 1.15em; vertical-align: -0.2em; flex-shrink: 0; }
+:is(h3, h4) > .win-ico:first-child { color: var(--win-vermelho); margin-right: 0.35em; }
+.btn > .win-ico:last-child { margin-left: 0.4em; }
+.login-welcome .win-ico { color: var(--win-vermelho); margin-right: 0.25em; }
+
+.feature-icon {
+  width: 56px !important; height: 56px !important; display: flex !important;
+  align-items: center; justify-content: center;
+}
+.feature-icon svg { width: 26px; height: 26px; }
+:is(.coord-card-icon, .aud-emoji) {
+  display: flex !important; align-items: center; justify-content: center;
+  color: var(--win-vermelho) !important; font-size: 0 !important;
+}
+.coord-card-icon {
+  width: 42px !important; height: 42px !important;
+  background: rgba(215, 25, 32, 0.08) !important; border-radius: var(--radius) !important;
+}
+.coord-card-icon svg { width: 21px; height: 21px; }
+.aud-emoji svg { width: 30px; height: 30px; }
+.info-icon svg { color: var(--win-vermelho); }
+/* estrela do selo: mesmo desenho de linha, via máscara (sem emoji) */
+.coord-badge-exp::before {
+  content: '' !important; display: inline-block; width: 15px; height: 15px; margin-right: 8px;
+  vertical-align: -2px; background: var(--win-vermelho);
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linejoin='round'><path d='m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z'/></svg>") center / contain no-repeat;
+          mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linejoin='round'><path d='m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z'/></svg>") center / contain no-repeat;
+}
+
+/* ── contraste: correções medidas (WCAG AA) ──────────────────── */
+/* rótulo "Conecte-se" na seção escura das redes: estava 1,00:1 */
+section[style*="--navy"] .section-label,
+section[style*="#0B1F33"] .section-label { color: var(--win-off-white) !important; }
+/* azul aço só passa como texto pequeno sobre escuro; no claro vira azul profundo */
+:is(.course-series-tag, .cur-unit-tag) { color: var(--win-azul-profundo) !important; }
+/* selos com fundo azul aço: texto azul profundo (4,84:1) em vez de branco (3,40:1) */
+:is(.course-badge, .journey-dot)[style*="6F8FA8"],
+:is(.course-badge, .journey-dot)[style*="6f8fa8"] { color: var(--win-azul-profundo) !important; }
+.teacher-skill { color: var(--win-azul-profundo) !important; }
+.teacher-bio-toggle { color: var(--win-vermelho-hover) !important; }
+.testimonial-char-count { color: var(--g500) !important; }
+.view-intro-eyebrow { color: var(--win-vermelho-hover) !important; }
+.bib-eyebrow { color: rgba(245, 247, 250, 0.82) !important; }
+/* texto pequeno em branco 40% sobre o escuro das redes (3,73:1) */
+section[style*="--navy"] div[style*="rgba(255,255,255,0.4)"] { color: rgba(245, 247, 250, 0.72) !important; }
+/* biblioteca: rótulos de 10px em cinza claro (2,54:1) e ícones verdes (2,24:1) */
+.cur-meta-text strong { color: var(--g500) !important; }
+.cur-meta-icon { background: var(--win-cinza-azulado) !important; color: var(--win-azul-profundo) !important; }
+
+/* ── degradês: redes sociais sem degradê de tela inteira ────────
+   O cartão vira escuro, da casa; a cor da plataforma fica só numa
+   faixa fina no topo, o suficiente para reconhecer. */
+a[href*="instagram.com"][style*="gradient"], a[href*="youtube.com"][style*="gradient"], .ig-card {
+  background: var(--win-quase-preto) !important; background-size: auto !important;
+  border: 1px solid rgba(111, 143, 168, 0.3) !important; border-radius: var(--radius) !important;
+  position: relative; overflow: hidden; animation: none !important; box-shadow: none !important;
+  transition: border-color var(--transition), transform var(--transition) !important;
+}
+a[href*="instagram.com"][style*="gradient"]::before, a[href*="youtube.com"][style*="gradient"]::before, .ig-card::before {
+  content: ''; position: absolute; left: 0; right: 0; top: 0; height: 3px;
+}
+a[href*="instagram.com"][style*="gradient"]::before, .ig-card::before {
+  background: linear-gradient(90deg, #833AB4, #FD1D1D, #FCAF45);
+}
+a[href*="youtube.com"][style*="gradient"]::before { background: #FF0000; }
+a[href*="instagram.com"][style*="gradient"]:hover, a[href*="youtube.com"][style*="gradient"]:hover {
+  border-color: rgba(245, 247, 250, 0.45) !important; transform: translateY(-2px) !important;
+}
+
+/* ── movimento: 150–250ms, sem quique, sem laços decorativos ──── */
+:is(a, .btn, .nav-links a, .footer a, .faq-q, .teacher-bio-toggle, .teacher-card, .feature-card,
+    .coord-card, .how-card, .info-card, .course-row, .ws-card, .mus-card) {
+  transition-duration: 200ms !important;
+  transition-timing-function: cubic-bezier(0.2, 0, 0, 1) !important;
+}
+:is(.faq-toggle, .faq-a-inner, .bio-modal, .wa-float) {
+  transition-duration: 220ms !important; transition-timing-function: ease-out !important;
+}
+:is(.teacher-photo, .teacher-photo-bg, .course-img-inner) { transition-duration: 250ms !important; }
+/* entrada ao rolar: mais curta e mais discreta */
+.reveal { transform: translateY(16px); }
+.reveal, .reveal.visible { transition-duration: 600ms !important; transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1) !important; }
+/* enfeites que ficavam animando sem parar: param */
+:is(.coord-deco-1, .coord-deco-2, .coord-deco-3, .coord-deco-4, .blob, [class*="hero-blob"]) { animation: none !important; }
+.coord-deco-star { display: none !important; }
+.hero-badge-dot { animation-duration: 3.2s !important; }
+/* número do progresso usa a cor do nível: a 20px vira texto grande (3:1) e passa */
+.cur-progress-info strong { font-size: 20px !important; }
+
+/* ── painéis: contraste ─────────────────────────────────────── */
+.journey-cefr { color: var(--g500) !important; }
+/* salvar é ação principal: vermelho, texto branco (5,19:1) */
+.dash .btn-send { background: var(--win-vermelho) !important; color: #fff !important; }
+.dash .btn-send:hover { background: var(--win-vermelho-hover) !important; }
+/* botões com fundo azul aço: texto azul profundo (4,84:1) em vez de branco (3,40:1) */
+.dash button[style*="background:var(--mango)"], .dash button[style*="background: var(--mango)"] { color: var(--win-azul-profundo) !important; }
+/* destaque de título na seção das redes: mesmo padrão dos demais (vermelho, sem itálico) */
+section[style*="--navy"] :is(h1, h2) span[style*="italic"] { color: var(--win-vermelho) !important; font-style: normal !important; }

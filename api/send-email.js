@@ -16,13 +16,13 @@
 const SB_URL = process.env.SUPABASE_URL;
 const SB_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const RESEND_KEY = process.env.RESEND_API_KEY;
-const FROM = process.env.EMAIL_FROM || 'EA English Classes <avisos@eaenglishclasses.com.br>';
+const FROM = process.env.EMAIL_FROM || 'WIN <avisos@eaenglishclasses.com.br>';
 const REPLY_TO = process.env.EMAIL_REPLY_TO || '';
 const SITE_URL = (process.env.SITE_URL || 'https://www.eaenglishclasses.com.br').replace(/\/+$/, '');
 const LOGO = process.env.EMAIL_LOGO_URL || (SITE_URL + '/icons/Logo_EA.jpg');
 
 // ── Paleta oficial da marca ──
-const C = { navy:'#19244e', blue:'#253c96', orange:'#f36b2e', mango:'#f59a1e', ocean:'#c4e7e5', cream:'#fef9f0' };
+const C = { navy:'#0B1F33', blue:'#0B1F33', orange:'#D71920', mango:'#6F8FA8', ocean:'#D8DEDD', cream:'#F5F7FA' };
 
 // ── Categorias visuais (cor de destaque + emoji + rótulo) ──
 const CATS = {
@@ -38,7 +38,7 @@ const CATS = {
   nivel:     { color: C.navy,   text: '#ffffff', emoji: '🎯', label: 'Nivelamento' },
   mensagem:  { color: C.blue,   text: '#ffffff', emoji: '📨', label: 'Mensagem' },
   pergunta:  { color: C.blue,   text: '#ffffff', emoji: '💬', label: 'Pergunta' },
-  geral:     { color: C.orange, text: '#ffffff', emoji: '✉️', label: 'EA English Classes' }
+  geral:     { color: C.orange, text: '#ffffff', emoji: '✉️', label: 'WIN' }
 };
 
 async function sbSelect(path) {
@@ -150,7 +150,7 @@ async function plan(table, rec, old) {
         ctaLabel: 'Ver mensagem', path: '/login' };
     case 'announcements':
       return { roles: [rec.target_role || 'student'], cat: 'aviso', subject: '📢 ' + (rec.title || 'Novo aviso'),
-        heading: rec.title || 'Novo comunicado da EA',
+        heading: rec.title || 'Novo comunicado da WIN',
         message: rec.content || rec.title || 'Há um novo aviso publicado no seu painel.',
         ctaLabel: 'Ver aviso', path: '/login' };
     case 'placement_tests':
@@ -201,9 +201,9 @@ function template(p, name) {
     '<table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;background:#ffffff;border-radius:20px;overflow:hidden;border:1px solid #e6e9f1">' +
 
     // Cabeçalho com logo
-    '<tr><td bgcolor="' + C.navy + '" style="background:#19244e;background-image:linear-gradient(135deg,#19244e 0%,#253c96 100%);padding:30px 28px 24px;text-align:center">' +
-      '<img src="' + esc(LOGO) + '" width="66" height="66" alt="EA English Classes" style="display:inline-block;width:66px;height:66px;border-radius:16px;background:#ffffff;border:3px solid rgba(255,255,255,.92)">' +
-      '<div style="margin-top:12px;color:#ffffff;font-size:18px;font-weight:800;letter-spacing:-.01em">EA <span style="color:#f59a1e">English Classes</span></div>' +
+    '<tr><td bgcolor="' + C.navy + '" style="background:#0B1F33;background-image:linear-gradient(135deg,#0B1F33 0%,#0B1F33 100%);padding:30px 28px 24px;text-align:center">' +
+      '<img src="' + esc(LOGO) + '" width="66" height="66" alt="WIN" style="display:inline-block;width:66px;height:66px;border-radius:16px;background:#ffffff;border:3px solid rgba(255,255,255,.92)">' +
+      '<div style="margin-top:12px;color:#ffffff;font-size:18px;font-weight:800;letter-spacing:-.01em">WIN <span style="color:#6F8FA8">English Classes</span></div>' +
     '</td></tr>' +
 
     // Faixa de cor da categoria
@@ -215,7 +215,7 @@ function template(p, name) {
       '<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px"><tr>' +
         '<td bgcolor="' + cat.color + '" style="background:' + cat.color + ';border-radius:999px;padding:6px 14px;color:' + cat.text + ';font-size:12px;font-weight:800;letter-spacing:.02em">' + cat.emoji + ' ' + esc(cat.label) + '</td>' +
       '</tr></table>' +
-      '<h1 style="margin:0 0 12px;color:#19244e;font-size:23px;line-height:1.3;font-weight:800">' + esc(p.heading) + '</h1>' +
+      '<h1 style="margin:0 0 12px;color:#0B1F33;font-size:23px;line-height:1.3;font-weight:800">' + esc(p.heading) + '</h1>' +
       '<p style="margin:0 0 28px;color:#48526b;font-size:15px;line-height:1.7">' + hi + esc(p.message) + '</p>' +
       // botão de ação (bulletproof)
       '<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>' +
@@ -227,17 +227,17 @@ function template(p, name) {
 
     // Rodapé institucional
     '<tr><td style="padding:24px 34px;background:#f7f8fb;border-top:1px solid #eceef3">' +
-      '<div style="color:#19244e;font-size:14px;font-weight:800;margin-bottom:4px">EA English Classes</div>' +
+      '<div style="color:#0B1F33;font-size:14px;font-weight:800;margin-bottom:4px">WIN</div>' +
       '<div style="color:#7c8499;font-size:12px;line-height:1.7">' +
         'Escola de inglês online · São Paulo, SP — Brasil<br>' +
-        '<a href="' + esc(SITE_URL) + '" target="_blank" style="color:#253c96;text-decoration:none;font-weight:600">' + esc(host) + '</a>' +
-        ' &nbsp;·&nbsp; <a href="https://www.instagram.com/contatoea" target="_blank" style="color:#253c96;text-decoration:none;font-weight:600">@contatoea</a>' +
+        '<a href="' + esc(SITE_URL) + '" target="_blank" style="color:#0B1F33;text-decoration:none;font-weight:600">' + esc(host) + '</a>' +
+        ' &nbsp;·&nbsp; <a href="https://www.instagram.com/contatoea" target="_blank" style="color:#0B1F33;text-decoration:none;font-weight:600">@contatoea</a>' +
       '</div>' +
     '</td></tr>' +
     '</table>' +
 
     '<div style="color:#aeb4c2;font-size:11px;line-height:1.6;padding:16px 8px 0;max-width:600px">' +
-      'Você recebeu este e-mail porque tem uma conta na EA English Classes.<br>© ' + year + ' EA English Classes · Todos os direitos reservados.' +
+      'Você recebeu este e-mail porque tem uma conta na WIN.<br>© ' + year + ' WIN · Todos os direitos reservados.' +
     '</div>' +
 
     '</td></tr></table></body></html>';
@@ -283,7 +283,7 @@ export default async function handler(req, res) {
       const tp = { cat: body.cat || 'geral', heading: 'Teste de e-mail',
         message: 'Se você recebeu isto, o envio de e-mails está funcionando perfeitamente.',
         ctaLabel: 'Abrir o app', path: '/login' };
-      const out = await sendEmail(body.to, body.subject || '✉️ Teste — EA English Classes', template(tp, body.name));
+      const out = await sendEmail(body.to, body.subject || '✉️ Teste | WIN', template(tp, body.name));
       res.status(out.ok ? 200 : 500).json({ test: true, sent: out.ok, error: out.ok ? undefined : out });
       return;
     }
@@ -305,7 +305,7 @@ export default async function handler(req, res) {
     // Assunto único por envio: evita que o Gmail agrupe e-mails diferentes
     // na mesma conversa (thread). Mantém o assunto original de plan() intacto.
     const finalSubject = (rec && rec.id)
-      ? `EA • ${p.subject} • ${String(rec.id).slice(0, 6).toUpperCase()}`
+      ? `WIN • ${p.subject} • ${String(rec.id).slice(0, 6).toUpperCase()}`
       : p.subject;
     await Promise.all(recipients.map(async (rcpt) => {
       const html = template(p, rcpt.name);   // personalizado pelo nome

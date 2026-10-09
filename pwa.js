@@ -55,8 +55,8 @@
     b.setAttribute('aria-label', 'Instalar aplicativo');
     b.style.cssText =
       'position:fixed;left:16px;bottom:16px;z-index:99999;max-width:340px;' +
-      'background:#fff;color:#19244e;border:1px solid rgba(25,36,78,.12);' +
-      'border-radius:16px;box-shadow:0 18px 50px rgba(25,36,78,.22);' +
+      'background:#fff;color:#0B1F33;border:1px solid rgba(11,31,51,.12);' +
+      'border-radius:16px;box-shadow:0 18px 50px rgba(11,31,51,.22);' +
       'padding:14px 14px 14px 16px;display:flex;gap:12px;align-items:center;' +
       'font-family:inherit;animation:eaSlideUp .35s cubic-bezier(.16,1,.3,1)';
     b.innerHTML = html;
@@ -65,12 +65,12 @@
       var s = document.createElement('style');
       s.id = 'eaInstallKf';
       s.textContent = '@keyframes eaSlideUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}' +
-        '#eaInstall .ea-i-icon{width:42px;height:42px;border-radius:11px;background:#19244e;color:#fff;' +
-        'display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-weight:800;font-size:20px;flex-shrink:0}' +
-        '#eaInstall .ea-i-icon i{color:#f36b2e;font-style:normal}' +
+        '#eaInstall .ea-i-icon{width:42px;height:42px;border-radius:11px;background:#0B1F33;color:#fff;' +
+        'display:flex;align-items:center;justify-content:center;font-family:Montserrat,system-ui,sans-serif;font-weight:800;font-size:20px;flex-shrink:0}' +
+        '#eaInstall .ea-i-icon i{color:#D71920;font-style:normal}' +
         '#eaInstall .ea-i-title{font-weight:800;font-size:14px;line-height:1.2}' +
         '#eaInstall .ea-i-sub{font-size:12px;color:#6b7280;margin-top:2px;line-height:1.35}' +
-        '#eaInstall .ea-i-btn{background:#f36b2e;color:#fff;border:none;border-radius:10px;' +
+        '#eaInstall .ea-i-btn{background:#D71920;color:#fff;border:none;border-radius:10px;' +
         'padding:9px 14px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;min-height:40px;white-space:nowrap}' +
         '#eaInstall .ea-i-close{background:none;border:none;color:#9ca3af;font-size:18px;cursor:pointer;' +
         'padding:4px 8px;line-height:1;align-self:flex-start}';
@@ -87,8 +87,8 @@
     deferred = e;
     if (dismissed() || isStandalone() || !smallScreen()) return;
     var b = makeBanner(
-      '<div class="ea-i-icon"><span>EA</span><i>.</i></div>' +
-      '<div style="flex:1;min-width:0"><div class="ea-i-title">Instalar o app da EA</div>' +
+      '<div class="ea-i-icon"><img src="/img/brand/win-mark.png" alt=""></div>' +
+      '<div style="flex:1;min-width:0"><div class="ea-i-title">Instalar o app da WIN</div>' +
       '<div class="ea-i-sub">Acesso rápido, em tela cheia, direto na sua tela inicial.</div></div>' +
       '<button class="ea-i-btn" data-ea-install type="button">Instalar</button>' +
       '<button class="ea-i-close" data-ea-close aria-label="Dispensar">&times;</button>'
@@ -110,8 +110,8 @@
     var t = document.createElement('div');
     t.textContent = msg;
     t.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:100000;' +
-      'background:#19244e;color:#fff;padding:13px 20px;border-radius:12px;font-family:inherit;font-size:14px;' +
-      'font-weight:600;box-shadow:0 12px 40px rgba(25,36,78,.3);max-width:90vw;text-align:center;' +
+      'background:#0B1F33;color:#fff;padding:13px 20px;border-radius:12px;font-family:inherit;font-size:14px;' +
+      'font-weight:600;box-shadow:0 12px 40px rgba(11,31,51,.3);max-width:90vw;text-align:center;' +
       'animation:eaSlideUp .3s ease';
     document.body.appendChild(t);
     setTimeout(function () { t.style.transition = 'opacity .4s'; t.style.opacity = '0'; setTimeout(function () { t.remove(); }, 400); }, 4200);
@@ -121,12 +121,12 @@
   function eaInstructionsModal(kind) {
     var steps = kind === 'ios'
       ? '<ol style="margin:0;padding-left:20px;line-height:2;color:#374151;font-size:15px">' +
-          '<li>Toque no botão <strong>Compartilhar</strong> <span style="display:inline-flex;vertical-align:-4px"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#f36b2e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></span> na barra do Safari.</li>' +
+          '<li>Toque no botão <strong>Compartilhar</strong> <span style="display:inline-flex;vertical-align:-4px"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#D71920" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></span> na barra do Safari.</li>' +
           '<li>Escolha <strong>Adicionar à Tela de Início</strong>.</li>' +
           '<li>Toque em <strong>Adicionar</strong> — pronto!</li>' +
         '</ol>'
       : '<ol style="margin:0;padding-left:20px;line-height:2;color:#374151;font-size:15px">' +
-          '<li>No Chrome/Edge, clique no ícone de <strong>instalar</strong> <span style="display:inline-flex;vertical-align:-4px"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#f36b2e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M12 8v6M9 11l3 3 3-3"/></svg></span> na barra de endereço.</li>' +
+          '<li>No Chrome/Edge, clique no ícone de <strong>instalar</strong> <span style="display:inline-flex;vertical-align:-4px"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#D71920" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M12 8v6M9 11l3 3 3-3"/></svg></span> na barra de endereço.</li>' +
           '<li>Ou abra o menu <strong>⋮</strong> e escolha <strong>Instalar app</strong>.</li>' +
           '<li>Confirme em <strong>Instalar</strong>.</li>' +
         '</ol>';
@@ -138,11 +138,11 @@
       '<div role="dialog" aria-label="Como instalar o app" style="background:#fff;border-radius:22px;max-width:400px;width:100%;' +
         'padding:28px 26px;box-shadow:0 30px 80px rgba(16,23,51,.4);animation:eaSlideUp .3s cubic-bezier(.16,1,.3,1)">' +
         '<div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">' +
-          '<div style="width:48px;height:48px;border-radius:13px;background:#19244e;color:#fff;display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-weight:800;font-size:22px">EA<span style="color:#f36b2e">.</span></div>' +
-          '<div><div style="font-family:Georgia,serif;font-weight:800;font-size:19px;color:#19244e">Instalar o app</div>' +
+          '<div style="width:48px;height:48px;border-radius:13px;background:#0B1F33;color:#fff;display:flex;align-items:center;justify-content:center;font-family:Montserrat,system-ui,sans-serif;font-weight:800;font-size:22px">WIN<span style="color:#D71920">.</span></div>' +
+          '<div><div style="font-family:Montserrat,system-ui,sans-serif;font-weight:800;font-size:19px;color:#0B1F33">Instalar o app</div>' +
           '<div style="font-size:13px;color:#6b7280">' + (kind === 'ios' ? 'No iPhone/iPad (Safari)' : 'No computador') + '</div></div>' +
         '</div>' + steps +
-        '<button type="button" data-ea-close-modal style="margin-top:22px;width:100%;background:#f36b2e;color:#fff;border:none;' +
+        '<button type="button" data-ea-close-modal style="margin-top:22px;width:100%;background:#D71920;color:#fff;border:none;' +
           'border-radius:13px;padding:14px;font-weight:700;font-size:15px;cursor:pointer;font-family:inherit;min-height:48px">Entendi</button>' +
       '</div>';
     document.body.appendChild(ov);
@@ -169,7 +169,7 @@
     if (!isIOS() || isStandalone() || dismissed()) return;
     setTimeout(function () {
       var b = makeBanner(
-        '<div class="ea-i-icon"><span>EA</span><i>.</i></div>' +
+        '<div class="ea-i-icon"><img src="/img/brand/win-mark.png" alt=""></div>' +
         '<div style="flex:1;min-width:0"><div class="ea-i-title">Adicione à Tela de Início</div>' +
         '<div class="ea-i-sub">Toque em <strong>Compartilhar</strong> e depois em <strong>Adicionar à Tela de Início</strong>.</div></div>' +
         '<button class="ea-i-close" data-ea-close aria-label="Dispensar">&times;</button>'

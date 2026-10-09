@@ -1,0 +1,223 @@
+/* ═══════════════════════════════════════════════════════════════
+   WIN — camada de marca
+   "English is just the beginning"
+
+   Carregada por ÚLTIMO em todas as páginas. Só aparência: nenhuma
+   classe, ID ou data-* é renomeado, e o DOM consultado pelo JS não muda.
+   Cores vêm dos tokens --win-* definidos em style.css.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── tipografia ─────────────────────────────────────────────── */
+html, body { font-family: var(--font-main); -webkit-font-smoothing: antialiased; }
+:is(h1, h2, h3, h4, h5, h6) { font-family: var(--font-main); }
+h1, h2 { letter-spacing: -0.02em; }
+/* o itálico de destaque era da Fraunces; na WIN o destaque é cor, não inclinação */
+:is(h1, h2, h3, h4) em { font-style: normal; color: var(--win-vermelho); }
+
+/* ── foco visível (acessibilidade) ──────────────────────────── */
+:is(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--win-vermelho) !important;
+  outline-offset: 2px !important;
+}
+
+/* ── logo ───────────────────────────────────────────────────────
+   O texto "EA." virou imagem. O elemento de texto continua no DOM,
+   só escondido. A área de proteção vem do espaçamento em volta. */
+.nav-logo-text { display: none !important; }
+.nav-logo-icon {
+  width: auto !important; height: auto !important;
+  background: none !important; border: none !important; border-radius: 0 !important;
+  padding: 0 !important; box-shadow: none !important; overflow: visible !important;
+}
+.nav-logo-icon img {
+  display: block; width: auto !important; height: 46px !important; max-width: none;
+  object-fit: contain; border-radius: 0 !important; box-shadow: none !important;
+  margin: 6px 0;
+}
+:is(footer, .footer) .nav-logo-icon img { height: 104px !important; }
+.login-logo { justify-content: center; }
+.login-logo .nav-logo-icon img { height: 160px !important; }
+.sb-logo .nav-logo-icon img { height: 44px !important; margin: 2px 0; }
+/* barra lateral recolhida: o "WIN" não cabe, fica o lobo */
+.sb.collapsed .nav-logo-icon img { display: none !important; }
+.sb.collapsed .nav-logo-icon {
+  width: 40px !important; height: 50px !important;
+  background: url(/img/brand/win-mark.png) center / contain no-repeat !important;
+}
+#eaInstall .ea-i-icon { background: var(--win-azul-profundo) !important; }
+#eaInstall .ea-i-icon img { width: 64%; height: auto; display: block; }
+.lpp-brand img { height: 40px; width: auto; display: block; }
+
+/* ── botões ─────────────────────────────────────────────────── */
+.btn {
+  font-family: var(--font-main) !important; font-weight: 700 !important;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  border-radius: var(--radius) !important;
+  transition: background var(--transition), color var(--transition),
+              border-color var(--transition), transform var(--transition) !important;
+}
+/* vence também os style="background:..." por curso em cursos.html */
+.btn-primary {
+  background: var(--win-vermelho) !important; color: #fff !important;
+  border: 1px solid var(--win-vermelho) !important; box-shadow: none !important;
+}
+.btn-primary:hover {
+  background: var(--win-vermelho-hover) !important;
+  border-color: var(--win-vermelho-hover) !important; transform: none !important;
+}
+.btn-outline, .btn-secondary {
+  background: transparent !important; color: var(--win-azul-profundo) !important;
+  border: 1px solid var(--win-azul-profundo) !important; box-shadow: none !important;
+}
+.btn-outline:hover, .btn-secondary:hover { background: var(--win-azul-profundo) !important; color: var(--win-off-white) !important; }
+/* sobre fundo escuro o contorno fica branco */
+:is(.about, .coord-cta, .app-cta, footer, .footer, .bib-hero) :is(.btn-outline, .btn-secondary) {
+  color: var(--win-off-white) !important; border-color: var(--win-off-white) !important;
+}
+:is(.about, .coord-cta, .app-cta, footer, .footer, .bib-hero) :is(.btn-outline, .btn-secondary):hover {
+  background: var(--win-off-white) !important; color: var(--win-azul-profundo) !important;
+}
+
+/* ── menu do site ───────────────────────────────────────────── */
+.nav, .nav.scrolled {
+  background: rgba(11, 31, 51, 0.96) !important;
+  border-bottom: 1px solid rgba(111, 143, 168, 0.22) !important;
+  box-shadow: none !important;
+}
+.nav-links a {
+  color: rgba(245, 247, 250, 0.78) !important; font-weight: 500 !important;
+  position: relative; transition: color var(--transition) !important;
+}
+.nav-links a:hover { color: var(--win-off-white) !important; background: transparent !important; }
+.nav-links a.active { color: var(--win-off-white) !important; background: transparent !important; }
+.nav-links a.active::after {
+  content: ''; position: absolute; left: 50%; bottom: -6px; transform: translateX(-50%);
+  width: 22px; height: 2px; background: var(--win-vermelho); border-radius: 2px;
+}
+:is(.mobile-toggle, .mobile-menu-btn) { color: var(--win-off-white) !important; }
+:is(.mobile-toggle, .mobile-menu-btn) span { background: var(--win-off-white) !important; }
+
+/* ── títulos de seção: linha vermelha curta do guia ─────────── */
+.section-label {
+  background: none !important; border: none !important; padding: 0 !important;
+  color: var(--win-azul-profundo) !important; font-family: var(--font-main) !important;
+  font-weight: 700 !important; font-size: 12px !important;
+  text-transform: uppercase; letter-spacing: 0.2em !important;
+  display: inline-flex !important; align-items: center; gap: 14px;
+}
+.section-label::before {
+  content: ''; width: 48px; height: 3px; background: var(--win-vermelho);
+  border-radius: 2px; flex-shrink: 0;
+}
+:is(.about, .coord-cta, .app-cta) .section-label { color: var(--win-off-white) !important; }
+.section-title { font-family: var(--font-main) !important; font-weight: 800 !important; color: var(--win-azul-profundo); }
+:is(.about, .coord-cta, .app-cta) .section-title { color: var(--win-off-white); }
+
+/* ── hero: sem manchas vermelhas grandes (vermelho é pontual) ── */
+[class*="hero-blob"], .blob { background: var(--win-azul-aco) !important; opacity: 0.14 !important; }
+
+/* ── cards do site ──────────────────────────────────────────── */
+:is(.feature-card, .coord-card, .how-card, .info-card, .contato-form-card, .ig-card, .faq-item) {
+  border: var(--border-subtle) !important; border-radius: var(--radius) !important;
+  box-shadow: none !important;
+  transition: border-color var(--transition), transform var(--transition) !important;
+}
+:is(.feature-card, .coord-card, .how-card, .info-card):hover {
+  border-color: rgba(215, 25, 32, 0.45) !important; transform: translateY(-2px) !important;
+}
+:is(.feature-icon, .coord-card-icon, .info-icon, .about-check-icon) {
+  background: rgba(215, 25, 32, 0.08) !important; color: var(--win-vermelho) !important;
+  border-radius: var(--radius) !important;
+}
+.teacher-card { border-radius: var(--radius) !important; border: var(--border-subtle) !important; box-shadow: none !important; }
+
+/* ── rodapé ─────────────────────────────────────────────────── */
+:is(footer, .footer) { background: var(--win-quase-preto) !important; }
+
+/* ── biblioteca: abas com sublinhado vermelho ───────────────── */
+.bib-tab { border-radius: 0 !important; transition: color var(--transition), box-shadow var(--transition) !important; }
+.bib-tab.active {
+  background: transparent !important; color: var(--win-azul-profundo) !important;
+  box-shadow: inset 0 -3px 0 var(--win-vermelho) !important;
+}
+.bib-tabs { border-radius: var(--radius) !important; }
+
+/* ═══ DASHBOARDS (aluno, professor, coordenação) ═══════════════ */
+.dash { background: var(--win-off-white); }
+.dash .main { background: var(--win-off-white); }
+
+/* item ativo da barra lateral: cada papel tinha sua cor (verde, roxo,
+   laranja). Agora os três usam o vermelho WIN, pontual. */
+.sb-link.active {
+  background: rgba(215, 25, 32, 0.16) !important; color: #fff !important;
+  box-shadow: inset 3px 0 0 var(--win-vermelho) !important;
+}
+.sb-link.active svg { color: var(--win-vermelho) !important; fill: currentColor; }
+.sb-badge {
+  background: rgba(245, 247, 250, 0.06) !important;
+  border: 1px solid rgba(245, 247, 250, 0.14) !important;
+}
+.sb-badge-text { color: var(--win-off-white) !important; }
+.sb-badge::after { background: var(--win-vermelho) !important; box-shadow: none !important; }
+
+/* abas internas dos painéis */
+:is(.stu-tab, .sup-tab, .niv-tab, .teach-tab) { border-radius: 0 !important; }
+:is(.stu-tab, .sup-tab, .niv-tab, .teach-tab).active {
+  background: transparent !important; color: var(--win-azul-profundo) !important;
+  box-shadow: inset 0 -3px 0 var(--win-vermelho) !important;
+}
+
+/* cartões: brancos, borda discreta, raio da marca */
+.dash :is(.panel, .stat-card, .form-card, .profile-card) {
+  background: #fff; border: var(--border-subtle) !important; border-radius: var(--radius) !important;
+}
+/* tabelas: divisórias em cinza azulado */
+.dash table :is(th, td) { border-color: var(--win-cinza-azulado) !important; }
+/* dados sempre legíveis: nada de Bebas Neue em dado */
+.dash :is(td, th, .stat-value, input, select, textarea) { font-family: var(--font-main) !important; }
+
+/* ── slogan no hero ─────────────────────────────────────────── */
+.win-slogan {
+  display: flex; align-items: center; gap: 14px;
+  font-family: var(--font-callout); font-size: 26px; line-height: 1;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--win-azul-profundo); margin: 20px 0 14px;
+}
+.win-slogan::before { content: ''; width: 48px; height: 3px; background: var(--win-vermelho); border-radius: 2px; flex-shrink: 0; }
+/* destaque do título: cor sólida, sem gradiente */
+.hero .highlight {
+  background: none !important; -webkit-background-clip: initial !important; background-clip: initial !important;
+  -webkit-text-fill-color: currentColor !important; color: var(--win-vermelho) !important;
+}
+.hero .highlight::after, .hero .highlight::before { background: none !important; }
+@media (max-width: 640px) { .win-slogan { font-size: 21px; } }
+
+/* ═══ ajustes da validação visual ═══════════════════════════ */
+/* botão de contorno sobre o menu escuro: texto e borda claros */
+.nav :is(.btn-outline, .btn-secondary) {
+  color: var(--win-off-white) !important; border-color: rgba(245, 247, 250, 0.7) !important;
+}
+.nav :is(.btn-outline, .btn-secondary):hover { background: var(--win-off-white) !important; color: var(--win-azul-profundo) !important; }
+.nav .nav-logo-icon img { height: 54px !important; margin: 4px 0; }
+
+/* destaque em título nunca inclinado (vence regras locais das páginas) */
+:is(h1, h2, h3, h4) em, .highlight { font-style: normal !important; }
+:is(h1, h2) em { color: var(--win-vermelho) !important; }
+
+/* logo da barra lateral: regra local travava o contêiner em 32px */
+.sb .sb-logo { justify-content: flex-start !important; overflow: visible !important; }
+.sb .sb-logo .nav-logo-icon { width: auto !important; height: auto !important; min-width: 0 !important; flex: 0 0 auto !important; }
+.sb.collapsed .sb-logo { justify-content: center !important; }
+
+/* barra lateral: mesmo fundo nos três papéis, sem brilho de cor de papel */
+.dash .sb {
+  background: linear-gradient(180deg, var(--win-azul-profundo) 0%, var(--win-quase-preto) 100%) !important;
+}
+
+/* biblioteca: 8 abas não cabiam em 580px e vazavam para fora da barra */
+.bib-tabs { max-width: 980px !important; }
+/* botão de menu mobile sobre o menu escuro */
+:is(.mobile-toggle, .mobile-menu-btn) {
+  background: rgba(245, 247, 250, 0.08) !important;
+  border: 1px solid rgba(245, 247, 250, 0.22) !important;
+}

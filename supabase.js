@@ -660,7 +660,7 @@ function eaBuildLessonPlanPrintHTML(header, rows) {
   return '' +
     '<div class="lpp-doc">' +
       '<div class="lpp-head">' +
-        '<div class="lpp-brand">EA<span>ENGLISH CLASSES</span></div>' +
+        '<div class="lpp-brand"><img src="/img/brand/win-logo.png" alt="WIN – English is just the beginning"></div>' +
         '<div class="lpp-meta">' +
           '<div><strong>Aluno</strong> ' + e(header.student) + '</div>' +
           '<div><strong>Livro</strong> ' + e(header.book) + '</div>' +
@@ -726,7 +726,7 @@ function formatDateTime(d) { return d ? new Date(d).toLocaleDateString('pt-BR',{
 function timeAgo(d) { if(!d)return''; const s=Math.floor((Date.now()-new Date(d))/1000); if(s<60)return'agora'; if(s<3600)return Math.floor(s/60)+'min'; if(s<86400)return Math.floor(s/3600)+'h'; return Math.floor(s/86400)+'d'; }
 function showToast(msg, type='success') {
   const t = document.createElement('div');
-  t.style.cssText = `position:fixed;top:20px;right:20px;z-index:9999;padding:14px 24px;border-radius:12px;font-size:14px;font-weight:600;color:#fff;background:${type==='success'?'#10b981':type==='error'?'#ef4444':'#f59a1e'};box-shadow:0 8px 24px rgba(0,0,0,0.2);transition:all 0.4s;opacity:0;transform:translateY(-10px)`;
+  t.style.cssText = `position:fixed;top:20px;right:20px;z-index:9999;padding:14px 24px;border-radius:12px;font-size:14px;font-weight:600;color:#fff;background:${type==='success'?'#10b981':type==='error'?'#BE123C':'#6F8FA8'};box-shadow:0 8px 24px rgba(0,0,0,0.2);transition:all 0.4s;opacity:0;transform:translateY(-10px)`;
   t.textContent = msg;
   document.body.appendChild(t);
   requestAnimationFrame(()=>{t.style.opacity='1';t.style.transform='translateY(0)'});
@@ -860,7 +860,7 @@ async function getNotificationItems(userId, role) {
         .eq('cancelled', false).gte('created_at', cutoff)
         .order('created_at', { ascending: false }).limit(10);
       (ann.data || []).forEach(a => {
-        items.push({ type: 'announcement', icon: '📢', title: 'Aviso: ' + (a.title||''), sub: (a.author?.full_name||'EA English'), when: a.created_at, section: 'announcements' });
+        items.push({ type: 'announcement', icon: '📢', title: 'Aviso: ' + (a.title||''), sub: (a.author?.full_name||'WIN'), when: a.created_at, section: 'announcements' });
       });
 
       // Respostas a help_requests

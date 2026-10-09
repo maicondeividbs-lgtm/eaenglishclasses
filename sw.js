@@ -4,7 +4,7 @@
    - Supabase/API/CDNs (cross-origin) e POST/PUT passam direto (dados e auth sempre ao vivo).
    - Páginas autenticadas (dashboards/login) nunca são armazenadas em cache.
 */
-const VERSION = 'ea-v39';
+const VERSION = 'ea-v42';
 const CACHE = 'ea-shell-' + VERSION;
 const PRECACHE = [
   '/offline',
@@ -49,7 +49,7 @@ function eaShowNotification(d) {
   };
   if (d.image) opts.image = d.image;                         // big picture (Android)
   if (d.actionLabel) opts.actions = [{ action: 'open', title: d.actionLabel }];
-  return self.registration.showNotification(d.title || 'EA English Classes', opts);
+  return self.registration.showNotification(d.title || 'WIN', opts);
 }
 
 self.addEventListener('message', (e) => {
@@ -62,7 +62,7 @@ self.addEventListener('message', (e) => {
 // ── Push do servidor (app fechado) ──
 self.addEventListener('push', (e) => {
   var data = {};
-  try { data = e.data ? e.data.json() : {}; } catch (err) { data = { title: 'EA English Classes', body: e.data ? e.data.text() : '' }; }
+  try { data = e.data ? e.data.json() : {}; } catch (err) { data = { title: 'WIN', body: e.data ? e.data.text() : '' }; }
   e.waitUntil(eaShowNotification(data));
 });
 

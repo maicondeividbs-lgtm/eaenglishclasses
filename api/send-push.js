@@ -161,7 +161,7 @@ export default async function handler(req, res) {
       const nm = await nameOf(body.user_id);
       const tpayload = buildPayload({
         cat: body.cat || 'aviso',
-        title: body.title || '🔔 Teste — EA English Classes',
+        title: body.title || '🔔 Teste | WIN',
         body: (nm ? 'Olá, ' + nm + '! ' : '') + (body.body || 'Se você recebeu isto, o push está funcionando!'),
         url: '/login'
       });

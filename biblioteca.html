@@ -3179,9 +3179,15 @@ const AV_I = {
   s:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 3H20v18H6.5A2.5 2.5 0 0 1 4 18.5z"/></svg>',
 };
 
+// O caminho vai em data-av-path (escapado). Antes ia num onclick com
+// JSON.stringify, cujas aspas duplas fechavam o atributo: botao quebrado.
 function avBtn(cls, ico, lbl, path) {
-  return '<button class="av-btn '+cls+'" onclick="avDl(this,'+JSON.stringify(path)+')" title="'+escapeHtml(path.split('/').pop())+'">'+AV_I[ico]+lbl+'</button>';
+  return '<button type="button" class="av-btn '+cls+'" data-av-path="'+escapeHtml(path)+'" title="'+escapeHtml(path.split('/').pop())+'">'+AV_I[ico]+lbl+'</button>';
 }
+document.addEventListener('click', function(e){
+  var b = e.target && e.target.closest ? e.target.closest('.av-btn[data-av-path]') : null;
+  if (b) avDl(b, b.getAttribute('data-av-path'));
+});
 
 function avBookHead(b) {
   const cov = b.img
@@ -3197,28 +3203,28 @@ function avViewIntro(eye, title, desc) {
 
 // ── Catálogo de Quizzes ──
 const AV_QUIZ = [
-  {id:'intro',name:'Interchange Intro',color:'#0B1F33',img:'img/books/interchange_intro.webp',ranges:[
+  {id:'intro',name:'Interchange Intro',color:'#0B1F33',img:'/img/books/interchange-intro.webp',ranges:[
     {label:'Units 1-8',base:'QUIZZES/INTRO/1-8/',px:'IC5_Intro_WQ_',items:[
       {u:'U 1-2',f:'U1to2.doc',t:'_Track01.mp3'},{u:'U 3-4',f:'U3to4.doc',t:'_Track02.mp3'},
       {u:'U 5-6',f:'U5to6.doc',t:'_Track03.mp3'},{u:'U 7-8',f:'U7to8.doc',t:'_Track04.mp3'}]},
     {label:'Units 9-16',base:'QUIZZES/INTRO/9-16/',px:'IC5_Intro_WQ_',items:[
       {u:'U 9-10',f:'U9to10.doc',t:'_Track05.mp3'},{u:'U 11-12',f:'U11to12.doc',t:'_Track06.mp3'},
       {u:'U 13-14',f:'U13to14.doc',t:'_Track07.mp3'},{u:'U 15-16',f:'U15to16.doc',t:'_Track08.mp3'}]}]},
-  {id:'book1',name:'Interchange 1',color:'#D71920',img:'img/books/interchange_1.webp',ranges:[
+  {id:'book1',name:'Interchange 1',color:'#D71920',img:'/img/books/interchange-1.webp',ranges:[
     {label:'Units 1-8',base:'QUIZZES/BOOK 1/1-8/',px:'IC5_L1_WQ_',items:[
       {u:'U 1-2',f:'U1to2.doc',t:'_Track01.mp3'},{u:'U 3-4',f:'U3to4.doc',t:'_Track02.mp3'},
       {u:'U 5-6',f:'U5to6.doc',t:'_Track03.mp3'},{u:'U 7-8',f:'U7to8.doc',t:'_Track04.mp3'}]},
     {label:'Units 9-16',base:'QUIZZES/BOOK 1/9-16/',px:'IC5_L1_WQ_',items:[
       {u:'U 9-10',f:'U9to10.doc',t:'_Track05.mp3'},{u:'U 11-12',f:'U11to12.doc',t:'_Track06.mp3'},
       {u:'U 13-14',f:'U13to14.doc',t:'_Track07.mp3'},{u:'U 15-16',f:'U15to16.doc',t:'_Track08.mp3'}]}]},
-  {id:'book2',name:'Interchange 2',color:'#0B1F33',img:'img/books/interchange_2.webp',ranges:[
+  {id:'book2',name:'Interchange 2',color:'#0B1F33',img:'/img/books/interchange-2.webp',ranges:[
     {label:'Units 1-8',base:'QUIZZES/BOOK 2/1-8/',px:'IC5_L2_WQ_',items:[
       {u:'U 1-2',f:'U1to2.doc',t:'_Track01.mp3'},{u:'U 3-4',f:'U3to4.doc',t:'_Track02.mp3'},
       {u:'U 5-6',f:'U5to6.doc',t:'_Track03.mp3'},{u:'U 7-8',f:'U7to8.doc',t:'_Track04.mp3'}]},
     {label:'Units 9-16',base:'QUIZZES/BOOK 2/9-16/',px:'IC5_L2_WQ_',items:[
       {u:'U 9-10',f:'U9to10.doc',t:'_Track05.mp3'},{u:'U 11-12',f:'U11to12.doc',t:'_Track06.mp3'},
       {u:'U 13-14',f:'U13to14.doc',t:'_Track07.mp3'},{u:'U 15-16',f:'U15to16.doc',t:'_Track08.mp3'}]}]},
-  {id:'book3',name:'Interchange 3',color:'#071522',img:'img/books/interchange_3.webp',ranges:[
+  {id:'book3',name:'Interchange 3',color:'#071522',img:'/img/books/interchange-3.webp',ranges:[
     {label:'Units 1-8',base:'QUIZZES/BOOK 3/1-8/',px:'IC5_L3_WQ_',items:[
       {u:'U 1-2',f:'U1to2.doc',t:'_Track01.mp3'},{u:'U 3-4',f:'U3to4.doc',t:'_Track02.mp3'},
       {u:'U 5-6',f:'U5to6.doc',t:'_Track03.mp3'},{u:'U 7-8',f:'U7to8.doc',t:'_Track04.mp3'}]},
@@ -3238,16 +3244,16 @@ const AV_QUIZ = [
 
 // ── Catálogo de Provas ──
 const AV_TEST = [
-  {id:'intro',name:'Interchange Intro',color:'#0B1F33',img:'img/books/interchange_intro.webp',ranges:[
+  {id:'intro',name:'Interchange Intro',color:'#0B1F33',img:'/img/books/interchange-intro.webp',ranges:[
     {label:'Units 1-8',base:'TESTS/INTRO/1-8/',w:'Intro written test units 01-08.doc',o:'ORAL EXAM INTRO UNITS 1-8.docx',k:'IC5_Intro_T1to8A_Key.doc',a:'IC5_Intro_T1-8A_Track09.mp3',sc:'IC5_Intro_T1to8A_Script.doc'},
     {label:'Units 9-16',base:'TESTS/INTRO/9-16/',w:'Written test units 09-16.doc',o:'ORAL EXAM INTRO UNITS 9-16.docx',k:'IC5_Intro_T9to16A_Key.doc',a:'IC5_Intro_T9-16A_Track11.mp3'}]},
-  {id:'book1',name:'Interchange 1 (Red Book)',color:'#D71920',img:'img/books/interchange_1.webp',ranges:[
+  {id:'book1',name:'Interchange 1 (Red Book)',color:'#D71920',img:'/img/books/interchange-1.webp',ranges:[
     {label:'Units 1-8',base:'TESTS/RED BOOK/1-8/',w:'Written test units 01-08 Interchange 1.doc',o:'ORAL INTER 1 UNITS 1-8.docx',k:'IC5_L1_T1to8A_Key.doc',a:'IC5_L1_T1-8A_Track09.mp3'},
-    {label:'Units 9-16',base:'TESTS/RED BOOK/9-16/',w:'Written test units 09-16 Interchange 1.doc',o:'ORAL INTER 1 UNITS 9-16.docx',k:'IC5_L1_T9to16A_Key.doc',a:'IC5_L1_T9-16A_Track11.mp3',sc:'IC5_L1_T9to16A_Script.doc'}]},
-  {id:'book2',name:'Interchange 2 (Blue Book)',color:'#0B1F33',img:'img/books/interchange_2.webp',ranges:[
+    {label:'Units 9-16',base:'TESTS/RED BOOK/9-16/',w:'Written test units 09-16 book 1.doc',o:'ORAL TEST UNITS 9-16 INTERCHANGE  1.docx',k:'IC5_L1_T9to16A_Key.doc',a:'IC5_L1_T9-16A_Track11.mp3',sc:'IC5_L1_T9to16A_Script.doc'}]},
+  {id:'book2',name:'Interchange 2 (Blue Book)',color:'#0B1F33',img:'/img/books/interchange-2.webp',ranges:[
     {label:'Units 1-8',base:'TESTS/BLUE BOOK/1-8/',w:'Written test units 01-08 Interchange 2.doc',o:'ORAL EXAM UNITS 1-8.docx',k:'IC5_L2_T1to8A_Key.doc',a:'IC5_L2_T1-8A_Track09.mp3'},
     {label:'Units 9-16',base:'TESTS/BLUE BOOK/9-16/',w:'Written test units 09-16 book 2.doc',o:'ORAL TEST UNITS 09-16 book 2.docx',k:'IC5_L2_T9to16A_Key.doc',a:'IC5_L2_T9-16A_Track11.mp3'}]},
-  {id:'book3',name:'Interchange 3 (Green Book)',color:'#071522',img:'img/books/interchange_3.webp',ranges:[
+  {id:'book3',name:'Interchange 3 (Green Book)',color:'#071522',img:'/img/books/interchange-3.webp',ranges:[
     {label:'Units 1-8',base:'TESTS/GREEN BOOK/1-8/',w:'Written units 1-8 book 3.doc',o:'Oral test book 3 units 01-08.docx',k:'IC5_L3_T1to8A_Key.doc',a:'IC5_L3_T1-8A_Track09.mp3'},
     {label:'Units 9-16',base:'TESTS/GREEN BOOK/9-16/',w:'Written test unit 09-16 book 3.doc',o:'ORAL TEST UNITS 9-16 BOOK 3.docx',k:'IC5_L3_T9to16A_Key.doc',a:'IC5_L3_T9-16A_Track11.mp3'}]},
   {id:'pas1',name:'Passages 1',color:'#6F8FA8',img:null,ranges:[

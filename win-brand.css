@@ -326,3 +326,101 @@ a[href*="instagram.com"][style*="gradient"]:hover, a[href*="youtube.com"][style*
 .dash button[style*="background:var(--mango)"], .dash button[style*="background: var(--mango)"] { color: var(--win-azul-profundo) !important; }
 /* destaque de título na seção das redes: mesmo padrão dos demais (vermelho, sem itálico) */
 section[style*="--navy"] :is(h1, h2) span[style*="italic"] { color: var(--win-vermelho) !important; font-style: normal !important; }
+
+/* ═══════════════════════════════════════════════════════════════
+   MENU DO SITE — versão refinada
+   Usa só as classes que o JS já aplica: .scrolled (rolagem > 50px)
+   e .mobile-menu.open / body.menu-open. Nenhum script foi tocado.
+   ═══════════════════════════════════════════════════════════════ */
+.nav {
+  backdrop-filter: blur(14px) saturate(1.15); -webkit-backdrop-filter: blur(14px) saturate(1.15);
+  transition: background 250ms ease, box-shadow 250ms ease, border-color 250ms ease !important;
+}
+.nav-inner { height: 78px !important; transition: height 250ms cubic-bezier(0.2, 0, 0, 1); }
+.nav .nav-logo-icon img { height: 50px !important; transition: height 250ms cubic-bezier(0.2, 0, 0, 1); }
+/* ao rolar: barra mais baixa, fundo sólido e sombra discreta */
+.nav.scrolled { background: rgba(11, 31, 51, 0.94) !important; box-shadow: 0 12px 30px -20px rgba(7, 21, 34, 0.9) !important; }
+.nav.scrolled .nav-inner { height: 64px !important; }
+.nav.scrolled .nav-logo-icon img { height: 42px !important; }
+
+/* links: sublinhado vermelho que cresce do centro */
+.nav-links { gap: 4px !important; }
+.nav-links a {
+  padding: 10px 15px !important; border-radius: 0 !important;
+  font-size: 14px !important; letter-spacing: 0.02em;
+}
+.nav-links a::after,
+.nav-links a.active::after {
+  content: ''; position: absolute; left: 15px; right: 15px; bottom: 3px; width: auto;
+  height: 2px; border-radius: 2px; background: var(--win-vermelho);
+  transform: scaleX(0); transform-origin: center;
+  transition: transform 200ms cubic-bezier(0.2, 0, 0, 1);
+}
+.nav-links a:hover::after, .nav-links a:focus-visible::after, .nav-links a.active::after { transform: scaleX(1); }
+
+/* divisória entre navegação e ações; botões mais compactos */
+.nav-cta { gap: 10px !important; padding-left: 22px; margin-left: 12px; border-left: 1px solid rgba(111, 143, 168, 0.25); }
+.nav .nav-cta .btn { padding: 11px 18px !important; font-size: 12.5px !important; letter-spacing: 0.06em !important; }
+
+/* ── menu mobile ────────────────────────────────────────────── */
+/* o botão só existe abaixo de 1024px (regra original do style.css);
+   aqui ajusta só o formato, sem forçar display */
+.mobile-toggle {
+  width: 44px !important; height: 44px !important; border-radius: var(--radius) !important;
+  flex-direction: column; align-items: center; justify-content: center;
+}
+.mobile-toggle span { width: 20px !important; height: 2px !important; border-radius: 2px; }
+.mobile-menu {
+  background: var(--win-quase-preto) !important;
+  align-items: stretch !important; justify-content: flex-start !important;
+  padding: 104px 28px 34px !important; gap: 0 !important; overflow-y: auto;
+}
+/* logo no topo do painel (imagem de fundo: nenhum elemento novo) */
+.mobile-menu::before {
+  content: ''; position: absolute; top: 24px; left: 28px; width: 92px; height: 46px;
+  background: url(/img/brand/win-logo.png) left center / contain no-repeat;
+}
+.mobile-close {
+  top: 24px !important; right: 24px !important; width: 44px !important; height: 44px !important;
+  border-radius: var(--radius) !important; background: transparent !important;
+  border: 1px solid rgba(245, 247, 250, 0.22) !important; color: var(--win-off-white) !important;
+  font-size: 18px !important; transition: background 200ms ease, border-color 200ms ease;
+}
+.mobile-close:hover { background: rgba(245, 247, 250, 0.08) !important; border-color: rgba(245, 247, 250, 0.45) !important; }
+.mobile-menu > a:not(.btn) {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 0 !important; border-bottom: 1px solid rgba(111, 143, 168, 0.18);
+  color: rgba(245, 247, 250, 0.82) !important; font-size: 26px !important; font-weight: 800 !important;
+  letter-spacing: -0.01em; text-decoration: none; background: none !important;
+  transition: color 200ms ease;
+}
+.mobile-menu > a:not(.btn)::after { content: '→'; font-weight: 500; font-size: 20px; color: var(--win-azul-aco); transition: transform 200ms ease; }
+.mobile-menu > a:not(.btn):hover { color: #fff !important; }
+.mobile-menu > a:not(.btn):hover::after { transform: translateX(4px); }
+.mobile-menu > a.active { color: #fff !important; }
+.mobile-menu > a.active::before {
+  content: ''; position: absolute; left: 0; width: 3px; height: 26px; background: var(--win-vermelho); border-radius: 2px;
+  margin-left: -28px;
+}
+.mobile-menu > a { position: relative; }
+/* botões presos ao rodapé do painel */
+.mobile-menu > div { margin-top: auto !important; padding-top: 32px; align-items: stretch !important; }
+.mobile-menu > div .btn { width: 100%; justify-content: center; }
+/* entrada: o painel aparece e os itens sobem em sequência curta */
+.mobile-menu.open { animation: mm-in 220ms ease-out; }
+.mobile-menu.open > a, .mobile-menu.open > div { animation: mm-item 320ms cubic-bezier(0.2, 0, 0, 1) both; }
+.mobile-menu.open > a:nth-of-type(1) { animation-delay: 40ms; }
+.mobile-menu.open > a:nth-of-type(2) { animation-delay: 80ms; }
+.mobile-menu.open > a:nth-of-type(3) { animation-delay: 120ms; }
+.mobile-menu.open > div { animation-delay: 170ms; }
+@keyframes mm-in   { from { opacity: 0; } to { opacity: 1; } }
+@keyframes mm-item { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .mobile-menu.open, .mobile-menu.open > a, .mobile-menu.open > div { animation: none !important; }
+}
+/* mobile: sem divisória (os botões ficam ao lado do logo, não dos links) */
+@media (max-width: 1024px) { .nav-cta { border-left: none; padding-left: 0; margin-left: 0; } }
+/* botões do painel: largura total; contorno claro sobre o fundo escuro */
+.mobile-menu > div > .btn { width: 100% !important; max-width: none !important; align-self: stretch !important; justify-content: center; }
+.mobile-menu .btn-outline { color: var(--win-off-white) !important; border-color: rgba(245, 247, 250, 0.6) !important; background: transparent !important; }
+.mobile-menu .btn-outline:hover { background: var(--win-off-white) !important; color: var(--win-azul-profundo) !important; }

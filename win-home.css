@@ -203,3 +203,10 @@
   .hero-stat h3 { font-size: 1.55rem !important; }
   .hero-stat p { font-size: 9.5px !important; letter-spacing: 0.1em; }
 }
+
+/* menu da home: transparente sobre o hero escuro; ganha fundo ao rolar */
+.nav:not(.scrolled) {
+  background: transparent !important; box-shadow: none !important;
+  border-bottom-color: transparent !important;
+  backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+}

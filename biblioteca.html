@@ -3128,6 +3128,21 @@ async function avCheckAccess() {
   } catch(e) { return 'none'; }
 }
 
+// Monta o link final a partir da resposta do Supabase. O signedURL vem
+// RELATIVO ao servico de storage ("/object/sign/...?token=..."), sem o
+// prefixo /storage/v1 — juntar direto ao dominio dava "requested path is invalid".
+function avSignedHref(signedURL, nome) {
+  let rel = String(signedURL || ''), u;
+  if (/^https?:\/\//i.test(rel)) u = new URL(rel);
+  else {
+    if (rel.indexOf('/storage/v1') !== 0) rel = '/storage/v1' + (rel.charAt(0) === '/' ? '' : '/') + rel;
+    u = new URL(AV_SB + rel);                // codifica espacos sem dupla codificacao
+  }
+  // download=nome: o Supabase responde como anexo, com o nome original
+  if (!/[?&]download=/.test(u.search)) u.search = (u.search ? u.search + '&' : '?') + 'download=' + encodeURIComponent(nome);
+  return u.toString();
+}
+
 async function avDl(btn, path) {
   const sess = avSession();
   if (!sess) { avToast('Faca login para baixar avaliacoes.', true); return; }
@@ -3142,13 +3157,18 @@ async function avDl(btn, path) {
       body: JSON.stringify({ expiresIn: 3600 })
     });
     if (!r.ok) {
-      avToast(r.status === 403 ? 'Acesso restrito a professores e coordenadores.' : 'Erro ao gerar link (' + r.status + ').', true);
+      const det = await r.json().catch(() => ({}));
+      const naoExiste = r.status === 404 || /not.?found/i.test(JSON.stringify(det));
+      avToast(r.status === 403 ? 'Acesso restrito a professores e coordenadores.'
+            : naoExiste ? 'Este arquivo ainda nao foi enviado ao Supabase.'
+            : 'Erro ao gerar link (' + r.status + ').', true);
       return;
     }
     const { signedURL } = await r.json();
     if (!signedURL) { avToast('Arquivo nao encontrado. Verifique se foi enviado ao bucket.', true); return; }
     const a = document.createElement('a');
-    a.href = AV_SB + signedURL; a.download = path.split('/').pop(); a.target = '_blank';
+    const nome = path.split('/').pop();
+    a.href = avSignedHref(signedURL, nome); a.download = nome; a.target = '_blank'; a.rel = 'noopener';
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
   } catch(ex) { avToast('Erro de rede. Tente novamente.', true); }
   finally { btn.innerHTML = orig; btn.disabled = false; }

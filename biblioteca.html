@@ -1695,6 +1695,9 @@
 .av-panel-h small{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--g500)}
 .av-row{display:flex;align-items:center;gap:14px;padding:12px 20px;transition:background .2s}
 .av-row+.av-row{border-top:1px solid var(--g100)}
+.av-row-rel{background:var(--off-white);border-top:none!important;padding-left:34px}
+.av-row-rel .av-ic{background:#fff}
+.av-row-rel .av-row-txt b{font-size:13px}
 .av-row:hover{background:var(--off-white)}
 .av-unit{width:62px;flex-shrink:0;white-space:nowrap;text-align:center;font-size:15px;font-weight:800;color:var(--navy);line-height:1.1}
 .av-unit small{display:block;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--g500)}
@@ -1756,6 +1759,77 @@
   .av-row .av-btn svg{display:none}
   .av-unit{width:40px}
   .av-row{padding:10px 12px}
+}
+
+/* ═══ Organização por livro + área de músicas ═══ */
+.mode-music .books-only{display:none!important}
+.bib-mode{display:inline-flex;gap:4px;padding:4px;margin:22px 0 4px;background:rgba(245,247,250,.08);border:1px solid rgba(245,247,250,.16);border-radius:999px}
+.bib-mode-btn{display:inline-flex;align-items:center;gap:8px;padding:9px 20px;border:none;border-radius:999px;background:transparent;color:rgba(245,247,250,.75);font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;transition:background .2s,color .2s}
+.bib-mode-btn svg{width:16px;height:16px}
+.bib-mode-btn:hover{color:#fff}
+.bib-mode-btn.active{background:#fff;color:var(--navy)}
+.bib-step-label{display:flex;align-items:center;justify-content:center;gap:12px;margin:34px 0 -6px;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,247,250,.7)}
+.bib-step-label::before,.bib-step-label::after{content:'';width:40px;height:1px;background:rgba(245,247,250,.25)}
+/* livro escolhido, à esquerda das seções */
+.bib-tabs{align-items:center}
+.bib-ctx{display:flex;align-items:center;gap:10px;padding:4px 16px 4px 6px;margin-right:6px;border-right:1px solid var(--g100);flex-shrink:0}
+.bib-ctx img{width:28px;height:40px;object-fit:cover;border-radius:4px;box-shadow:0 3px 8px rgba(11,31,51,.2)}
+.bib-ctx-txt{line-height:1.15}
+.bib-ctx-txt small{display:block;font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--g500)}
+.bib-ctx-txt b{font-size:13px;font-weight:800;color:var(--navy);white-space:nowrap}
+@media(max-width:640px){.bib-ctx{padding-right:10px}.bib-ctx-txt small{display:none}.bib-ctx-txt b{font-size:12px}}
+
+/* músicas */
+.mus2-tool{display:flex;flex-direction:column;gap:14px;margin-bottom:30px}
+.mus2-seg{display:flex;gap:6px;flex-wrap:wrap}
+.mus2-seg button,.mus2-temas button{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border:1px solid var(--g200);background:#fff;color:var(--navy);border-radius:999px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:border-color .2s,background .2s,color .2s}
+.mus2-seg button small{font-weight:600;color:var(--g500)}
+.mus2-seg button i,.mus2-temas button i{font-style:normal;font-size:11px;font-weight:700;color:var(--g500);background:var(--off-white);border-radius:999px;padding:1px 7px}
+.mus2-seg button:hover:not(:disabled),.mus2-temas button:hover{border-color:var(--navy)}
+.mus2-seg button.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.mus2-seg button.on small,.mus2-seg button.on i{color:#fff;background:rgba(255,255,255,.15)}
+.mus2-seg button:disabled{opacity:.45;cursor:default}
+.mus2-temas{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.mus2-temas button{padding:6px 12px;font-size:12.5px;font-weight:600}
+.mus2-temas button.on{border-color:var(--orange);color:var(--orange);background:rgba(215,25,32,.06)}
+.mus2-rot{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--g500);margin-right:4px}
+.mus2-shelf{margin-bottom:34px}
+.mus2-shelf-h{display:flex;align-items:baseline;gap:12px;padding-bottom:12px;margin-bottom:16px;border-bottom:1px solid var(--g100)}
+.mus2-shelf-h h3{margin:0;font-size:20px;font-weight:800;color:var(--navy)}
+.mus2-shelf-h span{font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--g500)}
+.mus2-shelf-h em{margin-left:auto;font-style:normal;font-size:12.5px;color:var(--g500)}
+.mus2-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.mus2-card{display:flex;flex-direction:column;background:#fff;border:1px solid var(--g100);border-radius:var(--r-lg);overflow:hidden;transition:border-color .2s,transform .2s}
+.mus2-card:hover{border-color:var(--g300);transform:translateY(-2px)}
+.mus2-capa{position:relative;height:96px;display:flex;align-items:center;justify-content:center;background:var(--navy);color:rgba(245,247,250,.9)}
+.mus2-capa svg{width:34px;height:34px}
+.mus2-capa span{position:absolute;top:10px;right:10px;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;background:rgba(245,247,250,.14);color:#fff}
+.mus2-capa.g-basico{background:var(--blue-light, #6F8FA8)}
+.mus2-capa.g-inter{background:var(--navy)}
+.mus2-capa.g-avanc{background:var(--navy-light, #071522)}
+.mus2-capa.g-avanc svg{color:var(--orange)}
+.mus2-capa.g-outros{background:var(--g500)}
+.mus2-body{padding:16px 18px 8px;flex:1}
+.mus2-body h3{margin:0;font-size:16px;font-weight:800;color:var(--navy);line-height:1.3}
+.mus2-artista{font-size:13px;color:var(--g500);margin-top:2px}
+.mus2-gram{display:inline-block;margin-top:10px;font-size:12px;font-weight:600;color:var(--navy);background:var(--off-white);border-radius:6px;padding:4px 9px}
+.mus2-dls{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 18px 18px}
+.mus2-dl{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 10px;border-radius:var(--r-sm);font-size:12.5px;font-weight:700;text-decoration:none;border:1px solid var(--navy);transition:background .2s,color .2s}
+.mus2-dl svg{width:14px;height:14px}
+.mus2-dl.prof{background:var(--navy);color:#fff}
+.mus2-dl.prof:hover{background:var(--orange);border-color:var(--orange)}
+.mus2-dl.alu{background:#fff;color:var(--navy)}
+.mus2-dl.alu:hover{background:var(--navy);color:#fff}
+.mus2-dls.um{grid-template-columns:1fr}
+.mus2-falta{font-size:12px;color:var(--g500);text-align:center}
+.mus2-dl.off{border-style:dashed;border-color:var(--g200);color:var(--g500);font-weight:600;cursor:default}
+.mus2-vazio{display:flex;flex-direction:column;align-items:center;gap:12px;padding:46px 20px;background:#fff;border:1px dashed var(--g200);border-radius:var(--r-lg);color:var(--navy)}
+.mus2-vazio button{padding:9px 18px;border:1px solid var(--navy);background:#fff;color:var(--navy);border-radius:999px;font:inherit;font-weight:700;cursor:pointer}
+@media(max-width:640px){
+  .mus2-seg,.mus2-temas{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px;scrollbar-width:none}
+  .mus2-seg::-webkit-scrollbar,.mus2-temas::-webkit-scrollbar{display:none}
+  .mus2-seg button,.mus2-temas button{flex-shrink:0}
+  .mus2-grid{grid-template-columns:1fr}
 }
 </style>
 <!-- PWA / App -->
@@ -1848,14 +1922,20 @@
     </script>
     <div class="bib-eyebrow">Biblioteca Pedagógica</div>
     <h1 class="bib-title">Toda a jornada,<br><em>em um só lugar</em></h1>
-    <p class="bib-sub">Currículo completo, worksheets e explicações gramaticais — organizados como uma linha do tempo de aprendizado, por livro e nível.</p>
+    <p class="bib-sub">Escolha o livro e encontre tudo dele: currículo, gramática, worksheets, quizzes, provas e conversação. As músicas ficam numa área própria, organizadas por nível.</p>
+
+    <div class="bib-mode" role="tablist" aria-label="Área da biblioteca">
+      <button type="button" class="bib-mode-btn active" data-mode="books" role="tab" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 5.5A1.5 1.5 0 0 1 3.5 4H9a3 3 0 0 1 3 3v13a2.5 2.5 0 0 0-2.5-2.5h-6A1.5 1.5 0 0 1 2 16z"/><path d="M22 5.5A1.5 1.5 0 0 0 20.5 4H15a3 3 0 0 0-3 3v13a2.5 2.5 0 0 1 2.5-2.5h6A1.5 1.5 0 0 0 22 16z"/></svg>Livros</button>
+      <button type="button" class="bib-mode-btn" data-mode="music" role="tab" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>Músicas</button>
+    </div>
 
     <div class="bib-search">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <input type="text" id="searchInput" placeholder="Buscar gramática, vocabulário, unidade…">
     </div>
 
-    <div class="journey-wrap">
+    <div class="bib-step-label books-only">Escolha o livro</div>
+    <div class="journey-wrap books-only">
       <div class="j-line"></div>
       <div class="journey-bar">
         <button class="j-step active" data-level="intro" type="button" aria-label="Intro">
@@ -1888,23 +1968,20 @@
 </header>
 
 <!-- Tabs -->
-<div class="bib-tabs-wrap">
+<div class="bib-tabs-wrap books-only">
   <div class="bib-tabs">
+    <div class="bib-ctx" aria-live="polite"><img id="bibCtxImg" src="img/books/interchange-intro.jpg" alt="" width="34" height="48"><div class="bib-ctx-txt"><small>Livro</small><b id="bibCtxName">Interchange Intro</b></div></div>
     <button class="bib-tab active" data-view="curriculum" type="button">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
       <span>Currículo</span>
-    </button>
-    <button class="bib-tab" data-view="worksheets" type="button">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-      <span>Worksheets</span>
     </button>
     <button class="bib-tab" data-view="examples" type="button">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
       <span>Gramática</span>
     </button>
-    <button class="bib-tab" data-view="music" type="button">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-      <span>Música</span>
+    <button class="bib-tab" data-view="worksheets" type="button">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <span>Worksheets</span>
     </button>
     <button class="bib-tab" data-view="quizzes" type="button">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="3"/><path d="M9 7h6M9 11h6M9 15h4"/></svg>
@@ -2279,15 +2356,33 @@ let curCarouselState = { index: 0, total: 0 };
 function setLevel(level) {
   currentLevel = level;
   document.querySelectorAll('.j-step').forEach(s => s.classList.toggle('active', s.dataset.level === level));
+  atualizarLivroAtual();
   render();
 }
+// a barra de secoes mostra de qual livro e o conteudo abaixo
+function atualizarLivroAtual() {
+  const capa = document.querySelector('.j-step[data-level="' + currentLevel + '"] img');
+  const img = document.getElementById('bibCtxImg'), nome = document.getElementById('bibCtxName');
+  if (img && capa) img.src = capa.getAttribute('src');
+  if (nome) nome.textContent = LEVEL_BOOK_TAGS[currentLevel] || '';
+}
+// Dois modos: LIVROS (estante + secoes do livro escolhido) e MUSICAS
+// (catalogo proprio, sem livro). Guarda a ultima secao de livro para voltar a ela.
+let ultimaSecaoLivro = 'curriculum';
 function setView(view) {
   currentView = view;
+  const musica = view === 'music';
+  if (!musica) ultimaSecaoLivro = view;
+  document.body.classList.toggle('mode-music', musica);
+  document.querySelectorAll('.bib-mode-btn').forEach(b => {
+    const on = (b.dataset.mode === 'music') === musica;
+    b.classList.toggle('active', on); b.setAttribute('aria-selected', on ? 'true' : 'false');
+  });
   document.querySelectorAll('.bib-tab').forEach(t => t.classList.toggle('active', t.dataset.view === view));
-  // Música é catálogo único: o seletor de nível não se aplica.
-  // Quizzes e Provas seguem o livro escolhido na barra.
+  const busca = document.getElementById('searchInput');
+  if (busca) busca.placeholder = musica ? 'Buscar música, artista ou gramática…' : 'Buscar gramática, vocabulário, unidade…';
   const jw = document.querySelector('.journey-wrap');
-  if (jw) jw.style.display = (view==='music') ? 'none' : '';
+  if (jw) jw.style.display = musica ? 'none' : '';
   document.querySelectorAll('.bib-view').forEach(v => v.classList.remove('active'));
   document.getElementById('v-' + view).classList.add('active');
   render();
@@ -2624,77 +2719,99 @@ async function loadMusicData(){
   return musicData;
 }
 
+// Musicas nao pertencem a um livro: ficam em prateleiras por nivel (CEFR),
+// com filtro pelo ponto gramatical. O nivel vem do texto livre cadastrado
+// pela coordenacao ("A1/A2", "B1"...); vale o menor nivel citado.
+const MUS_GRUPOS = [
+  { id:'basico', nome:'Básico',        faixa:'A1–A2', re:/\bA\s*[12]\b/i },
+  { id:'inter',  nome:'Intermediário', faixa:'B1–B2', re:/\bB\s*[12]\b/i },
+  { id:'avanc',  nome:'Avançado',      faixa:'C1–C2', re:/\bC\s*[12]\b/i },
+  { id:'outros', nome:'Sem nível definido', faixa:'', re:null }
+];
+let musFiltro = { grupo:'', gram:'' };
+function musGrupo(m){
+  const t = m.level || '';
+  for (const g of MUS_GRUPOS) if (g.re && g.re.test(t)) return g.id;
+  return 'outros';
+}
+function musDl(path, nome, cls, rotulo){
+  if (!path) return '<span class="mus2-dl off">' + rotulo + ' indisponível</span>';
+  return '<a class="mus2-dl ' + cls + '" href="' + musicEsc(MUSIC_FILES + path) + '" download' + (nome ? ' title="' + musicEsc(nome) + '"' : '') + '>' +
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>' + rotulo + '</a>';
+}
+function musCard(m){
+  const g = musGrupo(m);
+  return '<article class="mus2-card">' +
+    '<div class="mus2-capa g-' + g + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>' +
+      (m.level ? '<span>' + musicEsc(m.level) + '</span>' : '') + '</div>' +
+    '<div class="mus2-body"><h3>' + musicEsc(m.title) + '</h3>' +
+      (m.artist ? '<div class="mus2-artista">' + musicEsc(m.artist) + '</div>' : '') +
+      (m.grammar_focus ? '<div class="mus2-gram">' + musicEsc(m.grammar_focus) + '</div>' : '') +
+    '</div>' +
+    // se falta uma das versões, a outra ocupa a largura toda e uma nota explica
+    (m.teacher_path && m.student_path
+      ? '<div class="mus2-dls">' + musDl(m.teacher_path, m.teacher_name, 'prof', 'Professor') + musDl(m.student_path, m.student_name, 'alu', 'Aluno') + '</div>'
+      : '<div class="mus2-dls um">' + (m.teacher_path ? musDl(m.teacher_path, m.teacher_name, 'prof', 'Professor') : musDl(m.student_path, m.student_name, 'alu', 'Aluno')) +
+        '<span class="mus2-falta">Versão ' + (m.teacher_path ? 'do aluno' : 'do professor') + ' ainda não enviada.</span></div>') +
+  '</article>';
+}
 function renderMusic(search){
   const div = document.getElementById('v-music');
-  const intro = '<div class="view-intro">' +
-    '<div class="view-intro-eyebrow">Atividades de m\u00fasica</div>' +
-    '<h2>M\u00fasica em <em>sala de aula</em></h2>' +
-    '<p>Cada atividade traz duas vers\u00f5es em Word: a do <strong>professor</strong>, com condu\u00e7\u00e3o e gabarito, e a do <strong>aluno</strong>, para imprimir ou enviar.</p>' +
-  '</div>';
-
+  const intro = '<div class="view-intro"><div class="view-intro-eyebrow">Músicas</div>' +
+    '<h2>Aprender com <em>música</em></h2>' +
+    '<p>Atividades com duas versões em Word: a do <strong>professor</strong>, com condução e gabarito, e a do <strong>aluno</strong>. Organizadas por nível; filtre pelo ponto gramatical.</p></div>';
   if (musicData === null){
-    div.innerHTML = intro + '<div class="mus-load">Carregando atividades\u2026</div>';
+    div.innerHTML = intro + '<div class="mus-load">Carregando atividades…</div>';
     loadMusicData().then(function(){ if (currentView === 'music') render(); });
     return;
   }
-  if (musicError){
-    div.innerHTML = intro + emptyState('\ud83d\udce1', 'N\u00e3o foi poss\u00edvel carregar as atividades agora. Tente recarregar a p\u00e1gina.');
-    return;
-  }
+  if (musicError){ div.innerHTML = intro + emptyState('📡', 'Não foi possível carregar as atividades agora. Tente recarregar a página.'); return; }
+  if (!musicData.length){ div.innerHTML = intro + emptyState('🎵', 'Ainda não há atividades de música publicadas.'); return; }
 
   const termo = (search || '').trim().toLowerCase();
-  const lista = termo
-    ? musicData.filter(function(m){
-        return ((m.title||'') + ' ' + (m.artist||'') + ' ' + (m.level||'') + ' ' + (m.grammar_focus||''))
-          .toLowerCase().includes(termo);
-      })
-    : musicData;
+  const porBusca = termo ? musicData.filter(m => ((m.title||'')+' '+(m.artist||'')+' '+(m.level||'')+' '+(m.grammar_focus||'')).toLowerCase().includes(termo)) : musicData;
+  // contagens consideram a busca e o OUTRO filtro, para os numeros fazerem sentido
+  const cntGrupo = {}, cntGram = {};
+  porBusca.forEach(m => {
+    const g = musGrupo(m), t = (m.grammar_focus || '').trim();
+    if (!musFiltro.gram || t === musFiltro.gram) cntGrupo[g] = (cntGrupo[g] || 0) + 1;
+    if (t && (!musFiltro.grupo || g === musFiltro.grupo)) cntGram[t] = (cntGram[t] || 0) + 1;
+  });
+  const lista = porBusca.filter(m => (!musFiltro.grupo || musGrupo(m) === musFiltro.grupo) && (!musFiltro.gram || (m.grammar_focus || '').trim() === musFiltro.gram));
+  const totalGrupo = Object.values(cntGrupo).reduce((a,b) => a + b, 0);
 
-  if (!lista.length){
-    div.innerHTML = intro + emptyState('\ud83c\udfb5', termo
-      ? 'Nenhuma atividade encontrada com esses termos.'
-      : 'Ainda n\u00e3o h\u00e1 atividades de m\u00fasica publicadas.');
-    return;
+  const seg = '<div class="mus2-seg" role="tablist" aria-label="Nível">' +
+    '<button type="button" data-mus-grupo="" class="' + (!musFiltro.grupo ? 'on' : '') + '">Todos <i>' + totalGrupo + '</i></button>' +
+    MUS_GRUPOS.filter(g => g.id !== 'outros' || cntGrupo.outros).map(g =>
+      '<button type="button" data-mus-grupo="' + g.id + '" class="' + (musFiltro.grupo === g.id ? 'on' : '') + '"' + (cntGrupo[g.id] ? '' : ' disabled') + '>' +
+      g.nome + (g.faixa ? ' <small>' + g.faixa + '</small>' : '') + ' <i>' + (cntGrupo[g.id] || 0) + '</i></button>').join('') + '</div>';
+  const temas = Object.keys(cntGram).sort((a,b) => cntGram[b] - cntGram[a] || a.localeCompare(b));
+  const chips = temas.length ? '<div class="mus2-temas"><span class="mus2-rot">Gramática</span>' +
+    '<button type="button" data-mus-gram="" class="' + (!musFiltro.gram ? 'on' : '') + '">Todos os temas</button>' +
+    temas.map(t => '<button type="button" data-mus-gram="' + musicEsc(t) + '" class="' + (musFiltro.gram === t ? 'on' : '') + '">' + musicEsc(t) + ' <i>' + cntGram[t] + '</i></button>').join('') + '</div>' : '';
+
+  let corpo;
+  if (!lista.length) {
+    corpo = '<div class="mus2-vazio"><b>Nenhuma música encontrada' + (termo ? ' para “' + musicEsc(search.trim()) + '”' : ' com esse filtro') + '.</b><button type="button" data-mus-limpar>Limpar busca e filtros</button></div>';
+  } else {
+    corpo = MUS_GRUPOS.map(g => {
+      const itens = lista.filter(m => musGrupo(m) === g.id).sort((a,b) => (a.title||'').localeCompare(b.title||''));
+      if (!itens.length) return '';
+      return '<section class="mus2-shelf"><div class="mus2-shelf-h"><h3>' + g.nome + '</h3>' + (g.faixa ? '<span>' + g.faixa + '</span>' : '') +
+        '<em>' + itens.length + (itens.length === 1 ? ' música' : ' músicas') + '</em></div>' +
+        '<div class="mus2-grid">' + itens.map(musCard).join('') + '</div></section>';
+    }).join('');
   }
-
-  const cards = lista.map(function(m){
-    let chips = '';
-    if (m.level) chips += '<span class="mus-chip">' + musicEsc(m.level) + '</span>';
-    if (m.grammar_focus) chips += '<span class="mus-chip gram">' + musicEsc(m.grammar_focus) + '</span>';
-
-    const dl = function(path, nome, cls, rotulo){
-      if (!path) return '<span class="mus-dl mus-dl--off">' + rotulo + ' indispon\u00edvel</span>';
-      return '<a class="mus-dl ' + cls + '" href="' + musicEsc(MUSIC_FILES + path) + '" download' +
-        (nome ? ' title="' + musicEsc(nome) + '"' : '') + '>' +
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>' +
-        rotulo + '</a>';
-    };
-
-    return '<article class="mus-card">' +
-        '<div class="mus-top">' +
-        '<div class="mus-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>' +
-        '<div class="mus-body">' +
-          '<h3>' + musicEsc(m.title) + '</h3>' +
-          (m.artist ? '<div class="mus-artista">' + musicEsc(m.artist) + '</div>' : '') +
-          (chips ? '<div class="mus-chips">' + chips + '</div>' : '') +
-        '</div></div>' +
-        '<div class="mus-dls">' +
-          dl(m.teacher_path, m.teacher_name, 'prof', 'Professor') +
-          dl(m.student_path, m.student_name, 'alu', 'Aluno') +
-        '</div>' +
-      '</article>';
-  }).join('');
-
-  div.innerHTML = intro + '<div class="mus-grid">' + cards + '</div>';
-
-  // Garantia: a anima\u00e7\u00e3o de entrada depende do IntersectionObserver.
-  // Se por qualquer motivo ele n\u00e3o observar estes cart\u00f5es, eles aparecem
-  // do mesmo jeito \u2014 conte\u00fado nunca fica invis\u00edvel por quest\u00e3o de timing.
-  setTimeout(function(){
-    document.querySelectorAll('#v-music .mus-card:not(.in-view)')
-      .forEach(function(c){ c.classList.add('in-view'); });
-  }, 900);
+  div.innerHTML = intro + '<div class="mus2-tool">' + seg + chips + '</div>' + corpo;
 }
+// filtros das musicas: um ouvinte so, sem JS dentro do HTML
+document.addEventListener('click', function(e){
+  const t = e.target && e.target.closest ? e.target : null; if (!t) return;
+  const g = t.closest('[data-mus-grupo]'), m = t.closest('[data-mus-gram]'), l = t.closest('[data-mus-limpar]');
+  if (g && !g.disabled) { musFiltro.grupo = g.getAttribute('data-mus-grupo'); render(); }
+  else if (m) { musFiltro.gram = m.getAttribute('data-mus-gram'); render(); }
+  else if (l) { musFiltro = { grupo:'', gram:'' }; const bi = document.getElementById('searchInput'); if (bi) bi.value = ''; render(); }
+});
 
 // === EXAMPLES: timeline vertical com cards ===
 function renderExamples(search) {
@@ -3080,6 +3197,8 @@ document.addEventListener('click', (e) => {
   // Tab
   const tab = e.target.closest('.bib-tab');
   if (tab) { setView(tab.dataset.view); return; }
+  const modo = e.target.closest('.bib-mode-btn');
+  if (modo) { setView(modo.dataset.mode === 'music' ? 'music' : ultimaSecaoLivro); return; }
   // Conversação: abrir pop-up da unidade
   const convOpen = e.target.closest('[data-conv-open]');
   if (convOpen) { openConvUnit(parseInt(convOpen.dataset.convOpen, 10)); return; }
@@ -3144,6 +3263,7 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
+atualizarLivroAtual();
 render();
 
 // ═══ AVALIAÇÕES (Quizzes e Provas) ═══
@@ -3238,6 +3358,7 @@ function avGate(type) {
 }
 
 const AV_I = {
+  r:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12h6M9 16h4"/></svg>',
   d:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>',
   k:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg>',
   a:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>',
@@ -3328,11 +3449,6 @@ function avTipo(path){
 function avIntro(eyebrow, titulo, livro, desc){
   return '<div class="view-intro"><div class="view-intro-eyebrow">'+eyebrow+'</div><h2>'+titulo+' <em>'+escapeHtml(livro)+'</em></h2><p>'+desc+'</p></div>';
 }
-function avHead(b, kicker, sub, legenda){
-  return '<div class="av-head">'+(b.img?'<img src="'+escapeHtml(b.img)+'" alt="" onerror="this.remove()">':'')+
-    '<div class="av-head-txt"><div class="av-head-kicker">'+kicker+'</div><div class="av-head-title">'+escapeHtml(b.name)+'</div><div class="av-head-sub">'+sub+'</div></div>'+
-    (legenda||'')+'</div>';
-}
 // livro sem avaliações (Evolve): explica e oferece os livros que têm
 function avSemAvaliacao(tipo){
   const nome=AV_LIVRO[currentLevel]||'este livro';
@@ -3364,7 +3480,6 @@ function renderQuizzes() {
   const intro = avIntro('Quizzes de unidade','Quizzes do',livro,'Um quiz a cada duas unidades, com gabarito e áudio de listening. Acesso de professores e coordenação.');
   avComAcesso(div, intro, 'quizzes', function(){
     if (!b) { div.innerHTML = intro + avSemAvaliacao('quizzes'); return; }
-    const n = b.ranges.reduce((t,r)=>t+r.items.length,0);
     const cols = b.ranges.map(r => {
       const rows = r.items.map(it => {
         const kF = it.f.endsWith('.docx') ? it.f.replace('.docx','_Key.docx') : it.f.replace('.doc','_Key.doc');
@@ -3375,7 +3490,7 @@ function renderQuizzes() {
       }).join('');
       return '<div class="av-panel"><div class="av-panel-h"><b>'+escapeHtml(r.label.replace('-','–'))+'</b><small>'+r.items.length+' quizzes</small></div>'+rows+'</div>';
     }).join('');
-    div.innerHTML = intro + avHead(b,'Quizzes',n+' quizzes · gabarito e áudio em cada um') + '<div class="av-cols">'+cols+'</div>';
+    div.innerHTML = intro + '<div class="av-cols">'+cols+'</div>';
   });
 }
 
@@ -3383,18 +3498,25 @@ function renderTests() {
   const div = document.getElementById('v-tests'); if (!div) return;
   const livro = AV_LIVRO[currentLevel] || '';
   const b = AV_TEST.find(x => x.id === AV_LEVEL[currentLevel]);
-  const intro = avIntro('Provas','Provas do',livro,'Prova escrita, prova oral, gabarito e áudio de cada bloco de unidades.');
+  const intro = avIntro('Provas','Provas do',livro,'Prova escrita, prova oral com o relatório para registrar o resultado, gabarito e áudio de cada bloco de unidades.');
   avComAcesso(div, intro, 'tests', function(){
-    const modelo = '<div class="av-model"><div class="av-ic">'+AV_I.m+'</div><div class="av-model-txt"><b>Modelo de Oral Report</b><span>Template padrão de atividade oral, para todos os livros.</span></div>'+avBtn('dl','d','Baixar','TESTS/MODELO ORAL REPORT.docx')+'</div>';
-    if (!b) { div.innerHTML = intro + avSemAvaliacao('provas') + modelo; return; }
+    // O "MODELO ORAL REPORT" e o relatorio que o professor preenche ao aplicar
+    // a prova oral. E o mesmo arquivo para todos os livros.
+    const RELATORIO = 'TESTS/MODELO ORAL REPORT.docx';
+    const relLinha = '<div class="av-row av-row-rel"><div class="av-ic">'+AV_I.r+'</div><div class="av-row-txt"><b>Relatório da prova oral</b><span>Modelo para registrar o resultado do aluno · Word</span></div>'+avBtn('dl','d','Baixar',RELATORIO)+'</div>';
+    if (!b) {
+      const modelo = '<div class="av-model"><div class="av-ic">'+AV_I.r+'</div><div class="av-model-txt"><b>Relatório da prova oral (modelo)</b><span>Para registrar o resultado da prova oral do aluno. É o mesmo para todos os livros.</span></div>'+avBtn('dl','d','Baixar',RELATORIO)+'</div>';
+      div.innerHTML = intro + avSemAvaliacao('provas') + modelo; return;
+    }
     const ARQ = [['w','p','Prova escrita'],['o','m','Prova oral'],['k','k','Gabarito'],['a','a','Áudio do listening'],['sc','s','Roteiro do áudio']];
     const cols = b.ranges.map((r,i) => {
       const rows = ARQ.filter(x => r[x[0]]).map(x =>
-        '<div class="av-row"><div class="av-ic">'+AV_I[x[1]]+'</div><div class="av-row-txt"><b>'+x[2]+'</b><span>'+avTipo(r[x[0]])+'</span></div>'+avBtn('dl','d','Baixar',r.base+r[x[0]])+'</div>').join('');
+        '<div class="av-row"><div class="av-ic">'+AV_I[x[1]]+'</div><div class="av-row-txt"><b>'+x[2]+'</b><span>'+avTipo(r[x[0]])+'</span></div>'+avBtn('dl','d','Baixar',r.base+r[x[0]])+'</div>'
+        + (x[0]==='o' ? relLinha : '')).join('');
       return '<div class="av-panel"><div class="av-panel-h"><b>'+(i+1)+'ª prova</b><small>'+escapeHtml(r.label.replace('-','–'))+'</small></div>'+rows+'</div>';
     }).join('');
     const nota = '<div class="av-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Material confidencial: não compartilhe com alunos antes da aplicação.</div>';
-    div.innerHTML = intro + avHead(b,'Provas',b.ranges.length+' provas · escrita, oral, gabarito e áudio') + nota + '<div class="av-cols av-tests">'+cols+'</div>' + modelo;
+    div.innerHTML = intro + nota + '<div class="av-cols av-tests">'+cols+'</div>';
   });
 }
 </script>

@@ -1667,50 +1667,96 @@
   .cur-nav { min-width: 44px; min-height: 44px; }
 }
 
-/* ── Avaliações (Quizzes e Provas) ── */
-.av-gate{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:320px;text-align:center;padding:56px 24px;gap:14px}
-.av-gate>svg{width:52px;height:52px;color:var(--g200);margin-bottom:4px}
-.av-gate h3{font-family:Montserrat,system-ui,sans-serif;font-size:22px;font-weight:800;color:var(--navy);margin:0}
-.av-gate p{font-size:14px;color:var(--g500);line-height:1.7;max-width:380px;margin:0}
-.av-login-btn{display:inline-block;margin-top:6px;background:var(--orange);color:#fff;border-radius:12px;padding:12px 26px;font-weight:800;font-size:14px;text-decoration:none;transition:background .15s}
+/* ── Avaliações (Quizzes e Provas): filtradas pelo livro da barra ── */
+.av-gate{display:flex;flex-direction:column;align-items:center;text-align:center;padding:56px 24px;gap:14px;background:#fff;border:1px solid var(--g100);border-radius:var(--r-lg)}
+.av-gate>svg{width:46px;height:46px;color:var(--g300)}
+.av-gate h3{font-size:22px;font-weight:800;color:var(--navy);margin:0}
+.av-gate p{font-size:14px;color:var(--g500);line-height:1.7;max-width:400px;margin:0}
+.av-login-btn{display:inline-block;margin-top:6px;background:var(--orange);color:#fff;border-radius:var(--r-sm);padding:12px 26px;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.05em;text-decoration:none}
 .av-login-btn:hover{background:var(--orange-light)}
-.av-loading{text-align:center;padding:80px 24px;color:var(--g400);font-size:14px}
-.av-grid{display:flex;flex-direction:column;gap:18px}
-.av-model{display:flex;align-items:center;gap:16px;background:var(--cream);border:1px solid #D8DEDD;border-radius:16px;padding:15px 22px;margin-bottom:6px;flex-wrap:wrap}
-.av-model-icon{font-size:26px;flex-shrink:0}
-.av-model-body{flex:1;min-width:160px}
-.av-model-name{font-weight:800;font-size:14.5px;color:var(--navy)}
-.av-model-desc{font-size:12.5px;color:var(--g500);margin-top:2px}
-.av-book{border:1px solid var(--g100);border-radius:20px;overflow:hidden;background:#fff}
-.av-book-head{display:flex;align-items:center;gap:14px;padding:15px 22px;background:var(--g50);border-bottom:1px solid var(--g100)}
-.av-book-stripe{width:6px;height:46px;border-radius:3px;flex-shrink:0}
-.av-book-cover{width:34px;height:48px;object-fit:cover;border-radius:7px;box-shadow:0 3px 10px rgba(11,31,51,.16);flex-shrink:0}
-.av-book-cover-ph{width:34px;height:48px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;color:#fff;flex-shrink:0}
-.av-book-name{font-family:Montserrat,system-ui,sans-serif;font-size:17px;font-weight:800;color:var(--navy)}
-.av-book-sub{font-size:12px;color:var(--g400);margin-top:2px}
-.av-book-count{margin-left:auto;font-size:11px;font-weight:800;color:var(--g400);background:#fff;border:1px solid var(--g200);border-radius:999px;padding:4px 12px;flex-shrink:0}
-.av-range{padding:11px 22px 9px}
-.av-range+.av-range{border-top:1px solid var(--g50)}
-.av-range-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--g400);margin-bottom:8px}
-.av-items{display:flex;flex-direction:column;gap:6px}
-.av-item{display:flex;align-items:center;gap:12px;padding:9px 13px;background:var(--g50);border-radius:12px;flex-wrap:wrap}
-.av-item-label{font-size:13px;font-weight:700;color:var(--navy);min-width:90px;flex-shrink:0}
-.av-btns{display:flex;gap:6px;flex-wrap:wrap}
-.av-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border:none;border-radius:9px;font:inherit;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap;transition:opacity .15s,transform .15s}
-.av-btn svg{width:12px;height:12px;flex-shrink:0}
-.av-btn:hover{opacity:.82;transform:translateY(-1px)}
-.av-btn:disabled{opacity:.45;cursor:wait;transform:none}
-.av-btn.q{background:var(--blue-soft);color:var(--blue)}
-.av-btn.k{background:var(--cream);color:#0B1F33}
-.av-btn.a{background:var(--ocean-light);color:#0B1F33}
-.av-btn.w{background:var(--navy);color:#fff}
-.av-btn.o{background:var(--orange-soft);color:var(--orange)}
-.av-btn.sc{background:var(--g100);color:var(--g600)}
+.av-loading{text-align:center;padding:70px 24px;color:var(--g500);font-size:14px}
+
+/* cabeçalho do livro escolhido */
+.av-head{display:flex;align-items:center;gap:20px;background:#fff;border:1px solid var(--g100);border-radius:var(--r-lg);padding:18px 22px;margin-bottom:20px}
+.av-head img{width:54px;height:76px;object-fit:cover;border-radius:6px;box-shadow:0 6px 16px rgba(11,31,51,.18);flex-shrink:0}
+.av-head-txt{flex:1;min-width:0}
+.av-head-kicker{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.16em;color:var(--g500)}
+.av-head-title{font-size:21px;font-weight:800;color:var(--navy);margin:2px 0}
+.av-head-sub{font-size:13px;color:var(--g500)}
+.av-legend{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.av-legend span{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;color:var(--g500)}
+.av-legend i{width:8px;height:8px;border-radius:50%;display:inline-block}
+
+/* colunas por bloco de unidades */
+.av-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+.av-panel{background:#fff;border:1px solid var(--g100);border-radius:var(--r-lg);overflow:hidden}
+.av-panel-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:16px 20px;border-bottom:1px solid var(--g100)}
+.av-panel-h b{font-size:15px;font-weight:800;color:var(--navy)}
+.av-panel-h small{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--g500)}
+.av-row{display:flex;align-items:center;gap:14px;padding:12px 20px;transition:background .2s}
+.av-row+.av-row{border-top:1px solid var(--g100)}
+.av-row:hover{background:var(--off-white)}
+.av-unit{width:62px;flex-shrink:0;white-space:nowrap;text-align:center;font-size:15px;font-weight:800;color:var(--navy);line-height:1.1}
+.av-unit small{display:block;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--g500)}
+.av-row-txt{flex:1;min-width:0}
+.av-row-txt b{display:block;font-size:14px;font-weight:700;color:var(--navy)}
+.av-row-txt span{font-size:12px;color:var(--g500)}
+.av-ic{width:34px;height:34px;flex-shrink:0;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;background:var(--off-white);color:var(--navy)}
+.av-ic svg{width:17px;height:17px}
+
+/* botões */
+.av-btns{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.av-row .av-btns{margin-left:auto}
+.av-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border:1px solid var(--g200);background:#fff;color:var(--navy);border-radius:var(--r-sm);font:inherit;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;transition:border-color .2s,background .2s,color .2s}
+.av-btn svg{width:14px;height:14px;flex-shrink:0}
+.av-btn:hover{border-color:var(--navy);background:var(--navy);color:#fff}
+.av-btn:disabled{opacity:.5;cursor:wait}
+.av-btn.q{border-color:var(--orange);background:var(--orange);color:#fff}
+.av-btn.q:hover{border-color:var(--orange-light);background:var(--orange-light)}
+.av-btn.dl{min-width:96px;justify-content:center}
+
+/* avisos */
+.av-note{display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--g500);margin:-6px 0 18px}
+.av-note svg{width:15px;height:15px;color:var(--orange);flex-shrink:0}
+.av-model{display:flex;align-items:center;gap:16px;background:#fff;border:1px dashed var(--g200);border-radius:var(--r-lg);padding:16px 20px;margin-top:20px}
+.av-model-txt{flex:1;min-width:0}
+.av-model-txt b{display:block;font-size:14px;font-weight:700;color:var(--navy)}
+.av-model-txt span{font-size:12.5px;color:var(--g500)}
+
+/* livro sem avaliações (Evolve) */
+.av-empty{text-align:center;background:#fff;border:1px solid var(--g100);border-radius:var(--r-lg);padding:52px 24px}
+.av-empty svg{width:42px;height:42px;color:var(--g300);margin-bottom:12px}
+.av-empty h3{font-size:20px;font-weight:800;color:var(--navy);margin:0 0 6px}
+.av-empty p{font-size:14px;color:var(--g500);margin:0 0 20px}
+.av-empty-books{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.av-empty-books button{padding:9px 16px;border:1px solid var(--g200);background:#fff;color:var(--navy);border-radius:999px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:border-color .2s,color .2s}
+.av-empty-books button:hover{border-color:var(--orange);color:var(--orange)}
+
 @keyframes av-sp{to{transform:rotate(360deg)}}
-.av-sp{animation:av-sp .7s linear infinite;width:12px;height:12px}
-.av-toast{position:fixed;bottom:22px;right:22px;background:var(--navy);color:#fff;border-radius:12px;padding:12px 20px;font-size:13.5px;font-weight:700;z-index:9999;box-shadow:0 8px 24px rgba(11,31,51,.3);max-width:340px}
+.av-sp{animation:av-sp .7s linear infinite;width:14px;height:14px}
+.av-toast{position:fixed;bottom:22px;right:22px;background:var(--navy);color:#fff;border-radius:var(--r-sm);padding:12px 20px;font-size:13.5px;font-weight:600;z-index:9999;box-shadow:0 8px 24px rgba(11,31,51,.3);max-width:340px}
 .av-toast.err{background:#BE123C}
-@media(max-width:640px){.av-item{gap:8px}.av-item-label{min-width:0;width:100%}.av-btn{font-size:11px;padding:6px 10px}}
+@media(max-width:860px){
+  .av-cols{grid-template-columns:1fr}
+  .av-legend{display:none}
+}
+@media(max-width:560px){
+  .av-head{padding:14px 16px;gap:14px}
+  .av-head img{width:42px;height:60px}
+  .av-head-title{font-size:18px}
+  .av-row{flex-wrap:nowrap;gap:10px;padding:11px 14px}
+  .av-row .av-btns{margin-left:auto;flex-wrap:nowrap;gap:5px}
+  .av-unit{width:46px;font-size:14px}
+  .av-btn{padding:7px 9px;font-size:11.5px;gap:4px}
+  .av-btn svg{width:12px;height:12px}
+  .av-btn.dl{min-width:0}
+  .av-model{flex-wrap:wrap}
+}
+@media(max-width:350px){
+  .av-row .av-btn svg{display:none}
+  .av-unit{width:40px}
+  .av-row{padding:10px 12px}
+}
 </style>
 <!-- PWA / App -->
 <link rel="manifest" href="/manifest.webmanifest">
@@ -2238,9 +2284,10 @@ function setLevel(level) {
 function setView(view) {
   currentView = view;
   document.querySelectorAll('.bib-tab').forEach(t => t.classList.toggle('active', t.dataset.view === view));
-  // Música é catálogo único: o seletor de nível não se aplica
+  // Música é catálogo único: o seletor de nível não se aplica.
+  // Quizzes e Provas seguem o livro escolhido na barra.
   const jw = document.querySelector('.journey-wrap');
-  if (jw) jw.style.display = (view==='music'||view==='quizzes'||view==='tests') ? 'none' : '';
+  if (jw) jw.style.display = (view==='music') ? 'none' : '';
   document.querySelectorAll('.bib-view').forEach(v => v.classList.remove('active'));
   document.getElementById('v-' + view).classList.add('active');
   render();
@@ -3209,18 +3256,6 @@ document.addEventListener('click', function(e){
   if (b) avDl(b, b.getAttribute('data-av-path'));
 });
 
-function avBookHead(b) {
-  const cov = b.img
-    ? '<img class="av-book-cover" src="'+escapeHtml(b.img)+'" onerror="this.style.display=\'none\'" alt="">'
-    : '<div class="av-book-cover-ph" style="background:'+b.color+'">'+escapeHtml(b.name.slice(0,2).toUpperCase())+'</div>';
-  return '<div class="av-book-head"><div class="av-book-stripe" style="background:'+b.color+'"></div>'+cov+
-    '<div><div class="av-book-name">'+escapeHtml(b.name)+'</div><div class="av-book-sub">Interchange Series</div></div></div>';
-}
-
-function avViewIntro(eye, title, desc) {
-  return '<div class="view-intro"><div class="view-intro-eyebrow">'+eye+'</div><h2>'+title+'</h2><p>'+desc+'</p></div>';
-}
-
 // ── Catálogo de Quizzes ──
 const AV_QUIZ = [
   {id:'intro',name:'Interchange Intro',color:'#0B1F33',img:'/img/books/interchange-intro.webp',ranges:[
@@ -3281,60 +3316,86 @@ const AV_TEST = [
     {label:'Units 7-12',base:'TESTS/PASSAGES 1/7-12/',w:'Written test unit 07-12 passages 1.docx',o:'ORAL EXAM PASSAGES UNITS 7-12.docx',k:'PAS3e_L1_T_U07to12A_Key.docx',a:'PAS3e_L1_T_U07to12A_Track16.mp3'}]},
 ];
 
-function renderQuizzes() {
-  const div = document.getElementById('v-quizzes'); if (!div) return;
-  const intro = avViewIntro('Quizzes de unidade','Quizzes <em>semanais</em>','Quiz de aplicacao, gabarito e audio de listening. Acesso exclusivo a professores e coordenadores.');
+// Cada livro da barra aponta para o seu conjunto de avaliações.
+// Passages não é usado pela escola: fica fora do mapa e não aparece.
+const AV_LEVEL = { intro:'intro', lvl1:'book1', lvl2:'book2', lvl3:'book3' };
+const AV_LIVRO = { intro:'Interchange Intro', lvl1:'Interchange 1', lvl2:'Interchange 2', lvl3:'Interchange 3', evolve5:'Evolve 5', evolve6:'Evolve 6' };
+
+function avTipo(path){
+  const e=(path.split('.').pop()||'').toLowerCase();
+  return e==='mp3' ? 'Áudio MP3' : (e==='doc'||e==='docx') ? 'Word' : e.toUpperCase();
+}
+function avIntro(eyebrow, titulo, livro, desc){
+  return '<div class="view-intro"><div class="view-intro-eyebrow">'+eyebrow+'</div><h2>'+titulo+' <em>'+escapeHtml(livro)+'</em></h2><p>'+desc+'</p></div>';
+}
+function avHead(b, kicker, sub, legenda){
+  return '<div class="av-head">'+(b.img?'<img src="'+escapeHtml(b.img)+'" alt="" onerror="this.remove()">':'')+
+    '<div class="av-head-txt"><div class="av-head-kicker">'+kicker+'</div><div class="av-head-title">'+escapeHtml(b.name)+'</div><div class="av-head-sub">'+sub+'</div></div>'+
+    (legenda||'')+'</div>';
+}
+// livro sem avaliações (Evolve): explica e oferece os livros que têm
+function avSemAvaliacao(tipo){
+  const nome=AV_LIVRO[currentLevel]||'este livro';
+  return '<div class="av-empty">'+
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2.5z"/><path d="M9 7h6M9 11h4"/></svg>'+
+    '<h3>Ainda não há '+tipo+' do '+escapeHtml(nome)+'</h3>'+
+    '<p>Por enquanto, as avaliações cobrem os livros Interchange. Escolha um deles:</p>'+
+    '<div class="av-empty-books">'+Object.keys(AV_LEVEL).map(l=>'<button type="button" data-av-level="'+l+'">'+escapeHtml(AV_LIVRO[l])+'</button>').join('')+'</div></div>';
+}
+document.addEventListener('click', function(e){
+  const b = e.target && e.target.closest ? e.target.closest('[data-av-level]') : null;
+  if (b) { setLevel(b.getAttribute('data-av-level')); window.scrollTo({top: document.querySelector('.bib-tabs-wrap').offsetTop - 20, behavior:'smooth'}); }
+});
+// carrega o acesso uma vez; enquanto isso mostra "verificando"
+function avComAcesso(div, intro, view, desenhar){
   if (avAccess === undefined) {
-    div.innerHTML = intro + '<div class="av-loading">Verificando acesso...</div>';
-    avCheckAccess().then(res => { avAccess = res; if (currentView==='quizzes') renderQuizzes(); });
+    div.innerHTML = intro + '<div class="av-loading">Verificando acesso…</div>';
+    avCheckAccess().then(res => { avAccess = res; if (currentView === view) render(); });
     return;
   }
   if (avAccess !== 'staff') { div.innerHTML = intro + avGate(avAccess); return; }
-  const html = AV_QUIZ.map(b => {
-    const ranges = b.ranges.map(r => {
-      const items = r.items.map(it => {
+  desenhar();
+}
+
+function renderQuizzes() {
+  const div = document.getElementById('v-quizzes'); if (!div) return;
+  const livro = AV_LIVRO[currentLevel] || '';
+  const b = AV_QUIZ.find(x => x.id === AV_LEVEL[currentLevel]);
+  const intro = avIntro('Quizzes de unidade','Quizzes do',livro,'Um quiz a cada duas unidades, com gabarito e áudio de listening. Acesso de professores e coordenação.');
+  avComAcesso(div, intro, 'quizzes', function(){
+    if (!b) { div.innerHTML = intro + avSemAvaliacao('quizzes'); return; }
+    const n = b.ranges.reduce((t,r)=>t+r.items.length,0);
+    const cols = b.ranges.map(r => {
+      const rows = r.items.map(it => {
         const kF = it.f.endsWith('.docx') ? it.f.replace('.docx','_Key.docx') : it.f.replace('.doc','_Key.doc');
         const aF = it.f.replace(/\.docx?/, it.t);
-        return '<div class="av-item"><span class="av-item-label">'+escapeHtml(it.u)+'</span><div class="av-btns">'+
-          avBtn('q','d','Quiz',r.base+r.px+it.f)+
-          avBtn('k','k','Gabarito',r.base+r.px+kF)+
-          avBtn('a','a','Audio',r.base+r.px+aF)+
-        '</div></div>';
+        const u = it.u.replace(/^U\s*/,'').replace('-','–');
+        return '<div class="av-row"><div class="av-unit">'+escapeHtml(u)+'<small>units</small></div>'+
+          '<div class="av-btns">'+avBtn('q','d','Quiz',r.base+r.px+it.f)+avBtn('k','k','Gabarito',r.base+r.px+kF)+avBtn('a','a','Áudio',r.base+r.px+aF)+'</div></div>';
       }).join('');
-      return '<div class="av-range"><div class="av-range-label">'+escapeHtml(r.label)+'</div><div class="av-items">'+items+'</div></div>';
+      return '<div class="av-panel"><div class="av-panel-h"><b>'+escapeHtml(r.label.replace('-','–'))+'</b><small>'+r.items.length+' quizzes</small></div>'+rows+'</div>';
     }).join('');
-    return '<div class="av-book">'+avBookHead(b)+ranges+'</div>';
-  }).join('');
-  div.innerHTML = intro + '<div class="av-grid">'+html+'</div>';
+    div.innerHTML = intro + avHead(b,'Quizzes',n+' quizzes · gabarito e áudio em cada um') + '<div class="av-cols">'+cols+'</div>';
+  });
 }
 
 function renderTests() {
   const div = document.getElementById('v-tests'); if (!div) return;
-  const intro = avViewIntro('Provas bimestrais','Provas <em>e exames orais</em>','Material confidencial. Prova escrita, oral, gabarito, audio e script quando disponivel. Nao compartilhe com alunos.');
-  if (avAccess === undefined) {
-    div.innerHTML = intro + '<div class="av-loading">Verificando acesso...</div>';
-    avCheckAccess().then(res => { avAccess = res; if (currentView==='tests') renderTests(); });
-    return;
-  }
-  if (avAccess !== 'staff') { div.innerHTML = intro + avGate(avAccess); return; }
-  const model = '<div class="av-model"><div class="av-model-icon">&#0B1F33;</div>' +
-    '<div class="av-model-body"><div class="av-model-name">Modelo de Oral Report</div>' +
-    '<div class="av-model-desc">Template padrao para atividade oral individual.</div></div>' +
-    '<div class="av-btns">'+avBtn('q','d','Baixar','TESTS/MODELO ORAL REPORT.docx')+'</div></div>';
-  const html = AV_TEST.map(b => {
-    const ranges = b.ranges.map(r => {
-      return '<div class="av-range"><div class="av-range-label">'+escapeHtml(r.label)+'</div>' +
-        '<div class="av-items"><div class="av-item"><span class="av-item-label">Arquivos</span><div class="av-btns">' +
-        (r.w  ? avBtn('w','p','Escrita', r.base+r.w)  : '') +
-        (r.o  ? avBtn('o','m','Oral',    r.base+r.o)  : '') +
-        (r.k  ? avBtn('k','k','Gabarito',r.base+r.k)  : '') +
-        (r.a  ? avBtn('a','a','Audio',   r.base+r.a)  : '') +
-        (r.sc ? avBtn('sc','s','Script', r.base+r.sc) : '') +
-        '</div></div></div></div>';
+  const livro = AV_LIVRO[currentLevel] || '';
+  const b = AV_TEST.find(x => x.id === AV_LEVEL[currentLevel]);
+  const intro = avIntro('Provas','Provas do',livro,'Prova escrita, prova oral, gabarito e áudio de cada bloco de unidades.');
+  avComAcesso(div, intro, 'tests', function(){
+    const modelo = '<div class="av-model"><div class="av-ic">'+AV_I.m+'</div><div class="av-model-txt"><b>Modelo de Oral Report</b><span>Template padrão de atividade oral, para todos os livros.</span></div>'+avBtn('dl','d','Baixar','TESTS/MODELO ORAL REPORT.docx')+'</div>';
+    if (!b) { div.innerHTML = intro + avSemAvaliacao('provas') + modelo; return; }
+    const ARQ = [['w','p','Prova escrita'],['o','m','Prova oral'],['k','k','Gabarito'],['a','a','Áudio do listening'],['sc','s','Roteiro do áudio']];
+    const cols = b.ranges.map((r,i) => {
+      const rows = ARQ.filter(x => r[x[0]]).map(x =>
+        '<div class="av-row"><div class="av-ic">'+AV_I[x[1]]+'</div><div class="av-row-txt"><b>'+x[2]+'</b><span>'+avTipo(r[x[0]])+'</span></div>'+avBtn('dl','d','Baixar',r.base+r[x[0]])+'</div>').join('');
+      return '<div class="av-panel"><div class="av-panel-h"><b>'+(i+1)+'ª prova</b><small>'+escapeHtml(r.label.replace('-','–'))+'</small></div>'+rows+'</div>';
     }).join('');
-    return '<div class="av-book">'+avBookHead(b)+ranges+'</div>';
-  }).join('');
-  div.innerHTML = intro + model + '<div class="av-grid">'+html+'</div>';
+    const nota = '<div class="av-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Material confidencial: não compartilhe com alunos antes da aplicação.</div>';
+    div.innerHTML = intro + avHead(b,'Provas',b.ranges.length+' provas · escrita, oral, gabarito e áudio') + nota + '<div class="av-cols av-tests">'+cols+'</div>' + modelo;
+  });
 }
 </script>
 </body>

@@ -1350,11 +1350,22 @@ async function restoreStudent(studentId) {
 
 async function getArchivedStudents() {
   const { data, error } = await db.from('profiles')
-    .select('id, full_name, email, level, archived_at, archived_reason, archived_by, by:profiles!profiles_archived_by_fkey(full_name)')
+    .select('id, full_name, email, level, archived_at, archived_reason, archived_by')
     .eq('role', 'student').not('archived_at', 'is', null)
     .order('archived_at', { ascending: false });
   if (error) throw error;
-  return data || [];
+  const lista = data || [];
+  // Nome de quem arquivou numa busca separada. A junção profiles→profiles
+  // pela chave archived_by não é resolvida pela API do Supabase (erro 400,
+  // PGRST200): numa tabela ligada a ela mesma, a direção fica ambígua.
+  const ids = [...new Set(lista.map(a => a.archived_by).filter(Boolean))];
+  let nomes = {};
+  if (ids.length) {
+    const { data: quem } = await db.from('profiles').select('id, full_name').in('id', ids);
+    (quem || []).forEach(p => { nomes[p.id] = p.full_name; });
+  }
+  lista.forEach(a => { a.by = a.archived_by && nomes[a.archived_by] ? { full_name: nomes[a.archived_by] } : null; });
+  return lista;
 }
 
 // Com quem o aluno estudava e em que horários, no momento do arquivamento.
@@ -1369,5 +1380,8 @@ async function getArchiveDetails(studentIds) {
       .select('student_id, day_of_week, time_slot, teacher:profiles!schedule_slots_archive_teacher_id_fkey(full_name)')
       .in('student_id', ids).order('day_of_week')
   ]);
+  // detalhe é complementar: se falhar, a lista continua, mas o erro fica registrado
+  if (enr.error) console.error('getArchiveDetails (professores):', enr.error);
+  if (slots.error) console.error('getArchiveDetails (horários):', slots.error);
   return { vinculos: enr.data || [], horarios: slots.data || [] };
 }

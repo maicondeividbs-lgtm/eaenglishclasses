@@ -7760,7 +7760,14 @@ async function loadArchive() {
     _archiveCache = await getArchivedStudents();
     _archiveDetails = await getArchiveDetails(_archiveCache.map(a => a.id));
   } catch (e) {
-    div.innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><p>O arquivo morto ainda não foi ativado. Rode o <code>arquivo_morto.sql</code> no Supabase.</p></div>';
+    // Só culpa a falta do SQL quando o erro é mesmo de coluna/tabela inexistente;
+    // nos outros casos mostra o erro real, para não mandar rodar o SQL à toa.
+    const m = (e && e.message) || String(e);
+    const semSql = /does not exist|schedule_slots_archive/i.test(m) && !/relationship/i.test(m);
+    const esc = x => String(x).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    div.innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><p>' + (semSql
+      ? 'O arquivo morto ainda não foi ativado. Rode o <code>arquivo_morto.sql</code> no Supabase.'
+      : 'Não foi possível carregar o arquivo morto: ' + esc(m)) + '</p></div>';
     return;
   }
   renderArchive();

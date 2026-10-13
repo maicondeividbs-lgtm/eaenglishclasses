@@ -188,10 +188,6 @@ async function cancelFeedback(feedbackId) {
   const { error } = await db.from('feedbacks').update({ cancelled: true, cancelled_at: new Date().toISOString() }).eq('id', feedbackId);
   if (error) throw error;
 }
-async function cancelAnnouncement(announcementId) {
-  const { error } = await db.from('announcements').update({ cancelled: true, cancelled_at: new Date().toISOString() }).eq('id', announcementId);
-  if (error) throw error;
-}
 
 async function markTaskDone(submissionId) {
   const { error } = await db.from('task_submissions').update({status:'submitted',submitted_at:new Date().toISOString()}).eq('id',submissionId);
@@ -211,23 +207,6 @@ async function getFeedbacksByTeacher(teacherId) {
 
 async function getFeedbacksForStudent(studentId) {
   const { data } = await db.from('feedbacks').select('*, teacher:profiles!feedbacks_teacher_id_fkey(full_name)').eq('student_id',studentId).eq('cancelled',false).order('created_at',{ascending:false});
-  return data || [];
-}
-
-// ═══ ANNOUNCEMENTS ═══
-async function createAnnouncement(authorId, title, content, targetRole) {
-  const { error } = await db.from('announcements').insert([{author_id:authorId,title,content,target_role:targetRole||null}]);
-  if (error) throw error;
-}
-
-async function getAnnouncements() {
-  const { data } = await db.from('announcements').select('*, author:profiles!announcements_author_id_fkey(full_name)').eq('cancelled',false).order('created_at',{ascending:false}).limit(20);
-  return data || [];
-}
-
-// Versão para a equipe (professor/coordenação): inclui avisos cancelados, para gerir/auditar
-async function getAllAnnouncements() {
-  const { data } = await db.from('announcements').select('*, author:profiles!announcements_author_id_fkey(full_name)').order('created_at',{ascending:false}).limit(40);
   return data || [];
 }
 
@@ -353,22 +332,6 @@ async function getPronunciationForStudent(studentId) {
 
 async function markPronunciationPracticed(pronId) {
   const { error } = await db.from('pronunciation').update({practiced:true}).eq('id',pronId);
-  if (error) throw error;
-}
-
-// ═══ COORD MESSAGES ═══
-async function sendCoordMessage(authorId, teacherId, title, content) {
-  const { error } = await db.from('coord_messages').insert([{author_id:authorId,teacher_id:teacherId,title,content}]);
-  if (error) throw error;
-}
-
-async function getCoordMessagesForTeacher(teacherId) {
-  const { data } = await db.from('coord_messages').select('*, author:profiles!coord_messages_author_id_fkey(full_name)').eq('teacher_id',teacherId).order('created_at',{ascending:false});
-  return data || [];
-}
-
-async function markMessageRead(msgId) {
-  const { error } = await db.from('coord_messages').update({read:true}).eq('id',msgId);
   if (error) throw error;
 }
 
@@ -794,11 +757,8 @@ async function getUnreadCount(userId, role) {
       ]);
       count = (tasks.count||0) + (writing.count||0);
     } else if (role === 'teacher') {
-      const [writing, msgs] = await Promise.all([
-        countTeacherWritings(userId, 'submitted'),
-        db.from('coord_messages').select('id',{count:'exact',head:true}).eq('teacher_id',userId).eq('read',false)
-      ]);
-      count = (writing.count||0) + (msgs.count||0);
+      const writing = await countTeacherWritings(userId, 'submitted');
+      count = writing.count||0;
     } else if (role === 'coordinator') {
       const placements = await db.from('placement_tests').select('id',{count:'exact',head:true}).eq('status','pending');
       count = placements.count||0;
@@ -854,26 +814,6 @@ async function getNotificationItems(userId, role) {
         items.push({ type: 'feedback', icon: '💬', title: 'Feedback: ' + (f.title||''), sub: (f.teacher?.full_name||'Professor'), when: f.created_at, section: 'feedback' });
       });
 
-      // Avisos (announcements) gerais
-      const ann = await db.from('announcements')
-        .select('id, title, created_at, author:profiles!announcements_author_id_fkey(full_name)')
-        .eq('cancelled', false).gte('created_at', cutoff)
-        .order('created_at', { ascending: false }).limit(10);
-      (ann.data || []).forEach(a => {
-        items.push({ type: 'announcement', icon: '📢', title: 'Aviso: ' + (a.title||''), sub: (a.author?.full_name||'WIN'), when: a.created_at, section: 'announcements' });
-      });
-
-      // Respostas a help_requests
-      try {
-        const helps = await db.from('help_requests')
-          .select('id, subject, answered_at, status, teacher:profiles!help_requests_teacher_id_fkey(full_name)')
-          .eq('student_id', userId).eq('status', 'answered').gte('answered_at', cutoff)
-          .order('answered_at', { ascending: false }).limit(10);
-        (helps.data || []).forEach(h => {
-          items.push({ type: 'help', icon: '✅', title: 'Professor respondeu sua dúvida' + (h.subject ? ': ' + h.subject : ''), sub: (h.teacher?.full_name||'Professor'), when: h.answered_at, section: null, isNew: true });
-        });
-      } catch(e) { /* table may not exist */ }
-
     } else if (role === 'teacher') {
       // Redações submitted (aluno enviou)
       const wrIds = await teacherStudentIds(userId);
@@ -897,27 +837,6 @@ async function getNotificationItems(userId, role) {
         items.push({ type: 'homework', icon: '📥', title: 'Homework entregue: ' + (s.task?.title||''), sub: (s.student?.full_name||'Aluno'), when: s.submitted_at, section: 'homework' });
       });
 
-      // Mensagens da coord
-      const msgs = await db.from('coord_messages')
-        .select('id, title, created_at, read, author:profiles!coord_messages_author_id_fkey(full_name)')
-        .eq('teacher_id', userId).gte('created_at', cutoff)
-        .order('created_at', { ascending: false }).limit(10);
-      (msgs.data || []).forEach(m => {
-        items.push({ type: 'message', icon: '✉️', title: 'Coordenação: ' + (m.title||''), sub: (m.author?.full_name||''), when: m.created_at, section: 'messages', isNew: !m.read });
-      });
-
-      // Help requests recebidos (perguntas dos alunos)
-      try {
-        const helps = await db.from('help_requests')
-          .select('id, subject, message, created_at, status, student:profiles!help_requests_student_id_fkey(full_name)')
-          .eq('teacher_id', userId).gte('created_at', cutoff)
-          .order('created_at', { ascending: false }).limit(10);
-        (helps.data || []).forEach(h => {
-          const isOpen = h.status !== 'answered';
-          items.push({ type: 'help', icon: '❓', title: 'Pergunta de aluno' + (h.subject ? ': ' + h.subject : ''), sub: (h.student?.full_name||'Aluno'), when: h.created_at, section: 'help-requests', isNew: isOpen });
-        });
-      } catch(e) { /* table may not exist */ }
-
     } else if (role === 'coordinator') {
       // Nivelamentos pendentes
       const pl = await db.from('placement_tests')
@@ -937,14 +856,6 @@ async function getNotificationItems(userId, role) {
         items.push({ type: 'writing', icon: '✍️', title: 'Redação aguardando correção', sub: (w.student?.full_name||'Aluno') + ' → Prof. ' + (w.teacher?.full_name||'?'), when: w.submitted_at, section: 'supervision' });
       });
 
-      // Avisos recentes
-      const ann = await db.from('announcements')
-        .select('id, title, created_at')
-        .gte('created_at', cutoff)
-        .order('created_at', { ascending: false }).limit(5);
-      (ann.data || []).forEach(a => {
-        items.push({ type: 'announcement', icon: '📢', title: 'Aviso publicado: ' + (a.title||''), sub: '', when: a.created_at, section: 'announcements' });
-      });
     }
   } catch(e) { console.error('Notification items error:', e); }
 
@@ -1077,8 +988,6 @@ async function getAssessmentsForStudent(studentId) {
   const { data } = await db.from('assessments').select('*, teacher:profiles!assessments_teacher_id_fkey(full_name)').eq('student_id', studentId).order('year', {ascending:false}).order('month', {ascending:false});
   return data || [];
 }
-
-
 
 // ═══════════════════════════════════════════════════════
 // REGISTRO DE NOTAS DE AVALIAÇÕES (Coordenação)
@@ -1279,54 +1188,6 @@ async function getStudentCoTeachers(studentId, exceptTeacherId) {
     if (error) return [];
     return (data || []).filter(t => t.teacher_id && t.teacher_id !== exceptTeacherId);
   } catch (e) { return []; }
-}
-
-async function createHelpRequest(studentId, teacherId, subject, message) {
-  const { error } = await db.from('help_requests').insert([{
-    student_id: studentId,
-    teacher_id: teacherId,
-    subject: subject || null,
-    message,
-    status: 'open'
-  }]);
-  if (error) throw error;
-}
-
-async function getHelpRequestsForTeacher(teacherId) {
-  const { data, error } = await db
-    .from('help_requests')
-    .select('*, student:profiles!help_requests_student_id_fkey(full_name)')
-    .eq('teacher_id', teacherId)
-    .order('created_at', { ascending: false });
-  if (error) throw error;
-  return data || [];
-}
-
-async function getHelpRequestsForStudent(studentId) {
-  const { data, error } = await db
-    .from('help_requests')
-    .select('*, teacher:profiles!help_requests_teacher_id_fkey(full_name)')
-    .eq('student_id', studentId)
-    .order('created_at', { ascending: false });
-  if (error) throw error;
-  return data || [];
-}
-
-async function answerHelpRequest(requestId, answer) {
-  const { error } = await db
-    .from('help_requests')
-    .update({ answer, answered_at: new Date().toISOString(), status: 'answered' })
-    .eq('id', requestId);
-  if (error) throw error;
-}
-
-async function markHelpRead(requestId) {
-  const { error } = await db
-    .from('help_requests')
-    .update({ read_at: new Date().toISOString() })
-    .eq('id', requestId)
-    .is('read_at', null);
-  if (error) throw error;
 }
 
 // ═══════════════════════════════════════════════════════════════

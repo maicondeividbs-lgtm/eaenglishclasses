@@ -948,119 +948,6 @@ body.sb-collapsed .main { margin-left: 92px !important; }
   display: inline-block;
 }
 
-/* === HELP REQUESTS (perguntas alunos) === */
-.help-card {
-  background: #fff;
-  border: 1px solid var(--g100);
-  border-radius: 14px;
-  padding: 18px 22px;
-  margin: 0 16px 12px;
-  position: relative;
-  transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
-}
-.help-card::before {
-  content: ''; position: absolute;
-  left: 0; top: 0; bottom: 0; width: 4px;
-  background: linear-gradient(180deg, #f59e0b, #fbbf24);
-  border-radius: 14px 0 0 14px;
-}
-.help-card.answered::before { background: linear-gradient(180deg, #10b981, #34d399); }
-.help-card:hover {
-  transform: translateY(-2px);
-  border-color: transparent;
-  box-shadow: 0 8px 22px rgba(11,31,51,0.07);
-}
-.help-head {
-  display: flex; align-items: flex-start; gap: 12px;
-  margin-bottom: 10px;
-}
-.help-avatar {
-  width: 38px; height: 38px; min-width: 38px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #fbbf24, #f59e0b);
-  color: #fff;
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 800; font-size: 14px;
-}
-.help-card.answered .help-avatar { background: linear-gradient(135deg, #10b981, #34d399); }
-.help-head-text { flex: 1; min-width: 0; }
-.help-student-name {
-  font-size: 14px; font-weight: 700; color: var(--navy);
-  margin-bottom: 2px;
-}
-.help-meta {
-  font-size: 11.5px; color: var(--g500);
-  display: flex; gap: 8px; align-items: center;
-}
-.help-meta .sent-status { margin-left: auto; }
-.help-question {
-  font-size: 14px; color: var(--g700);
-  line-height: 1.65;
-  padding-left: 50px;
-  margin-bottom: 10px;
-}
-.help-answer {
-  margin-left: 50px;
-  padding: 12px 16px;
-  background: linear-gradient(135deg, rgba(16,185,129,0.06), #fff);
-  border: 1px solid rgba(16,185,129,0.15);
-  border-radius: 12px;
-  font-size: 13.5px; color: var(--g700);
-  line-height: 1.6;
-  position: relative;
-}
-.help-answer::before {
-  content: 'Sua resposta';
-  display: block;
-  font-size: 10.5px; font-weight: 800;
-  color: #059669;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  margin-bottom: 4px;
-}
-.help-reply-area {
-  margin-left: 50px;
-  margin-top: 8px;
-}
-.help-reply-area textarea {
-  width: 100%;
-  padding: 12px 14px;
-  border: 1.5px solid var(--g200);
-  border-radius: 10px;
-  font-family: inherit;
-  font-size: 13.5px;
-  color: var(--navy);
-  background: var(--off-white);
-  outline: none;
-  resize: vertical;
-  min-height: 64px;
-  transition: all 0.2s;
-}
-.help-reply-area textarea:focus {
-  border-color: var(--orange);
-  background: #fff;
-  box-shadow: 0 0 0 4px rgba(215,25,32,0.08);
-}
-.help-reply-btn {
-  margin-top: 8px;
-  padding: 9px 16px;
-  border: none;
-  border-radius: 10px;
-  background: linear-gradient(var(--win-vermelho), var(--win-vermelho));
-  color: #fff;
-  font-family: inherit;
-  font-size: 12.5px;
-  font-weight: 700;
-  cursor: pointer;
-  display: inline-flex; align-items: center; gap: 6px;
-  box-shadow: 0 4px 12px rgba(215,25,32,0.20);
-  transition: all 0.2s;
-}
-.help-reply-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(215,25,32,0.30);
-}
-.help-reply-btn svg { width: 14px; height: 14px; }
 
 /* === WRITING (Professor — corrigir) === */
 .prof-wr-card {
@@ -1188,27 +1075,6 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 }
 .prof-pron-meta .sent-status { margin-left: 0; }
 
-/* === MESSAGES === */
-.msg-card {
-  background: #fff;
-  border: 1px solid var(--g100);
-  border-radius: 14px;
-  padding: 18px 22px;
-  margin: 0 16px 12px;
-  position: relative;
-  transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
-}
-.msg-card::before {
-  content: ''; position: absolute;
-  left: 0; top: 0; bottom: 0; width: 4px;
-  background: linear-gradient(180deg, var(--blue), var(--blue-light));
-  border-radius: 14px 0 0 14px;
-}
-.msg-card:hover {
-  transform: translateY(-2px);
-  border-color: transparent;
-  box-shadow: 0 8px 24px rgba(11,31,51,0.07);
-}
 
 /* === EMPTY STATE === */
 .empty-state {
@@ -1234,14 +1100,14 @@ body.sb-collapsed .main { margin-left: 92px !important; }
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
-.sent-card, .student-card, .help-card, .prof-wr-card, .prof-pron-card, .msg-card {
+.sent-card, .student-card, .prof-wr-card, .prof-pron-card {
   animation: profCardIn 0.35s cubic-bezier(0.4,0,0.2,1) backwards;
 }
-.sent-card:nth-child(1), .student-card:nth-child(1), .help-card:nth-child(1), .prof-wr-card:nth-child(1), .prof-pron-card:nth-child(1), .msg-card:nth-child(1) { animation-delay: 0.02s; }
-.sent-card:nth-child(2), .student-card:nth-child(2), .help-card:nth-child(2), .prof-wr-card:nth-child(2), .prof-pron-card:nth-child(2), .msg-card:nth-child(2) { animation-delay: 0.07s; }
-.sent-card:nth-child(3), .student-card:nth-child(3), .help-card:nth-child(3), .prof-wr-card:nth-child(3), .prof-pron-card:nth-child(3), .msg-card:nth-child(3) { animation-delay: 0.12s; }
-.sent-card:nth-child(4), .student-card:nth-child(4), .help-card:nth-child(4), .prof-wr-card:nth-child(4), .prof-pron-card:nth-child(4), .msg-card:nth-child(4) { animation-delay: 0.17s; }
-.sent-card:nth-child(n+5), .student-card:nth-child(n+5), .help-card:nth-child(n+5), .prof-wr-card:nth-child(n+5), .prof-pron-card:nth-child(n+5), .msg-card:nth-child(n+5) { animation-delay: 0.22s; }
+.sent-card:nth-child(1), .student-card:nth-child(1), .prof-wr-card:nth-child(1), .prof-pron-card:nth-child(1) { animation-delay: 0.02s; }
+.sent-card:nth-child(2), .student-card:nth-child(2), .prof-wr-card:nth-child(2), .prof-pron-card:nth-child(2) { animation-delay: 0.07s; }
+.sent-card:nth-child(3), .student-card:nth-child(3), .prof-wr-card:nth-child(3), .prof-pron-card:nth-child(3) { animation-delay: 0.12s; }
+.sent-card:nth-child(4), .student-card:nth-child(4), .prof-wr-card:nth-child(4), .prof-pron-card:nth-child(4) { animation-delay: 0.17s; }
+.sent-card:nth-child(n+5), .student-card:nth-child(n+5), .prof-wr-card:nth-child(n+5), .prof-pron-card:nth-child(n+5) { animation-delay: 0.22s; }
 
 /* === Mobile === */
 @media (max-width: 640px) {
@@ -1250,8 +1116,8 @@ body.sb-collapsed .main { margin-left: 92px !important; }
   .section-head-icon { width: 44px; height: 44px; min-width: 44px; }
   .stat-row { grid-template-columns: repeat(2, 1fr) !important; }
   .form-card { padding: 22px !important; }
-  .sent-content, .help-question, .help-answer, .help-reply-area { padding-left: 0; margin-left: 0; }
-  .sent-card, .help-card, .prof-pron-card, .msg-card, .prof-wr-card { margin-left: 12px; margin-right: 12px; }
+  .sent-content { padding-left: 0; margin-left: 0; }
+  .sent-card, .prof-pron-card, .prof-wr-card { margin-left: 12px; margin-right: 12px; }
 }
 
 /* ════════════════════════════════════════════════════════
@@ -1725,14 +1591,6 @@ body.sb-collapsed .main { margin-left: 92px !important; }
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
         <span>Feedbacks</span>
       </button>
-      <button class="sb-link" data-section="help-requests" data-tip="Perguntas dos Alunos">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/></svg>
-        <span>Perguntas <span id="helpBadge" class="sb-count zero" style="margin-left:auto;background:var(--orange);color:#fff;border-radius:10px;padding:1px 7px;font-size:10px;font-weight:800;display:none">0</span></span>
-      </button>
-      <button class="sb-link" data-section="announcements" data-tip="Avisos">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
-        <span>Avisos</span>
-      </button>
       <button class="sb-link" data-section="writing" data-tip="Redação">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.996.996 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
         <span>Redação</span>
@@ -1749,10 +1607,6 @@ body.sb-collapsed .main { margin-left: 92px !important; }
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg>
         <span>Biblioteca</span>
       </a>
-      <button class="sb-link" data-section="messages" data-tip="Mensagens">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-        <span>Mensagens</span>
-      </button>
             <button class="sb-link" data-section="profile" data-tip="Meu Perfil">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
         <span>Meu Perfil</span>
@@ -2016,59 +1870,6 @@ body.sb-collapsed .main { margin-left: 92px !important; }
         </div>
       </div>
 
-      <!-- ═══ HELP REQUESTS (Perguntas dos Alunos) ═══ -->
-      <div class="section" id="sec-help-requests">
-        <div class="section-head">
-          <div class="section-head-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/><circle cx="12" cy="12" r="10"/></svg>
-          </div>
-          <div class="section-head-text">
-            <h2>Perguntas dos Alunos</h2>
-            <p class="section-sub">Responda às dúvidas enviadas pelos alunos pelo botão "Pedir ajuda".</p>
-          </div>
-        </div>
-        <div class="panel">
-          <div class="panel-head">
-            <div class="panel-title"><span class="panel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>Dúvidas recebidas</div>
-          </div>
-          <div style="padding:16px 24px;background:var(--cream);font-size:13px;color:var(--g700);border-bottom:1px solid var(--g100);display:flex;gap:10px;align-items:flex-start">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--mango)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><path d="M9 11H1l8-8 8 8h-8v8z"/><circle cx="18" cy="6" r="3"/></svg>
-            <span>As dúvidas enviadas pelos alunos aparecem aqui. Responda com calma — eles serão notificados automaticamente.</span>
-          </div>
-          <div id="helpList"><div class="empty-state"><div class="empty-icon">💬</div><p>Nenhuma pergunta recebida ainda.</p></div></div>
-        </div>
-      </div>
-
-      <!-- ═══ ANNOUNCEMENTS ═══ -->
-      <div class="section" id="sec-announcements">
-        <div class="section-head">
-          <div class="section-head-icon ocean">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
-          </div>
-          <div class="section-head-text">
-            <h2>Avisos</h2>
-            <p class="section-sub">Publique comunicados que serão exibidos para seus alunos.</p>
-          </div>
-        </div>
-        <div class="form-card">
-          <h3>
-            <span class="form-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg></span>
-            Publicar Aviso
-          </h3>
-          <p class="sub">Envie um comunicado para seus alunos.</p>
-          <div class="f-group"><label>Título do aviso</label><input type="text" id="annTitle" placeholder="Ex: Aula cancelada dia 20/04"></div>
-          <div class="f-group"><label>Conteúdo</label><textarea id="annContent" rows="4" placeholder="Escreva o aviso..."></textarea></div>
-          <button class="btn-send" onclick="sendAnnouncement()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-            Publicar Aviso
-          </button>
-        </div>
-        <div class="panel">
-          <div class="panel-head"><div class="panel-title"><span class="panel-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-5v12L3 14v-3z"/></svg></span>Avisos Publicados</div></div>
-          <div id="annList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhum aviso publicado ainda.</p></div></div>
-        </div>
-      </div>
-
       <!-- ═══ WRITING ═══ -->
       <div class="section" id="sec-writing">
         <div class="section-head">
@@ -2294,23 +2095,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
         </div>
       </div>
 
-      <!-- ═══ MESSAGES ═══ -->
-      <div class="section" id="sec-messages">
-        <div class="section-head">
-          <div class="section-head-icon pink">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          </div>
-          <div class="section-head-text">
-            <h2>Mensagens</h2>
-            <p class="section-sub">Comunicados e documentos enviados pela coordenação.</p>
-          </div>
-        </div>
-        <div class="panel">
-          <div class="panel-head"><div class="panel-title"><span class="panel-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>Caixa de Entrada</div></div>
-          <div id="msgList"><div class="empty-state"><div class="empty-icon">📭</div><p>Nenhuma mensagem recebida.</p></div></div>
-        </div>
-      </div>
-
+      
       <!-- PROFILE -->
       <div class="section" id="sec-profile">
         <h2 style="font-size:24px;font-weight:800;color:var(--navy);margin-bottom:8px;letter-spacing:-0.02em">👤 Meu Perfil</h2>
@@ -2448,7 +2233,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 <script src="app-fx.js" defer></script>
 <script>
 let currentUser = null;
-const sections = {"overview":"Visão Geral","schedule":"Meu Schedule","students":"Meus Alunos","lesson-plans":"Planos de Aula","access":"Acessos dos Alunos","homework":"Homework","feedback":"Feedbacks","help-requests":"Perguntas dos Alunos","announcements":"Avisos","writing":"Redação","pronunciation":"Pronúncia","vocabulary":"Vocabulário","messages":"Mensagens","profile":"Meu Perfil"};
+const sections = {"overview":"Visão Geral","schedule":"Meu Schedule","students":"Meus Alunos","lesson-plans":"Planos de Aula","access":"Acessos dos Alunos","homework":"Homework","feedback":"Feedbacks","writing":"Redação","pronunciation":"Pronúncia","vocabulary":"Vocabulário","profile":"Meu Perfil"};
 
 // ═══ INIT ═══
 // Init collapsible sidebar immediately (independent of auth)
@@ -2576,23 +2361,15 @@ async function loadStudents() {
 // ═══ OVERVIEW ═══
 async function loadOverview() {
   try {
-    const [tasks, feedbacks, writing, announcements, slots, help] = await Promise.all([
+    const [tasks, feedbacks, writing, slots] = await Promise.all([
       getTasksByTeacher(currentUser.id),
       getFeedbacksByTeacher(currentUser.id),
       getWritingByTeacher(currentUser.id),
-      getAnnouncements(),
-      getScheduleSlots(currentUser.id).catch(function(){return[];}),
-      getHelpRequestsForTeacher(currentUser.id).catch(function(){return[];})
+      getScheduleSlots(currentUser.id).catch(function(){return[];})
     ]);
     var students = window._myStudents;
     if(!students || !students.length){ students = await getMyStudents(currentUser.id).catch(function(){return[];}); window._myStudents = students; }
 
-
-    try {
-      var pendingH = help.filter(function(h){return h.status!=='answered';}).length;
-      var badge = document.getElementById('helpBadge');
-      if (badge){ if(pendingH>0){badge.textContent=pendingH;badge.style.display='';badge.classList.remove('zero');} else {badge.style.display='none';} }
-    } catch(e){}
 
     var esc=function(x){return String(x==null?'':x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');};
     // ── Precisa de você ──
@@ -2604,9 +2381,6 @@ async function loadOverview() {
       (t.task_submissions||[]).filter(function(su){return su.status==='submitted';}).forEach(function(su){
         pend.push({tag:'📝',cls:'hw',label:'Homework entregue',name:(su.student&&su.student.full_name)||'Aluno',goto:'homework'});
       });
-    });
-    help.filter(function(h){return h.status!=='answered';}).forEach(function(h){
-      pend.push({tag:'❓',cls:'q',label:'Pergunta aberta',name:(h.student&&h.student.full_name)||'Aluno',goto:'help-requests'});
     });
     var pc=document.getElementById('todayPending'), pcount=document.getElementById('pendCount');
     if(pcount){ pcount.textContent=pend.length; pcount.classList.toggle('warn', pend.length>0); }
@@ -2663,17 +2437,15 @@ async function sendHomework() {
 
 // ── Cancelamento de envios (marca como cancelado; some para o aluno) ──
 async function eaCancelSend(kind, id){
-  var labels={homework:'este homework',feedback:'este feedback',aviso:'este aviso'};
+  var labels={homework:'este homework',feedback:'este feedback'};
   if(!confirm('Cancelar o envio de '+(labels[kind]||'este item')+'?\n\nEle deixar\u00e1 de aparecer para o aluno. A a\u00e7\u00e3o fica registrada e pode ser revertida no banco.')) return;
   try{
     if(kind==='homework') await cancelTask(id);
     else if(kind==='feedback') await cancelFeedback(id);
-    else if(kind==='aviso') await cancelAnnouncement(id);
     if(typeof popSnd==='function') popSnd();
     showToast('Envio cancelado');
     if(kind==='homework') loadHomeworkList();
     else if(kind==='feedback') loadFeedbackList();
-    else loadAnnouncementList();
   }catch(e){ showToast('Erro ao cancelar: '+((e&&e.message)||e),'error'); }
 }
 
@@ -2892,66 +2664,7 @@ async function loadFeedbackList() {
   }).join('') + '</div>';
 }
 
-// ═══ HELP REQUESTS (Perguntas dos Alunos) ═══
-async function loadHelpRequests() {
-  let items;
-  try {
-    items = await getHelpRequestsForTeacher(currentUser.id);
-  } catch(e) {
-    document.getElementById('helpList').innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><p>Tabela <code>help_requests</code> ainda não foi criada no Supabase. Veja as instruções no manual.</p></div>';
-    return;
-  }
-  const div = document.getElementById('helpList');
-  if (!items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">💬</div><p>Nenhuma pergunta recebida ainda.</p></div>'; return; }
 
-  div.innerHTML = '<div style="padding:12px 0 16px">' + items.map(h => {
-    const isAnswered = h.status === 'answered';
-    const studentName = h.student?.full_name || 'Aluno';
-    const initial = studentName.charAt(0).toUpperCase();
-    const subjectTag = h.subject ? '<span class="sent-status pending" style="margin-left:8px">📌 ' + escHtml(h.subject) + '</span>' : '';
-    const statusBadge = isAnswered
-      ? '<span class="sent-status done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Respondida</span>'
-      : '<span class="sent-status pending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Aguardando</span>';
-    const answerSection = isAnswered
-      ? '<div class="help-answer">' + escHtml(h.answer || '') + (h.answered_at ? '<div style="font-size:11px;color:var(--g500);margin-top:6px;font-style:italic">Respondida em ' + formatDateTime(h.answered_at) + '</div>' : '') + '</div>'
-      : '<div class="help-reply-area">' +
-          '<textarea id="helpAns-' + h.id + '" rows="3" placeholder="Sua resposta..."></textarea>' +
-          '<button onclick="submitHelpAnswer(' + h.id + ')" class="help-reply-btn">' +
-            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>' +
-            'Responder' +
-          '</button>' +
-        '</div>';
-
-    return '<div class="help-card' + (isAnswered ? ' answered' : '') + '">' +
-      '<div class="help-head">' +
-        '<div class="help-avatar">' + escHtml(initial) + '</div>' +
-        '<div class="help-head-text">' +
-          '<div class="help-student-name">' + escHtml(studentName) + subjectTag + '</div>' +
-          '<div class="help-meta">' +
-            '<span>' + formatDateTime(h.created_at) + '</span>' +
-            statusBadge +
-          '</div>' +
-        '</div>' +
-      '</div>' +
-      '<div class="help-question">' + escHtml(h.message) + '</div>' +
-      answerSection +
-    '</div>';
-  }).join('') + '</div>';
-}
-
-async function submitHelpAnswer(requestId) {
-  const ta = document.getElementById('helpAns-' + requestId);
-  const answer = ta.value.trim();
-  if (!answer) { showToast('Escreva uma resposta.', 'error'); return; }
-  try {
-    await answerHelpRequest(requestId, answer);
-    showToast('Resposta enviada! O aluno será notificado.');
-    loadHelpRequests();
-    loadOverview();
-  } catch(e) {
-    showToast('Erro: ' + e.message, 'error');
-  }
-}
 
 function escHtml(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -3054,8 +2767,6 @@ function eaNotifMessage(table, row, isUpdate) {
     case 'task_submissions': return { title: '📝 Novo homework', body: 'Você recebeu uma nova tarefa.' };
     case 'writing_activities': return isUpdate ? { title: '✅ Redação atualizada', body: 'Há novidade na sua redação.' } : { title: '✍️ Novo tema de redação', body: 'Um novo tema foi atribuído.' };
     case 'feedbacks': return { title: '💬 Novo feedback', body: 'Seu professor deixou um feedback.' };
-    case 'announcements': return { title: '📢 Novo aviso', body: (row && row.title) ? row.title : 'Há um novo aviso.' };
-    case 'coord_messages': return { title: '📨 Coordenação', body: (row && row.title) ? row.title : 'Você tem uma nova mensagem.' };
     case 'placement_tests': return { title: '🎯 Novo nivelamento', body: 'Um novo lead solicitou aula.' };
     default: return { title: 'WIN', body: 'Você tem uma nova notificação.' };
   }
@@ -3074,9 +2785,9 @@ async function eaOnNewNotif(role, table, row, isUpdate) {
 function eaStartRealtime(role) {
   if (window._eaRT || !db.channel) return;
   var tables = role === 'student'
-    ? [['task_submissions','student_id=eq.'+currentUser.id],['writing_activities','student_id=eq.'+currentUser.id],['feedbacks','student_id=eq.'+currentUser.id],['announcements',null]]
+    ? [['task_submissions','student_id=eq.'+currentUser.id],['writing_activities','student_id=eq.'+currentUser.id],['feedbacks','student_id=eq.'+currentUser.id]]
     : role === 'teacher'
-    ? [['writing_activities','teacher_id=eq.'+currentUser.id],['coord_messages','teacher_id=eq.'+currentUser.id]]
+    ? [['writing_activities','teacher_id=eq.'+currentUser.id]]
     : [['placement_tests',null]];
   var ch = db.channel('ea-notif-' + currentUser.id);
   tables.forEach(function (cfg) {
@@ -3161,49 +2872,7 @@ function notifFormatTime(iso) {
   return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
 }
 
-// ═══ SEND ANNOUNCEMENT ═══
-async function sendAnnouncement() {
-  const title = document.getElementById('annTitle').value.trim();
-  const content = document.getElementById('annContent').value.trim();
-  if (!title || !content) { showToast('Preencha título e conteúdo','error'); return; }
-  try {
-    await createAnnouncement(currentUser.id, title, content, 'student');
-    showToast('Aviso publicado!');
-    document.getElementById('annTitle').value = '';
-    document.getElementById('annContent').value = '';
-    loadAnnouncementList();
-    loadOverview();
-  } catch(e) {
-    showToast('Erro: ' + e.message, 'error');
-  }
-}
 
-async function loadAnnouncementList() {
-  const anns = await getAllAnnouncements();
-  const div = document.getElementById('annList');
-  const mine = anns.filter(a => a.author_id === currentUser.id);
-  if (!mine.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📢</div><p>Nenhum aviso publicado.</p></div>'; return; }
-  const annIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>';
-  div.innerHTML = '<div style="padding:12px 0 16px">' + mine.map(a => {
-    const fullContent = a.content || '';
-    const preview = fullContent.length > 140 ? fullContent.substring(0, 140) + '…' : fullContent;
-    return '<div class="sent-card ann' + (a.cancelled ? ' sent-cancelled' : '') + '">' +
-      '<div class="sent-head">' +
-        '<div class="sent-icon">' + annIcon + '</div>' +
-        '<div class="sent-body">' +
-          '<div class="sent-title">' + a.title + (a.cancelled ? ' <span class="sent-status" style="background:#FFE4E6;color:#881337;vertical-align:middle">🚫 Cancelado</span>' : '') + '</div>' +
-          '<div class="sent-meta">' +
-            '<span class="sent-meta-author">' + (a.cancelled ? 'Cancelado' : 'Publicado') + '</span>' +
-            '<span class="sent-meta-sep">•</span>' +
-            '<span>' + formatDateTime(a.created_at) + '</span>' +
-          '</div>' +
-        '</div>' +
-        (a.cancelled ? '' : '<button onclick="eaCancelSend(\'aviso\',\'' + a.id + '\')" class="sent-cancel-btn" title="Cancelar aviso">Cancelar</button>') +
-      '</div>' +
-      '<div class="sent-content">' + escapeHtml(preview) + '</div>' +
-    '</div>';
-  }).join('') + '</div>';
-}
 
 // ═══ SEND WRITING ═══
 async function sendWriting() {
@@ -3523,51 +3192,7 @@ async function loadPronunciationList() {
   }).join('') + '</div>';
 }
 
-// ═══ LOAD MESSAGES ═══
-async function loadMessages() {
-  const msgs = await getCoordMessagesForTeacher(currentUser.id);
-  const div = document.getElementById('msgList');
-  if (!msgs.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>Nenhuma mensagem da coordenação.</p></div>'; return; }
-  const msgIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>';
-  div.innerHTML = '<div style="padding:12px 0 16px">' + msgs.map(m => {
-    const isNew = !m.read;
-    const authorName = m.author?.full_name || 'Coordenação';
-    const readBtn = isNew
-      ? '<button onclick="markMsgRead(' + m.id + ',this)" class="help-reply-btn" style="margin-top:10px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Marcar como lida</button>'
-      : '<span class="sent-status done" style="margin-top:8px;display:inline-flex"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Lida</span>';
-    const newBadge = isNew ? '<span class="sent-status pending" style="margin-left:auto;display:inline-flex">Nova</span>' : '';
-    return '<div class="msg-card">' +
-      '<div class="sent-head" style="margin-bottom:0">' +
-        '<div class="sent-icon" style="background:var(--blue-soft);color:var(--blue)">' + msgIcon + '</div>' +
-        '<div class="sent-body">' +
-          '<div class="sent-title">' + m.title + '</div>' +
-          '<div class="sent-meta">' +
-            '<span class="sent-meta-author">' + escapeHtml(authorName) + '</span>' +
-            '<span class="sent-meta-sep">•</span>' +
-            '<span>' + formatDateTime(m.created_at) + '</span>' +
-            newBadge +
-          '</div>' +
-        '</div>' +
-      '</div>' +
-      '<div class="sent-content" style="margin-top:10px">' + escapeHtml(m.content || '') + '</div>' +
-      '<div style="padding-left:50px">' + readBtn + '</div>' +
-    '</div>';
-  }).join('') + '</div>';
-}
 
-async function markMsgRead(msgId, btn) {
-  btn.disabled = true;
-  btn.textContent = 'Salvando...';
-  try {
-    await markMessageRead(msgId);
-    showToast('Mensagem marcada como lida');
-    loadMessages();
-  } catch(e) {
-    showToast('Erro: ' + e.message, 'error');
-    btn.disabled = false;
-    btn.textContent = 'Marcar como lida';
-  }
-}
 
 
 
@@ -4123,21 +3748,18 @@ async function openStudentDetail(sid, sname){
     getVocabularyForStudent(sid).catch(function(){return[];}),
     getWritingForStudent(sid).catch(function(){return[];}),
     getAssessmentGrades(sid).catch(function(){return null;}),
-    getHelpRequestsForTeacher(currentUser.id).catch(function(){return[];}),
     getScheduleSlots(currentUser.id).catch(function(){return[];})
   ]);
   var tasks=(R[0]||[]).map(function(r){return {title:(r.task&&r.task.title)||'(tarefa)', due:(r.task&&r.task.due_date)||null, status:r.status};});
   var fbs=R[1]||[], pron=R[2]||[], vocab=R[3]||[], wr=R[4]||[], grades=R[5];
-  var help=(R[6]||[]).filter(function(h){return String(h.student_id)===String(sid);});
-  var slots=(R[7]||[]).filter(function(s){return (s.student_name||'').trim().toLowerCase()===(sname||'').trim().toLowerCase();});
+  var slots=(R[6]||[]).filter(function(s){return (s.student_name||'').trim().toLowerCase()===(sname||'').trim().toLowerCase();});
   var nextClass=eaNextClass(slots);
 
-  window._stuData={sid:sid,sname:sname,stu:stu,tasks:tasks,fbs:fbs,wr:wr,pron:pron,vocab:vocab,grades:grades,help:help,nextClass:nextClass};
+  window._stuData={sid:sid,sname:sname,stu:stu,tasks:tasks,fbs:fbs,wr:wr,pron:pron,vocab:vocab,grades:grades,nextClass:nextClass};
   var tabs=[
     {k:'resumo',label:'✨ Resumo',n:null},
     {k:'tasks',label:'📝 Tarefas',n:tasks.length},
     {k:'wr',label:'✍️ Redação',n:wr.length},
-    {k:'help',label:'❓ Perguntas',n:help.length},
     {k:'fbs',label:'💬 Feedbacks',n:fbs.length},
     {k:'pron',label:'🔊 Pronúncia',n:pron.length},
     {k:'vocab',label:'📚 Vocabulário',n:vocab.length},
@@ -4159,27 +3781,17 @@ function eaStuRender(k){
     var nc=eaFmtNextClass(d.nextClass);
     var pend=(d.tasks||[]).filter(function(t){return t.status!=='submitted';}).length;
     var corr=(d.wr||[]).filter(function(w){return w.status==='submitted';}).length;
-    var oh=(d.help||[]).filter(function(x){return x.status!=='answered';}).length;
     h='<div class="stu-next">'+(nc
         ? '<div class="stu-next-lbl">Próxima aula</div><div class="stu-next-val">'+escapeHtml(nc)+'</div>'
         : '<div class="stu-next-lbl">Sem aula recorrente no schedule</div>')+'</div>'+
       '<div class="stu-cards">'+
         '<div class="stu-c'+(pend?' warn':'')+'"><div class="stu-c-n">'+pend+'</div><div class="stu-c-l">tarefas pendentes</div></div>'+
         '<div class="stu-c'+(corr?' warn':'')+'"><div class="stu-c-n">'+corr+'</div><div class="stu-c-l">redações a corrigir</div></div>'+
-        '<div class="stu-c'+(oh?' warn':'')+'"><div class="stu-c-n">'+oh+'</div><div class="stu-c-l">perguntas abertas</div></div>'+
       '</div>'+
       '<div class="stu-acts">'+
         '<button class="stu-act" onclick="eaStuGoPlan()"><span>📋</span> Plano de aula do mês</button>'+
         '<button class="stu-act" onclick="eaStuGoHw()"><span>📝</span> Enviar homework</button>'+
       '</div>';
-  } else if(k==='help'){
-    h=(d.help&&d.help.length)?d.help.map(function(q){
-      var ans=q.status==='answered';
-      var st=ans?'<span class="stu-pill" style="background:#dcfce7;color:#16a34a">respondida</span>':'<span class="stu-pill" style="background:#fef9c3;color:#a16207">aberta</span>';
-      return '<div class="stu-row"><b>'+escapeHtml(q.question||q.title||'(pergunta)')+'</b>'+st+
-        (q.answer?'<div style="font-size:12px;color:var(--g600);margin-top:4px">'+escapeHtml(q.answer)+'</div>':'')+
-        '<div style="font-size:11px;color:var(--g400);margin-top:4px">'+formatDate(q.created_at)+'</div></div>';
-    }).join(''):empty('Nenhuma pergunta deste aluno.');
   } else if(k==='tasks'){
 
     h=(d.tasks&&d.tasks.length)?d.tasks.map(function(t){var st=t.status==='submitted'?'<span class="stu-pill" style="background:#dcfce7;color:#16a34a">entregue</span>':'<span class="stu-pill" style="background:#F5F7FA;color:#d97706">pendente</span>';return '<div class="stu-row"><b>'+escapeHtml(t.title||'')+'</b>'+st+'<div style="font-size:12px;color:var(--g500);margin-top:4px">Prazo: '+formatDate(t.due)+'</div></div>';}).join(''):empty('Nenhuma tarefa para este aluno.');
@@ -4401,7 +4013,7 @@ function renderStudentAccessLogs() {
 }
 function eaProfAccessMore() { _profAccessShown += 20; renderStudentAccessLogs(); }
 document.addEventListener('DOMContentLoaded', function(){
-  ['hwList','fbList','annList','wrList','prList','vocList','msgList'].forEach(function(id){ eaWatchVerMais(id, 5); });
+  ['hwList','fbList','wrList','prList','vocList'].forEach(function(id){ eaWatchVerMais(id, 5); });
 });
 
 // ═══ MEU PERFIL ═══
@@ -4508,12 +4120,9 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'access': loadStudentAccessLogs(); break;
       case 'homework': loadHomeworkList(); break;
       case 'feedback': loadFeedbackList(); break;
-      case 'help-requests': loadHelpRequests(); break;
-      case 'announcements': loadAnnouncementList(); break;
       case 'writing': loadWritingList(); break;
       case 'pronunciation': loadPronunciationList(); break;
       case 'vocabulary': loadVocabularyList(); break;
-      case 'messages': loadMessages(); break;
       case 'profile': loadProfile(); break;
     }
   });

@@ -2452,119 +2452,6 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 .user-grid.as-list { display:flex !important; flex-direction:column !important; gap:8px !important; }
 .as-list .user-card { padding:10px 14px !important; }
 .as-list .user-card-avatar { width:38px !important; height:38px !important; min-width:38px !important; }
-/* === HELP REQUESTS (perguntas alunos) === */
-.help-card {
-  background: #fff;
-  border: 1px solid var(--g100);
-  border-radius: 14px;
-  padding: 18px 22px;
-  margin: 0 16px 12px;
-  position: relative;
-  transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
-}
-.help-card::before {
-  content: ''; position: absolute;
-  left: 0; top: 0; bottom: 0; width: 4px;
-  background: linear-gradient(180deg, #f59e0b, #fbbf24);
-  border-radius: 14px 0 0 14px;
-}
-.help-card.answered::before { background: linear-gradient(180deg, #10b981, #34d399); }
-.help-card:hover {
-  transform: translateY(-2px);
-  border-color: transparent;
-  box-shadow: 0 8px 22px rgba(11,31,51,0.07);
-}
-.help-head {
-  display: flex; align-items: flex-start; gap: 12px;
-  margin-bottom: 10px;
-}
-.help-avatar {
-  width: 38px; height: 38px; min-width: 38px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #fbbf24, #f59e0b);
-  color: #fff;
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 800; font-size: 14px;
-}
-.help-card.answered .help-avatar { background: linear-gradient(135deg, #10b981, #34d399); }
-.help-head-text { flex: 1; min-width: 0; }
-.help-student-name {
-  font-size: 14px; font-weight: 700; color: var(--navy);
-  margin-bottom: 2px;
-}
-.help-meta {
-  font-size: 11.5px; color: var(--g500);
-  display: flex; gap: 8px; align-items: center;
-}
-.help-meta .sent-status { margin-left: auto; }
-.help-question {
-  font-size: 14px; color: var(--g700);
-  line-height: 1.65;
-  padding-left: 50px;
-  margin-bottom: 10px;
-}
-.help-answer {
-  margin-left: 50px;
-  padding: 12px 16px;
-  background: linear-gradient(135deg, rgba(16,185,129,0.06), #fff);
-  border: 1px solid rgba(16,185,129,0.15);
-  border-radius: 12px;
-  font-size: 13.5px; color: var(--g700);
-  line-height: 1.6;
-  position: relative;
-}
-.help-answer::before {
-  content: 'Sua resposta';
-  display: block;
-  font-size: 10.5px; font-weight: 800;
-  color: #059669;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  margin-bottom: 4px;
-}
-.help-reply-area {
-  margin-left: 50px;
-  margin-top: 8px;
-}
-.help-reply-area textarea {
-  width: 100%;
-  padding: 12px 14px;
-  border: 1.5px solid var(--g200);
-  border-radius: 10px;
-  font-family: inherit;
-  font-size: 13.5px;
-  color: var(--navy);
-  background: var(--off-white);
-  outline: none;
-  resize: vertical;
-  min-height: 64px;
-  transition: all 0.2s;
-}
-.help-reply-area textarea:focus {
-  border-color: var(--orange);
-  background: #fff;
-  box-shadow: 0 0 0 4px rgba(215,25,32,0.08);
-}
-.help-reply-btn {
-  margin-top: 8px;
-  padding: 9px 16px;
-  border: none;
-  border-radius: 10px;
-  background: linear-gradient(var(--win-vermelho), var(--win-vermelho));
-  color: #fff;
-  font-family: inherit;
-  font-size: 12.5px;
-  font-weight: 700;
-  cursor: pointer;
-  display: inline-flex; align-items: center; gap: 6px;
-  box-shadow: 0 4px 12px rgba(215,25,32,0.20);
-  transition: all 0.2s;
-}
-.help-reply-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(215,25,32,0.30);
-}
-.help-reply-btn svg { width: 14px; height: 14px; }
 
 /* === MINHAS TAREFAS — periodicidade / fixas === */
 .coord-todo-row select.todo-recur{
@@ -2651,23 +2538,6 @@ body.sb-collapsed .main { margin-left: 92px !important; }
             <span>Nivelamentos</span>
             <span id="nivCount" class="sb-count zero">0</span>
             <span class="tip">Nivelamentos</span>
-          </button>
-          <button class="sb-link" data-section="announcements">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
-            <span>Avisos</span>
-            <span class="tip">Avisos</span>
-          </button>
-          <button class="sb-link" data-section="messages">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-            <span>Msg → Professor</span>
-            <span id="msgCount" class="sb-count zero">0</span>
-            <span class="tip">Msg → Professor</span>
-          </button>
-          <button class="sb-link" data-section="help-requests">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 12h-2v-2h2v2zm1.07-7.75-.9.92c-.5.51-.86.97-1.04 1.69-.08.32-.13.68-.13 1.14h-2v-.5c0-.46.08-.9.22-1.31.2-.58.53-1.1.95-1.52l1.24-1.26c.46-.44.68-1.1.55-1.8-.13-.72-.69-1.33-1.39-1.53-1.11-.31-2.14.32-2.47 1.27-.12.37-.43.65-.82.65h-.3C8.4 5 8 4.44 8.16 3.88c.43-1.47 1.68-2.59 3.23-2.83 1.52-.24 2.97.55 3.74 1.87.85 1.46.54 3.16-.8 4.33z"/></svg>
-            <span>Perguntas</span>
-            <span id="helpCount" class="sb-count zero">0</span>
-            <span class="tip">Perguntas dos Alunos</span>
           </button>
           <button class="sb-link" data-section="satisfaction">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
@@ -3530,79 +3400,9 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 
       <div class="section" id="sec-pronunciation-coord" style="display:none"></div>
 
-      <div class="section" id="sec-announcements">
-        <div class="section-head">
-          <div class="section-head-icon ocean">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
-          </div>
-          <div class="section-head-text">
-            <h2>Avisos</h2>
-            <p class="section-sub">Envie comunicados para alunos, professores ou todos.</p>
-          </div>
-        </div>
-        <div class="form-card">
-          <div class="f-group"><label>Título</label><input type="text" id="annTitle" placeholder="Ex: Recesso de fim de ano"></div>
-          <div class="f-group"><label>Conteúdo</label><textarea id="annContent" rows="3" placeholder="Escreva o aviso..."></textarea></div>
-          <div class="f-group"><label>Destinatários</label><select id="annTarget"><option value="">Todos</option><option value="student">Apenas alunos</option><option value="teacher">Apenas professores</option></select></div>
-          <button class="btn-send" onclick="sendAnn()">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-            Publicar Aviso
-          </button>
-        </div>
-        <div class="panel">
-          <div class="panel-head"><div class="panel-title"><span class="panel-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-5v12L3 14v-3z"/></svg></span>Avisos Publicados</div></div>
-          <div id="annList"><div class="empty-state"><div class="empty-icon">📢</div><p>Nenhum aviso.</p></div></div>
-        </div>
-      </div>
 
-      <div class="section" id="sec-messages">
-        <div class="section-head">
-          <div class="section-head-icon pink">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          </div>
-          <div class="section-head-text">
-            <h2>Mensagens para Professores</h2>
-            <p class="section-sub">Envie mensagens diretas para professores específicos.</p>
-          </div>
-        </div>
-        <div class="form-card">
-          <div class="f-group"><label>Professor</label><select id="msgTeacher"><option value="">Selecione o professor</option></select></div>
-          <div class="f-group"><label>Assunto</label><input type="text" id="msgTitle" placeholder="Ex: Aviso sobre horários"></div>
-          <div class="f-group"><label>Mensagem</label><textarea id="msgContent" rows="3" placeholder="Escreva a mensagem..."></textarea></div>
-          <button class="btn-send" onclick="sendMsg()">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-            Enviar Mensagem
-          </button>
-        </div>
-        <div class="panel">
-          <div class="panel-head"><div class="panel-title"><span class="panel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>Mensagens Enviadas</div></div>
-          <div id="msgList"><div class="empty-state"><div class="empty-icon">📩</div><p>Nenhuma mensagem.</p></div></div>
-        </div>
-      </div>
 
-      <!-- ═══ PERGUNTAS DOS ALUNOS ═══ -->
-      <div class="section" id="sec-help-requests">
-        <div class="section-head">
-          <div class="section-head-icon pink">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/><circle cx="12" cy="12" r="10"/></svg>
-          </div>
-          <div class="section-head-text">
-            <h2>Perguntas dos Alunos</h2>
-            <p class="section-sub">Dúvidas enviadas pelos seus alunos pelo botão “Pedir ajuda”. Responda — eles são notificados automaticamente.</p>
-          </div>
-        </div>
-        <div class="panel">
-          <div class="panel-head">
-            <div class="panel-title"><span class="panel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>Dúvidas recebidas</div>
-          </div>
-          <div style="padding:16px 24px;background:var(--cream);font-size:13px;color:var(--g700);border-bottom:1px solid var(--g100);display:flex;gap:10px;align-items:flex-start">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--mango)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><path d="M9 11H1l8-8 8 8h-8v8z"/><circle cx="18" cy="6" r="3"/></svg>
-            <span>Aparecem aqui as perguntas dos alunos que têm você como professor. Responda com calma — o aluno recebe a resposta na hora.</span>
-          </div>
-          <div id="coHelpList"><div class="empty-state"><div class="empty-icon">💬</div><p>Nenhuma pergunta recebida ainda.</p></div></div>
-        </div>
-      </div>
-
+      
       
       <!-- ═══ SATISFACTION SURVEY ═══ -->
       <div class="section" id="sec-satisfaction"></div>
@@ -4174,7 +3974,7 @@ function recalcFinal(){const adj=toolAdjustments.reduce((s,a)=>s+a.val,0);const 
 <script src="app-fx.js" defer></script>
 <script>
 let currentUser = null;
-const sections = {"overview":"Visão Geral","users":"Usuários","access":"Acessos de Alunos","schedules":"Schedules","nivelamento":"Nivelamentos","supervision":"Supervisão","homework":"Homeworks","feedbacks":"Feedbacks","announcements":"Avisos","messages":"Msg → Professor","help-requests":"Perguntas","writing":"Redações","pronunciation-coord":"Pronúncias","documents":"Notas de Avaliações","testimonials":"Depoimentos","teach":"Área do Professor","tool":"Ferramenta","my-students":"Meus Alunos","my-profile":"Meu Perfil","satisfaction":"Satisfação"}
+const sections = {"overview":"Visão Geral","users":"Usuários","access":"Acessos de Alunos","schedules":"Schedules","nivelamento":"Nivelamentos","supervision":"Supervisão","homework":"Homeworks","feedbacks":"Feedbacks","writing":"Redações","pronunciation-coord":"Pronúncias","documents":"Notas de Avaliações","testimonials":"Depoimentos","teach":"Área do Professor","tool":"Ferramenta","my-students":"Meus Alunos","my-profile":"Meu Perfil","satisfaction":"Satisfação"}
 function loadSatisfaction(){ if(window.EA_SAT) EA_SAT.mountCoord(document.getElementById('sec-satisfaction'), currentUser); };
 
 // ═══ INIT ═══
@@ -4288,10 +4088,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const placements = await getPlacementTests();
     const pendingNiv = placements.filter(p => p.status === 'pending').length;
     setBadge('nivCount', pendingNiv);
-    
-    // Mensagens não lidas
-    const { data: unreadMsgs } = await db.from('coord_messages').select('id').eq('read', false);
-    setBadge('msgCount', unreadMsgs?.length || 0);
     
     // Contratos vencendo (next 30 days)
     const today = new Date();
@@ -4627,8 +4423,6 @@ function eaNotifMessage(table, row, isUpdate) {
     case 'task_submissions': return { title: '📝 Novo homework', body: 'Você recebeu uma nova tarefa.' };
     case 'writing_activities': return isUpdate ? { title: '✅ Redação atualizada', body: 'Há novidade na sua redação.' } : { title: '✍️ Novo tema de redação', body: 'Um novo tema foi atribuído.' };
     case 'feedbacks': return { title: '💬 Novo feedback', body: 'Seu professor deixou um feedback.' };
-    case 'announcements': return { title: '📢 Novo aviso', body: (row && row.title) ? row.title : 'Há um novo aviso.' };
-    case 'coord_messages': return { title: '📨 Coordenação', body: (row && row.title) ? row.title : 'Você tem uma nova mensagem.' };
     case 'placement_tests': return { title: '🎯 Novo nivelamento', body: 'Um novo lead solicitou aula.' };
     default: return { title: 'WIN', body: 'Você tem uma nova notificação.' };
   }
@@ -4647,9 +4441,9 @@ async function eaOnNewNotif(role, table, row, isUpdate) {
 function eaStartRealtime(role) {
   if (window._eaRT || !db.channel) return;
   var tables = role === 'student'
-    ? [['task_submissions','student_id=eq.'+currentUser.id],['writing_activities','student_id=eq.'+currentUser.id],['feedbacks','student_id=eq.'+currentUser.id],['announcements',null]]
+    ? [['task_submissions','student_id=eq.'+currentUser.id],['writing_activities','student_id=eq.'+currentUser.id],['feedbacks','student_id=eq.'+currentUser.id]]
     : role === 'teacher'
-    ? [['writing_activities','teacher_id=eq.'+currentUser.id],['coord_messages','teacher_id=eq.'+currentUser.id]]
+    ? [['writing_activities','teacher_id=eq.'+currentUser.id]]
     : [['placement_tests',null]];
   var ch = db.channel('ea-notif-' + currentUser.id);
   tables.forEach(function (cfg) {
@@ -4738,10 +4532,9 @@ function notifFormatTime(iso) {
 
 async function loadOverview() {
   try {
-    const [profiles, placements, announcements] = await Promise.all([
+    const [profiles, placements] = await Promise.all([
       getAllProfiles(),
-      getPlacementTests(),
-      getAnnouncements()
+      getPlacementTests()
     ]);
     
     const students = profiles.filter(p => p.role === 'student');
@@ -4758,7 +4551,6 @@ async function loadOverview() {
     // Recent activity
     const recent = [];
     placements.slice(0,3).forEach(p => recent.push({title:'📅 Nivelamento: ' + p.full_name, sub: p.email + ' — ' + formatDateTime(p.created_at), badge: ({pending:'Pendente',reviewed:'Avaliado',contacted:'Contatado',enrolled:'Matriculado'}[p.status] || 'Novo'), cls: 'badge-new'}));
-    announcements.slice(0,3).forEach(a => recent.push({title:'📢 ' + a.title, sub: (a.author?.full_name||'') + ' — ' + formatDateTime(a.created_at), badge: 'Aviso', cls: 'badge-time'}));
 
     const div = document.getElementById('recentActivity');
     if (!recent.length) {
@@ -5190,140 +4982,12 @@ async function revertContacted(id) {
   } catch(e) { showToast('Erro: ' + e.message,'error'); }
 }
 
-// ═══ ANNOUNCEMENTS ═══
-async function sendAnn() {
-  const title = document.getElementById('annTitle').value.trim();
-  const content = document.getElementById('annContent').value.trim();
-  const target = document.getElementById('annTarget').value || null;
-  if (!title || !content) { showToast('Preencha título e conteúdo','error'); return; }
-  const btn = event?.target; if(btn) { btn.classList.add('loading'); btn.dataset.text = btn.textContent; btn.textContent = ''; }
-  try {
-    await createAnnouncement(currentUser.id, title, content, target);
-    showToast('Aviso publicado!');
-    document.getElementById('annTitle').value = '';
-    document.getElementById('annContent').value = '';
-    loadAnnouncementList();
-    loadOverview();
-  } catch(e) { showToast('Erro: ' + e.message, 'error'); }
-  finally { if(btn) { btn.classList.remove('loading'); btn.textContent = btn.dataset.text || 'Publicar Aviso'; } }
-}
 
-async function eaCancelSend(kind, id){
-  if(!confirm('Cancelar este aviso?\n\nEle deixar\u00e1 de aparecer para os destinat\u00e1rios. A a\u00e7\u00e3o fica registrada e pode ser revertida no banco.')) return;
-  try{
-    if(kind==='aviso') await cancelAnnouncement(id);
-    if(typeof popSnd==='function') popSnd();
-    showToast('Aviso cancelado');
-    loadAnnouncementList();
-  }catch(e){ showToast('Erro ao cancelar: '+((e&&e.message)||e),'error'); }
-}
 
-async function loadAnnouncementList() {
-  const anns = await getAllAnnouncements();
-  const div = document.getElementById('annList');
-  if (!anns.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📢</div><p>Nenhum aviso publicado.</p></div>'; return; }
-  div.innerHTML = anns.map(a => {
-    const target = a.target_role ? (a.target_role === 'student' ? 'Alunos' : 'Professores') : 'Todos';
-    const cancelled = a.cancelled;
-    return '<div class="list-item" style="' + (cancelled ? 'opacity:.65' : '') + '"><div><div class="list-title">📢 ' + a.title + (cancelled ? ' <span class="badge" style="background:#FFE4E6;color:#881337">🚫 Cancelado</span>' : '') + '</div><div class="list-sub">' + (a.author?.full_name||'') + ' → ' + target + ' — ' + formatDateTime(a.created_at) + '</div></div>' +
-      '<div style="display:flex;align-items:center;gap:8px;flex-shrink:0">' +
-        '<span class="badge badge-time">' + target + '</span>' +
-        (cancelled ? '' : '<button onclick="eaCancelSend(\'aviso\',\'' + a.id + '\')" title="Cancelar aviso" style="border:1px solid #FDA4AF;background:#fff;color:#BE123C;padding:5px 11px;border-radius:8px;cursor:pointer;font-size:11px;font-weight:800;font-family:inherit">Cancelar</button>') +
-      '</div>' +
-    '</div>';
-  }).join('');
-}
 
-// ═══ SEND MESSAGE TO TEACHER ═══
-async function sendMsg() {
-  const teacherId = document.getElementById('msgTeacher').value;
-  const title = document.getElementById('msgTitle').value.trim();
-  const content = document.getElementById('msgContent').value.trim();
-  if (!teacherId || !title || !content) { showToast('Preencha todos os campos','error'); return; }
-  try {
-    await sendCoordMessage(currentUser.id, teacherId, title, content);
-    showToast('Mensagem enviada!');
-    document.getElementById('msgTitle').value = '';
-    document.getElementById('msgContent').value = '';
-    document.getElementById('msgTeacher').value = '';
-    loadMsgList();
-  } catch(e) { showToast('Erro: ' + e.message, 'error'); }
-}
 
-async function loadMsgList() {
-  // Get all coord messages sent by this coordinator
-  const { data: msgs } = await db.from('coord_messages').select('*, teacher:profiles!coord_messages_teacher_id_fkey(full_name)').eq('author_id', currentUser.id).order('created_at', {ascending: false});
-  const div = document.getElementById('msgList');
-  if (!msgs || !msgs.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📩</div><p>Nenhuma mensagem enviada.</p></div>'; return; }
-  div.innerHTML = msgs.map(m => '<div class="list-item"><div><div class="list-title">📩 ' + m.title + '</div><div class="list-sub">→ ' + (m.teacher?.full_name||'?') + ' — ' + formatDateTime(m.created_at) + '</div></div><span class="badge ' + (m.read ? 'badge-done' : 'badge-pending') + '">' + (m.read ? 'Lida' : 'Não lida') + '</span></div>').join('');
-}
 
-// ═══ PERGUNTAS DOS ALUNOS (coordenação como professor) ═══
-async function loadCoordHelp() {
-  const div = document.getElementById('coHelpList');
-  if (!div) return;
-  let items;
-  try {
-    items = await getHelpRequestsForTeacher(currentUser.id);
-  } catch(e) {
-    div.innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><p>Tabela <code>help_requests</code> ainda não foi criada no Supabase. Rode o arquivo <code>help_requests.sql</code>.</p></div>';
-    return;
-  }
-  // badge da sidebar = perguntas ainda sem resposta
-  const open = (items||[]).filter(h => h.status !== 'answered').length;
-  const badge = document.getElementById('helpCount');
-  if (badge) { badge.textContent = open; badge.classList.toggle('zero', open === 0); }
 
-  if (!items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">💬</div><p>Nenhuma pergunta recebida ainda.</p></div>'; return; }
-
-  div.innerHTML = '<div style="padding:12px 0 16px">' + items.map(h => {
-    const isAnswered = h.status === 'answered';
-    const studentName = (h.student && h.student.full_name) || 'Aluno';
-    const initial = studentName.charAt(0).toUpperCase();
-    const subjectTag = h.subject ? '<span class="sent-status pending" style="margin-left:8px">📌 ' + nivEsc(h.subject) + '</span>' : '';
-    const statusBadge = isAnswered
-      ? '<span class="sent-status done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Respondida</span>'
-      : '<span class="sent-status pending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Aguardando</span>';
-    const answerSection = isAnswered
-      ? '<div class="help-answer">' + nivEsc(h.answer || '') + (h.answered_at ? '<div style="font-size:11px;color:var(--g500);margin-top:6px;font-style:italic">Respondida em ' + formatDateTime(h.answered_at) + '</div>' : '') + '</div>'
-      : '<div class="help-reply-area">' +
-          '<textarea id="coHelpAns-' + h.id + '" rows="3" placeholder="Sua resposta..."></textarea>' +
-          '<button onclick="submitCoordHelpAnswer(\'' + h.id + '\')" class="help-reply-btn">' +
-            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>' +
-            'Responder' +
-          '</button>' +
-        '</div>';
-
-    return '<div class="help-card' + (isAnswered ? ' answered' : '') + '">' +
-      '<div class="help-head">' +
-        '<div class="help-avatar">' + nivEsc(initial) + '</div>' +
-        '<div class="help-head-text">' +
-          '<div class="help-student-name">' + nivEsc(studentName) + subjectTag + '</div>' +
-          '<div class="help-meta">' +
-            '<span>' + formatDateTime(h.created_at) + '</span>' +
-            statusBadge +
-          '</div>' +
-        '</div>' +
-      '</div>' +
-      '<div class="help-question">' + nivEsc(h.message) + '</div>' +
-      answerSection +
-    '</div>';
-  }).join('') + '</div>';
-}
-
-async function submitCoordHelpAnswer(requestId) {
-  const ta = document.getElementById('coHelpAns-' + requestId);
-  if (!ta) return;
-  const answer = ta.value.trim();
-  if (!answer) { showToast('Escreva uma resposta.', 'error'); return; }
-  try {
-    await answerHelpRequest(requestId, answer);
-    showToast('Resposta enviada! O aluno será notificado.');
-    loadCoordHelp();
-  } catch(e) {
-    showToast('Erro: ' + e.message, 'error');
-  }
-}
 
 
 
@@ -5979,7 +5643,7 @@ async function loadCoMyStudents(){
   eaRenderStudentList('coMyStudentsList', students, coStudentCard);
 }
 document.addEventListener('DOMContentLoaded', function(){
-  ['hwList','fbList','annList','prCoordList','vocabCoordList','msgList','tWrList','wrCoordList','tHwList','tFbList','tPrList','tVocList'].forEach(function(id){ eaWatchVerMais(id, 5); });
+  ['hwList','fbList','prCoordList','vocabCoordList','tWrList','wrCoordList','tHwList','tFbList','tPrList','tVocList'].forEach(function(id){ eaWatchVerMais(id, 5); });
 });
 
 async function loadWritingCoord() {
@@ -7463,10 +7127,6 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'nivelamento': loadNivelamentos(); break;
       case 'homework': loadHomeworks(); break;
       case 'feedbacks': loadFeedbacks(); break;
-      case 'announcements': loadAnnouncementList(); break;
-      case 'announcements': loadAnnouncementList(); break;
-      case 'messages': loadMsgList(); break;
-      case 'help-requests': loadCoordHelp(); break;
       case 'pronunciation-coord': loadPronunciationCoord(); break;
       case 'documents': loadDocStudents(); break;
       case 'music': loadMusic(); break;

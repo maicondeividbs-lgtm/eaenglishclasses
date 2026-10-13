@@ -456,12 +456,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   } catch(e) { /* localStorage indisponível */ }
 
+  // Aluno no arquivo morto: encerra a sessão e explica por que não entra.
+  async function bloquearArquivado(profile) {
+    if (!isArchivedStudent(profile)) return false;
+    try { await db.auth.signOut(); } catch (e) {}
+    mostrarArquivado();
+    return true;
+  }
+  function mostrarArquivado() {
+    loginError.textContent = 'Sua matrícula na WIN está encerrada. Para voltar a estudar com a gente, fale com a coordenação.';
+    loginError.style.display = 'block';
+  }
+  try { if (new URLSearchParams(location.search).has('arquivado')) mostrarArquivado(); } catch (e) {}
+
   // Check if already logged in
   (async () => {
     if (window.__eaRecovery) return;   // em recuperação de senha: não redirecionar
     const profile = await getUserProfile();
     if (profile) {
       if (window.__eaRecovery) return;
+      if (await bloquearArquivado(profile)) return;
       console.log('[access_logs] Sessão já ativa, registrando acesso...');
       await logStudentAccess(profile.id, profile.full_name, profile.role);
       redirectByRole(profile.role);
@@ -500,6 +514,12 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Profile loaded:', profile);
         
         if (profile && profile.role) {
+          if (await bloquearArquivado(profile)) {
+            loginBtn.disabled = false;
+            document.getElementById('loginText').textContent = 'Entrar';
+            document.getElementById('loginSpinner').style.display = 'none';
+            return;
+          }
           console.log('Redirecting by role:', profile.role);
           // Registra o acesso do aluno para a coordenação
           await logStudentAccess(profile.id, profile.full_name, profile.role);

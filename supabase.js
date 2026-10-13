@@ -46,7 +46,18 @@ async function requireAuth(allowedRoles) {
     window.location.href = '/login';
     return null;
   }
+  // Aluno no arquivo morto: encerra a sessão e volta ao login com o aviso.
+  if (isArchivedStudent(profile)) {
+    try { await db.auth.signOut(); } catch (e) {}
+    window.location.href = '/login?arquivado=1';
+    return null;
+  }
   return profile;
+}
+
+// Aluno que cancelou o curso e foi para o arquivo morto (ver arquivo_morto.sql).
+function isArchivedStudent(p) {
+  return !!(p && p.role === 'student' && p.archived_at);
 }
 
 function redirectByRole(role) {
@@ -75,7 +86,8 @@ async function getAllTeachers() {
 }
 async function getAllProfiles() {
   const { data } = await db.from('profiles').select('*').order('created_at',{ascending:false});
-  return data || [];
+  // Quem está no arquivo morto sai das listas da escola; tem tela própria.
+  return (data || []).filter(p => !isArchivedStudent(p));
 }
 
 // ═══ ACCESS LOGS (Registro de acessos de alunos) ═══
@@ -1316,4 +1328,46 @@ async function removeMusicFile(path) {
   if (!path) return;
   try { await db.storage.from(MUSIC_BUCKET).remove([path]); }
   catch (e) { console.error('removeMusicFile', e); }
+}
+
+
+// ═══════════════════════════════════════════════════════════════
+// ARQUIVO MORTO — alunos que cancelaram o curso
+// Arquivar e reativar rodam no banco, numa transação só
+// (funções archive_student / restore_student, ver arquivo_morto.sql).
+// ═══════════════════════════════════════════════════════════════
+async function archiveStudent(studentId, reason) {
+  const { data, error } = await db.rpc('archive_student', { p_student: studentId, p_reason: reason || null });
+  if (error) throw error;
+  return data || {};
+}
+
+async function restoreStudent(studentId) {
+  const { data, error } = await db.rpc('restore_student', { p_student: studentId });
+  if (error) throw error;
+  return data || {};
+}
+
+async function getArchivedStudents() {
+  const { data, error } = await db.from('profiles')
+    .select('id, full_name, email, level, archived_at, archived_reason, archived_by, by:profiles!profiles_archived_by_fkey(full_name)')
+    .eq('role', 'student').not('archived_at', 'is', null)
+    .order('archived_at', { ascending: false });
+  if (error) throw error;
+  return data || [];
+}
+
+// Com quem o aluno estudava e em que horários, no momento do arquivamento.
+async function getArchiveDetails(studentIds) {
+  const ids = (studentIds || []).filter(Boolean);
+  if (!ids.length) return { vinculos: [], horarios: [] };
+  const [enr, slots] = await Promise.all([
+    db.from('enrollments')
+      .select('student_id, teacher:profiles!enrollments_teacher_id_fkey(full_name), course:courses(name)')
+      .in('student_id', ids).not('archived_at', 'is', null),
+    db.from('schedule_slots_archive')
+      .select('student_id, day_of_week, time_slot, teacher:profiles!schedule_slots_archive_teacher_id_fkey(full_name)')
+      .in('student_id', ids).order('day_of_week')
+  ]);
+  return { vinculos: enr.data || [], horarios: slots.data || [] };
 }

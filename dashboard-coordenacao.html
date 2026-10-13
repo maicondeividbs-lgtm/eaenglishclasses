@@ -2488,6 +2488,21 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 .niv-sched-notes{margin-top:8px;font-size:12.5px;color:var(--g600);line-height:1.5;font-style:italic;}
 .niv-act-btn.niv-act-detail{background:rgba(11,31,51,0.08);color:var(--blue,#0B1F33);border:1px solid rgba(11,31,51,0.18);}
 .niv-act-btn.niv-act-detail:hover{background:rgba(11,31,51,0.14);}
+
+/* ═══ ARQUIVO MORTO ═══ */
+.arq-list{display:flex;flex-direction:column;gap:12px}
+.arq-card{display:flex;align-items:flex-start;gap:16px;background:#fff;border:1px solid var(--g100);border-radius:14px;padding:16px 18px}
+.arq-main{flex:1;min-width:0}
+.arq-name{font-size:15.5px;font-weight:800;color:var(--navy)}
+.arq-tag{display:inline-block;font-size:11px;font-weight:700;color:var(--g500);background:var(--g50);border-radius:999px;padding:2px 9px;margin-left:6px;vertical-align:2px}
+.arq-sub{font-size:13px;color:var(--g500);margin-top:2px}
+.arq-meta{font-size:12.5px;color:var(--g500);margin-top:8px}
+.arq-info{font-size:12.5px;color:var(--g700);margin-top:4px;line-height:1.5}
+.arq-info b{color:var(--navy)}
+.arq-btn{flex-shrink:0;padding:10px 16px;border:2px solid var(--navy);border-radius:10px;background:#fff;color:var(--navy);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:background .2s,color .2s}
+.arq-btn:hover{background:var(--navy);color:#fff}
+.arq-btn:disabled{opacity:.6;cursor:wait}
+@media(max-width:640px){.arq-card{flex-direction:column}.arq-btn{width:100%}}
 </style>
 <!-- PWA / App -->
 <link rel="manifest" href="/manifest.webmanifest">
@@ -2527,6 +2542,11 @@ body.sb-collapsed .main { margin-left: 92px !important; }
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
             <span>Usuários</span>
             <span class="tip">Usuários</span>
+          </button>
+          <button class="sb-link" data-section="archive">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="5" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></svg>
+            <span>Arquivo morto</span>
+            <span class="tip">Arquivo morto</span>
           </button>
           <button class="sb-link" data-section="access">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/></svg>
@@ -2789,7 +2809,27 @@ body.sb-collapsed .main { margin-left: 92px !important; }
         </div>
 
         <!-- Edit User Modal -->
-        <div id="editModal" role="dialog" aria-modal="true" aria-label="Editar usuário" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center">
+        <!-- ═══ MODAL: ARQUIVAR ALUNO ═══ -->
+<div id="archiveModal" style="position:fixed;inset:0;z-index:1001;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center" onclick="if(event.target===this)closeArchiveModal()">
+  <div style="background:#fff;border-radius:20px;padding:30px;max-width:460px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,0.2)">
+    <h3 style="font-size:20px;font-weight:800;color:var(--navy);margin:0 0 6px">🗄️ Arquivar aluno</h3>
+    <p style="font-size:14px;color:var(--g500);margin:0 0 16px"><b id="archiveName" style="color:var(--navy)"></b> cancelou o curso?</p>
+    <ul style="font-size:13px;color:var(--g700);line-height:1.7;margin:0 0 16px;padding-left:18px">
+      <li>Sai das listas da escola e dos professores.</li>
+      <li>Não consegue mais entrar na plataforma.</li>
+      <li>Os horários dele saem da grade e ficam livres.</li>
+      <li><b>Nada é apagado:</b> notas, homeworks e histórico ficam guardados. Se ele voltar, é só reativar.</li>
+    </ul>
+    <label for="archiveReason" style="display:block;font-size:12px;font-weight:700;color:var(--g500);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Motivo (opcional)</label>
+    <input id="archiveReason" type="text" maxlength="200" placeholder="Ex.: mudou de cidade, questão financeira…" style="width:100%;box-sizing:border-box;padding:11px 13px;border:1.5px solid var(--g200);border-radius:10px;font-family:inherit;font-size:14px">
+    <div style="display:flex;gap:10px;margin-top:20px">
+      <button type="button" onclick="closeArchiveModal()" style="flex:1;padding:12px;border:2px solid var(--g200);border-radius:10px;background:#fff;color:var(--navy);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer">Cancelar</button>
+      <button type="button" id="archiveConfirmBtn" onclick="confirmArchive()" style="flex:1;padding:12px;border:none;border-radius:10px;background:var(--navy);color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer">Arquivar aluno</button>
+    </div>
+  </div>
+</div>
+
+<div id="editModal" role="dialog" aria-modal="true" aria-label="Editar usuário" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center">
           <div style="background:#fff;border-radius:20px;padding:32px;max-width:500px;width:90%;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,0.2)">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
               <h3 style="font-size:20px;font-weight:800;color:var(--navy)">✏️ Editar Aluno</h3>
@@ -2810,10 +2850,26 @@ body.sb-collapsed .main { margin-left: 92px !important; }
             <div class="f-group"><label>Curso</label><select id="editCourse"><option value="">Selecione o curso</option><option value="1">Interchange Intro</option><option value="2">Interchange 1</option><option value="3">Interchange 2</option><option value="4">Interchange 3</option><option value="7">Evolve 5</option><option value="8">Evolve 6</option></select></div>
             <div style="display:flex;gap:10px;margin-top:16px">
               <button class="btn-send" style="background:var(--mango);flex:1" onclick="saveUserEdit()">Salvar Alterações</button>
-              <button onclick="confirmDeleteUser()" style="padding:13px 20px;border:2px solid #BE123C;border-radius:10px;background:#fff;color:#BE123C;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer">🗑️ Excluir</button>
+              <button id="editArchiveBtn" onclick="openArchiveModal()" title="Aluno cancelou o curso: vai para o arquivo morto, sem perder o histórico" style="display:none;padding:13px 16px;border:2px solid var(--navy);border-radius:10px;background:#fff;color:var(--navy);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer">🗄️ Arquivar</button>
+<button onclick="confirmDeleteUser()" style="padding:13px 20px;border:2px solid #BE123C;border-radius:10px;background:#fff;color:#BE123C;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer">🗑️ Excluir</button>
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- ═══ ARQUIVO MORTO ═══ -->
+      <div class="section" id="sec-archive">
+        <div class="section-head">
+          <div class="section-head-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="5" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></svg></div>
+          <div class="section-head-text">
+            <h2>Arquivo morto</h2>
+            <p class="section-sub">Alunos que cancelaram o curso. Saíram das listas da escola e dos professores e não acessam a plataforma, mas todo o histórico continua guardado. Ao reativar, o aluno volta com os mesmos professores.</p>
+          </div>
+        </div>
+        <div class="coord-search-bar">
+          <input type="text" id="archiveSearch" placeholder="🔍 Buscar por nome ou e-mail..." oninput="renderArchive()">
+        </div>
+        <div id="archiveList"><div class="empty-state"><div class="empty-icon">🗄️</div><p>Carregando…</p></div></div>
       </div>
 
       <!-- ═══ ACESSOS DE ALUNOS ═══ -->
@@ -3974,7 +4030,7 @@ function recalcFinal(){const adj=toolAdjustments.reduce((s,a)=>s+a.val,0);const 
 <script src="app-fx.js" defer></script>
 <script>
 let currentUser = null;
-const sections = {"overview":"Visão Geral","users":"Usuários","access":"Acessos de Alunos","schedules":"Schedules","nivelamento":"Nivelamentos","supervision":"Supervisão","homework":"Homeworks","feedbacks":"Feedbacks","writing":"Redações","pronunciation-coord":"Pronúncias","documents":"Notas de Avaliações","testimonials":"Depoimentos","teach":"Área do Professor","tool":"Ferramenta","my-students":"Meus Alunos","my-profile":"Meu Perfil","satisfaction":"Satisfação"}
+const sections = {"overview":"Visão Geral","users":"Usuários","archive":"Arquivo morto","access":"Acessos de Alunos","schedules":"Schedules","nivelamento":"Nivelamentos","supervision":"Supervisão","homework":"Homeworks","feedbacks":"Feedbacks","writing":"Redações","pronunciation-coord":"Pronúncias","documents":"Notas de Avaliações","testimonials":"Depoimentos","teach":"Área do Professor","tool":"Ferramenta","my-students":"Meus Alunos","my-profile":"Meu Perfil","satisfaction":"Satisfação"}
 function loadSatisfaction(){ if(window.EA_SAT) EA_SAT.mountCoord(document.getElementById('sec-satisfaction'), currentUser); };
 
 // ═══ INIT ═══
@@ -5009,6 +5065,8 @@ async function openEditModal(userId) {
   document.getElementById('editName').value = user.full_name || '';
   document.getElementById('editEmail').value = user.email || '';
   document.getElementById('editRole').value = user.role || 'student';
+  const arqBtn = document.getElementById('editArchiveBtn');
+  if (arqBtn) arqBtn.style.display = user.role === 'student' ? '' : 'none';
   document.getElementById('editLevel').value = user.level || '';
   document.getElementById('editBirthday').value = user.birthday || '';
   document.getElementById('editContractStart').value = user.contract_start || '';
@@ -7123,6 +7181,7 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'schedules': initCoordSchedule(); break;
       case 'supervision': initSupFilter(); loadCurrentSup(); break;
       case 'users': loadUsers(); break;
+      case 'archive': loadArchive(); break;
       case 'access': loadAccessLogs(); break;
       case 'nivelamento': loadNivelamentos(); break;
       case 'homework': loadHomeworks(); break;
@@ -7666,6 +7725,90 @@ async function submitGrade() {
   const m = document.getElementById('gradeModal');
   if (m) m.addEventListener('click', function(e){ if (e.target === m) m.style.display = 'none'; });
 })();
+
+// ═══ ARQUIVO MORTO ═══
+// Arquivar e reativar acontecem no banco, numa transação só (arquivo_morto.sql).
+let _archiveCache = [], _archiveDetails = { vinculos: [], horarios: [] };
+const DIAS_SEMANA = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+
+function openArchiveModal() {
+  document.getElementById('archiveName').textContent = document.getElementById('editName').value || 'Este aluno';
+  document.getElementById('archiveReason').value = '';
+  document.getElementById('archiveModal').style.display = 'flex';
+  setTimeout(() => document.getElementById('archiveReason').focus(), 50);
+}
+function closeArchiveModal() { document.getElementById('archiveModal').style.display = 'none'; }
+
+async function confirmArchive() {
+  const userId = document.getElementById('editUserId').value;
+  const btn = document.getElementById('archiveConfirmBtn');
+  btn.disabled = true; btn.textContent = 'Arquivando…';
+  try {
+    const r = await archiveStudent(userId, document.getElementById('archiveReason').value);
+    const h = r.horarios || 0;
+    showToast('Aluno arquivado' + (h ? ' · ' + h + (h === 1 ? ' horário liberado' : ' horários liberados') + ' na grade' : '') + '.');
+    closeArchiveModal(); closeEditModal(); loadUsers(); loadOverview();
+  } catch (e) {
+    const m = (e && e.message) || String(e);
+    showToast(/archive_student|schema cache|function/i.test(m) ? 'Rode o arquivo_morto.sql no Supabase antes de usar o arquivo morto.' : 'Erro ao arquivar: ' + m, 'error');
+  } finally { btn.disabled = false; btn.textContent = 'Arquivar aluno'; }
+}
+
+async function loadArchive() {
+  const div = document.getElementById('archiveList');
+  try {
+    _archiveCache = await getArchivedStudents();
+    _archiveDetails = await getArchiveDetails(_archiveCache.map(a => a.id));
+  } catch (e) {
+    div.innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><p>O arquivo morto ainda não foi ativado. Rode o <code>arquivo_morto.sql</code> no Supabase.</p></div>';
+    return;
+  }
+  renderArchive();
+}
+
+function renderArchive() {
+  const div = document.getElementById('archiveList'); if (!div) return;
+  const esc = x => String(x == null ? '' : x).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const termo = ((document.getElementById('archiveSearch') || {}).value || '').trim().toLowerCase();
+  const lista = _archiveCache.filter(a => !termo || ((a.full_name || '') + ' ' + (a.email || '')).toLowerCase().includes(termo));
+  if (!_archiveCache.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">🗄️</div><p>Nenhum aluno no arquivo morto.</p></div>'; return; }
+  if (!lista.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">🔍</div><p>Nenhum aluno encontrado.</p></div>'; return; }
+  div.innerHTML = '<div class="arq-list">' + lista.map(a => {
+    const prof = _archiveDetails.vinculos.filter(v => v.student_id === a.id)
+      .map(v => esc(((v.teacher && v.teacher.full_name) || 'Professor') + (v.course && v.course.name ? ' · ' + v.course.name : ''))).join(', ');
+    const hor = _archiveDetails.horarios.filter(h => h.student_id === a.id)
+      .map(h => esc((DIAS_SEMANA[h.day_of_week] || '?') + ' ' + String(h.time_slot || '').slice(0, 5) + (h.teacher && h.teacher.full_name ? ' (' + h.teacher.full_name + ')' : ''))).join(', ');
+    const quando = a.archived_at ? formatDate(a.archived_at) : '';
+    return '<div class="arq-card">' +
+      '<div class="arq-main"><div class="arq-name">' + esc(a.full_name) + (a.level ? ' <span class="arq-tag">' + esc(a.level) + '</span>' : '') + '</div>' +
+      '<div class="arq-sub">' + esc(a.email || '') + '</div>' +
+      '<div class="arq-meta">Arquivado em ' + esc(quando) + (a.by && a.by.full_name ? ' por ' + esc(a.by.full_name) : '') +
+        (a.archived_reason ? ' · <i>' + esc(a.archived_reason) + '</i>' : '') + '</div>' +
+      (prof ? '<div class="arq-info"><b>Professores:</b> ' + prof + '</div>' : '') +
+      (hor ? '<div class="arq-info"><b>Horários que tinha:</b> ' + hor + '</div>' : '') +
+      '</div>' +
+      '<button type="button" class="arq-btn" data-restore="' + esc(a.id) + '">↩ Reativar</button>' +
+    '</div>';
+  }).join('') + '</div>';
+}
+
+document.addEventListener('click', async function (e) {
+  const b = e.target && e.target.closest ? e.target.closest('[data-restore]') : null;
+  if (!b) return;
+  const id = b.getAttribute('data-restore');
+  const a = _archiveCache.find(x => x.id === id);
+  if (!confirm('Reativar ' + ((a && a.full_name) || 'este aluno') + '?\n\nEle volta às listas e aos mesmos professores e recupera o acesso. Os horários antigos NÃO voltam sozinhos: agende de novo na grade.')) return;
+  b.disabled = true; b.textContent = 'Reativando…';
+  try {
+    const r = await restoreStudent(id);
+    const v = r.vinculos || 0;
+    showToast('Aluno reativado' + (v ? ' com ' + v + (v === 1 ? ' professor' : ' professores') : '') + '. Agende os horários na grade.');
+    loadArchive(); loadOverview();
+  } catch (err) {
+    showToast('Erro ao reativar: ' + ((err && err.message) || err), 'error');
+    b.disabled = false; b.textContent = '↩ Reativar';
+  }
+});
 </script>
 
 <!-- Modal global (fora das seções) -->

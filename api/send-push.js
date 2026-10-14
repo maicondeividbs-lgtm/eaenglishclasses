@@ -137,7 +137,7 @@ export default async function handler(req, res) {
     try { const mod = await import('web-push'); webpush = mod.default || mod; }
     catch (e) { res.status(500).json({ error: 'web-push não carregou', detail: String(e) }); return; }
     webpush.setVapidDetails(
-      process.env.VAPID_SUBJECT || 'mailto:eaenglished@gmail.com',
+      process.env.VAPID_SUBJECT || 'mailto:contatowincord@gmail.com',
       process.env.VAPID_PUBLIC, process.env.VAPID_PRIVATE
     );
 
@@ -178,6 +178,12 @@ export default async function handler(req, res) {
     const rec = body.record || body.new || {};
     const old = body.old_record || body.old || null;
     if (!table || !rec) { res.status(200).json({ skipped: 'no record' }); return; }
+    // Atualizações que só marcam "visto" (seen_at) não geram aviso — senão o
+    // aluno abrir a seção reenviaria push/e-mail do item que ele acabou de ver.
+    if (old && typeof old === 'object') {
+      const changed = Object.keys(rec).some(k => k !== 'seen_at' && JSON.stringify(rec[k]) !== JSON.stringify(old[k]));
+      if (!changed) { res.status(200).json({ skipped: 'only seen_at changed' }); return; }
+    }
 
     const r = await resolve(table, rec, old);
     if (!r) { res.status(200).json({ skipped: 'no mapping' }); return; }

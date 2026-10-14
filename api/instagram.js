@@ -1,17 +1,17 @@
 // Função serverless da Vercel — retorna as publicações recentes do Instagram
-// da EA para o site (index.html → seção "Instagram").
+// da WIN para o site (index.html → seção "Instagram").
 //
 // ► VERSÃO SEM APP NA META (acessível no Brasil)
 // Em vez da Graph API (que exige app/token na Meta), esta função lê uma URL de
 // FEED JSON pronta — gerada por um serviço como Behold.so (plano grátis),
-// RSS.app, EmbedSocial, etc. Você conecta o @contatoea no painel do serviço,
+// RSS.app, EmbedSocial, etc. Você conecta o @contatowin no painel do serviço,
 // copia a URL do feed JSON e cola na variável de ambiente abaixo.
 //
 // Variáveis de ambiente (Vercel → Settings → Environment Variables):
 //   IG_FEED_URL   URL do feed JSON (ex.: https://feeds.behold.so/XXXXXXXX)
 //   IG_LIMIT      (opcional) quantos posts exibir — padrão 9
 //
-// Sem IG_FEED_URL definida, o site mostra só o botão "Seguir @contatoea".
+// Sem IG_FEED_URL definida, o site mostra só o botão "Seguir @contatowin".
 // Nenhum segredo fica versionado.
 
 function cors(res) {

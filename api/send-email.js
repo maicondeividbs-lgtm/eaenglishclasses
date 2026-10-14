@@ -8,10 +8,10 @@
 //   RESEND_API_KEY               (segredo do Resend — começa com "re_")
 //   EA_PUSH_SECRET               o MESMO segredo já usado no push (o webhook envia junto)
 // Opcionais:
-//   EMAIL_FROM       remetente verificado. Padrão: EA English Classes <avisos@eaenglishclasses.com.br>
-//   EMAIL_REPLY_TO   endereço de resposta (ex.: eaenglished@gmail.com)
+//   EMAIL_FROM       remetente verificado. Padrão: WIN <avisos@eaenglishclasses.com.br>
+//   EMAIL_REPLY_TO   endereço de resposta (ex.: contatowincord@gmail.com)
 //   SITE_URL         base dos links. Padrão: https://www.eaenglishclasses.com.br
-//   EMAIL_LOGO_URL   logo do e-mail. Padrão: SITE_URL + '/icons/Logo_EA.jpg'
+//   EMAIL_LOGO_URL   logo do e-mail. Padrão: SITE_URL + '/icons/Logo_WIN.jpg'
 
 const SB_URL = process.env.SUPABASE_URL;
 const SB_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -19,7 +19,7 @@ const RESEND_KEY = process.env.RESEND_API_KEY;
 const FROM = process.env.EMAIL_FROM || 'WIN <avisos@eaenglishclasses.com.br>';
 const REPLY_TO = process.env.EMAIL_REPLY_TO || '';
 const SITE_URL = (process.env.SITE_URL || 'https://www.eaenglishclasses.com.br').replace(/\/+$/, '');
-const LOGO = process.env.EMAIL_LOGO_URL || (SITE_URL + '/icons/Logo_EA.jpg');
+const LOGO = process.env.EMAIL_LOGO_URL || (SITE_URL + '/icons/Logo_WIN.jpg');
 
 // ── Paleta oficial da marca ──
 const C = { navy:'#0B1F33', blue:'#0B1F33', orange:'#D71920', mango:'#6F8FA8', ocean:'#D8DEDD', cream:'#F5F7FA' };
@@ -229,9 +229,9 @@ function template(p, name) {
     '<tr><td style="padding:24px 34px;background:#f7f8fb;border-top:1px solid #eceef3">' +
       '<div style="color:#0B1F33;font-size:14px;font-weight:800;margin-bottom:4px">WIN</div>' +
       '<div style="color:#7c8499;font-size:12px;line-height:1.7">' +
-        'Escola de inglês online · São Paulo, SP — Brasil<br>' +
+        'Escola de inglês online · SP — Brasil<br>' +
         '<a href="' + esc(SITE_URL) + '" target="_blank" style="color:#0B1F33;text-decoration:none;font-weight:600">' + esc(host) + '</a>' +
-        ' &nbsp;·&nbsp; <a href="https://www.instagram.com/contatoea" target="_blank" style="color:#0B1F33;text-decoration:none;font-weight:600">@contatoea</a>' +
+        ' &nbsp;·&nbsp; <a href="https://www.instagram.com/contatowin" target="_blank" style="color:#0B1F33;text-decoration:none;font-weight:600">@contatowin</a>' +
       '</div>' +
     '</td></tr>' +
     '</table>' +
@@ -292,6 +292,12 @@ export default async function handler(req, res) {
     const rec = body.record || body.new || {};
     const old = body.old_record || body.old || null;
     if (!table || !rec) { res.status(200).json({ skipped: 'no record' }); return; }
+    // Atualizações que só marcam "visto" (seen_at) não geram aviso — senão o
+    // aluno abrir a seção reenviaria push/e-mail do item que ele acabou de ver.
+    if (old && typeof old === 'object') {
+      const changed = Object.keys(rec).some(k => k !== 'seen_at' && JSON.stringify(rec[k]) !== JSON.stringify(old[k]));
+      if (!changed) { res.status(200).json({ skipped: 'only seen_at changed' }); return; }
+    }
 
     const p = await plan(table, rec, old);
     if (!p) { res.status(200).json({ skipped: 'no mapping' }); return; }

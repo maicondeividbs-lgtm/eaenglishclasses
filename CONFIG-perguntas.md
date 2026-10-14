@@ -42,7 +42,7 @@ mesmo segredo `EA_PUSH_SECRET` já usado nos outros webhooks.)
   `{"test":true,"to":"voce@exemplo.com","cat":"pergunta"}`.
 
 ## Sobre o ícone da notificação
-O push agora usa a **logo da escola** (`icons/Logo_EA.jpg`) como imagem grande.
+O push agora usa a **logo da escola** (`icons/Logo_WIN.jpg`) como imagem grande.
 O quadradinho menor no canto (a logo do app, `icons/icon-192.png`) é colocado
 automaticamente pelo Android a partir do `manifest.webmanifest` — por isso ele
 já aparecia certo. A versão do Service Worker subiu para `ea-v10`; ao publicar,

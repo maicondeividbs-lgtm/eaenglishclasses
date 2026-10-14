@@ -7,7 +7,7 @@
 //   SUPABASE_SERVICE_ROLE_KEY    (segredo do Supabase — Project Settings > API)
 //   VAPID_PUBLIC                 chave pública VAPID
 //   VAPID_PRIVATE                chave privada VAPID (segredo)
-//   VAPID_SUBJECT                ex.: mailto:eaenglished@gmail.com
+//   VAPID_SUBJECT                ex.: mailto:contatowincord@gmail.com
 //   EA_PUSH_SECRET               um segredo qualquer; o mesmo é enviado pelo webhook
 // (web-push é carregado sob demanda dentro do handler, com tratamento de erro)
 
@@ -81,7 +81,7 @@ export default async function handler(req, res) {
       return;
     }
     webpush.setVapidDetails(
-      process.env.VAPID_SUBJECT || 'mailto:eaenglished@gmail.com',
+      process.env.VAPID_SUBJECT || 'mailto:contatowincord@gmail.com',
       process.env.VAPID_PUBLIC,
       process.env.VAPID_PRIVATE
     );
@@ -93,7 +93,7 @@ export default async function handler(req, res) {
     // Modo de teste: { test:true, user_id:"..." } envia push direto para o aparelho daquele usuário.
     if (body.test && body.user_id) {
       const tsubs = await sbSelect(`push_subscriptions?user_id=eq.${body.user_id}&select=endpoint,subscription`);
-      const tpayload = JSON.stringify({ title: body.title || '🔔 Teste EA', body: body.body || 'Se você recebeu isto, o push está funcionando!', url: '/login', tag: 'ea-test' });
+      const tpayload = JSON.stringify({ title: body.title || '🔔 Teste WIN', body: body.body || 'Se você recebeu isto, o push está funcionando!', url: '/login', tag: 'ea-test' });
       let tsent = 0; const errors = []; let removed = 0;
       await Promise.all((tsubs || []).map(async (s) => {
         try { await webpush.sendNotification(s.subscription, tpayload); tsent++; }

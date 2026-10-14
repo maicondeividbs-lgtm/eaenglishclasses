@@ -3139,7 +3139,7 @@ async function loadOverview() {
   } catch(e) { console.error('Journey:', e); renderJourney(null); renderCurrentBook(null); }
 }
 
-// Trilha fixa de livros da EA — define a ordem da jornada
+// Trilha fixa de livros da WIN — define a ordem da jornada
 const EA_JOURNEY = [
   { key: 'intro',         label: 'Interchange Intro', short: 'Intro',  cefr: 'A1',  img: 'img/books/interchange-intro.jpg' },
   { key: 'interchange 1', label: 'Interchange 1',     short: 'Inter 1', cefr: 'A2', img: 'img/books/interchange-1.jpg' },
@@ -3496,7 +3496,7 @@ async function loadGrades() {
         '</div>' +
       '</div>';
 
-    // Cards por livro (na ordem da jornada EA)
+    // Cards por livro (na ordem da jornada WIN)
     html += '<div class="grades-section-label">Notas por livro</div>';
 
     const orderedBooks = [];

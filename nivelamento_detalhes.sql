@@ -1,5 +1,5 @@
 -- ═══════════════════════════════════════════════════════════════
--- DETALHES DO NIVELAMENTO — EA English Classes
+-- DETALHES DO NIVELAMENTO — WIN
 -- Adiciona campos para a coordenação agendar a aula experimental
 -- de cada lead (data, horário, nível, livro, professor, observações).
 -- Rode no Supabase → SQL Editor. É seguro rodar mais de uma vez.

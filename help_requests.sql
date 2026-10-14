@@ -1,5 +1,5 @@
 -- ═══════════════════════════════════════════════════════════════
--- PERGUNTAS DOS ALUNOS — EA English Classes  (tabela: help_requests)
+-- PERGUNTAS DOS ALUNOS — WIN  (tabela: help_requests)
 -- Aluno envia uma pergunta ao professor; o professor responde.
 -- Dispara notificação (push) + e-mail nos dois sentidos.
 -- Rode no Supabase → SQL Editor. É seguro rodar mais de uma vez.

@@ -1,4 +1,4 @@
-/* EA English Classes — registro do PWA + instalação (Android/iPhone) */
+/* WIN — registro do PWA + instalação (Android/iPhone) */
 (function () {
   if (!('serviceWorker' in navigator)) return;
 
@@ -102,7 +102,7 @@
   window.addEventListener('appinstalled', function () {
     var b = document.getElementById('eaInstall'); if (b) b.remove();
     setDismissed();
-    eaToast('App instalado! Procure o ícone "EA." na tela inicial. 🎉');
+    eaToast('App instalado! Procure o ícone "WIN" na tela inicial. 🎉');
   });
 
   // Toast leve (reutiliza estilo simples)

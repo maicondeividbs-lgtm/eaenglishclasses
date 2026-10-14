@@ -1,5 +1,5 @@
 -- ═══════════════════════════════════════════════════════════════
--- PLANOS DE AULA — EA English Classes
+-- PLANOS DE AULA — WIN
 -- Preparação de aulas por ALUNO e por MÊS (estrutura da "Preparação de aulas").
 --   • lesson_plans          → cabeçalho (1 por professor + aluno + mês): Livro, Nível, Observações
 --   • lesson_plan_entries   → linhas da grade: Data, Tópico, Páginas, Homework, Last homework

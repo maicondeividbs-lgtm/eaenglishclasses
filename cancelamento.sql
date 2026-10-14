@@ -1,5 +1,5 @@
 -- ═══════════════════════════════════════════════════════════════
--- CANCELAMENTO DE ENVIOS — EA English Classes
+-- CANCELAMENTO DE ENVIOS — WIN
 -- Marca Homework / Feedback / Aviso como "cancelado".
 -- O destinatário (aluno) deixa de ver; o registro permanece para
 -- auditoria e pode ser revertido (cancelled = false).

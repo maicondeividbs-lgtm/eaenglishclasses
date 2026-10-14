@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════
-// EA ENGLISH CLASSES — SUPABASE CONNECTION v2
+// WIN — SUPABASE CONNECTION v2
 // ═══════════════════════════════════════════════════════
 
 const SUPABASE_URL = 'https://ktdrgvlyrotqpzlunlqs.supabase.co';

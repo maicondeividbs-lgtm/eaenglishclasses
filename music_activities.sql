@@ -1,5 +1,5 @@
 -- ═══════════════════════════════════════════════════════════════
--- ATIVIDADES DE MÚSICA — EA English Classes
+-- ATIVIDADES DE MÚSICA — WIN
 --   Coordenação envia duas versões (professor e aluno) em Word.
 --   Professores baixam pela Biblioteca.
 --

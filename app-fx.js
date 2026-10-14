@@ -1,4 +1,4 @@
-/* EA English Classes — feedback de interação do app (som leve + vibração + toque) */
+/* WIN — feedback de interação do app (som leve + vibração + toque) */
 (function () {
   'use strict';
 

@@ -1,5 +1,5 @@
 -- ═══════════════════════════════════════════════════════════════
--- PLANOS DE AULA — evolução v2 (EA English Classes)
+-- PLANOS DE AULA — evolução v2 (WIN)
 --   1) lesson_plans.book_pages            → total de páginas do livro (completude do curso)
 --   2) lesson_plan_entries.last_auto       → marca se o "Last homework" é automático
 --   3) speaking_notes                      → observações de speaking por aluno/data

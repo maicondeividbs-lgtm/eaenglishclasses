@@ -1,18 +1,18 @@
-/* EA English Classes — Service Worker (PWA)
+/* WIN — Service Worker (PWA)
    Estratégia segura:
    - Apenas requisições GET de MESMA origem são tratadas.
    - Supabase/API/CDNs (cross-origin) e POST/PUT passam direto (dados e auth sempre ao vivo).
    - Páginas autenticadas (dashboards/login) nunca são armazenadas em cache.
 */
-const VERSION = 'ea-v55';
-const CACHE = 'ea-shell-' + VERSION;
+const VERSION = 'win-v56';
+const CACHE = 'win-shell-' + VERSION;
 const PRECACHE = [
   '/offline',
   '/style.css',
   '/manifest.webmanifest',
   '/icons/icon-192.png',
   '/icons/icon-512.png',
-  '/icons/Logo_EA.jpg',
+  '/icons/Logo_WIN.jpg',
   '/icons/notif-icon.png',
   '/icons/notif-badge.png'
 ];
@@ -33,12 +33,12 @@ self.addEventListener('activate', (e) => {
   );
 });
 
-// ── Notificação padronizada da EA (logo oficial + categoria + ação) ──
+// ── Notificação padronizada da WIN (logo oficial + categoria + ação) ──
 function eaShowNotification(d) {
   d = d || {};
   var opts = {
     body: d.body || '',
-    icon: '/icons/Logo_EA.jpg',      // logo da escola (aparece grande, recortada em círculo)
+    icon: '/icons/Logo_WIN.jpg',      // logo da escola (aparece grande, recortada em círculo)
     badge: '/icons/notif-badge.png', // monocromático para a barra de status
     vibrate: [60, 30, 60],
     tag: d.tag || 'ea-notif',        // mesma categoria agrupa/atualiza

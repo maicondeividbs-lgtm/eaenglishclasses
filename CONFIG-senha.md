@@ -31,7 +31,7 @@ Supabase → **Authentication → Emails → SMTP Settings** → *Enable Custom 
 - Username: `resend`
 - Password: **sua `RESEND_API_KEY`** (a mesma `re_...` já usada na Vercel)
 - Sender email: `avisos@eaenglishclasses.com.br`  *(domínio já verificado no Resend)*
-- Sender name: `EA English Classes`
+- Sender name: `WIN`
 
 Isso troca o remetente `…@mail.app.supabase.io` pelo da escola, melhora a entrega
 e remove o rodapé “powered by Supabase”. (O SMTP padrão do Supabase também tem
@@ -39,10 +39,10 @@ limite baixo de envios; o Resend resolve isso.)
 
 ---
 
-## 3) Template com a marca EA
+## 3) Template com a marca WIN
 Supabase → **Authentication → Emails → Reset Password**
 
-- **Subject:** `Redefinição de senha — EA English Classes`
+- **Subject:** `Redefinição de senha — WIN`
 - **Message body** → aba **Source** → cole o conteúdo de **`supabase-email-reset.html`**
   (está na raiz do projeto).
 
@@ -57,7 +57,7 @@ novo **ou** com o padrão.
 
 ## Testar
 1. Tela de login → **Esqueci a senha** → digite o e-mail → enviar.
-2. Abra o e-mail (já com a cara da EA) → **Criar nova senha**.
+2. Abra o e-mail (já com a cara da WIN) → **Criar nova senha**.
 3. Deve abrir o `login.html` direto na tela de definir senha → salve → faça login.
 
 **Observações**

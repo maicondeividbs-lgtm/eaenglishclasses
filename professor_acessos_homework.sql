@@ -1,6 +1,6 @@
 -- ═══════════════════════════════════════════════════════════════
 -- PROFESSOR — ver acessos dos PRÓPRIOS alunos + marcar homework como feito
--- EA English Classes
+-- WIN
 --
 -- Tudo aqui é ADITIVO e IDEMPOTENTE (seguro rodar mais de uma vez).
 -- NÃO remove nem altera nenhuma política existente de aluno/coordenação.

@@ -21,7 +21,7 @@ h1, h2 { letter-spacing: -0.02em; }
 }
 
 /* ── logo ───────────────────────────────────────────────────────
-   O texto "EA." virou imagem. O elemento de texto continua no DOM,
+   O texto da marca virou imagem. O elemento de texto continua no DOM,
    só escondido. A área de proteção vem do espaçamento em volta. */
 .nav-logo-text { display: none !important; }
 .nav-logo-icon {

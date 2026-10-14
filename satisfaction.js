@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════
-   PESQUISA DE SATISFAÇÃO — módulo compartilhado (EA English Classes)
+   PESQUISA DE SATISFAÇÃO — módulo compartilhado (WIN)
    Eixo aluno → coordenação. O professor NÃO acessa (garantido por RLS).
    Depende do client global `db` (supabase.js) e de `showToast` (opcional).
    API:

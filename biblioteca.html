@@ -1831,6 +1831,80 @@
   .mus2-seg button,.mus2-temas button{flex-shrink:0}
   .mus2-grid{grid-template-columns:1fr}
 }
+
+/* barra de seções: 7 seções + livro precisam de ~1080px (a marca limitava a 980px) */
+.bib-tabs-wrap .bib-tabs{max-width:1100px!important}
+@media (min-width:641px) and (max-width:1180px){ .bib-ctx-txt{display:none} .bib-ctx{padding-right:10px} }
+@media (min-width:641px) and (max-width:1024px){ .bib-tabs-wrap .bib-tab{padding-left:7px!important;padding-right:7px!important;font-size:12.5px!important;gap:5px} }
+@media (min-width:641px) and (max-width:880px){ .bib-tabs-wrap .bib-tabs{flex-wrap:wrap;justify-content:center;row-gap:2px} .bib-ctx{border-right:none} }
+
+/* ═══ Vocabulário por unidade ═══ */
+.voc-unidades{display:flex;gap:6px;overflow-x:auto;padding:2px 2px 10px;margin-bottom:14px;scrollbar-width:thin}
+.voc-unidades button{flex-shrink:0;padding:8px 14px;border:1px solid var(--g200);background:#fff;color:var(--navy);border-radius:999px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:border-color .2s,background .2s,color .2s}
+.voc-unidades button:hover{border-color:var(--navy)}
+.voc-unidades button.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.voc-barra{position:sticky;top:8px;z-index:5;display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px;background:#fff;border:1px solid var(--g100);border-radius:var(--r-lg);padding:14px 18px;margin-bottom:10px;box-shadow:0 8px 24px -18px rgba(11,31,51,.35)}
+.voc-resumo{display:flex;flex-direction:column;line-height:1.25;min-width:150px}
+.voc-resumo b{font-size:17px;font-weight:800;color:var(--navy)}
+.voc-resumo span{font-size:12.5px;color:var(--g500)}
+.voc-resumo em{font-style:normal;font-size:12px;font-weight:700;color:var(--orange)}
+.voc-switch{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--navy);cursor:pointer;user-select:none}
+.voc-switch input{position:absolute;opacity:0;width:1px;height:1px}
+.voc-switch span{width:36px;height:20px;border-radius:999px;background:var(--g200);position:relative;transition:background .2s}
+.voc-switch span::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.voc-switch input:checked+span{background:var(--orange)}
+.voc-switch input:checked+span::after{transform:translateX(16px)}
+.voc-switch input:focus-visible+span{outline:2px solid var(--navy);outline-offset:2px}
+.voc-acoes{display:flex;flex-wrap:wrap;gap:6px;margin-left:auto}
+.voc-ac{padding:9px 13px;border:1px solid var(--g200);background:#fff;color:var(--navy);border-radius:var(--r-sm);font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;transition:border-color .2s,background .2s,color .2s}
+.voc-ac:hover:not(:disabled){border-color:var(--navy);background:var(--navy);color:#fff}
+.voc-ac.pri{background:var(--orange);border-color:var(--orange);color:#fff}
+.voc-ac.pri:hover:not(:disabled){background:var(--orange-light);border-color:var(--orange-light)}
+.voc-ac.cartoes{border-color:var(--navy)}
+.voc-ac:disabled{opacity:.45;cursor:not-allowed}
+.voc-marcar{display:flex;gap:14px;margin:0 0 14px 4px}
+.voc-marcar button{border:none;background:none;padding:0;font:inherit;font-size:12.5px;font-weight:600;color:var(--g500);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.voc-marcar button:hover{color:var(--navy)}
+.voc-grupos{columns:2;column-gap:16px}
+.voc-grupo{break-inside:avoid;background:#fff;border:1px solid var(--g100);border-radius:var(--r-lg);margin:0 0 16px;overflow:hidden;transition:opacity .2s}
+.voc-grupo.exp{border-left:3px solid var(--orange)}
+.voc-grupo.off{opacity:.45}
+.voc-gh{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--g100);cursor:pointer;background:var(--off-white)}
+.voc-gh input{width:17px;height:17px;accent-color:var(--orange);flex-shrink:0;cursor:pointer}
+.voc-gt{flex:1;min-width:0;line-height:1.25}
+.voc-gt b{display:block;font-size:13.5px;font-weight:800;color:var(--navy)}
+.voc-gt small{font-size:12px;color:var(--g500)}
+.voc-gh i{font-style:normal;font-size:11px;font-weight:700;color:var(--g500);background:#fff;border:1px solid var(--g100);border-radius:999px;padding:1px 8px}
+.voc-lista{list-style:none;margin:0;padding:6px 0}
+.voc-it{display:flex;gap:12px;align-items:baseline;padding:5px 16px;font-size:14px;line-height:1.4}
+.voc-it.resp{padding-left:34px}
+.voc-it.resp .voc-en::before{content:'↳ ';color:var(--g300)}
+.voc-en{flex:1 1 52%;color:var(--navy);font-weight:600}
+.voc-pt{flex:1 1 48%;color:var(--g500)}
+.sem-trad .voc-pt{display:none}
+.voc-busca{font-size:14px;color:var(--g500);margin:0 0 12px}
+.voc-busca b{color:var(--navy)}
+.voc-res{background:#fff;border:1px solid var(--g100);border-radius:var(--r-lg)}
+.voc-res .voc-it{border-bottom:1px solid var(--g100);padding:9px 16px}
+.voc-un{flex-shrink:0;border:1px solid var(--g200);background:#fff;border-radius:999px;padding:3px 10px;font:inherit;font-size:11.5px;font-weight:700;color:var(--navy);cursor:pointer}
+.voc-un:hover{border-color:var(--orange);color:var(--orange)}
+.voc-it mark{background:rgba(215,25,32,.12);color:inherit;border-radius:3px;padding:0 2px}
+/* cartões para projetar */
+.voc-ov{position:fixed;inset:0;z-index:10000;background:var(--navy);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:20px 20px 28px}
+.voc-ov[hidden]{display:none}
+body.voc-ov-aberto{overflow:hidden}
+.voc-ov-top{width:100%;max-width:1000px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:13px;font-weight:700;letter-spacing:.06em;color:rgba(245,247,250,.75)}
+.voc-ov-top div{display:flex;gap:8px}
+.voc-ov-top button,.voc-ov-nav button{border:1px solid rgba(245,247,250,.3);background:transparent;color:#fff;border-radius:var(--r-sm);padding:8px 14px;font:inherit;font-weight:700;cursor:pointer;transition:background .2s,border-color .2s}
+.voc-ov-top button:hover,.voc-ov-nav button:hover{background:rgba(245,247,250,.1);border-color:rgba(245,247,250,.6)}
+.voc-card{flex:1;width:100%;max-width:1000px;margin:20px 0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;border:none;background:none;color:#fff;cursor:pointer;font:inherit;text-align:center}
+.voc-card-en{font-size:clamp(34px,7vw,84px);font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.voc-card-pt{font-size:clamp(14px,2.2vw,22px);color:rgba(245,247,250,.55);transition:color .2s}
+.voc-card.virado .voc-card-pt{font-size:clamp(22px,4vw,44px);font-weight:600;color:var(--orange)}
+.voc-ov-nav{display:flex;gap:14px}
+.voc-ov-nav button{font-size:22px;padding:10px 26px}
+@media(max-width:860px){.voc-grupos{columns:1}.voc-acoes{margin-left:0}.voc-barra{position:static}}
+@media(max-width:560px){.voc-it{flex-direction:column;gap:0}.voc-ac{flex:1 1 46%}}
 </style>
 <!-- PWA / App -->
 <link rel="manifest" href="/manifest.webmanifest">
@@ -1979,6 +2053,10 @@
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
       <span>Gramática</span>
     </button>
+    <button class="bib-tab" data-view="vocab" type="button">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V5h9v2"/><path d="M8.5 5v14"/><path d="M6.5 19h4"/><path d="M14 12h7"/><path d="M17.5 12v7"/></svg>
+      <span>Vocabulário</span>
+    </button>
     <button class="bib-tab" data-view="worksheets" type="button">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
       <span>Worksheets</span>
@@ -2005,7 +2083,8 @@
   <div class="bib-view" id="v-examples"></div>
   <div class="bib-view" id="v-conversation"></div>
   <div class="bib-view" id="v-music"></div>
-  <div class="bib-view" id="v-quizzes"></div>
+  <div class="bib-view" id="v-vocab"></div>
+<div class="bib-view" id="v-quizzes"></div>
   <div class="bib-view" id="v-tests"></div>
 </div>
 
@@ -2465,6 +2544,7 @@ function render() {
   if (currentView === 'curriculum') renderCurriculum(search);
   else if (currentView === 'worksheets') renderWorksheets();
   else if (currentView === 'music') renderMusic(search);
+  else if (currentView === 'vocab') renderVocab(search);
   else if (currentView === 'quizzes') renderQuizzes();
   else if (currentView === 'tests') renderTests();
   else if (currentView === 'conversation') renderConversation(search);
@@ -3519,6 +3599,218 @@ function renderTests() {
     div.innerHTML = intro + nota + '<div class="av-cols av-tests">'+cols+'</div>';
   });
 }
+
+// ═══ VOCABULÁRIO POR UNIDADE ═══
+// Dados em /vocabulario-livros.js (carregado só quando a aba é aberta).
+// O professor escolhe a unidade, marca os grupos e copia no formato que quiser
+// (com tradução, só inglês, ou como exercício) — pronto para colar no WhatsApp.
+let vocUnidade = {};             // unidade escolhida em cada livro
+let vocTraducao = true;          // mostrar tradução na tela
+let vocFora = {};                // grupos desmarcados, por livro-unidade
+let vocCarregando = false, vocErro = false;
+
+function vocCarregar() {
+  if (window.WIN_VOCAB || vocCarregando) return;
+  vocCarregando = true;
+  const sc = document.createElement('script');
+  sc.src = '/vocabulario-livros.js';
+  sc.onload = () => { vocCarregando = false; if (currentView === 'vocab') render(); };
+  sc.onerror = () => { vocCarregando = false; vocErro = true; if (currentView === 'vocab') render(); };
+  document.head.appendChild(sc);
+}
+function vocLivro() { return window.WIN_VOCAB ? window.WIN_VOCAB[currentLevel] : null; }
+function vocChave(n) { return currentLevel + '-' + n; }
+function vocUnidadeAtual(lv) {
+  const n = vocUnidade[currentLevel] || 1;
+  return lv.u.find(u => u.n === n) || lv.u[0];
+}
+function vocGruposMarcados(u) {
+  const fora = vocFora[vocChave(u.n)] || {};
+  return u.g.filter((g, i) => !fora[i]);
+}
+function vocContar(grupos) {
+  let p = 0, e = 0;
+  grupos.forEach(g => { if (g.t === 'v') p += g.i.length; else e += g.i.length; });
+  return { p, e };
+}
+function vocPlural(n, um, varios) { return n + ' ' + (n === 1 ? um : varios); }
+
+// Texto para copiar. modo: 'trad' | 'en' | 'ex-pt' (traduza) | 'ex-en' (escreva em inglês)
+function vocTexto(lv, u, modo) {
+  const grupos = vocGruposMarcados(u);
+  const L = ['*📘 ' + lv.titulo + ' — Unit ' + u.n + '*'];
+  if (modo === 'trad') L.push('_Vocabulary · Vocabulário_');
+  if (modo === 'en') L.push('_Vocabulary_');
+  if (modo === 'ex-pt') L.push('✏️ _Escreva a tradução de cada item._');
+  if (modo === 'ex-en') L.push('✏️ _Write each item in English._');
+  grupos.forEach(g => {
+    L.push('');
+    L.push('*' + (modo === 'en' ? g.en : modo === 'ex-en' ? g.pt : g.en + ' — ' + g.pt) + '*');
+    g.i.forEach(it => {
+      const pre = it[2] ? '   ↳ ' : '• ';
+      if (modo === 'trad') L.push(pre + it[0] + ' — ' + it[1]);
+      else if (modo === 'en') L.push(pre + it[0]);
+      else if (modo === 'ex-pt') L.push(pre + it[0] + ' = ______________');
+      else L.push(pre + it[1] + ' = ______________');
+    });
+  });
+  return L.join('\n');
+}
+function vocCopiar(txt, aviso) {
+  const ok = () => avToast(aviso);
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(txt).then(ok, () => vocCopiarAntigo(txt) ? ok() : avToast('Não foi possível copiar.', true));
+  } else if (vocCopiarAntigo(txt)) ok(); else avToast('Não foi possível copiar.', true);
+}
+function vocCopiarAntigo(txt) {
+  const t = document.createElement('textarea'); t.value = txt; t.setAttribute('readonly', '');
+  t.style.position = 'fixed'; t.style.opacity = '0'; document.body.appendChild(t); t.select();
+  let ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
+  t.remove(); return ok;
+}
+
+function vocItemHtml(it, termo) {
+  const real = s => termo ? escapeHtml(s).replace(new RegExp('(' + termo.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'ig'), '<mark>$1</mark>') : escapeHtml(s);
+  return '<li class="voc-it' + (it[2] ? ' resp' : '') + '"><span class="voc-en">' + real(it[0]) + '</span>' +
+         '<span class="voc-pt">' + real(it[1]) + '</span></li>';
+}
+
+function renderVocab(search) {
+  const div = document.getElementById('v-vocab'); if (!div) return;
+  const nomeLivro = (typeof AV_LIVRO !== 'undefined' && AV_LIVRO[currentLevel]) || '';
+  const intro = '<div class="view-intro"><div class="view-intro-eyebrow">Vocabulário</div>' +
+    '<h2>Vocabulário do <em>' + escapeHtml(nomeLivro) + '</em></h2>' +
+    '<p>Palavras e expressões esperadas em cada unidade, com tradução. Escolha a unidade, marque o que quer enviar e copie no formato que preferir — pronto para colar no WhatsApp.</p></div>';
+  if (!window.WIN_VOCAB) {
+    if (vocErro) { div.innerHTML = intro + emptyState('📡', 'Não foi possível carregar o vocabulário. Recarregue a página.'); return; }
+    div.innerHTML = intro + '<div class="mus-load">Carregando vocabulário…</div>'; vocCarregar(); return;
+  }
+  const lv = vocLivro();
+  if (!lv) { div.innerHTML = intro + emptyState('📘', 'Ainda não há vocabulário cadastrado para este livro.'); return; }
+  const termo = (search || '').trim().toLowerCase();
+
+  // busca: procura no livro inteiro e mostra em que unidade está
+  if (termo) {
+    const achados = [];
+    lv.u.forEach(u => u.g.forEach(g => g.i.forEach(it => {
+      if ((it[0] + ' ' + it[1]).toLowerCase().includes(termo)) achados.push({ u: u.n, g: g, it: it });
+    })));
+    div.innerHTML = intro + '<div class="voc-busca"><b>' + vocPlural(achados.length, 'resultado', 'resultados') + '</b> para “' + escapeHtml(search.trim()) + '” no ' + escapeHtml(lv.titulo) + '</div>' +
+      (achados.length ? '<ul class="voc-lista voc-res">' + achados.map(a =>
+        '<li class="voc-it"><button type="button" class="voc-un" data-voc-unidade="' + a.u + '" title="Abrir a unidade">Unit ' + a.u + '</button>' +
+        '<span class="voc-en">' + escapeHtml(a.it[0]) + '</span><span class="voc-pt">' + escapeHtml(a.it[1]) + '</span></li>').join('') + '</ul>'
+      : emptyState('🔍', 'Nada encontrado neste livro.'));
+    return;
+  }
+
+  const u = vocUnidadeAtual(lv);
+  const fora = vocFora[vocChave(u.n)] || {};
+  const marcados = vocGruposMarcados(u);
+  const tot = vocContar(u.g), sel = vocContar(marcados);
+  const unidades = '<div class="voc-unidades" role="tablist" aria-label="Unidade">' + lv.u.map(x =>
+    '<button type="button" role="tab" aria-selected="' + (x.n === u.n) + '" class="' + (x.n === u.n ? 'on' : '') + '" data-voc-unidade="' + x.n + '">Unit ' + x.n + '</button>').join('') + '</div>';
+  const nada = !marcados.length;
+  const barra = '<div class="voc-barra">' +
+    '<div class="voc-resumo"><b>Unit ' + u.n + '</b><span>' + vocPlural(tot.p, 'palavra', 'palavras') + ' · ' + vocPlural(tot.e, 'expressão', 'expressões') + '</span>' +
+      (marcados.length !== u.g.length ? '<em>' + (sel.p + sel.e) + ' itens selecionados</em>' : '') + '</div>' +
+    '<label class="voc-switch"><input type="checkbox" id="vocTrad"' + (vocTraducao ? ' checked' : '') + '><span></span>Mostrar tradução</label>' +
+    '<div class="voc-acoes">' +
+      '<button type="button" class="voc-ac pri" data-voc-copiar="trad"' + (nada ? ' disabled' : '') + '>Copiar com tradução</button>' +
+      '<button type="button" class="voc-ac" data-voc-copiar="en"' + (nada ? ' disabled' : '') + '>Só em inglês</button>' +
+      '<button type="button" class="voc-ac" data-voc-copiar="ex-pt"' + (nada ? ' disabled' : '') + ' title="O aluno escreve a tradução">Exercício: traduzir</button>' +
+      '<button type="button" class="voc-ac" data-voc-copiar="ex-en"' + (nada ? ' disabled' : '') + ' title="O aluno escreve em inglês">Exercício: em inglês</button>' +
+      '<button type="button" class="voc-ac cartoes" data-voc-cartoes' + (nada ? ' disabled' : '') + ' title="Para projetar na aula">▶ Modo cartões</button>' +
+    '</div></div>';
+  const grupos = u.g.map((g, i) => {
+    const off = !!fora[i];
+    return '<section class="voc-grupo' + (g.t === 'e' ? ' exp' : '') + (off ? ' off' : '') + '">' +
+      '<label class="voc-gh"><input type="checkbox" data-voc-grupo="' + i + '"' + (off ? '' : ' checked') + '>' +
+      '<span class="voc-gt"><b>' + escapeHtml(g.en) + '</b><small>' + escapeHtml(g.pt) + '</small></span><i>' + g.i.length + '</i></label>' +
+      '<ul class="voc-lista">' + g.i.map(it => vocItemHtml(it)).join('') + '</ul></section>';
+  }).join('');
+  div.innerHTML = intro + unidades + barra +
+    '<div class="voc-marcar"><button type="button" data-voc-todos="1">Marcar tudo</button><button type="button" data-voc-todos="0">Desmarcar tudo</button></div>' +
+    '<div class="voc-grupos' + (vocTraducao ? '' : ' sem-trad') + '">' + grupos + '</div>';
+}
+
+// ── cartões para projetar na aula ──
+let vocCartoes = null;
+function vocAbrirCartoes() {
+  const lv = vocLivro(); if (!lv) return;
+  const u = vocUnidadeAtual(lv);
+  const itens = []; vocGruposMarcados(u).forEach(g => g.i.forEach(it => { if (!it[2]) itens.push(it); }));
+  if (!itens.length) return;
+  vocCartoes = { lv: lv, u: u, itens: itens, pos: 0, virado: false };
+  let ov = document.getElementById('vocCartoes');
+  if (!ov) { ov = document.createElement('div'); ov.id = 'vocCartoes'; ov.className = 'voc-ov'; ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true'); document.body.appendChild(ov); }
+  ov.hidden = false; document.body.classList.add('voc-ov-aberto'); vocDesenharCartao();
+}
+function vocDesenharCartao() {
+  const c = vocCartoes, ov = document.getElementById('vocCartoes'); if (!c || !ov) return;
+  const it = c.itens[c.pos];
+  ov.innerHTML = '<div class="voc-ov-top"><span>' + escapeHtml(c.lv.titulo) + ' · Unit ' + c.u.n + '</span>' +
+      '<span>' + (c.pos + 1) + ' / ' + c.itens.length + '</span>' +
+      '<div><button type="button" data-voc-c="misturar">Embaralhar</button><button type="button" data-voc-c="fechar" aria-label="Fechar">✕</button></div></div>' +
+    '<button type="button" class="voc-card' + (c.virado ? ' virado' : '') + '" data-voc-c="virar">' +
+      '<span class="voc-card-en">' + escapeHtml(it[0]) + '</span>' +
+      '<span class="voc-card-pt">' + (c.virado ? escapeHtml(it[1]) : 'toque ou espaço para ver a tradução') + '</span></button>' +
+    '<div class="voc-ov-nav"><button type="button" data-voc-c="ant" aria-label="Anterior">←</button><button type="button" data-voc-c="prox" aria-label="Próximo">→</button></div>';
+}
+function vocCartaoAcao(a) {
+  const c = vocCartoes; if (!c) return;
+  if (a === 'fechar') { const ov = document.getElementById('vocCartoes'); if (ov) ov.hidden = true; document.body.classList.remove('voc-ov-aberto'); vocCartoes = null; return; }
+  if (a === 'virar') c.virado = !c.virado;
+  if (a === 'prox') { c.pos = (c.pos + 1) % c.itens.length; c.virado = false; }
+  if (a === 'ant') { c.pos = (c.pos - 1 + c.itens.length) % c.itens.length; c.virado = false; }
+  if (a === 'misturar') { for (let i = c.itens.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [c.itens[i], c.itens[j]] = [c.itens[j], c.itens[i]]; } c.pos = 0; c.virado = false; }
+  vocDesenharCartao();
+}
+
+// ── eventos (um ouvinte só, sem JS dentro do HTML) ──
+document.addEventListener('click', function (e) {
+  const t = e.target && e.target.closest ? e.target : null; if (!t) return;
+  const un = t.closest('[data-voc-unidade]');
+  if (un) {
+    vocUnidade[currentLevel] = +un.getAttribute('data-voc-unidade');
+    const bi = document.getElementById('searchInput');
+    if (bi && bi.value) bi.value = '';
+    render(); return;
+  }
+  const cp = t.closest('[data-voc-copiar]');
+  if (cp && !cp.disabled) {
+    const lv = vocLivro(), u = vocUnidadeAtual(lv), modo = cp.getAttribute('data-voc-copiar');
+    const n = vocContar(vocGruposMarcados(u)); const total = n.p + n.e;
+    const rot = { trad: 'com tradução', en: 'só em inglês', 'ex-pt': 'exercício de tradução', 'ex-en': 'exercício em inglês' }[modo];
+    vocCopiar(vocTexto(lv, u, modo), 'Copiado: Unit ' + u.n + ', ' + total + ' itens (' + rot + '). É só colar no WhatsApp.');
+    return;
+  }
+  if (t.closest('[data-voc-cartoes]') && !t.closest('[data-voc-cartoes]').disabled) { vocAbrirCartoes(); return; }
+  const td = t.closest('[data-voc-todos]');
+  if (td) {
+    const lv = vocLivro(), u = vocUnidadeAtual(lv), f = {};
+    if (td.getAttribute('data-voc-todos') === '0') u.g.forEach((g, i) => { f[i] = true; });
+    vocFora[vocChave(u.n)] = f; render(); return;
+  }
+  const c = t.closest('[data-voc-c]');
+  if (c) { vocCartaoAcao(c.getAttribute('data-voc-c')); return; }
+});
+document.addEventListener('change', function (e) {
+  const t = e.target; if (!t) return;
+  if (t.id === 'vocTrad') { vocTraducao = t.checked; const g = document.querySelector('#v-vocab .voc-grupos'); if (g) g.classList.toggle('sem-trad', !vocTraducao); return; }
+  if (t.hasAttribute && t.hasAttribute('data-voc-grupo')) {
+    const lv = vocLivro(), u = vocUnidadeAtual(lv), k = vocChave(u.n), i = +t.getAttribute('data-voc-grupo');
+    const f = vocFora[k] || (vocFora[k] = {});
+    if (t.checked) delete f[i]; else f[i] = true;
+    render();
+  }
+});
+document.addEventListener('keydown', function (e) {
+  if (!vocCartoes) return;
+  if (e.key === 'ArrowRight') { vocCartaoAcao('prox'); e.preventDefault(); }
+  else if (e.key === 'ArrowLeft') { vocCartaoAcao('ant'); e.preventDefault(); }
+  else if (e.key === ' ' || e.key === 'Enter') { vocCartaoAcao('virar'); e.preventDefault(); }
+  else if (e.key === 'Escape') vocCartaoAcao('fechar');
+});
 </script>
 </body>
 </html>

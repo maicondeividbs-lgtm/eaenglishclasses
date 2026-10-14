@@ -1,0 +1,118 @@
+/* ═══════════════════════════════════════════════════════════════
+   WIN — navegação do menu (win-nav.js)
+   Abas de grupo, contadores de itens não abertos, rótulos de grupo
+   no menu e selo "Visto / Não aberto" nas listas do professor.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Itens que viraram aba de outro item: continuam no DOM (atalhos,
+   notificações e cards seguem funcionando), só não aparecem no menu. */
+.sb .sb-link.win-merged { display: none !important; }
+
+/* Rótulo de grupo no menu (fixo, não recolhe) */
+.win-sb-label {
+  padding: 14px 14px 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.38);
+  user-select: none;
+}
+.sb-nav > .win-sb-label:first-child { padding-top: 4px; }
+.sb.collapsed .win-sb-label,
+.sb.shrunk .win-sb-label { display: none; }
+
+/* Contador ao lado do item */
+.sb-link { position: relative; }
+.win-count {
+  margin-left: auto;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 10px;
+  background: var(--win-vermelho, #D71920);
+  color: #fff;
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 20px;
+  text-align: center;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+.win-count.zero { display: none; }
+
+/* Menu recolhido: o número vira um ponto no canto do ícone */
+.sb.collapsed .sb-link > .win-count,
+.sb.shrunk .sb-link > .win-count {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  min-width: 9px;
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  font-size: 0;
+  border: 2px solid var(--win-azul-profundo, #0B1F33);
+}
+
+/* Abas de grupo (topo da seção) — mais discretas que as abas internas */
+.win-tabs {
+  display: flex;
+  gap: 4px;
+  margin: 0 0 22px;
+  border-bottom: 1px solid var(--g100, #E7EBF0);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.win-tabs::-webkit-scrollbar { display: none; }
+.win-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  padding: 10px 14px 12px;
+  margin-bottom: -1px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: none;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--g500, #6B7785);
+  cursor: pointer;
+  transition: color var(--transition, 200ms ease), border-color var(--transition, 200ms ease);
+}
+.win-tab:hover { color: var(--navy, #0B1F33); }
+.win-tab.active {
+  color: var(--navy, #0B1F33);
+  font-weight: 800;
+  border-bottom-color: var(--win-vermelho, #D71920);
+  cursor: default;
+}
+.win-tab:focus-visible { outline: 2px solid var(--win-azul-aco, #6F8FA8); outline-offset: -2px; border-radius: 6px; }
+.win-tab .win-count { margin-left: 0; min-width: 18px; height: 18px; line-height: 18px; font-size: 10px; }
+
+/* Painel "Minha Grade" dentro da Visão Geral do aluno */
+.win-grade-panel { margin-bottom: 20px; scroll-margin-top: 90px; }
+.win-grade-panel .win-grade-sub { font-size: 12.5px; color: var(--g500, #6B7785); font-weight: 500; margin-left: auto; }
+.win-grade-panel .win-grade-body { padding: 16px clamp(14px, 4.5vw, 24px) 20px; }
+
+/* Selo de visualização nas listas de envios (professor/coordenação) */
+.win-seen {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.win-seen.yes { background: rgba(111, 143, 168, 0.14); color: var(--navy, #0B1F33); }
+.win-seen.no  { background: var(--g50, #F5F7FA); color: var(--g500, #6B7785); border: 1px dashed var(--win-cinza-azulado, #D8DEDD); }
+
+@media (prefers-reduced-motion: reduce) {
+  .win-tab { transition: none; }
+}
+.win-grade-panel .panel-head { flex-wrap: wrap; gap: 4px 12px; }

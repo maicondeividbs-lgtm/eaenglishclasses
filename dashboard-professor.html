@@ -1548,6 +1548,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 <meta name="apple-mobile-web-app-title" content="WIN">
 <script src="/pwa.js" defer></script>
 <link rel="stylesheet" href="/win-brand.css">
+<link rel="stylesheet" href="/win-nav.css">
 </head>
 <body>
 
@@ -1563,6 +1564,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
       <span class="sb-badge-text">Área do Professor</span>
     </div>
     <nav class="sb-nav" id="sidebarNav">
+      <div class="win-sb-label" aria-hidden="true">Dia a dia</div>
       <button class="sb-link active" data-section="overview" data-tip="Visão Geral">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
         <span>Visão Geral</span>
@@ -1575,44 +1577,46 @@ body.sb-collapsed .main { margin-left: 92px !important; }
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
         <span>Meus Alunos</span>
       </button>
-      <button class="sb-link" data-section="lesson-plans" data-tip="Planos de Aula">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-2h2v2zm0-4H7v-2h2v2zm0-4H7V7h2v2zm8 8h-6v-2h6v2zm0-4h-6v-2h6v2zm0-4h-6V7h6v2z"/></svg>
-        <span>Planos de Aula</span>
-      </button>
       <button class="sb-link" data-section="access" data-tip="Acessos dos Alunos">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5C21.27 7.61 17 4.5 12 4.5zm0 12a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9zm0-7A2.5 2.5 0 1 0 12 14a2.5 2.5 0 0 0 0-5z"/></svg>
         <span>Acessos dos Alunos</span>
       </button>
+      <div class="win-sb-label" aria-hidden="true">Enviar ao aluno</div>
       <button class="sb-link" data-section="homework" data-tip="Homework">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
         <span>Homework</span>
-      </button>
-      <button class="sb-link" data-section="feedback" data-tip="Feedbacks">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
-        <span>Feedbacks</span>
       </button>
       <button class="sb-link" data-section="writing" data-tip="Redação">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.996.996 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
         <span>Redação</span>
       </button>
-      <button class="sb-link" data-section="pronunciation" data-tip="Pronúncia">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm-1-9c0-.55.45-1 1-1s1 .45 1 1v6c0 .55-.45 1-1 1s-1-.45-1-1V6zm6 6c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-2.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
-        <span>Pronúncia</span>
+      <button class="sb-link" data-section="feedback" data-tip="Feedbacks">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+        <span>Feedbacks</span>
       </button>
       <button class="sb-link" data-section="vocabulary" data-tip="Vocabulário">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h18a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H8l-5 4V4a1 1 0 0 1 1-1zm4 6v2h10V9H7zm0 4v2h7v-2H7z"/></svg>
         <span>Vocabulário</span>
       </button>
-      <a href="/biblioteca?from=professor" class="sb-link" data-tip="Biblioteca" style="color:rgba(255,255,255,0.5)">
+      <button class="sb-link" data-section="pronunciation" data-tip="Pronúncia">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm-1-9c0-.55.45-1 1-1s1 .45 1 1v6c0 .55-.45 1-1 1s-1-.45-1-1V6zm6 6c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-2.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+        <span>Pronúncia</span>
+      </button>
+      <div class="win-sb-label" aria-hidden="true">Ferramentas</div>
+      <button class="sb-link" data-section="lesson-plans" data-tip="Planos de Aula">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-2h2v2zm0-4H7v-2h2v2zm0-4H7V7h2v2zm8 8h-6v-2h6v2zm0-4h-6v-2h6v2zm0-4h-6V7h6v2z"/></svg>
+        <span>Planos de Aula</span>
+      </button>
+      <a href="/biblioteca?from=professor" class="sb-link" data-tip="Biblioteca">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg>
         <span>Biblioteca</span>
       </a>
-            <button class="sb-link" data-section="profile" data-tip="Meu Perfil">
+    </nav>
+    <div class="sb-bottom">
+      <button class="sb-link" data-section="profile" data-tip="Meu Perfil" style="color:rgba(255,255,255,0.5)">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
         <span>Meu Perfil</span>
       </button>
-    </nav>
-    <div class="sb-bottom">
       <a href="docs/manual-do-professor.pdf" target="_blank" rel="noopener" class="sb-link" data-tip="Manual do Professor" style="color:rgba(255,255,255,0.5)">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-6 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm6 13H6v-1c0-2 4-3.1 6-3.1s6 1.1 6 3.1v1z"/></svg>
         <span>Manual do Professor</span>
@@ -2227,6 +2231,20 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 <!-- Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase.js"></script>
+<script src="win-nav.js"></script>
+<script>
+// Menu: "Acessos dos Alunos" vira aba de Meus Alunos.
+// Contador: redações enviadas pelos alunos aguardando correção.
+WIN_NAV.init({
+  groups: [
+    { label: 'Meus Alunos', members: ['students', 'access'], tabs: { students: 'Alunos', access: 'Acessos' } }
+  ],
+  counters: async function (u) {
+    var r = await countTeacherWritings(u.id, 'submitted');
+    return { writing: (r && r.count) || 0 };
+  }
+});
+</script>
 <script src="curriculum-index.js" defer></script>
 <script src="seu-dia.js" defer></script>
 <script src="lesson-plan-editor.js" defer></script>
@@ -2451,6 +2469,7 @@ async function eaCancelSend(kind, id){
 
 async function loadHomeworkList() {
   const tasks = await getTasksByTeacher(currentUser.id);
+  const seenSince = await winSeenSince();
   const div = document.getElementById('hwList');
   if (!tasks.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📝</div><p>Nenhum homework enviado ainda.</p></div>'; return; }
   const hwIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/></svg>';
@@ -2472,6 +2491,7 @@ async function loadHomeworkList() {
           : '<button onclick="eaTeacherMarkDone(\'' + s.id + '\',this)" style="padding:6px 12px;border:1.5px solid var(--orange);background:var(--orange);color:#fff;border-radius:8px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap" title="Marcar como feito em nome do aluno">Marcar como feita</button>';
         return '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--g50)">' +
           '<span style="flex:1;min-width:0;font-size:13px;color:var(--navy);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + escapeHtml(sname) + '</span>' +
+          (sDone ? '' : winSeenTag(s, seenSince)) +
           right +
         '</div>';
       }).join('') +
@@ -2641,6 +2661,7 @@ async function sendFeedback() {
 
 async function loadFeedbackList() {
   const fbs = await getFeedbacksByTeacher(currentUser.id);
+  const seenSince = await winSeenSince();
   const div = document.getElementById('fbList');
   if (!fbs.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">💬</div><p>Nenhum feedback registrado.</p></div>'; return; }
   const fbIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>';
@@ -2655,6 +2676,7 @@ async function loadFeedbackList() {
             '<span class="sent-meta-author">Para: ' + studentName + '</span>' +
             '<span class="sent-meta-sep">•</span>' +
             '<span>' + formatDateTime(f.created_at) + '</span>' +
+            (f.cancelled ? '' : ' ' + winSeenTag(f, seenSince)) +
           '</div>' +
         '</div>' +
         (f.cancelled ? '' : '<button onclick="eaCancelSend(\'feedback\',\'' + f.id + '\')" class="sent-cancel-btn" title="Cancelar envio">Cancelar</button>') +
@@ -2896,6 +2918,7 @@ async function sendWriting() {
 
 async function loadWritingList() {
   const items = await getWritingByTeacher(currentUser.id);
+  const seenSince = await winSeenSince();
   const div = document.getElementById('wrList');
   if (!items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">✍️</div><p>Nenhuma atividade de redação.</p></div>'; return; }
 
@@ -2912,7 +2935,7 @@ async function loadWritingList() {
             '<h4>' + escapeHtml(w.title) + '</h4>' +
             '<div class="prof-wr-header-meta">' + escapeHtml(studentName) + ' · Prazo: ' + formatDate(w.due_date) + wrAuthorTag(w) + '</div>' +
           '</div>' +
-          '<span class="sent-status pending">⏳ Aguardando aluno</span>' +
+          '<span class="sent-status pending">⏳ Aguardando aluno</span>' + winSeenTag(w, seenSince) +
         '</div>' +
         '<div style="padding:18px 22px">' +
           '<div style="background:var(--g50);padding:14px 16px;border-radius:10px;font-size:13.5px;color:var(--g700);font-style:italic;line-height:1.6"><strong style="font-style:normal">Tema:</strong> ' + escapeHtml(w.prompt) + '</div>' +
@@ -3169,6 +3192,7 @@ async function sendPronunciation() {
 
 async function loadPronunciationList() {
   const items = await getPronunciationByTeacher(currentUser.id);
+  const seenSince = await winSeenSince();
   const div = document.getElementById('prList');
   if (!items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">🎙️</div><p>Nenhuma prática enviada.</p></div>'; return; }
   div.innerHTML = '<div style="padding:12px 0 16px">' + items.map(p => {
@@ -3186,6 +3210,7 @@ async function loadPronunciationList() {
           '<span>Para: <strong style="color:var(--g700)">' + escapeHtml(studentName) + '</strong></span>' +
           '<span class="sent-meta-sep">•</span>' +
           '<span class="sent-status ' + statusClass + '">' + statusIcon + statusLabel + '</span>' +
+          (p.practiced ? '' : winSeenTag(p, seenSince)) +
         '</div>' +
       '</div>' +
     '</div>';

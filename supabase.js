@@ -758,6 +758,45 @@ async function deleteUser(userId) {
 }
 
 // ═══ NOTIFICATIONS ═══
+// ═══ CONTADORES DO MENU — itens não abertos (ver menu_contadores.sql) ═══
+// Se o SQL ainda não foi rodado, tudo aqui devolve vazio sem erro na tela.
+async function winUnseenCounts() {
+  try {
+    const { data, error } = await db.rpc('win_unseen_counts');
+    if (error || !data) return null;
+    return typeof data === 'string' ? JSON.parse(data) : data;
+  } catch (e) { return null; }
+}
+
+async function winMarkSeen(kind) {
+  try { await db.rpc('win_mark_seen', { p_kind: kind }); } catch (e) { /* opcional */ }
+}
+
+// Data em que a contagem começou (cacheada na sessão da página).
+let _winSeenSince;
+async function winSeenSince() {
+  if (_winSeenSince !== undefined) return _winSeenSince;
+  try {
+    const { data } = await db.from('win_settings').select('value').eq('key', 'seen_tracking_since').maybeSingle();
+    _winSeenSince = data && data.value ? new Date(data.value) : null;
+  } catch (e) { _winSeenSince = null; }
+  return _winSeenSince;
+}
+
+// Selo "Visto em dd/mm" ou "Não aberto" para as listas de envios.
+// Só aparece em envios feitos depois que a contagem começou — antes disso
+// não há como saber se o aluno abriu.
+function winSeenTag(row, since) {
+  if (!row || !since || !Object.prototype.hasOwnProperty.call(row, 'seen_at')) return '';
+  if (row.created_at && new Date(row.created_at) < since) return '';
+  if (row.seen_at) {
+    const d = new Date(row.seen_at);
+    const dd = d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+    return '<span class="win-seen yes" title="Aberto pelo aluno em ' + d.toLocaleString('pt-BR') + '">👁 Visto em ' + dd + '</span>';
+  }
+  return '<span class="win-seen no" title="O aluno ainda não abriu esta seção">Não aberto</span>';
+}
+
 async function getUnreadCount(userId, role) {
   let count = 0;
   try {

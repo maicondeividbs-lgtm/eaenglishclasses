@@ -2513,6 +2513,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 <meta name="apple-mobile-web-app-title" content="WIN">
 <script src="/pwa.js" defer></script>
 <link rel="stylesheet" href="/win-brand.css">
+<link rel="stylesheet" href="/win-nav.css">
 </head>
 <body>
 
@@ -2528,15 +2529,17 @@ body.sb-collapsed .main { margin-left: 92px !important; }
     </div>
     <nav class="sb-nav" role="menubar">
       <div class="sb-group">
+        <div class="sb-group-items">
         <button class="sb-link active" data-section="overview">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
           <span>Visão Geral</span>
           <span class="tip">Visão Geral</span>
         </button>
+        </div>
       </div>
 
-      <!-- Gestão -->
       <div class="sb-group">
+        <div class="win-sb-label" aria-hidden="true">Gestão</div>
         <div class="sb-group-items">
           <button class="sb-link" data-section="users">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
@@ -2559,16 +2562,16 @@ body.sb-collapsed .main { margin-left: 92px !important; }
             <span id="nivCount" class="sb-count zero">0</span>
             <span class="tip">Nivelamentos</span>
           </button>
-          <button class="sb-link" data-section="satisfaction">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-            <span>Satisfação</span>
-            <span class="tip">Pesquisa de Satisfação</span>
+          <button class="sb-link" data-section="tool">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+            <span>Contagem de Aulas</span>
+            <span class="tip">Contagem de Aulas e Salário</span>
           </button>
         </div>
       </div>
 
-      <!-- Acadêmico -->
       <div class="sb-group">
+        <div class="win-sb-label" aria-hidden="true">Acadêmico</div>
         <div class="sb-group-items">
           <button class="sb-link" data-section="schedules">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
@@ -2586,36 +2589,36 @@ body.sb-collapsed .main { margin-left: 92px !important; }
             <span>Avaliações</span>
             <span class="tip">Notas de Avaliações</span>
           </button>
-          <button class="sb-link" data-section="my-students">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
-            <span>Meus Alunos</span>
-            <span class="tip">Meus Alunos</span>
-          </button>
           <button class="sb-link" data-section="teach">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
             <span>Área do Professor</span>
             <span class="tip">Área do Professor</span>
           </button>
+          <button class="sb-link" data-section="my-students">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+            <span>Meus Alunos</span>
+            <span class="tip">Meus Alunos</span>
+          </button>
         </div>
       </div>
 
-      <!-- Ferramentas -->
       <div class="sb-group">
+        <div class="win-sb-label" aria-hidden="true">Escola</div>
         <div class="sb-group-items">
           <button class="sb-link" data-section="music">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg>
             <span>Música</span>
             <span class="tip">Atividades de Música</span>
           </button>
+          <button class="sb-link" data-section="satisfaction">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            <span>Opinião dos Alunos</span>
+            <span class="tip">Pesquisa de Satisfação e Depoimentos</span>
+          </button>
           <button class="sb-link" data-section="testimonials">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
             <span>Depoimentos</span>
             <span class="tip">Depoimentos</span>
-          </button>
-          <button class="sb-link" data-section="tool">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
-            <span>Ferramenta</span>
-            <span class="tip">Ferramenta</span>
           </button>
           <a class="sb-link" href="/biblioteca?from=coordenacao" title="Abrir Biblioteca">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
@@ -4023,6 +4026,23 @@ function recalcFinal(){const adj=toolAdjustments.reduce((s,a)=>s+a.val,0);const 
 <!-- Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase.js"></script>
+<script src="win-nav.js"></script>
+<script>
+// Menu: Usuários reúne Arquivo morto e Acessos; Opinião dos Alunos reúne Satisfação e Depoimentos;
+// Área do Professor reúne Meus Alunos. Contador: redações dos seus alunos
+// aguardando correção (Nivelamentos e Supervisão mantêm os contadores próprios).
+WIN_NAV.init({
+  groups: [
+    { label: 'Usuários', members: ['users', 'archive', 'access'], tabs: { users: 'Usuários', archive: 'Arquivo morto', access: 'Acessos' } },
+    { label: 'Área do Professor', members: ['teach', 'my-students'], tabs: { teach: 'Enviar ao aluno', 'my-students': 'Meus Alunos' } },
+    { label: 'Opinião dos Alunos', members: ['satisfaction', 'testimonials'], tabs: { satisfaction: 'Pesquisa de Satisfação', testimonials: 'Depoimentos' } }
+  ],
+  counters: async function (u) {
+    var r = await countTeacherWritings(u.id, 'submitted');
+    return { teach: (r && r.count) || 0 };
+  }
+});
+</script>
 <script src="curriculum-index.js" defer></script>
 <script src="seu-dia.js" defer></script>
 <script src="lesson-plan-editor.js" defer></script>
@@ -4030,7 +4050,7 @@ function recalcFinal(){const adj=toolAdjustments.reduce((s,a)=>s+a.val,0);const 
 <script src="app-fx.js" defer></script>
 <script>
 let currentUser = null;
-const sections = {"overview":"Visão Geral","users":"Usuários","archive":"Arquivo morto","access":"Acessos de Alunos","schedules":"Schedules","nivelamento":"Nivelamentos","supervision":"Supervisão","homework":"Homeworks","feedbacks":"Feedbacks","writing":"Redações","pronunciation-coord":"Pronúncias","documents":"Notas de Avaliações","testimonials":"Depoimentos","teach":"Área do Professor","tool":"Ferramenta","my-students":"Meus Alunos","my-profile":"Meu Perfil","satisfaction":"Satisfação"}
+const sections = {"overview":"Visão Geral","users":"Usuários","archive":"Arquivo morto","access":"Acessos de Alunos","schedules":"Schedules","nivelamento":"Nivelamentos","supervision":"Supervisão","homework":"Homeworks","feedbacks":"Feedbacks","writing":"Redações","pronunciation-coord":"Pronúncias","documents":"Notas de Avaliações","testimonials":"Depoimentos","teach":"Área do Professor","tool":"Contagem de Aulas","my-students":"Meus Alunos","my-profile":"Meu Perfil","satisfaction":"Satisfação"}
 function loadSatisfaction(){ if(window.EA_SAT) EA_SAT.mountCoord(document.getElementById('sec-satisfaction'), currentUser); };
 
 // ═══ INIT ═══
@@ -5342,11 +5362,16 @@ async function loadTeachHwList(){
   div.innerHTML='<div class="empty-state"><div class="empty-icon">⏳</div><p>Carregando...</p></div>';
   var items=[]; try{ items=await getTasksByTeacher(currentUser.id); }catch(e){}
   if(!items.length){ div.innerHTML='<div class="empty-state"><div class="empty-icon">📝</div><p>Nenhum homework enviado ainda.</p></div>'; return; }
+  var seenSince=await winSeenSince();
   div.innerHTML='<div style="padding:8px 0">'+items.map(function(t){
     var subs=t.task_submissions||[];
     var names=subs.map(function(s){return (s.student&&s.student.full_name)||'';}).filter(Boolean).join(', ')||'—';
     var done=subs.filter(function(s){return s.status!=='pending';}).length;
     var badge=done>0?'<span class="badge badge-done">'+done+'/'+subs.length+' feito(s)</span>':'<span class="badge badge-pending">Pendente</span>';
+    if(seenSince && subs.length && t.created_at && new Date(t.created_at)>=seenSince && subs.length && 'seen_at' in subs[0]){
+      var seenN=subs.filter(function(s){return !!s.seen_at;}).length;
+      badge='<span class="win-seen '+(seenN?'yes':'no')+'">'+(seenN?'👁 '+seenN+'/'+subs.length+' abriram':'Não aberto')+'</span> '+badge;
+    }
     return '<div class="list-item"><div><div class="list-title">📝 '+docEsc(t.title||'')+'</div><div class="list-sub">'+docEsc(names)+' — '+formatDateTime(t.created_at)+'</div></div>'+badge+'</div>';
   }).join('')+'</div>';
 }
@@ -5354,20 +5379,22 @@ async function loadTeachFbList(){
   var div=document.getElementById('tFbList'); if(!div) return;
   div.innerHTML='<div class="empty-state"><div class="empty-icon">⏳</div><p>Carregando...</p></div>';
   var items=[]; try{ items=await getFeedbacksByTeacher(currentUser.id); }catch(e){}
+  var seenSince=await winSeenSince();
   if(!items.length){ div.innerHTML='<div class="empty-state"><div class="empty-icon">💬</div><p>Nenhum feedback enviado ainda.</p></div>'; return; }
   div.innerHTML='<div style="padding:8px 0">'+items.map(function(f){
     var nm=(f.student&&f.student.full_name)||'Aluno';
-    return '<div class="list-item"><div><div class="list-title">💬 '+docEsc(f.title||'')+'</div><div class="list-sub">Para '+docEsc(nm)+' — '+formatDateTime(f.created_at)+'</div>'+(f.content?'<div style="font-size:12px;color:var(--g600);margin-top:4px">'+docEsc(f.content)+'</div>':'')+'</div></div>';
+    return '<div class="list-item"><div><div class="list-title">💬 '+docEsc(f.title||'')+'</div><div class="list-sub">Para '+docEsc(nm)+' — '+formatDateTime(f.created_at)+(f.cancelled?'':' '+winSeenTag(f,seenSince))+'</div>'+(f.content?'<div style="font-size:12px;color:var(--g600);margin-top:4px">'+docEsc(f.content)+'</div>':'')+'</div></div>';
   }).join('')+'</div>';
 }
 async function loadTeachPrList(){
   var div=document.getElementById('tPrList'); if(!div) return;
   div.innerHTML='<div class="empty-state"><div class="empty-icon">⏳</div><p>Carregando...</p></div>';
   var items=[]; try{ items=await getPronunciationByTeacher(currentUser.id); }catch(e){}
+  var seenSince=await winSeenSince();
   if(!items.length){ div.innerHTML='<div class="empty-state"><div class="empty-icon">🎙️</div><p>Nenhuma pronúncia enviada ainda.</p></div>'; return; }
   div.innerHTML='<div style="padding:8px 0">'+items.map(function(p){
     var nm=(p.student&&p.student.full_name)||'Aluno';
-    var st=p.practiced?'<span class="badge badge-done">Praticada</span>':'<span class="badge badge-pending">Pendente</span>';
+    var st=p.practiced?'<span class="badge badge-done">Praticada</span>':(winSeenTag(p,seenSince)+' <span class="badge badge-pending">Pendente</span>');
     return '<div class="list-item"><div><div class="list-title">🎙️ '+docEsc(p.word||'')+'</div><div class="list-sub">Para '+docEsc(nm)+' — '+formatDateTime(p.created_at)+'</div></div>'+st+'</div>';
   }).join('')+'</div>';
 }

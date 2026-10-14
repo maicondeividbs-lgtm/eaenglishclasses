@@ -2515,6 +2515,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 <script src="/pwa.js" defer></script>
 <link rel="stylesheet" href="/win-brand.css">
 <link rel="stylesheet" href="/win-nav.css">
+<link rel="stylesheet" href="/supervisao.css">
 </head>
 <body>
 
@@ -4028,6 +4029,7 @@ function recalcFinal(){const adj=toolAdjustments.reduce((s,a)=>s+a.val,0);const 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase.js"></script>
 <script src="win-nav.js"></script>
+<script src="supervisao.js"></script>
 <script>
 // Menu: Usuários reúne Arquivo morto e Acessos; Opinião dos Alunos reúne Satisfação e Depoimentos;
 // Área do Professor reúne Meus Alunos. Contador: redações dos seus alunos
@@ -5001,10 +5003,12 @@ async function saveNivDetail(){
 // ═══ HOMEWORKS SUPERVISION ═══
 async function loadHomeworks() {
   showSkeleton('hwList', 3);
-  const filterTeacher = document.getElementById('hwFilter')?.value || '';
+  const filterTeacher = supTeacherFilter();
   let query = db.from('tasks').select('*, teacher:profiles!tasks_teacher_id_fkey(full_name, id), task_submissions(*, student:profiles(full_name))').order('created_at', {ascending: false});
   if (filterTeacher) query = query.eq('teacher_id', filterTeacher);
   const { data: tasks } = await query;
+  const since = await SUP_VIEW.since();
+  SUP_VIEW.setItems('hw', tasks);
   const div = document.getElementById('hwList');
   if (!tasks || !tasks.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📝</div><p>Nenhum homework no sistema.</p></div>'; return; }
   div.innerHTML = tasks.map(t => {
@@ -5012,20 +5016,34 @@ async function loadHomeworks() {
     const pending = subs.filter(s => s.status === 'pending').length;
     const done = subs.filter(s => s.status !== 'pending').length;
     const names = subs.map(s => s.student?.full_name || '').filter(Boolean).join(', ');
-    return '<div class="list-item"><div><div class="list-title">📝 ' + t.title + '</div><div class="list-sub">Prof. ' + (t.teacher?.full_name||'?') + ' → ' + (names||'nenhum aluno') + ' — ' + formatDateTime(t.created_at) + '</div></div><div style="display:flex;gap:6px"><span class="badge badge-done">' + done + ' ✓</span><span class="badge badge-pending">' + pending + ' ⏳</span></div></div>';
+    const tracked = since && subs.length && t.created_at && new Date(t.created_at) >= since;
+    const opened = subs.filter(s => s.seen_at).length;
+    return '<div' + SUP_VIEW.attrs('hw', t.id) + '><div style="min-width:0">' +
+      '<div class="list-title">📝 ' + docEsc(t.title) + (t.cancelled ? ' <span class="badge" style="background:#FFE4E6;color:#881337">Cancelado</span>' : '') + '</div>' +
+      '<div class="list-sub">Prof. ' + docEsc(t.teacher?.full_name || '?') + ' → ' + docEsc(names || 'nenhum aluno') + ' — ' + formatDateTime(t.created_at) + '</div>' +
+      (t.description ? '<div class="sv-preview">' + docEsc(t.description) + '</div>' : '') +
+      '</div><div class="sv-list-tags">' +
+      (tracked ? '<span class="win-seen ' + (opened ? 'yes' : 'no') + '" title="Alunos que abriram">👁 ' + opened + '/' + subs.length + '</span>' : '') +
+      '<span class="badge badge-done">' + done + ' ✓</span><span class="badge badge-pending">' + pending + ' ⏳</span></div></div>';
   }).join('');
 }
 
 // ═══ FEEDBACKS SUPERVISION ═══
 async function loadFeedbacks() {
   showSkeleton('fbList', 3);
-  const filterTeacher = document.getElementById('fbFilter')?.value || '';
+  const filterTeacher = supTeacherFilter();
   let query = db.from('feedbacks').select('*, teacher:profiles!feedbacks_teacher_id_fkey(full_name, id), student:profiles!feedbacks_student_id_fkey(full_name)').order('created_at', {ascending: false});
   if (filterTeacher) query = query.eq('teacher_id', filterTeacher);
   const { data: fbs } = await query;
+  const since = await SUP_VIEW.since();
+  SUP_VIEW.setItems('fb', fbs);
   const div = document.getElementById('fbList');
   if (!fbs || !fbs.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">💬</div><p>Nenhum feedback no sistema.</p></div>'; return; }
-  div.innerHTML = fbs.map(f => '<div class="list-item"><div><div class="list-title">💬 ' + f.title + '</div><div class="list-sub">Prof. ' + (f.teacher?.full_name||'?') + ' → ' + (f.student?.full_name||'?') + ' — ' + (f.category||'geral') + ' — ' + formatDateTime(f.created_at) + '</div></div></div>').join('');
+  div.innerHTML = fbs.map(f => '<div' + SUP_VIEW.attrs('fb', f.id) + '><div style="min-width:0">' +
+    '<div class="list-title">💬 ' + docEsc(f.title) + (f.cancelled ? ' <span class="badge" style="background:#FFE4E6;color:#881337">Cancelado</span>' : '') + '</div>' +
+    '<div class="list-sub">Prof. ' + docEsc(f.teacher?.full_name || '?') + ' → ' + docEsc(f.student?.full_name || '?') + ' — ' + docEsc(f.category || 'geral') + ' — ' + formatDateTime(f.created_at) + '</div>' +
+    (f.content ? '<div class="sv-preview">' + docEsc(f.content) + '</div>' : '') +
+    '</div><div class="sv-list-tags">' + (f.cancelled ? '' : winSeenTag(f, since)) + '</div></div>').join('');
 }
 
 
@@ -5292,6 +5310,9 @@ function openWrCorrect(id){
   var w=null; for(var i=0;i<items.length;i++){ if(String(items[i].id)===String(id)){ w=items[i]; break; } }
   if(!w){ showToast('Não foi possível abrir a redação.','error'); return; }
   window._wrCurrentId=w.id;
+  // A correção do professor é gravada como JSON {general, inline}. Mostra só o
+  // comentário geral para edição e preserva os comentários no texto ao salvar.
+  var _wrFb=SUP_VIEW.parseWr(w.feedback); window._wrCurrentInline=_wrFb.inline||[];
   eaStuDetailStyles();
   var prev=document.getElementById('stuOverlay'); if(prev)prev.remove();
   var ov=document.createElement('div'); ov.id='stuOverlay'; ov.className='stu-overlay';
@@ -5304,7 +5325,7 @@ function openWrCorrect(id){
       '<div class="stu-row" style="white-space:pre-wrap;font-size:13px;color:var(--navy);max-height:240px;overflow:auto">'+(w.response?docEsc(w.response):'<span style="color:var(--g400)">O aluno ainda não respondeu.</span>')+'</div>'+
       '<div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;align-items:flex-end">'+
         '<div style="width:120px"><label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px">Nota</label><input type="number" id="wrGrade" step="0.5" value="'+(w.grade!=null?w.grade:'')+'" style="width:100%;padding:10px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:14px;color:var(--navy);outline:none"></div>'+
-        '<div style="flex:1;min-width:200px"><label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px">Feedback</label><textarea id="wrFeedback" rows="3" style="width:100%;padding:10px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:14px;color:var(--navy);outline:none">'+docEsc(w.feedback||'')+'</textarea></div>'+
+        '<div style="flex:1;min-width:200px"><label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px">Feedback</label><textarea id="wrFeedback" rows="3" style="width:100%;padding:10px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:14px;color:var(--navy);outline:none">'+docEsc(_wrFb.general||'')+'</textarea>'+(_wrFb.inline&&_wrFb.inline.length?'<div style="font-size:12px;color:var(--g500);margin-top:6px">'+_wrFb.inline.length+' comentário(s) no texto do aluno serão mantidos.</div>':'')+'</div>'+
       '</div>'+
       '<button class="btn-send" style="margin-top:14px;width:100%" onclick="saveWrCorrect()">'+(graded?'Atualizar correção':'Salvar correção')+'</button>'+
     '</div>'+
@@ -5318,6 +5339,8 @@ async function saveWrCorrect(){
   var g=document.getElementById('wrGrade').value;
   var fb=document.getElementById('wrFeedback').value.trim();
   if(g===''){ showToast('Informe a nota','error'); return; }
+  var inl=window._wrCurrentInline||[];
+  if(inl.length) fb=JSON.stringify({general:fb, inline:inl});
   try{
     await gradeWriting(id, fb, Number(g), currentUser.id);
     showToast('Correção salva!');
@@ -5733,40 +5756,57 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 
 async function loadWritingCoord() {
-  const filterTeacher = document.getElementById('wrFilter')?.value || '';
+  const filterTeacher = supTeacherFilter();
   let query = db.from('writing_activities').select('*, teacher:profiles!writing_activities_teacher_id_fkey(full_name, id), student:profiles!writing_activities_student_id_fkey(full_name)').order('created_at', {ascending: false});
   if (filterTeacher) query = query.eq('teacher_id', filterTeacher);
   const { data: items } = await query; window._wrCoordItems = items || [];
+  const since = await SUP_VIEW.since();
+  SUP_VIEW.setItems('wr', items);
   const div = document.getElementById('wrCoordList');
   if (!items || !items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">✍️</div><p>Nenhuma redação no sistema.</p></div>'; return; }
   div.innerHTML = items.map(w => {
-    const statusMap = {pending:'<span class="badge badge-pending">Aguardando aluno</span>',submitted:'<span class="badge" style="background:rgba(215,25,32,0.12);color:#D71920">Aguardando correção</span>',graded:'<span class="badge badge-done">Corrigida: '+(w.grade||'')+'</span>'};
-    return '<div class="list-item"'+((w.status==='submitted'||w.status==='graded')?' style="cursor:pointer" onclick="openWrCorrect(\''+w.id+'\')"':'')+'><div><div class="list-title">✍️ ' + w.title + '</div><div class="list-sub">Prof. ' + (w.teacher?.full_name||'?') + ' → ' + (w.student?.full_name||'?') + ' — ' + formatDateTime(w.created_at) + '</div></div>' + (statusMap[w.status]||'') + '</div>';
+    const statusMap = {pending:'<span class="badge badge-pending">Aguardando aluno</span>',submitted:'<span class="badge" style="background:rgba(215,25,32,0.12);color:#D71920">Aguardando correção</span>',graded:'<span class="badge badge-done">Corrigida: '+docEsc(w.grade==null?'':w.grade)+'</span>'};
+    return '<div' + SUP_VIEW.attrs('wr', w.id) + '><div style="min-width:0">' +
+      '<div class="list-title">✍️ ' + docEsc(w.title) + '</div>' +
+      '<div class="list-sub">Prof. ' + docEsc(w.teacher?.full_name || '?') + ' → ' + docEsc(w.student?.full_name || '?') + ' — ' + formatDateTime(w.created_at) + '</div>' +
+      (w.prompt ? '<div class="sv-preview">' + docEsc(w.prompt) + '</div>' : '') +
+      '</div><div class="sv-list-tags">' + (w.status === 'pending' ? winSeenTag(w, since) : '') + (statusMap[w.status] || '') + '</div></div>';
   }).join('');
 }
 
 // ═══ PRONUNCIATION SUPERVISION ═══
 async function loadPronunciationCoord() {
-  const filterTeacher = document.getElementById('prFilter')?.value || '';
+  const filterTeacher = supTeacherFilter();
   let query = db.from('pronunciation').select('*, teacher:profiles!pronunciation_teacher_id_fkey(full_name, id), student:profiles!pronunciation_student_id_fkey(full_name)').order('created_at', {ascending: false});
   if (filterTeacher) query = query.eq('teacher_id', filterTeacher);
   const { data: items } = await query;
+  const since = await SUP_VIEW.since();
+  SUP_VIEW.setItems('pr', items);
   const div = document.getElementById('prCoordList');
   if (!items || !items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">🎙️</div><p>Nenhuma pronúncia no sistema.</p></div>'; return; }
-  div.innerHTML = items.map(p => '<div class="list-item"><div><div class="list-title">🎙️ ' + p.word + (p.phonetic ? ' <span style="color:var(--g400);font-weight:400;font-style:italic">' + p.phonetic + '</span>' : '') + '</div><div class="list-sub">Prof. ' + (p.teacher?.full_name||'?') + ' → ' + (p.student?.full_name||'?') + ' — ' + formatDateTime(p.created_at) + '</div></div><span class="badge ' + (p.practiced ? 'badge-done' : 'badge-pending') + '">' + (p.practiced ? 'Praticado' : 'Pendente') + '</span></div>').join('');
+  div.innerHTML = items.map(p => '<div' + SUP_VIEW.attrs('pr', p.id) + '><div style="min-width:0">' +
+    '<div class="list-title">🎙️ ' + docEsc(p.word) + (p.phonetic ? ' <span style="color:var(--g400);font-weight:400;font-style:italic">' + docEsc(p.phonetic) + '</span>' : '') + '</div>' +
+    '<div class="list-sub">Prof. ' + docEsc(p.teacher?.full_name || '?') + ' → ' + docEsc(p.student?.full_name || '?') + ' — ' + formatDateTime(p.created_at) + '</div>' +
+    (p.notes ? '<div class="sv-preview">' + docEsc(p.notes) + '</div>' : '') +
+    '</div><div class="sv-list-tags">' + (p.practiced ? '' : winSeenTag(p, since)) +
+    '<span class="badge ' + (p.practiced ? 'badge-done' : 'badge-pending') + '">' + (p.practiced ? 'Praticado' : 'Pendente') + '</span></div></div>').join('');
 }
 
 // ═══ VOCABULARY SUPERVISION ═══
 async function loadVocabularyCoord() {
-  const filterTeacher = document.getElementById('supFilter')?.value || '';
+  const filterTeacher = supTeacherFilter();
   const div = document.getElementById('vocabCoordList');
   if (div) div.innerHTML = '<div class="empty-state"><div class="empty-icon">⏳</div><p>Carregando...</p></div>';
   let query = db.from('vocabulary_words').select('*, teacher:profiles!vocabulary_words_teacher_id_fkey(full_name, id), student:profiles!vocabulary_words_student_id_fkey(full_name)').order('created_at', {ascending: false});
   if (filterTeacher) query = query.eq('teacher_id', filterTeacher);
   const { data: items } = await query;
+  SUP_VIEW.setItems('vocab', items);
   if (!div) return;
   if (!items || !items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📚</div><p>Nenhum vocabulário no sistema.</p></div>'; return; }
-  div.innerHTML = items.map(v => '<div class="list-item"><div><div class="list-title">📚 ' + (v.word || '') + (v.translation ? ' <span style="color:var(--g400);font-weight:400">— ' + v.translation + '</span>' : '') + '</div><div class="list-sub">Prof. ' + (v.teacher?.full_name||'?') + ' → ' + (v.student?.full_name||'?') + ' — ' + formatDateTime(v.created_at) + '</div></div><span class="badge ' + (v.enriched ? 'badge-done' : 'badge-pending') + '">' + (v.enriched ? 'Estudada' : 'Aguardando') + '</span></div>').join('');
+  div.innerHTML = items.map(v => '<div' + SUP_VIEW.attrs('vocab', v.id) + '><div style="min-width:0">' +
+    '<div class="list-title">📚 ' + docEsc(v.word || '') + (v.translation ? ' <span style="color:var(--g400);font-weight:400">— ' + docEsc(v.translation) + '</span>' : '') + '</div>' +
+    '<div class="list-sub">Prof. ' + docEsc(v.teacher?.full_name || '?') + ' → ' + docEsc(v.student?.full_name || '?') + ' — ' + formatDateTime(v.created_at) + '</div>' +
+    '</div><span class="badge ' + (v.enriched ? 'badge-done' : 'badge-pending') + '">' + (v.enriched ? 'Estudada' : 'Aguardando') + '</span></div>').join('');
 }
 
 // ═══ LESSON PLANS SUPERVISION (leitura) ═══
@@ -6775,6 +6815,12 @@ function switchSup(tab, btn) {
   // Hide filter for avisos
   document.getElementById('supFilterBar').style.display = tab === 'av' ? 'none' : '';
   loadCurrentSup();
+}
+
+// Professor escolhido no filtro da Supervisão (vale para todas as abas)
+function supTeacherFilter() {
+  var el = document.getElementById('supFilter');
+  return el ? el.value : '';
 }
 
 function loadCurrentSup() {

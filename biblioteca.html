@@ -1839,72 +1839,128 @@
 @media (min-width:641px) and (max-width:880px){ .bib-tabs-wrap .bib-tabs{flex-wrap:wrap;justify-content:center;row-gap:2px} .bib-ctx{border-right:none} }
 
 /* ═══ Vocabulário por unidade ═══ */
-.voc-unidades{display:flex;gap:6px;overflow-x:auto;padding:2px 2px 10px;margin-bottom:14px;scrollbar-width:thin}
-.voc-unidades button{flex-shrink:0;padding:8px 14px;border:1px solid var(--g200);background:#fff;color:var(--navy);border-radius:999px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:border-color .2s,background .2s,color .2s}
-.voc-unidades button:hover{border-color:var(--navy)}
-.voc-unidades button.on{background:var(--navy);border-color:var(--navy);color:#fff}
-.voc-barra{position:sticky;top:8px;z-index:5;display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px;background:#fff;border:1px solid var(--g100);border-radius:var(--r-lg);padding:14px 18px;margin-bottom:10px;box-shadow:0 8px 24px -18px rgba(11,31,51,.35)}
-.voc-resumo{display:flex;flex-direction:column;line-height:1.25;min-width:150px}
-.voc-resumo b{font-size:17px;font-weight:800;color:var(--navy)}
-.voc-resumo span{font-size:12.5px;color:var(--g500)}
-.voc-resumo em{font-style:normal;font-size:12px;font-weight:700;color:var(--orange)}
-.voc-switch{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--navy);cursor:pointer;user-select:none}
-.voc-switch input{position:absolute;opacity:0;width:1px;height:1px}
-.voc-switch span{width:36px;height:20px;border-radius:999px;background:var(--g200);position:relative;transition:background .2s}
-.voc-switch span::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
-.voc-switch input:checked+span{background:var(--orange)}
-.voc-switch input:checked+span::after{transform:translateX(16px)}
-.voc-switch input:focus-visible+span{outline:2px solid var(--navy);outline-offset:2px}
-.voc-acoes{display:flex;flex-wrap:wrap;gap:6px;margin-left:auto}
-.voc-ac{padding:9px 13px;border:1px solid var(--g200);background:#fff;color:var(--navy);border-radius:var(--r-sm);font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;transition:border-color .2s,background .2s,color .2s}
-.voc-ac:hover:not(:disabled){border-color:var(--navy);background:var(--navy);color:#fff}
-.voc-ac.pri{background:var(--orange);border-color:var(--orange);color:#fff}
-.voc-ac.pri:hover:not(:disabled){background:var(--orange-light);border-color:var(--orange-light)}
-.voc-ac.cartoes{border-color:var(--navy)}
-.voc-ac:disabled{opacity:.45;cursor:not-allowed}
-.voc-marcar{display:flex;gap:14px;margin:0 0 14px 4px}
-.voc-marcar button{border:none;background:none;padding:0;font:inherit;font-size:12.5px;font-weight:600;color:var(--g500);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
-.voc-marcar button:hover{color:var(--navy)}
-.voc-grupos{columns:2;column-gap:16px}
-.voc-grupo{break-inside:avoid;background:#fff;border:1px solid var(--g100);border-radius:var(--r-lg);margin:0 0 16px;overflow:hidden;transition:opacity .2s}
-.voc-grupo.exp{border-left:3px solid var(--orange)}
-.voc-grupo.off{opacity:.45}
-.voc-gh{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--g100);cursor:pointer;background:var(--off-white)}
-.voc-gh input{width:17px;height:17px;accent-color:var(--orange);flex-shrink:0;cursor:pointer}
-.voc-gt{flex:1;min-width:0;line-height:1.25}
-.voc-gt b{display:block;font-size:13.5px;font-weight:800;color:var(--navy)}
-.voc-gt small{font-size:12px;color:var(--g500)}
-.voc-gh i{font-style:normal;font-size:11px;font-weight:700;color:var(--g500);background:#fff;border:1px solid var(--g100);border-radius:999px;padding:1px 8px}
-.voc-lista{list-style:none;margin:0;padding:6px 0}
-.voc-it{display:flex;gap:12px;align-items:baseline;padding:5px 16px;font-size:14px;line-height:1.4}
-.voc-it.resp{padding-left:34px}
-.voc-it.resp .voc-en::before{content:'↳ ';color:var(--g300)}
-.voc-en{flex:1 1 52%;color:var(--navy);font-weight:600}
-.voc-pt{flex:1 1 48%;color:var(--g500)}
-.sem-trad .voc-pt{display:none}
-.voc-busca{font-size:14px;color:var(--g500);margin:0 0 12px}
-.voc-busca b{color:var(--navy)}
-.voc-res{background:#fff;border:1px solid var(--g100);border-radius:var(--r-lg)}
-.voc-res .voc-it{border-bottom:1px solid var(--g100);padding:9px 16px}
-.voc-un{flex-shrink:0;border:1px solid var(--g200);background:#fff;border-radius:999px;padding:3px 10px;font:inherit;font-size:11.5px;font-weight:700;color:var(--navy);cursor:pointer}
-.voc-un:hover{border-color:var(--orange);color:var(--orange)}
-.voc-it mark{background:rgba(215,25,32,.12);color:inherit;border-radius:3px;padding:0 2px}
+.vx{display:grid;grid-template-columns:172px 1fr;gap:24px;align-items:start}
+.vx-units{position:sticky;top:16px;display:flex;flex-direction:column;gap:2px;max-height:calc(100vh - 32px);overflow-y:auto;padding:2px}
+.vx-units-t{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--g500);padding:0 12px 8px}
+.vx-u{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px;border:none;border-radius:var(--r-sm);background:transparent;color:var(--navy);font:inherit;font-size:14px;font-weight:600;cursor:pointer;text-align:left;transition:background .15s}
+.vx-u i{font-style:normal;font-size:11.5px;font-weight:700;color:var(--g500)}
+.vx-u:hover{background:#fff}
+.vx-u.on{background:var(--navy);color:#fff}
+.vx-u.on i{color:rgba(255,255,255,.7)}
+.vx-main{min-width:0;scroll-margin-top:16px}
+.vx-head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+.vx-title h3{margin:0;font-size:24px;font-weight:800;color:var(--navy)}
+.vx-title p{margin:2px 0 0;font-size:13.5px;color:var(--g500)}
+.vx-cta{display:flex;gap:8px;flex-wrap:wrap}
+.vx-btn{padding:11px 18px;border:1px solid var(--navy);background:#fff;color:var(--navy);border-radius:var(--r-sm);font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;transition:background .2s,color .2s,border-color .2s}
+.vx-btn:hover:not(:disabled){background:var(--navy);color:#fff}
+.vx-btn.pri{background:var(--orange);border-color:var(--orange);color:#fff}
+.vx-btn.pri:hover:not(:disabled){background:var(--orange-light);border-color:var(--orange-light)}
+.vx-btn:disabled{opacity:.45;cursor:not-allowed}
+.vx-tools{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.vx-seg{display:inline-flex;padding:3px;background:#fff;border:1px solid var(--g100);border-radius:999px}
+.vx-seg button{display:inline-flex;align-items:center;gap:7px;padding:8px 16px;border:none;border-radius:999px;background:transparent;color:var(--g500);font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;transition:background .2s,color .2s}
+.vx-seg button i{font-style:normal;font-size:11px;background:var(--off-white);color:var(--g500);border-radius:999px;padding:1px 7px}
+.vx-seg button.on{background:var(--navy);color:#fff}
+.vx-seg button.on i{background:rgba(255,255,255,.15);color:#fff}
+.vx-seg button:disabled{opacity:.4;cursor:not-allowed}
+.vx-seg.sm button{padding:6px 13px;font-size:12.5px}
+.vx-table{background:#fff;border:1px solid var(--g100);border-radius:var(--r-lg);overflow:hidden}
+.vx-th,.vx-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;padding:0 22px}
+.vx-th{padding-top:11px;padding-bottom:11px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--g500);border-bottom:1px solid var(--g100)}
+.vx-cat{display:flex;align-items:baseline;gap:10px;padding:18px 22px 8px}
+.vx-cat b{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--orange)}
+.vx-cat span{font-size:12.5px;color:var(--g500)}
+.vx-cat i{margin-left:auto;font-style:normal;font-size:11.5px;font-weight:700;color:var(--g500)}
+.vx-row{padding-top:8px;padding-bottom:8px;font-size:14.5px;line-height:1.4;border-top:1px solid var(--off-white)}
+.vx-cat+.vx-row{border-top:none}
+.vx-row:hover{background:var(--off-white)}
+.vx-row .en{color:var(--navy);font-weight:600}
+.vx-row .pt{color:var(--g500)}
+.vx-row.resp .en{padding-left:20px;font-weight:500;position:relative}
+.vx-row.resp .en::before{content:'↳';position:absolute;left:2px;color:var(--g300)}
+.so-en .vx-th span:last-child,.so-en .vx-row .pt{display:none}
+.so-en .vx-th,.so-en .vx-row{grid-template-columns:1fr}
+.vx-busca{font-size:14px;color:var(--g500);margin:0 0 12px}
+.vx-row.busca{grid-template-columns:auto minmax(0,1fr) minmax(0,1fr);align-items:baseline}
+.vx-un{border:1px solid var(--g200);background:#fff;border-radius:999px;padding:3px 10px;font:inherit;font-size:11.5px;font-weight:700;color:var(--navy);cursor:pointer;white-space:nowrap}
+.vx-un:hover{border-color:var(--orange);color:var(--orange)}
+.vx-row mark{background:rgba(215,25,32,.12);color:inherit;border-radius:3px;padding:0 2px}
+/* painel de envio */
+#vxEnvio[hidden]{display:none}
+.vx-dw-bg{position:fixed;inset:0;z-index:9998;background:rgba(7,21,34,.45);animation:vx-fade .2s ease-out}
+.vx-dw{position:fixed;top:0;right:0;bottom:0;z-index:9999;width:min(460px,100%);background:#fff;display:flex;flex-direction:column;box-shadow:-20px 0 50px -20px rgba(7,21,34,.5);animation:vx-entra .22s ease-out}
+@keyframes vx-fade{from{opacity:0}}
+@keyframes vx-entra{from{transform:translateX(24px);opacity:0}}
+.vx-dw-h{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:20px 22px 16px;border-bottom:1px solid var(--g100)}
+.vx-dw-h small{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--g500)}
+.vx-dw-h h3{margin:3px 0 0;font-size:19px;font-weight:800;color:var(--navy)}
+.vx-x{width:36px;height:36px;border:1px solid var(--g200);border-radius:var(--r-sm);background:#fff;color:var(--navy);font-size:15px;cursor:pointer}
+.vx-x:hover{border-color:var(--navy)}
+.vx-dw-c{flex:1;overflow-y:auto;padding:6px 22px 18px}
+.vx-dw-c section{padding:16px 0;border-bottom:1px solid var(--g100)}
+.vx-dw-c section:last-child{border-bottom:none}
+.vx-dw-c h4{display:flex;align-items:center;gap:9px;margin:0 0 12px;font-size:14px;font-weight:800;color:var(--navy)}
+.vx-dw-c h4 em{font-style:normal;width:22px;height:22px;border-radius:50%;background:var(--navy);color:#fff;font-size:12px;display:inline-flex;align-items:center;justify-content:center}
+.vx-fmts{display:flex;flex-direction:column;gap:8px}
+.vx-fmt{display:flex;flex-direction:column;align-items:flex-start;gap:1px;text-align:left;padding:11px 14px 11px 40px;border:1.5px solid var(--g200);border-radius:var(--r-sm);background:#fff;font:inherit;cursor:pointer;position:relative;transition:border-color .2s}
+.vx-fmt::before{content:'';position:absolute;left:14px;top:14px;width:14px;height:14px;border-radius:50%;border:2px solid var(--g300)}
+.vx-fmt b{font-size:14px;color:var(--navy)}
+.vx-fmt span{font-size:12.5px;color:var(--g500)}
+.vx-fmt:hover{border-color:var(--navy)}
+.vx-fmt.on{border-color:var(--orange);background:rgba(215,25,32,.03)}
+.vx-fmt.on::before{border-color:var(--orange);background:radial-gradient(circle,var(--orange) 45%,transparent 50%)}
+.vx-dir{margin-top:10px}
+.vx-todos{margin-left:auto;font-size:12px;font-weight:600;color:var(--g500)}
+.vx-todos button{border:none;background:none;padding:0;font:inherit;color:var(--g500);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.vx-todos button:hover{color:var(--navy)}
+.vx-inc-t{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--g500);margin:10px 0 4px}
+.vx-inc-t:first-of-type{margin-top:0}
+.vx-inc{display:flex;align-items:center;gap:10px;padding:7px 4px;font-size:13.5px;color:var(--navy);cursor:pointer;border-radius:6px}
+.vx-inc:hover{background:var(--off-white)}
+.vx-inc input{width:17px;height:17px;accent-color:var(--orange);flex-shrink:0}
+.vx-inc span{flex:1}
+.vx-inc i{font-style:normal;font-size:11.5px;font-weight:700;color:var(--g500)}
+.vx-prev-n{margin-left:auto;font-size:12px;font-weight:500;color:var(--g500)}
+.vx-prev{background:#e7f8de;border-radius:10px 10px 10px 2px;padding:12px 14px;font-size:13px;line-height:1.5;color:#1d2a23;white-space:pre-wrap;word-break:break-word;box-shadow:0 1px 1px rgba(0,0,0,.08)}
+.vx-prev.vazio{background:var(--off-white);color:var(--g500);font-style:italic}
+.vx-mais{margin-top:6px;font-size:12px;color:#55705e;font-style:italic}
+.vx-dw-f{display:flex;align-items:center;gap:8px;padding:14px 22px;border-top:1px solid var(--g100);background:#fff}
+.vx-dw-f span{margin-right:auto;font-size:13px;font-weight:700;color:var(--g500)}
+body.voc-ov-aberto{overflow:hidden}
+body.voc-ov-aberto .av-toast{top:16px;bottom:auto;left:50%;right:auto;transform:translateX(-50%);z-index:10001}
 /* cartões para projetar */
 .voc-ov{position:fixed;inset:0;z-index:10000;background:var(--navy);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:20px 20px 28px}
 .voc-ov[hidden]{display:none}
-body.voc-ov-aberto{overflow:hidden}
 .voc-ov-top{width:100%;max-width:1000px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:13px;font-weight:700;letter-spacing:.06em;color:rgba(245,247,250,.75)}
 .voc-ov-top div{display:flex;gap:8px}
 .voc-ov-top button,.voc-ov-nav button{border:1px solid rgba(245,247,250,.3);background:transparent;color:#fff;border-radius:var(--r-sm);padding:8px 14px;font:inherit;font-weight:700;cursor:pointer;transition:background .2s,border-color .2s}
 .voc-ov-top button:hover,.voc-ov-nav button:hover{background:rgba(245,247,250,.1);border-color:rgba(245,247,250,.6)}
 .voc-card{flex:1;width:100%;max-width:1000px;margin:20px 0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;border:none;background:none;color:#fff;cursor:pointer;font:inherit;text-align:center}
 .voc-card-en{font-size:clamp(34px,7vw,84px);font-weight:800;letter-spacing:-.02em;line-height:1.1}
-.voc-card-pt{font-size:clamp(14px,2.2vw,22px);color:rgba(245,247,250,.55);transition:color .2s}
+.voc-card-pt{font-size:clamp(14px,2.2vw,22px);color:rgba(245,247,250,.55)}
 .voc-card.virado .voc-card-pt{font-size:clamp(22px,4vw,44px);font-weight:600;color:var(--orange)}
 .voc-ov-nav{display:flex;gap:14px}
 .voc-ov-nav button{font-size:22px;padding:10px 26px}
-@media(max-width:860px){.voc-grupos{columns:1}.voc-acoes{margin-left:0}.voc-barra{position:static}}
-@media(max-width:560px){.voc-it{flex-direction:column;gap:0}.voc-ac{flex:1 1 46%}}
+@media(max-width:860px){
+  .vx{grid-template-columns:1fr;gap:14px}
+  .vx-units{position:static;flex-direction:row;max-height:none;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin}
+  .vx-units-t{display:none}
+  .vx-u{flex-shrink:0;background:#fff;border:1px solid var(--g100);border-radius:999px;padding:7px 13px}
+  .vx-u.on{border-color:var(--navy)}
+}
+@media(max-width:560px){
+  .vx-head{flex-direction:column;align-items:stretch}
+  .vx-cta .vx-btn{flex:1}
+  .vx-th{display:none}
+  .vx-th,.vx-row{gap:2px;padding-left:16px;padding-right:16px}
+  .vx-row{grid-template-columns:1fr}
+  .vx-cat{padding-left:16px;padding-right:16px}
+  .vx-row.busca{grid-template-columns:auto 1fr}
+  .vx-row.busca .pt{grid-column:2}
+  .vx-dw-f{flex-wrap:wrap}
+  .vx-dw-f .vx-btn{flex:1}
+}
 </style>
 <!-- PWA / App -->
 <link rel="manifest" href="/manifest.webmanifest">
@@ -3601,12 +3657,15 @@ function renderTests() {
 }
 
 // ═══ VOCABULÁRIO POR UNIDADE ═══
-// Dados em /vocabulario-livros.js (carregado só quando a aba é aberta).
-// O professor escolhe a unidade, marca os grupos e copia no formato que quiser
-// (com tradução, só inglês, ou como exercício) — pronto para colar no WhatsApp.
-let vocUnidade = {};             // unidade escolhida em cada livro
-let vocTraducao = true;          // mostrar tradução na tela
-let vocFora = {};                // grupos desmarcados, por livro-unidade
+// A tela principal só CONSULTA (unidades à esquerda, tabela inglês|português).
+// Tudo o que é ENVIO fica no painel "Enviar para alunos": formato, o que
+// incluir e a prévia exata do texto. Dados em /vocabulario-livros.js
+// (carregado só quando a aba é aberta).
+let vocUnidade = {};                 // unidade escolhida em cada livro
+let vocAba = 'v';                    // 'v' = palavras | 'e' = expressões
+let vocMostrar = 'ambos';            // 'ambos' | 'en'
+let vocFmt = 'trad', vocDir = 'en-pt';
+let vocFora = {};                    // grupos desmarcados no envio, por livro-unidade
 let vocCarregando = false, vocErro = false;
 
 function vocCarregar() {
@@ -3619,126 +3678,157 @@ function vocCarregar() {
   document.head.appendChild(sc);
 }
 function vocLivro() { return window.WIN_VOCAB ? window.WIN_VOCAB[currentLevel] : null; }
-function vocChave(n) { return currentLevel + '-' + n; }
-function vocUnidadeAtual(lv) {
-  const n = vocUnidade[currentLevel] || 1;
-  return lv.u.find(u => u.n === n) || lv.u[0];
-}
-function vocGruposMarcados(u) {
-  const fora = vocFora[vocChave(u.n)] || {};
-  return u.g.filter((g, i) => !fora[i]);
-}
-function vocContar(grupos) {
-  let p = 0, e = 0;
-  grupos.forEach(g => { if (g.t === 'v') p += g.i.length; else e += g.i.length; });
-  return { p, e };
-}
+function vocUnidadeAtual(lv) { const n = vocUnidade[currentLevel] || 1; return lv.u.find(u => u.n === n) || lv.u[0]; }
+function vocChave(u) { return currentLevel + '-' + u.n; }
+function vocConta(grupos, tipo) { return grupos.filter(g => !tipo || g.t === tipo).reduce((t, g) => t + g.i.length, 0); }
 function vocPlural(n, um, varios) { return n + ' ' + (n === 1 ? um : varios); }
+function vocEsc(x) { return escapeHtml(String(x == null ? '' : x)); }
 
-// Texto para copiar. modo: 'trad' | 'en' | 'ex-pt' (traduza) | 'ex-en' (escreva em inglês)
-function vocTexto(lv, u, modo) {
-  const grupos = vocGruposMarcados(u);
+// ── texto para o WhatsApp (o mesmo que aparece na prévia) ──
+function vocSelecionados(u) { const f = vocFora[vocChave(u)] || {}; return u.g.filter((g, i) => !f[i]); }
+function vocTexto(lv, u, fmt, dir) {
+  const grupos = vocSelecionados(u);
   const L = ['*📘 ' + lv.titulo + ' — Unit ' + u.n + '*'];
-  if (modo === 'trad') L.push('_Vocabulary · Vocabulário_');
-  if (modo === 'en') L.push('_Vocabulary_');
-  if (modo === 'ex-pt') L.push('✏️ _Escreva a tradução de cada item._');
-  if (modo === 'ex-en') L.push('✏️ _Write each item in English._');
+  const ex = fmt === 'ex', pt = ex && dir === 'pt-en';
+  if (fmt === 'trad') L.push('_Vocabulary · Vocabulário_');
+  if (fmt === 'en') L.push('_Vocabulary_');
+  if (ex) L.push(pt ? '✏️ _Write each item in English._' : '✏️ _Escreva a tradução em português._');
   grupos.forEach(g => {
-    L.push('');
-    L.push('*' + (modo === 'en' ? g.en : modo === 'ex-en' ? g.pt : g.en + ' — ' + g.pt) + '*');
+    // título do grupo: em português (o aluno lê); em inglês só na lista só em inglês
+    L.push('', '*' + (fmt === 'en' ? g.en : g.pt) + '*');
     g.i.forEach(it => {
       const pre = it[2] ? '   ↳ ' : '• ';
-      if (modo === 'trad') L.push(pre + it[0] + ' — ' + it[1]);
-      else if (modo === 'en') L.push(pre + it[0]);
-      else if (modo === 'ex-pt') L.push(pre + it[0] + ' = ______________');
-      else L.push(pre + it[1] + ' = ______________');
+      if (fmt === 'trad') L.push(pre + it[0] + ' — ' + it[1]);
+      else if (fmt === 'en') L.push(pre + it[0]);
+      else L.push(pre + (pt ? it[1] : it[0]) + ' = ______________');
     });
   });
   return L.join('\n');
 }
+// prévia com a mesma formatação do WhatsApp (*negrito* e _itálico_)
+function vocPreviaHtml(txt) {
+  return vocEsc(txt).replace(/\*([^*\n]+)\*/g, '<b>$1</b>').replace(/(^|\s)_([^_\n]+)_/g, '$1<i>$2</i>');
+}
 function vocCopiar(txt, aviso) {
-  const ok = () => avToast(aviso);
-  if (navigator.clipboard && window.isSecureContext) {
-    navigator.clipboard.writeText(txt).then(ok, () => vocCopiarAntigo(txt) ? ok() : avToast('Não foi possível copiar.', true));
-  } else if (vocCopiarAntigo(txt)) ok(); else avToast('Não foi possível copiar.', true);
-}
-function vocCopiarAntigo(txt) {
-  const t = document.createElement('textarea'); t.value = txt; t.setAttribute('readonly', '');
-  t.style.position = 'fixed'; t.style.opacity = '0'; document.body.appendChild(t); t.select();
-  let ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
-  t.remove(); return ok;
+  const feito = () => avToast(aviso);
+  const antigo = () => {
+    const t = document.createElement('textarea'); t.value = txt; t.setAttribute('readonly', '');
+    t.style.position = 'fixed'; t.style.opacity = '0'; document.body.appendChild(t); t.select();
+    let ok = false; try { ok = document.execCommand('copy'); } catch (e) {} t.remove(); return ok;
+  };
+  if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(txt).then(feito, () => antigo() ? feito() : avToast('Não foi possível copiar.', true));
+  else if (antigo()) feito(); else avToast('Não foi possível copiar.', true);
 }
 
-function vocItemHtml(it, termo) {
-  const real = s => termo ? escapeHtml(s).replace(new RegExp('(' + termo.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'ig'), '<mark>$1</mark>') : escapeHtml(s);
-  return '<li class="voc-it' + (it[2] ? ' resp' : '') + '"><span class="voc-en">' + real(it[0]) + '</span>' +
-         '<span class="voc-pt">' + real(it[1]) + '</span></li>';
-}
-
+// ── tela principal: consulta ──
 function renderVocab(search) {
   const div = document.getElementById('v-vocab'); if (!div) return;
-  const nomeLivro = (typeof AV_LIVRO !== 'undefined' && AV_LIVRO[currentLevel]) || '';
+  const nome = (typeof AV_LIVRO !== 'undefined' && AV_LIVRO[currentLevel]) || '';
   const intro = '<div class="view-intro"><div class="view-intro-eyebrow">Vocabulário</div>' +
-    '<h2>Vocabulário do <em>' + escapeHtml(nomeLivro) + '</em></h2>' +
-    '<p>Palavras e expressões esperadas em cada unidade, com tradução. Escolha a unidade, marque o que quer enviar e copie no formato que preferir — pronto para colar no WhatsApp.</p></div>';
+    '<h2>Vocabulário do <em>' + vocEsc(nome) + '</em></h2>' +
+    '<p>As palavras e expressões de cada unidade, com tradução.</p></div>';
   if (!window.WIN_VOCAB) {
     if (vocErro) { div.innerHTML = intro + emptyState('📡', 'Não foi possível carregar o vocabulário. Recarregue a página.'); return; }
     div.innerHTML = intro + '<div class="mus-load">Carregando vocabulário…</div>'; vocCarregar(); return;
   }
   const lv = vocLivro();
-  if (!lv) { div.innerHTML = intro + emptyState('📘', 'Ainda não há vocabulário cadastrado para este livro.'); return; }
+  if (!lv) { div.innerHTML = intro + emptyState('📘', 'Ainda não há vocabulário para este livro.'); return; }
   const termo = (search || '').trim().toLowerCase();
-
-  // busca: procura no livro inteiro e mostra em que unidade está
-  if (termo) {
-    const achados = [];
-    lv.u.forEach(u => u.g.forEach(g => g.i.forEach(it => {
-      if ((it[0] + ' ' + it[1]).toLowerCase().includes(termo)) achados.push({ u: u.n, g: g, it: it });
-    })));
-    div.innerHTML = intro + '<div class="voc-busca"><b>' + vocPlural(achados.length, 'resultado', 'resultados') + '</b> para “' + escapeHtml(search.trim()) + '” no ' + escapeHtml(lv.titulo) + '</div>' +
-      (achados.length ? '<ul class="voc-lista voc-res">' + achados.map(a =>
-        '<li class="voc-it"><button type="button" class="voc-un" data-voc-unidade="' + a.u + '" title="Abrir a unidade">Unit ' + a.u + '</button>' +
-        '<span class="voc-en">' + escapeHtml(a.it[0]) + '</span><span class="voc-pt">' + escapeHtml(a.it[1]) + '</span></li>').join('') + '</ul>'
-      : emptyState('🔍', 'Nada encontrado neste livro.'));
-    return;
-  }
+  if (termo) { div.innerHTML = intro + vocBuscaHtml(lv, termo, search.trim()); return; }
 
   const u = vocUnidadeAtual(lv);
-  const fora = vocFora[vocChave(u.n)] || {};
-  const marcados = vocGruposMarcados(u);
-  const tot = vocContar(u.g), sel = vocContar(marcados);
-  const unidades = '<div class="voc-unidades" role="tablist" aria-label="Unidade">' + lv.u.map(x =>
-    '<button type="button" role="tab" aria-selected="' + (x.n === u.n) + '" class="' + (x.n === u.n ? 'on' : '') + '" data-voc-unidade="' + x.n + '">Unit ' + x.n + '</button>').join('') + '</div>';
-  const nada = !marcados.length;
-  const barra = '<div class="voc-barra">' +
-    '<div class="voc-resumo"><b>Unit ' + u.n + '</b><span>' + vocPlural(tot.p, 'palavra', 'palavras') + ' · ' + vocPlural(tot.e, 'expressão', 'expressões') + '</span>' +
-      (marcados.length !== u.g.length ? '<em>' + (sel.p + sel.e) + ' itens selecionados</em>' : '') + '</div>' +
-    '<label class="voc-switch"><input type="checkbox" id="vocTrad"' + (vocTraducao ? ' checked' : '') + '><span></span>Mostrar tradução</label>' +
-    '<div class="voc-acoes">' +
-      '<button type="button" class="voc-ac pri" data-voc-copiar="trad"' + (nada ? ' disabled' : '') + '>Copiar com tradução</button>' +
-      '<button type="button" class="voc-ac" data-voc-copiar="en"' + (nada ? ' disabled' : '') + '>Só em inglês</button>' +
-      '<button type="button" class="voc-ac" data-voc-copiar="ex-pt"' + (nada ? ' disabled' : '') + ' title="O aluno escreve a tradução">Exercício: traduzir</button>' +
-      '<button type="button" class="voc-ac" data-voc-copiar="ex-en"' + (nada ? ' disabled' : '') + ' title="O aluno escreve em inglês">Exercício: em inglês</button>' +
-      '<button type="button" class="voc-ac cartoes" data-voc-cartoes' + (nada ? ' disabled' : '') + ' title="Para projetar na aula">▶ Modo cartões</button>' +
-    '</div></div>';
-  const grupos = u.g.map((g, i) => {
-    const off = !!fora[i];
-    return '<section class="voc-grupo' + (g.t === 'e' ? ' exp' : '') + (off ? ' off' : '') + '">' +
-      '<label class="voc-gh"><input type="checkbox" data-voc-grupo="' + i + '"' + (off ? '' : ' checked') + '>' +
-      '<span class="voc-gt"><b>' + escapeHtml(g.en) + '</b><small>' + escapeHtml(g.pt) + '</small></span><i>' + g.i.length + '</i></label>' +
-      '<ul class="voc-lista">' + g.i.map(it => vocItemHtml(it)).join('') + '</ul></section>';
-  }).join('');
-  div.innerHTML = intro + unidades + barra +
-    '<div class="voc-marcar"><button type="button" data-voc-todos="1">Marcar tudo</button><button type="button" data-voc-todos="0">Desmarcar tudo</button></div>' +
-    '<div class="voc-grupos' + (vocTraducao ? '' : ' sem-trad') + '">' + grupos + '</div>';
+  const nv = vocConta(u.g, 'v'), ne = vocConta(u.g, 'e');
+  if (vocAba === 'e' && !ne) vocAba = 'v';
+  const unidades = '<nav class="vx-units" aria-label="Unidades"><div class="vx-units-t">Unidades</div>' +
+    lv.u.map(x => '<button type="button" class="vx-u' + (x.n === u.n ? ' on' : '') + '" data-voc-unidade="' + x.n + '"' + (x.n === u.n ? ' aria-current="true"' : '') + '>' +
+      '<span>Unit ' + x.n + '</span><i>' + vocConta(x.g) + '</i></button>').join('') + '</nav>';
+  const grupos = u.g.filter(g => g.t === vocAba);
+  const tabela = '<div class="vx-table' + (vocMostrar === 'en' ? ' so-en' : '') + '">' +
+    '<div class="vx-th"><span>Inglês</span><span>Português</span></div>' +
+    grupos.map(g => '<div class="vx-cat"><b>' + vocEsc(g.en) + '</b><span>' + vocEsc(g.pt) + '</span><i>' + g.i.length + '</i></div>' +
+      g.i.map(it => '<div class="vx-row' + (it[2] ? ' resp' : '') + '"><span class="en">' + vocEsc(it[0]) + '</span><span class="pt">' + vocEsc(it[1]) + '</span></div>').join('')).join('') +
+    '</div>';
+  div.innerHTML = intro + '<div class="vx">' + unidades +
+    '<div class="vx-main" id="vxMain">' +
+      '<div class="vx-head"><div class="vx-title"><h3>Unit ' + u.n + '</h3><p>' + vocPlural(nv, 'palavra', 'palavras') + ' · ' + vocPlural(ne, 'expressão', 'expressões') + '</p></div>' +
+        '<div class="vx-cta"><button type="button" class="vx-btn" data-voc-cartoes>▶ Projetar em aula</button>' +
+        '<button type="button" class="vx-btn pri" data-voc-enviar>Enviar para alunos</button></div></div>' +
+      '<div class="vx-tools">' +
+        '<div class="vx-seg" role="tablist"><button type="button" role="tab" data-voc-aba="v" class="' + (vocAba === 'v' ? 'on' : '') + '">Palavras <i>' + nv + '</i></button>' +
+        '<button type="button" role="tab" data-voc-aba="e" class="' + (vocAba === 'e' ? 'on' : '') + '"' + (ne ? '' : ' disabled') + '>Expressões <i>' + ne + '</i></button></div>' +
+        '<div class="vx-seg sm"><button type="button" data-voc-mostrar="ambos" class="' + (vocMostrar === 'ambos' ? 'on' : '') + '">Com tradução</button>' +
+        '<button type="button" data-voc-mostrar="en" class="' + (vocMostrar === 'en' ? 'on' : '') + '">Só inglês</button></div>' +
+      '</div>' + tabela + '</div></div>';
+}
+function vocBuscaHtml(lv, termo, original) {
+  const achados = [];
+  lv.u.forEach(u => u.g.forEach(g => g.i.forEach(it => { if ((it[0] + ' ' + it[1]).toLowerCase().includes(termo)) achados.push({ u: u.n, it: it }); })));
+  const marca = s => vocEsc(s).replace(new RegExp('(' + termo.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'ig'), '<mark>$1</mark>');
+  if (!achados.length) return emptyState('🔍', 'Nada encontrado para “' + vocEsc(original) + '” no ' + vocEsc(lv.titulo) + '.');
+  return '<div class="vx-busca">' + vocPlural(achados.length, 'resultado', 'resultados') + ' para “' + vocEsc(original) + '” no ' + vocEsc(lv.titulo) + '</div>' +
+    '<div class="vx-table">' + achados.map(a => '<div class="vx-row busca"><button type="button" class="vx-un" data-voc-unidade="' + a.u + '">Unit ' + a.u + '</button>' +
+      '<span class="en">' + marca(a.it[0]) + '</span><span class="pt">' + marca(a.it[1]) + '</span></div>').join('') + '</div>';
 }
 
-// ── cartões para projetar na aula ──
+// ── painel "Enviar para alunos" ──
+function vocAbrirEnvio() {
+  let p = document.getElementById('vxEnvio');
+  if (!p) { p = document.createElement('div'); p.id = 'vxEnvio'; document.body.appendChild(p); }
+  p.innerHTML = '<div class="vx-dw-bg" data-voc-env="fechar"></div><aside class="vx-dw" role="dialog" aria-modal="true" aria-label="Enviar para alunos"></aside>';
+  p.hidden = false; document.body.classList.add('voc-ov-aberto'); vocDesenharEnvio();
+  setTimeout(() => { const f = p.querySelector('.vx-fmt.on'); if (f) f.focus(); }, 30);
+}
+function vocFecharEnvio() { const p = document.getElementById('vxEnvio'); if (p) p.hidden = true; document.body.classList.remove('voc-ov-aberto'); }
+function vocDesenharEnvio() {
+  const p = document.getElementById('vxEnvio'); const lv = vocLivro(); if (!p || !lv) return;
+  const u = vocUnidadeAtual(lv), fora = vocFora[vocChave(u)] || {};
+  const sel = vocSelecionados(u), total = vocConta(sel);
+  const txt = vocTexto(lv, u, vocFmt, vocDir), linhas = txt.split('\n');
+  const LIM = 16, previa = linhas.slice(0, LIM).join('\n');
+  const fmt = (k, t, d) => '<button type="button" class="vx-fmt' + (vocFmt === k ? ' on' : '') + '" data-voc-fmt="' + k + '" aria-pressed="' + (vocFmt === k) + '"><b>' + t + '</b><span>' + d + '</span></button>';
+  const lista = (tipo, titulo) => {
+    const gs = u.g.map((g, i) => ({ g, i })).filter(x => x.g.t === tipo); if (!gs.length) return '';
+    return '<div class="vx-inc-t">' + titulo + '</div>' + gs.map(x =>
+      '<label class="vx-inc"><input type="checkbox" data-voc-grp="' + x.i + '"' + (fora[x.i] ? '' : ' checked') + '>' +
+      '<span>' + vocEsc(x.g.pt) + '</span><i>' + x.g.i.length + '</i></label>').join('');
+  };
+  // Só o conteúdo é trocado: a moldura fica, então não há "piscada" da animação
+  // de entrada a cada clique, e a rolagem e o foco são preservados.
+  const aside = p.querySelector('.vx-dw'); if (!aside) return;
+  const cont = aside.querySelector('.vx-dw-c'), rolagem = cont ? cont.scrollTop : 0;
+  const ativo = document.activeElement, chaveFoco = ativo && aside.contains(ativo)
+    ? ['data-voc-grp', 'data-voc-fmt', 'data-voc-dir', 'data-voc-todos', 'data-voc-env'].map(a => ativo.hasAttribute(a) ? '[' + a + '="' + ativo.getAttribute(a) + '"]' : '').join('') : '';
+  aside.innerHTML =
+      '<div class="vx-dw-h"><div><small>Enviar para alunos</small><h3>' + vocEsc(lv.titulo) + ' · Unit ' + u.n + '</h3></div>' +
+        '<button type="button" class="vx-x" data-voc-env="fechar" aria-label="Fechar">✕</button></div>' +
+      '<div class="vx-dw-c">' +
+        '<section><h4><em>1</em>Formato</h4><div class="vx-fmts">' +
+          fmt('trad', 'Lista com tradução', 'Para o aluno estudar em casa') +
+          fmt('en', 'Lista só em inglês', 'Para revisar sem consultar a tradução') +
+          fmt('ex', 'Exercício', 'O aluno completa as lacunas') + '</div>' +
+          (vocFmt === 'ex' ? '<div class="vx-seg sm vx-dir"><button type="button" data-voc-dir="en-pt" class="' + (vocDir === 'en-pt' ? 'on' : '') + '">Traduzir para o português</button>' +
+            '<button type="button" data-voc-dir="pt-en" class="' + (vocDir === 'pt-en' ? 'on' : '') + '">Escrever em inglês</button></div>' : '') +
+        '</section>' +
+        '<section><h4><em>2</em>O que incluir <span class="vx-todos"><button type="button" data-voc-todos="1">todos</button> · <button type="button" data-voc-todos="0">nenhum</button></span></h4>' +
+          lista('v', 'Palavras') + lista('e', 'Expressões') + '</section>' +
+        '<section><h4><em>3</em>Prévia <span class="vx-prev-n">como vai aparecer no WhatsApp</span></h4>' +
+          (total ? '<div class="vx-prev">' + vocPreviaHtml(previa) + (linhas.length > LIM ? '<div class="vx-mais">… e mais ' + (linhas.length - LIM) + ' linhas</div>' : '') + '</div>'
+                 : '<div class="vx-prev vazio">Marque pelo menos um item para enviar.</div>') +
+        '</section>' +
+      '</div>' +
+      '<div class="vx-dw-f"><span>' + vocPlural(total, 'item', 'itens') + '</span>' +
+        (vocFmt === 'ex' && total ? '<button type="button" class="vx-btn" data-voc-env="gabarito">Copiar gabarito</button>' : '') +
+        '<button type="button" class="vx-btn pri" data-voc-env="copiar"' + (total ? '' : ' disabled') + '>Copiar texto</button></div>';
+  const cont2 = aside.querySelector('.vx-dw-c'); if (cont2) cont2.scrollTop = rolagem;
+  if (chaveFoco) { const f = aside.querySelector(chaveFoco); if (f && !f.disabled) f.focus({ preventScroll: true }); }
+}
+
+// ── cartões para projetar na aula (aba atual: palavras ou expressões) ──
 let vocCartoes = null;
 function vocAbrirCartoes() {
   const lv = vocLivro(); if (!lv) return;
   const u = vocUnidadeAtual(lv);
-  const itens = []; vocGruposMarcados(u).forEach(g => g.i.forEach(it => { if (!it[2]) itens.push(it); }));
+  const itens = []; u.g.filter(g => g.t === vocAba).forEach(g => g.i.forEach(it => { if (!it[2]) itens.push(it); }));
   if (!itens.length) return;
   vocCartoes = { lv: lv, u: u, itens: itens, pos: 0, virado: false };
   let ov = document.getElementById('vocCartoes');
@@ -3748,12 +3838,12 @@ function vocAbrirCartoes() {
 function vocDesenharCartao() {
   const c = vocCartoes, ov = document.getElementById('vocCartoes'); if (!c || !ov) return;
   const it = c.itens[c.pos];
-  ov.innerHTML = '<div class="voc-ov-top"><span>' + escapeHtml(c.lv.titulo) + ' · Unit ' + c.u.n + '</span>' +
+  ov.innerHTML = '<div class="voc-ov-top"><span>' + vocEsc(c.lv.titulo) + ' · Unit ' + c.u.n + '</span>' +
       '<span>' + (c.pos + 1) + ' / ' + c.itens.length + '</span>' +
       '<div><button type="button" data-voc-c="misturar">Embaralhar</button><button type="button" data-voc-c="fechar" aria-label="Fechar">✕</button></div></div>' +
     '<button type="button" class="voc-card' + (c.virado ? ' virado' : '') + '" data-voc-c="virar">' +
-      '<span class="voc-card-en">' + escapeHtml(it[0]) + '</span>' +
-      '<span class="voc-card-pt">' + (c.virado ? escapeHtml(it[1]) : 'toque ou espaço para ver a tradução') + '</span></button>' +
+      '<span class="voc-card-en">' + vocEsc(it[0]) + '</span>' +
+      '<span class="voc-card-pt">' + (c.virado ? vocEsc(it[1]) : 'toque ou espaço para ver a tradução') + '</span></button>' +
     '<div class="voc-ov-nav"><button type="button" data-voc-c="ant" aria-label="Anterior">←</button><button type="button" data-voc-c="prox" aria-label="Próximo">→</button></div>';
 }
 function vocCartaoAcao(a) {
@@ -3766,45 +3856,53 @@ function vocCartaoAcao(a) {
   vocDesenharCartao();
 }
 
-// ── eventos (um ouvinte só, sem JS dentro do HTML) ──
+// ── eventos (um ouvinte por tipo, sem JS dentro do HTML) ──
 document.addEventListener('click', function (e) {
   const t = e.target && e.target.closest ? e.target : null; if (!t) return;
   const un = t.closest('[data-voc-unidade]');
   if (un) {
     vocUnidade[currentLevel] = +un.getAttribute('data-voc-unidade');
-    const bi = document.getElementById('searchInput');
-    if (bi && bi.value) bi.value = '';
-    render(); return;
-  }
-  const cp = t.closest('[data-voc-copiar]');
-  if (cp && !cp.disabled) {
-    const lv = vocLivro(), u = vocUnidadeAtual(lv), modo = cp.getAttribute('data-voc-copiar');
-    const n = vocContar(vocGruposMarcados(u)); const total = n.p + n.e;
-    const rot = { trad: 'com tradução', en: 'só em inglês', 'ex-pt': 'exercício de tradução', 'ex-en': 'exercício em inglês' }[modo];
-    vocCopiar(vocTexto(lv, u, modo), 'Copiado: Unit ' + u.n + ', ' + total + ' itens (' + rot + '). É só colar no WhatsApp.');
+    const bi = document.getElementById('searchInput'); if (bi && bi.value) bi.value = '';
+    render();
+    const m = document.getElementById('vxMain');                 // volta ao topo da unidade se ela começa fora da tela
+    if (m && m.getBoundingClientRect().top < 0) m.scrollIntoView({ behavior: 'smooth', block: 'start' });
     return;
   }
-  if (t.closest('[data-voc-cartoes]') && !t.closest('[data-voc-cartoes]').disabled) { vocAbrirCartoes(); return; }
+  const ab = t.closest('[data-voc-aba]'); if (ab && !ab.disabled) { vocAba = ab.getAttribute('data-voc-aba'); render(); return; }
+  const mo = t.closest('[data-voc-mostrar]'); if (mo) { vocMostrar = mo.getAttribute('data-voc-mostrar'); render(); return; }
+  if (t.closest('[data-voc-enviar]')) { vocAbrirEnvio(); return; }
+  if (t.closest('[data-voc-cartoes]')) { vocAbrirCartoes(); return; }
+  const fm = t.closest('[data-voc-fmt]'); if (fm) { vocFmt = fm.getAttribute('data-voc-fmt'); vocDesenharEnvio(); return; }
+  const dr = t.closest('[data-voc-dir]'); if (dr) { vocDir = dr.getAttribute('data-voc-dir'); vocDesenharEnvio(); return; }
   const td = t.closest('[data-voc-todos]');
   if (td) {
-    const lv = vocLivro(), u = vocUnidadeAtual(lv), f = {};
+    const u = vocUnidadeAtual(vocLivro()), f = {};
     if (td.getAttribute('data-voc-todos') === '0') u.g.forEach((g, i) => { f[i] = true; });
-    vocFora[vocChave(u.n)] = f; render(); return;
+    vocFora[vocChave(u)] = f; vocDesenharEnvio(); return;
   }
-  const c = t.closest('[data-voc-c]');
-  if (c) { vocCartaoAcao(c.getAttribute('data-voc-c')); return; }
+  const ev = t.closest('[data-voc-env]');
+  if (ev) {
+    const acao = ev.getAttribute('data-voc-env');
+    if (acao === 'fechar') { vocFecharEnvio(); return; }
+    const lv = vocLivro(), u = vocUnidadeAtual(lv), n = vocConta(vocSelecionados(u));
+    if (acao === 'copiar') {
+      const rot = vocFmt === 'trad' ? 'lista com tradução' : vocFmt === 'en' ? 'lista só em inglês' : 'exercício';
+      vocCopiar(vocTexto(lv, u, vocFmt, vocDir), 'Copiado: ' + rot + ', Unit ' + u.n + ' (' + vocPlural(n, 'item', 'itens') + '). É só colar no WhatsApp.');
+    }
+    if (acao === 'gabarito') vocCopiar(vocTexto(lv, u, 'trad', vocDir), 'Gabarito copiado: Unit ' + u.n + '.');
+    return;
+  }
+  const c = t.closest('[data-voc-c]'); if (c) { vocCartaoAcao(c.getAttribute('data-voc-c')); return; }
 });
 document.addEventListener('change', function (e) {
-  const t = e.target; if (!t) return;
-  if (t.id === 'vocTrad') { vocTraducao = t.checked; const g = document.querySelector('#v-vocab .voc-grupos'); if (g) g.classList.toggle('sem-trad', !vocTraducao); return; }
-  if (t.hasAttribute && t.hasAttribute('data-voc-grupo')) {
-    const lv = vocLivro(), u = vocUnidadeAtual(lv), k = vocChave(u.n), i = +t.getAttribute('data-voc-grupo');
-    const f = vocFora[k] || (vocFora[k] = {});
-    if (t.checked) delete f[i]; else f[i] = true;
-    render();
-  }
+  const t = e.target; if (!t || !t.hasAttribute || !t.hasAttribute('data-voc-grp')) return;
+  const u = vocUnidadeAtual(vocLivro()), k = vocChave(u), i = +t.getAttribute('data-voc-grp');
+  const f = vocFora[k] || (vocFora[k] = {}); if (t.checked) delete f[i]; else f[i] = true;
+  vocDesenharEnvio();
 });
 document.addEventListener('keydown', function (e) {
+  const envio = document.getElementById('vxEnvio');
+  if (envio && !envio.hidden && e.key === 'Escape') { vocFecharEnvio(); return; }
   if (!vocCartoes) return;
   if (e.key === 'ArrowRight') { vocCartaoAcao('prox'); e.preventDefault(); }
   else if (e.key === 'ArrowLeft') { vocCartaoAcao('ant'); e.preventDefault(); }

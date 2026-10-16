@@ -4,7 +4,7 @@
    - Supabase/API/CDNs (cross-origin) e POST/PUT passam direto (dados e auth sempre ao vivo).
    - Páginas autenticadas (dashboards/login) nunca são armazenadas em cache.
 */
-const VERSION = 'win-v58';
+const VERSION = 'win-v59';
 const CACHE = 'win-shell-' + VERSION;
 const PRECACHE = [
   '/offline',

@@ -1,0 +1,219 @@
+/* ═══════════════════════════════════════════════════════════════
+   WIN — CAMADA MOBILE
+   Carregada por último em todas as páginas. Só age em telas
+   estreitas; no computador nada muda.
+   Seletores com "html body" para vencer os !important antigos.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ═════════════════ SITE PÚBLICO ═════════════════ */
+@media (max-width: 900px) {
+  /* Itens de grade nunca podem ser mais largos que a coluna */
+  html body .hero-grid > *,
+  html body .hero-grid { min-width: 0; }
+  html body .hero-grid h1 { overflow-wrap: anywhere; }
+  html body .hero-stats { flex-wrap: wrap; }
+  html body .hero-badge { max-width: 100%; }
+  html body .coord-badge-exp { right: 8px !important; left: auto !important; max-width: calc(100% - 16px); }
+
+  /* Menu do site: logo + botão + hambúrguer sempre cabem */
+  html body .nav-inner { max-width: 100% !important; width: 100% !important; box-sizing: border-box; gap: 10px; }
+  html body .nav-cta { display: flex; align-items: center; gap: 8px; min-width: 0; margin-left: auto; }
+  html body .nav-cta .btn { width: auto !important; white-space: nowrap; padding: 10px 14px !important; font-size: 12px !important; }
+  html body .mobile-toggle { flex-shrink: 0; }
+}
+@media (max-width: 480px) {
+  /* Botões nunca passam da largura da coluna (em Cursos, um CTA alargava a página) */
+  html body .container .btn { max-width: 100%; white-space: normal !important; text-align: center; justify-content: center; box-sizing: border-box; }
+}
+@media (max-width: 420px) {
+  html body .nav-cta .btn-outline { display: none !important; }
+  html body .nav-logo-text { display: none; }
+  html body .hero-grid .btn,
+  html body .hero .btn { white-space: normal !important; text-align: center; justify-content: center; }
+}
+
+/* ═════════════════ PAINÉIS ═════════════════ */
+@media (max-width: 900px) {
+
+  /* Toque e leitura: inputs com 16px evitam o zoom automático do iPhone */
+  html body .main input:not([type=checkbox]):not([type=radio]):not([type=range]),
+  html body .main select,
+  html body .main textarea,
+  html body #schedPopup input, html body #schedPopup select,
+  html body #cSchedPopup input, html body #cSchedPopup select { font-size: 16px !important; }
+
+  /* ── Barra superior ───────────────────────────────────────── */
+  html body .topbar {
+    position: sticky !important; top: 0; z-index: 90;
+    height: auto !important; min-height: 60px;
+    padding: calc(8px + env(safe-area-inset-top, 0px)) 12px 8px !important;
+    gap: 10px !important;
+    justify-content: flex-start !important;
+  }
+  /* O botão do menu estava branco sobre fundo branco (invisível) */
+  html body .topbar .mobile-menu-btn {
+    display: inline-flex !important; order: -1;
+    width: 42px !important; height: 42px !important; flex: 0 0 42px;
+    align-items: center; justify-content: center;
+    border-radius: 12px !important;
+    background: var(--win-azul-profundo, #0B1F33) !important;
+    color: #fff !important; border: none !important;
+    font-size: 20px !important; line-height: 1;
+    box-shadow: 0 4px 12px rgba(11,31,51,.18);
+  }
+  html body .topbar .topbar-title,
+  html body .topbar > div:first-child:not(.topbar-user) {
+    flex: 1 1 auto; min-width: 0; text-align: left !important;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  html body .topbar .topbar-user { margin-left: auto; gap: 8px !important; flex-shrink: 0; }
+
+  /* ── Gaveta do menu ───────────────────────────────────────── */
+  html body .sb {
+    width: min(84vw, 320px) !important;
+    padding: calc(16px + env(safe-area-inset-top, 0px)) 14px calc(16px + env(safe-area-inset-bottom, 0px)) !important;
+    transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1) !important;
+    box-shadow: 0 0 0 rgba(0,0,0,0);
+    overflow-y: auto;
+  }
+  html body .sb.open { box-shadow: 24px 0 60px rgba(0,0,0,.35); }
+  html body .sb .sb-nav { overflow: visible !important; flex: 0 0 auto !important; }
+  html body .sb .sb-link { min-height: 44px; }
+  html body .sb-toggle { display: none !important; }
+  html body .sb-overlay.open { display: block !important; background: rgba(7,21,34,.5) !important; backdrop-filter: blur(2px); }
+  .win-sb-close {
+    position: absolute; top: calc(14px + env(safe-area-inset-top, 0px)); right: 12px;
+    width: 38px; height: 38px; border-radius: 50%;
+    border: none; background: rgba(255,255,255,.08); color: #fff;
+    font-size: 18px; line-height: 38px; cursor: pointer; z-index: 3;
+  }
+  html body.win-menu-open { overflow: hidden; }
+
+  /* ── Conteúdo ─────────────────────────────────────────────── */
+  html body .content { padding: 16px 14px calc(32px + env(safe-area-inset-bottom, 0px)) !important; }
+  html body .section-head { gap: 12px !important; margin-bottom: 18px !important; }
+  html body .section-head h2 { font-size: 24px !important; line-height: 1.15 !important; }
+  html body .section-sub { font-size: 13.5px !important; }
+
+  /* Cabeçalho de painel: título e contador na mesma linha */
+  html body .panel-head {
+    display: flex !important; flex-direction: row !important; flex-wrap: wrap !important;
+    align-items: center !important; justify-content: space-between !important;
+    gap: 8px 10px !important; padding: 14px 16px !important;
+  }
+  html body .panel-head .panel-title { flex: 1 1 auto; min-width: 0; }
+
+  /* Linhas de filtro/ordenar não deixam rótulo órfão */
+  html body .coord-filter-row { flex-wrap: wrap !important; gap: 8px !important; }
+
+  /* ── Cartões "enviados" (homework, feedback…) ─────────────── */
+  html body .sent-card .sent-head {
+    display: grid !important; grid-template-columns: minmax(0,1fr) auto; gap: 6px 10px; align-items: start;
+  }
+  html body .sent-card .sent-icon { display: none !important; }
+  html body .sent-card .sent-title { font-size: 15px !important; line-height: 1.3 !important; }
+  html body .sent-card .sent-cancel-btn { padding: 5px 10px !important; font-size: 11.5px !important; }
+  html body .sent-card .sent-status { white-space: nowrap; }
+  /* Linhas por aluno no homework: nome em cima, selos e botão embaixo */
+  html body .sent-card div[style*="padding:8px 0"] { flex-wrap: wrap !important; row-gap: 6px !important; }
+  html body .sent-card div[style*="padding:8px 0"] > span:first-child { flex: 1 1 100% !important; white-space: normal !important; }
+
+  /* ── Redações do professor ────────────────────────────────── */
+  html body .prof-wr-header { flex-wrap: wrap !important; gap: 8px 12px !important; padding: 14px 16px !important; align-items: flex-start !important; }
+  html body .prof-wr-header-icon { width: 36px !important; height: 36px !important; flex: 0 0 36px !important; }
+  html body .prof-wr-header-info { flex: 1 1 calc(100% - 52px) !important; min-width: 0 !important; }
+  html body .prof-wr-header-info h4 { font-size: 15px !important; }
+  html body .prof-wr-header > .sent-status { margin-left: 48px !important; }
+  html body .prof-wr-card > div[style*="padding:18px 22px"] { padding: 12px 16px 16px !important; }
+
+  /* ── Nivelamentos ─────────────────────────────────────────── */
+  html body .niv-tabs, html body .niv-search { width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; }
+  html body .niv-tabs { overflow-x: auto !important; scrollbar-width: none; }
+  html body .niv-lead-chip svg, html body .niv-lead-info-item svg { width: 14px !important; height: 14px !important; flex: none !important; }
+  html body .niv-lead-name-row { flex-wrap: wrap !important; gap: 6px 8px !important; }
+
+  /* ── Planos de aula ───────────────────────────────────────── */
+  html body .lp2-bar { display: grid !important; grid-template-columns: 1fr !important; gap: 12px !important; }
+  html body .lp2-bar .lp2-field, html body .lp2-bar .lp2-select { width: 100% !important; max-width: none !important; }
+  html body .lp2-bar .lp2-month { width: 100% !important; justify-content: space-between !important; }
+  html body .lp2-bar .lp2-mlabel { flex: 1 1 auto; }
+  html body .lp2-spacer { display: none !important; }
+  html body .lp2-chips { flex-wrap: wrap !important; gap: 6px !important; }
+  html body .lp2-chip-in { min-width: 0 !important; }
+  html body .lp2-hero { flex-wrap: wrap !important; }
+  html body .lp2-fields { grid-template-columns: 1fr !important; }
+
+  /* ── Grade (schedule) ─────────────────────────────────────── */
+  html body .sched-day-head { align-items: center; }
+  .win-sm-add {
+    margin-left: auto; display: inline-flex; align-items: center; gap: 4px;
+    border: none; border-radius: 999px; padding: 6px 12px;
+    background: rgba(255,255,255,.14); color: #fff;
+    font-family: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer;
+  }
+  .win-sm-add:active { transform: scale(.96); }
+  html body .sched-day-head .sched-day-count { margin-left: 8px; }
+  .win-sm-item { cursor: pointer; position: relative; }
+  .win-sm-item::after {
+    content: '›'; position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+    font-size: 20px; opacity: .45;
+  }
+  /* Pop-ups da grade viram folha que sobe de baixo */
+  html body #schedPopup, html body #cSchedPopup {
+    top: auto !important; bottom: 0 !important; left: 0 !important; right: 0 !important;
+    transform: none !important; width: 100% !important; max-width: none !important;
+    max-height: 88vh; overflow-y: auto; overscroll-behavior: contain;
+    border-radius: 20px 20px 0 0 !important; box-sizing: border-box;
+    padding: 20px 18px calc(20px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+  .win-sm-form label { display: block; font-size: 12px; font-weight: 700; color: var(--g500, #6B7785); margin: 0 0 6px; }
+  .win-sm-form select, .win-sm-form input {
+    width: 100%; box-sizing: border-box; padding: 11px 12px;
+    border: 2px solid var(--g200, #D8DEDD); border-radius: 12px; font-family: inherit; background: #fff;
+    margin-bottom: 14px;
+  }
+  .win-sm-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .win-sm-dur { display: flex; gap: 8px; margin-bottom: 16px; }
+  .win-sm-dur button {
+    flex: 1; padding: 10px; border-radius: 12px; border: 2px solid var(--g200, #D8DEDD);
+    background: #fff; font-family: inherit; font-weight: 700; color: var(--navy, #0B1F33);
+  }
+  .win-sm-dur button.on { background: var(--navy, #0B1F33); border-color: var(--navy, #0B1F33); color: #fff; }
+  .win-sm-pri, .win-sm-sec, .win-sm-danger {
+    width: 100%; padding: 13px; border-radius: 12px; font-family: inherit; font-size: 14.5px; font-weight: 800; cursor: pointer;
+  }
+  .win-sm-pri { border: none; background: var(--win-vermelho, #D71920); color: #fff; margin-bottom: 10px; }
+  .win-sm-sec { border: 2px solid var(--g200, #D8DEDD); background: #fff; color: var(--navy, #0B1F33); }
+  .win-sm-danger { border: none; background: none; color: var(--win-erro, #BE123C); margin-top: 6px; }
+  .win-sm-sep { border: none; border-top: 1px solid var(--g100, #E7EBF0); margin: 18px 0 14px; }
+  .win-sm-hint { font-size: 12.5px; color: var(--g500, #6B7785); margin: -4px 0 14px; }
+
+  /* ── Aluno: Visão Geral mais enxuta ───────────────────────── */
+  html body #sec-overview .stat-row { grid-template-columns: repeat(2, minmax(0,1fr)) !important; gap: 10px !important; }
+  html body #sec-overview .stat-card { padding: 14px !important; min-height: 0 !important; }
+  html body #sec-overview .stat-value { font-size: 26px !important; }
+  html body #winGradePanel .win-grade-body { padding: 12px 14px 16px !important; }
+  html body #winGradePanel .win-grade-body [style*="dashed"] { padding: 22px 16px !important; min-height: 0 !important; }
+
+  /* ── Tabelas largas rolam dentro do próprio cartão ────────── */
+  html body .section table { max-width: 100%; }
+  html body .table-wrap, html body .tbl-wrap { overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
+
+  /* Listas: uma coluna de verdade */
+  html body .list-item { gap: 10px; }
+  html body .sv-list-tags { justify-content: flex-start !important; }
+}
+
+@media (max-width: 600px) {
+  html body .topbar .topbar-name { display: none !important; }
+}
+
+@media (max-width: 380px) {
+  html body .content { padding-left: 12px !important; padding-right: 12px !important; }
+  html body .section-head h2 { font-size: 22px !important; }
+  html body #sec-overview .stat-value { font-size: 22px !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html body .sb { transition: none !important; }
+}

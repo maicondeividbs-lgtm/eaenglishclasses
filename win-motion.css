@@ -1,0 +1,84 @@
+/* ═══════════════════════════════════════════════════════════════
+   WIN — movimento ("flow")
+   Animações curtas que ligam um estado ao outro, em vez de trocar
+   de tela de uma vez. Tudo some para quem pede menos movimento
+   no sistema (prefers-reduced-motion).
+
+   1) Troca de página suave (Início ↔ Cursos ↔ Contato, login → painel)
+   2) Pílula do menu que desliza até o item clicado
+   3) Linha das abas de grupo que desliza entre as abas
+   4) Itens de lista entrando em cascata ao abrir uma seção
+   5) Contador do menu que "pula" quando chega item novo
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  --win-flow: cubic-bezier(0.22, 1, 0.36, 1);   /* sai rápido, assenta devagar */
+}
+
+/* 1) TROCA DE PÁGINA ──────────────────────────────────────────
+   Navegadores sem suporte simplesmente ignoram. */
+@view-transition { navigation: auto; }
+::view-transition-old(root) { animation: 140ms ease-out both win-vt-out; }
+::view-transition-new(root) { animation: 280ms var(--win-flow) both win-vt-in; }
+/* O menu do site fica parado enquanto o conteúdo troca */
+.nav#nav { view-transition-name: win-site-nav; }
+::view-transition-group(win-site-nav) { animation-duration: 0s; }
+@keyframes win-vt-out { to { opacity: 0; } }
+@keyframes win-vt-in  { from { opacity: 0; transform: translateY(10px); } }
+
+/* 2) PÍLULA DESLIZANTE DO MENU ─────────────────────────────── */
+.sb-nav.win-glide-on { position: relative; }
+.win-glide {
+  position: absolute; top: 0; left: 0;
+  z-index: 0; pointer-events: none;
+  opacity: 0;
+  transition:
+    transform 340ms var(--win-flow),
+    height 340ms var(--win-flow),
+    width 200ms ease,
+    opacity 160ms ease;
+  will-change: transform;
+}
+.win-glide.on { opacity: 1; }
+.sb-nav.win-glide-on .sb-link { position: relative; z-index: 1; }
+/* O item ativo fica transparente: quem desenha o fundo é a pílula */
+.sb-nav.win-glide-on .sb-link.active {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* 3) LINHA DAS ABAS ────────────────────────────────────────── */
+.win-tabs.win-ink-on { position: relative; }
+.win-tabs.win-ink-on .win-tab.active { border-bottom-color: transparent; }
+.win-ink {
+  position: absolute; left: 0; bottom: 0;
+  height: 2px; width: 0;
+  background: var(--win-vermelho, #D71920);
+  border-radius: 2px;
+  pointer-events: none;
+}
+.win-ink.go { transition: transform 320ms var(--win-flow), width 320ms var(--win-flow); }
+
+/* 4) CASCATA ───────────────────────────────────────────────── */
+.win-in {
+  animation: win-item-in 380ms var(--win-flow) both;
+  animation-delay: calc(var(--win-i, 0) * 35ms);
+}
+@keyframes win-item-in {
+  from { opacity: 0; transform: translateY(8px); }
+}
+
+/* 5) CONTADOR ──────────────────────────────────────────────── */
+.win-count.win-bump { animation: win-bump 420ms var(--win-flow); }
+@keyframes win-bump {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.28); }
+  100% { transform: scale(1); }
+}
+
+/* Menos movimento: tudo instantâneo */
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+  .win-glide, .win-ink.go { transition: none !important; }
+  .win-in, .win-count.win-bump { animation: none !important; }
+}

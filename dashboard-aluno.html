@@ -2933,7 +2933,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
               <div style="font-family:Montserrat,system-ui,sans-serif;font-weight:700;font-size:17px;color:#fff;margin-bottom:2px">Manual do Aluno — Edição 2026</div>
               <div style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.5">Guia completo em PDF com tudo sobre aulas, homework, redações, notas e como instalar o app.</div>
             </div>
-            <a href="docs/manual-do-aluno.pdf" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:var(--orange);color:#fff;font-weight:700;font-size:14px;padding:12px 20px;border-radius:10px;text-decoration:none;white-space:nowrap">
+            <a href="docs/manual-do-aluno.pdf?v=win-2026-10" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:var(--orange);color:#fff;font-weight:700;font-size:14px;padding:12px 20px;border-radius:10px;text-decoration:none;white-space:nowrap">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               Abrir / Baixar PDF
             </a>
@@ -2964,7 +2964,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
         <div class="panel" style="margin-bottom:18px">
           <div class="panel-head"><div class="panel-title"><span class="panel-icon ocean">🔄</span>Cancelamento e reposição</div></div>
           <div style="padding:18px clamp(14px,4.5vw,24px);font-size:14px;color:var(--g700);line-height:1.75">
-            Aulas canceladas <strong>com pelo menos 24 horas de antecedência</strong> podem ser repostas em outro horário combinado com o professor. Cancelamentos sem 24 horas de antecedência são contabilizados como aula dada e não dão direito a reposição.
+            Aulas canceladas <strong>com pelo menos 24 horas de antecedência</strong> podem ser repostas dentro do mês, em horário combinado. Cancelamentos com menos de 24 horas contam como aula dada. Vai <strong>atrasar ou faltar</strong>? Avise o seu professor o quanto antes. <strong>Férias e viagens</strong> devem ser avisadas com 30 dias de antecedência para antecipar as aulas.
           </div>
         </div>
 
@@ -4205,8 +4205,8 @@ async function loadProfile() {
       const card = document.getElementById('profTeacherCard');
       const body = document.getElementById('profTeacherBody');
       const hint = teachers.length > 1
-        ? 'Você tem ' + teachers.length + ' professores. Use o botão "Pedir ajuda" no canto da tela e escolha para quem enviar.'
-        : 'Use o botão "Pedir ajuda" no canto da tela para tirar dúvidas.';
+        ? 'Você tem ' + teachers.length + ' professores. Dúvidas? Fale com eles pelo WhatsApp ou na próxima aula.'
+        : 'Dúvidas? Fale com seu professor pelo WhatsApp ou na próxima aula.';
       body.innerHTML = teachers.map(function(t){
         const tName = t.teacher_name || 'Professor';
         const initial = tName.charAt(0).toUpperCase();

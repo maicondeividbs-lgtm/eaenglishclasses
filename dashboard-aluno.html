@@ -2868,6 +2868,10 @@ body.sb-collapsed .main { margin-left: 92px !important; }
                   </div>
                 </div>
                 <p class="profile-help">🔒 E-mail e nível são definidos pela coordenação. Fale com seu professor se precisar alterar.</p>
+                <label class="profile-label" style="display:flex;gap:10px;align-items:flex-start;margin-top:16px;cursor:pointer;text-transform:none;letter-spacing:0">
+                  <input type="checkbox" id="profDigest" style="margin-top:3px;width:18px;height:18px;accent-color:#D71920" onchange="saveDigestPref(this)">
+                  <span><b>Resumo da semana por e-mail</b><br><span class="profile-help" style="margin:0">Às segundas: suas aulas, o que está pendente e o que chegou de novo. Só chega quando há algo para você.</span></span>
+                </label>
                 <button onclick="saveProfile()" class="profile-btn profile-btn-primary">💾 Salvar alterações</button>
               </div>
             </div>
@@ -3052,6 +3056,15 @@ async function initStudentDashboard() {
       document.getElementById('topbarTitle').textContent = sections[sec] || sec;
     });
   });
+
+  // Link direto (e-mail, push, WhatsApp): /dashboard-aluno#homework abre a seção certa
+  (function(){
+    const alvo = (location.hash || '').replace('#', '');
+    if (!/^[a-z]{3,20}$/.test(alvo)) return;
+    const b = document.querySelector('.sb-link[data-section="' + alvo + '"]');
+    if (b) setTimeout(function(){ b.click(); }, 0);
+    try { history.replaceState(null, '', location.pathname); } catch (e) {}
+  })();
 
   // Avatar da topbar abre a seção "Meu Perfil"
   (function(){
@@ -4163,6 +4176,7 @@ function setAvatarEverywhere(url) {
 // ═══ PROFILE ═══
 async function loadProfile() {
   document.getElementById('profName').value = currentUser.full_name || '';
+  { const dg = document.getElementById('profDigest'); if (dg) dg.checked = currentUser.weekly_digest !== false; }
   document.getElementById('profEmail').value = currentUser.email || '';
   document.getElementById('profLevel').value = currentUser.level || '';
 
@@ -4392,6 +4406,16 @@ async function loadStudentSchedule() {
     if (banner) banner.style.display = 'none';
     body.innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><p>Não foi possível carregar sua grade no momento.</p></div>';
   }
+}
+
+// Resumo semanal: preferência do próprio aluno (salva na hora)
+async function saveDigestPref(el) {
+  try {
+    const { error } = await db.from('profiles').update({ weekly_digest: !!el.checked }).eq('id', currentUser.id);
+    if (error) throw error;
+    currentUser.weekly_digest = !!el.checked;
+    showToast(el.checked ? 'Resumo semanal ativado' : 'Resumo semanal desativado', 'success');
+  } catch (e) { el.checked = !el.checked; showToast('Não foi possível salvar agora', 'error'); }
 }
 
 async function saveProfile() {

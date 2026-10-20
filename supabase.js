@@ -60,9 +60,16 @@ function isArchivedStudent(p) {
   return !!(p && p.role === 'student' && p.archived_at);
 }
 
+// Destino vindo de um e-mail/notificação (ex.: /login?ir=homework).
+function eaDeepTarget() {
+  try {
+    const ir = new URLSearchParams(window.location.search).get('ir') || '';
+    return /^[a-z]{3,20}$/.test(ir) ? '#' + ir : '';
+  } catch (e) { return ''; }
+}
 function redirectByRole(role) {
   const routes = { student: '/dashboard-aluno', teacher: '/dashboard-professor', coordinator: '/dashboard-coordenacao' };
-  window.location.href = routes[role] || '/dashboard-aluno';
+  window.location.href = (routes[role] || '/dashboard-aluno') + eaDeepTarget();
 }
 
 // ═══ PLACEMENT TESTS ═══

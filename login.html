@@ -541,7 +541,7 @@ document.addEventListener('DOMContentLoaded', () => {
               await logStudentAccess(p2.id, p2.full_name, p2.role);
               redirectByRole(p2.role);
             } else {
-              window.location.href = '/dashboard-aluno';
+              window.location.href = '/dashboard-aluno' + (typeof eaDeepTarget === 'function' ? eaDeepTarget() : '');
             }
           }
         }

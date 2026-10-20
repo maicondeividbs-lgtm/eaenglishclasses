@@ -9,7 +9,7 @@
 
 const SB_URL = process.env.SUPABASE_URL;
 const SB_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const SITE_URL = (process.env.SITE_URL || 'https://www.winenglish.com.br').replace(/\/+$/, '');
+const SITE_URL = 'https://www.winenglish.com.br';
 
 // Identidade visual das categorias (emoji + rótulo da ação rápida)
 const CAT = {
@@ -61,27 +61,27 @@ async function resolve(table, rec, old) {
         return null;
       }
       if (!rec.student_id) return null;
-      return { byUser: rec.student_id, cat: 'homework', title: '📚 Nova atividade disponível',
+      return { byUser: rec.student_id, cat: 'homework', url: '/login?ir=homework', title: '📚 Nova atividade disponível',
         body: (t && t.title ? 'Sua atividade “' + t.title + '” já está disponível.' : 'Sua nova atividade já está disponível no painel.') };
     }
     case 'feedbacks':
       if (!rec.student_id) return null;
-      return { byUser: rec.student_id, cat: 'feedback', title: '📝 Novo feedback',
+      return { byUser: rec.student_id, cat: 'feedback', url: '/login?ir=feedback', title: '📝 Novo feedback',
         body: (rec.title ? '“' + rec.title + '” — ' : '') + 'um novo feedback está disponível para consulta.' };
     case 'writing_activities':
-      if (rec.status === 'graded') return { byUser: rec.student_id, cat: 'redacao', title: '✅ Redação corrigida',
+      if (rec.status === 'graded') return { byUser: rec.student_id, cat: 'redacao', url: '/login?ir=writing', title: '✅ Redação corrigida',
         body: (rec.title ? '“' + rec.title + '” ' : 'Sua redação ') + 'recebeu comentários e nota.' };
       if (rec.status === 'submitted') return { byUser: rec.teacher_id, cat: 'redacao', title: '✍️ Redação enviada',
         body: 'Um aluno enviou uma redação para correção.' };
-      return { byUser: rec.student_id, cat: 'redacao', title: '✍️ Novo tema de redação',
+      return { byUser: rec.student_id, cat: 'redacao', url: '/login?ir=writing', title: '✍️ Novo tema de redação',
         body: (rec.title ? '“' + rec.title + '” ' : 'Há um novo tema ') + 'para você escrever.' };
     case 'pronunciation':
       if (!rec.student_id) return null;
-      return { byUser: rec.student_id, cat: 'pronuncia', title: '🎙️ Nova prática de pronúncia',
+      return { byUser: rec.student_id, cat: 'pronuncia', url: '/login?ir=pronunciation', title: '🎙️ Nova prática de pronúncia',
         body: 'Pratique a palavra enviada pelo seu professor.' };
     case 'vocabulary_words':
       if (!rec.student_id) return null;
-      return { byUser: rec.student_id, cat: 'vocab', title: '📚 Novo vocabulário',
+      return { byUser: rec.student_id, cat: 'vocab', url: '/login?ir=vocabulary', title: '📚 Novo vocabulário',
         body: 'Novas palavras foram adicionadas para você estudar.' };
     case 'coord_messages':
       if (!rec.teacher_id) return null;

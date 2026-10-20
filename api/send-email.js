@@ -10,16 +10,16 @@
 // Opcionais:
 //   EMAIL_FROM       remetente (domínio precisa estar VERIFICADO no Resend). Padrão: WIN <avisos@winenglish.com.br>
 //   EMAIL_REPLY_TO   endereço de resposta. Padrão: contatowincord@gmail.com
-//   SITE_URL         base dos links. Padrão: https://www.winenglish.com.br
-//   EMAIL_LOGO_URL   logo do e-mail. Padrão: SITE_URL + '/icons/Logo_WIN.jpg'
+// Links e logo usam SEMPRE o domínio oficial da WIN (não dependem de variável,
+// para nenhuma configuração antiga voltar a apontar para o domínio desativado).
 
 const SB_URL = process.env.SUPABASE_URL;
 const SB_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const RESEND_KEY = process.env.RESEND_API_KEY;
 const FROM = process.env.EMAIL_FROM || 'WIN <avisos@winenglish.com.br>';
 const REPLY_TO = process.env.EMAIL_REPLY_TO || 'contatowincord@gmail.com';
-const SITE_URL = (process.env.SITE_URL || 'https://www.winenglish.com.br').replace(/\/+$/, '');
-const LOGO = process.env.EMAIL_LOGO_URL || (SITE_URL + '/icons/Logo_WIN.jpg');
+const SITE_URL = 'https://www.winenglish.com.br';
+const LOGO = SITE_URL + '/icons/Logo_WIN.jpg';
 
 // ── Paleta oficial da marca ──
 const C = { navy:'#0B1F33', blue:'#0B1F33', orange:'#D71920', mango:'#6F8FA8', ocean:'#D8DEDD', cream:'#F5F7FA' };
@@ -100,7 +100,7 @@ async function plan(table, rec, old) {
         return { userIds: [rec.student_id], cat: 'homework', subject: '📚 Nova atividade disponível',
           heading: 'Sua nova atividade já está disponível',
           message: (t && t.title ? 'A atividade “' + t.title + '” já está no seu painel. ' : 'Há uma nova tarefa esperando por você no painel. ') + 'Bons estudos!',
-          ctaLabel: 'Abrir homework', path: '/login' };
+          ctaLabel: 'Abrir homework', path: '/login?ir=homework' };
       }
       return null;
     }
@@ -109,14 +109,14 @@ async function plan(table, rec, old) {
       return { userIds: [rec.student_id], cat: 'feedback', subject: '📝 Novo feedback disponível',
         heading: 'Seu professor deixou um novo feedback',
         message: (rec.title ? '“' + rec.title + '”. ' : '') + 'Um novo feedback já está disponível para consulta no seu painel.',
-        ctaLabel: 'Ver feedback', path: '/login' };
+        ctaLabel: 'Ver feedback', path: '/login?ir=feedback' };
     case 'writing_activities':
       if (rec.status === 'graded') {
         if (!rec.student_id) return null;
         return { userIds: [rec.student_id], cat: 'redacao', subject: '✅ Sua redação foi corrigida',
           heading: 'Sua redação foi corrigida',
           message: (rec.title ? '“' + rec.title + '” ' : 'Sua redação ') + 'recebeu comentários e nota. Confira o resultado no painel.',
-          ctaLabel: 'Ver correção', path: '/login' };
+          ctaLabel: 'Ver correção', path: '/login?ir=writing' };
       }
       if (rec.status === 'submitted') {
         if (!rec.teacher_id) return null;
@@ -129,19 +129,19 @@ async function plan(table, rec, old) {
       return { userIds: [rec.student_id], cat: 'redacao', subject: '✍️ Novo tema de redação',
         heading: 'Você recebeu um novo tema de redação',
         message: (rec.title ? '“' + rec.title + '”. ' : '') + 'Escreva sua resposta no painel quando quiser.',
-        ctaLabel: 'Escrever redação', path: '/login' };
+        ctaLabel: 'Escrever redação', path: '/login?ir=writing' };
     case 'pronunciation':
       if (!rec.student_id) return null;
       return { userIds: [rec.student_id], cat: 'pronuncia', subject: '🎙️ Nova prática de pronúncia',
         heading: 'Você recebeu uma prática de pronúncia',
         message: 'Pratique a palavra enviada pelo seu professor e melhore seu speaking.',
-        ctaLabel: 'Praticar agora', path: '/login' };
+        ctaLabel: 'Praticar agora', path: '/login?ir=pronunciation' };
     case 'vocabulary_words':
       if (!rec.student_id) return null;
       return { userIds: [rec.student_id], cat: 'vocab', subject: '📚 Novo vocabulário para estudar',
         heading: 'Novas palavras de vocabulário',
         message: 'Seu professor adicionou novas palavras para você estudar. Vamos expandir seu vocabulário!',
-        ctaLabel: 'Estudar agora', path: '/login' };
+        ctaLabel: 'Estudar agora', path: '/login?ir=vocabulary' };
     case 'coord_messages':
       if (!rec.teacher_id) return null;
       return { userIds: [rec.teacher_id], cat: 'mensagem', subject: '📨 Mensagem da coordenação',
@@ -283,7 +283,8 @@ export default async function handler(req, res) {
       const tp = { cat: body.cat || 'geral', heading: 'Teste de e-mail',
         message: 'Se você recebeu isto, o envio de e-mails está funcionando perfeitamente.',
         ctaLabel: 'Abrir o app', path: '/login' };
-      const out = await sendEmail(body.to, body.subject || '✉️ Teste | WIN', template(tp, body.name));
+      // Assunto fixo: o modo teste não aceita texto livre (evita uso para phishing).
+      const out = await sendEmail(body.to, '✉️ Teste | WIN', template(tp, ''));
       res.status(out.ok ? 200 : 500).json({ test: true, sent: out.ok, error: out.ok ? undefined : out });
       return;
     }

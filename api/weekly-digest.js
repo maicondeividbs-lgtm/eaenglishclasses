@@ -17,7 +17,15 @@ const crypto = require('crypto');
 const SB_URL = process.env.SUPABASE_URL;
 const SB_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const RESEND_KEY = process.env.RESEND_API_KEY;
-const FROM = process.env.EMAIL_FROM || 'WIN <avisos@winenglish.com.br>';
+// Remetente: usa EMAIL_FROM só se estiver num formato válido; senão, o padrão da WIN.
+// (Evita que aspas, crases ou espaços colados na Vercel derrubem todos os envios.)
+function cleanFrom(v) {
+  const s = String(v || '').trim().replace(/^[`'"]+|[`'"]+$/g, '').trim();
+  const addr = '[^@\\s<>"]+@[^@\\s<>"]+\\.[^@\\s<>"]+';
+  if (new RegExp('^[^<>@]+<' + addr + '>$').test(s) || new RegExp('^' + addr + '$').test(s)) return s;
+  return 'WIN <avisos@winenglish.com.br>';
+}
+const FROM = cleanFrom(process.env.EMAIL_FROM);
 const REPLY_TO = process.env.EMAIL_REPLY_TO || 'contatowincord@gmail.com';
 const SITE = 'https://www.winenglish.com.br';
 const LOGO = SITE + '/icons/Logo_WIN.jpg';

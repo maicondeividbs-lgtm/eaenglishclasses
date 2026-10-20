@@ -8,17 +8,17 @@
 //   RESEND_API_KEY               (segredo do Resend — começa com "re_")
 //   EA_PUSH_SECRET               o MESMO segredo já usado no push (o webhook envia junto)
 // Opcionais:
-//   EMAIL_FROM       remetente verificado. Padrão: WIN <avisos@eaenglishclasses.com.br>
-//   EMAIL_REPLY_TO   endereço de resposta (ex.: contatowincord@gmail.com)
-//   SITE_URL         base dos links. Padrão: https://www.eaenglishclasses.com.br
+//   EMAIL_FROM       remetente (domínio precisa estar VERIFICADO no Resend). Padrão: WIN <avisos@winenglish.com.br>
+//   EMAIL_REPLY_TO   endereço de resposta. Padrão: contatowincord@gmail.com
+//   SITE_URL         base dos links. Padrão: https://www.winenglish.com.br
 //   EMAIL_LOGO_URL   logo do e-mail. Padrão: SITE_URL + '/icons/Logo_WIN.jpg'
 
 const SB_URL = process.env.SUPABASE_URL;
 const SB_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const RESEND_KEY = process.env.RESEND_API_KEY;
-const FROM = process.env.EMAIL_FROM || 'WIN <avisos@eaenglishclasses.com.br>';
-const REPLY_TO = process.env.EMAIL_REPLY_TO || '';
-const SITE_URL = (process.env.SITE_URL || 'https://www.eaenglishclasses.com.br').replace(/\/+$/, '');
+const FROM = process.env.EMAIL_FROM || 'WIN <avisos@winenglish.com.br>';
+const REPLY_TO = process.env.EMAIL_REPLY_TO || 'contatowincord@gmail.com';
+const SITE_URL = (process.env.SITE_URL || 'https://www.winenglish.com.br').replace(/\/+$/, '');
 const LOGO = process.env.EMAIL_LOGO_URL || (SITE_URL + '/icons/Logo_WIN.jpg');
 
 // ── Paleta oficial da marca ──

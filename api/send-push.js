@@ -5,11 +5,11 @@
 //   SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
 //   VAPID_PUBLIC, VAPID_PRIVATE, VAPID_SUBJECT
 //   EA_PUSH_SECRET  (mesmo segredo enviado pelo webhook)
-//   SITE_URL        (opcional) base para imagens. Padrão: https://www.eaenglishclasses.com.br
+//   SITE_URL        (opcional) base para imagens. Padrão: https://www.winenglish.com.br
 
 const SB_URL = process.env.SUPABASE_URL;
 const SB_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const SITE_URL = (process.env.SITE_URL || 'https://www.eaenglishclasses.com.br').replace(/\/+$/, '');
+const SITE_URL = (process.env.SITE_URL || 'https://www.winenglish.com.br').replace(/\/+$/, '');
 
 // Identidade visual das categorias (emoji + rótulo da ação rápida)
 const CAT = {

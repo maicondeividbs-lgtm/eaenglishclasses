@@ -5256,6 +5256,17 @@ async function saveUserEdit() {
       showToast('Selecione o curso também', 'error'); return;
     }
 
+    // Planos de aula do mês atual em diante acompanham o novo nível/curso.
+    if (role === 'student' && typeof syncStudentLessonPlans === 'function') {
+      try {
+        const cSel = document.getElementById('editCourse');
+        const bookName = (courseId && cSel && cSel.selectedIndex > 0) ? cSel.options[cSel.selectedIndex].text.trim() : '';
+        await syncStudentLessonPlans(userId, { book: bookName, level: level });
+      } catch (syncErr) {
+        console.warn('Planos de aula não sincronizados:', syncErr);
+      }
+    }
+
     showToast('Aluno atualizado com sucesso!');
     // Flash the updated user card
     setTimeout(function(){

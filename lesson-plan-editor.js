@@ -119,6 +119,12 @@ async function lpOnPick() {
     }
   }
   lpCancelAutosave();
+  // Dados do aluno sempre atualizados: se a coordenação mudou nível ou curso
+  // depois que a página abriu, o plano já nasce com os valores novos.
+  try {
+    var fresh = await getMyStudents(currentUser.id);
+    if (fresh && fresh.length) window._myStudents = fresh;
+  } catch(e) { /* mantém a lista em memória */ }
   var student = lpFindStudent(sid);
   var mp = mv.split('-');
   var monthKey = (typeof lpMonthKey==='function') ? lpMonthKey(parseInt(mp[0],10), parseInt(mp[1],10)) : (mv + '-01');
@@ -131,7 +137,16 @@ async function lpOnPick() {
   if (av) av.textContent = (_lpState.studentName||'•').trim().charAt(0).toUpperCase() || '•';
 
   var autoBook  = (student && student.course_name) || '';
-  var autoLevel = (student && (student.cefr || student.level)) || '';
+  // Nível do cadastro do aluno (o que a coordenação edita) tem prioridade;
+  // o nível CEFR do curso fica como reserva.
+  var autoLevel = (student && (student.level || student.cefr)) || '';
+  // Plano do mês atual ou futuro acompanha o cadastro; meses passados
+  // ficam como histórico, com o livro/nível da época.
+  var nowD = new Date();
+  var curKey = (typeof lpMonthKey==='function') ? lpMonthKey(nowD.getFullYear(), nowD.getMonth()+1)
+             : (nowD.getFullYear()+'-'+String(nowD.getMonth()+1).padStart(2,'0')+'-01');
+  var isLive = monthKey >= curKey;
+  var syncedFromProfile = false;
 
   // Carrega em paralelo: plano do mes + homework realmente enviado +
   // historico de planos (completude) + observacoes de speaking.
@@ -144,8 +159,14 @@ async function lpOnPick() {
   var saved = loaded[0];
 
   if (saved) {
-    document.getElementById('lpHdrBook').value  = saved.book  != null ? saved.book  : autoBook;
-    document.getElementById('lpHdrLevel').value = saved.level != null ? saved.level : autoLevel;
+    var hdrBook  = saved.book  != null ? saved.book  : autoBook;
+    var hdrLevel = saved.level != null ? saved.level : autoLevel;
+    if (isLive) {
+      if (autoBook  && autoBook  !== hdrBook)  { hdrBook  = autoBook;  syncedFromProfile = true; }
+      if (autoLevel && autoLevel !== hdrLevel) { hdrLevel = autoLevel; syncedFromProfile = true; }
+    }
+    document.getElementById('lpHdrBook').value  = hdrBook;
+    document.getElementById('lpHdrLevel').value = hdrLevel;
     lpSetTotalPages(saved.book_pages);
     lpRenderRows(saved.entries || []);
   } else {
@@ -159,7 +180,10 @@ async function lpOnPick() {
   lpBindHeaderInputs();
   lpRenderSpeakPanel();
   lpUpdateProgress();
-  lpSetDirty(false);
+  // Se o cabeçalho foi atualizado pelo cadastro, grava sozinho (autosave).
+  lpSetDirty(syncedFromProfile);
+  if (syncedFromProfile && typeof showToast === 'function')
+    showToast('Plano atualizado com o nível/curso atual do aluno.');
 }
 
 function lpBindHeaderInputs(){

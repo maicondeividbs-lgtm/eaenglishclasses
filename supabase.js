@@ -399,6 +399,27 @@ function lpMonthKey(year, month) {
   return year + '-' + String(month).padStart(2, '0') + '-01';
 }
 
+// Mantém os planos de aula em dia com o cadastro do aluno: quando a coordenação
+// muda o nível ou o curso, os planos do mês atual em diante (de todos os
+// professores do aluno) recebem o novo livro/nível. Meses passados ficam como
+// histórico. Só altera o que veio preenchido.
+async function syncStudentLessonPlans(studentId, data) {
+  const patch = {};
+  if (data && data.book)  patch.book  = data.book;
+  if (data && data.level) patch.level = data.level;
+  if (!studentId || !Object.keys(patch).length) return 0;
+  patch.updated_at = new Date().toISOString();
+  const now = new Date();
+  const fromKey = lpMonthKey(now.getFullYear(), now.getMonth() + 1);
+  const { data: rows, error } = await db.from('lesson_plans')
+    .update(patch)
+    .eq('student_id', studentId)
+    .gte('plan_month', fromKey)
+    .select('id');
+  if (error) throw error;
+  return (rows || []).length;
+}
+
 // Busca o plano (cabeçalho + linhas) de um professor/aluno/mês.
 // Retorna null se ainda não existir.
 async function getLessonPlan(teacherId, studentId, monthKey) {

@@ -277,12 +277,13 @@ section[style*="--navy"] div[style*="rgba(255,255,255,0.4)"] { color: rgba(245, 
 .cur-meta-text strong { color: var(--g500) !important; }
 .cur-meta-icon { background: var(--win-cinza-azulado) !important; color: var(--win-azul-profundo) !important; }
 
-/* ── degradês: redes sociais sem degradê de tela inteira ────────
-   O cartão vira escuro, da casa; a cor da plataforma fica só numa
-   faixa fina no topo, o suficiente para reconhecer. */
+/* ── redes sociais: cartões claros e discretos ──────────────────
+   Fundo off-white e texto azul profundo; a cor da plataforma fica só
+   no ícone e numa faixa fina no topo, o suficiente para reconhecer. */
 a[href*="instagram.com"][style*="gradient"], a[href*="youtube.com"][style*="gradient"], .ig-card {
-  background: var(--win-quase-preto) !important; background-size: auto !important;
-  border: 1px solid rgba(111, 143, 168, 0.3) !important; border-radius: var(--radius) !important;
+  background: var(--win-off-white) !important; background-size: auto !important;
+  color: var(--win-azul-profundo) !important;
+  border: 1px solid var(--win-cinza-azulado) !important; border-radius: 16px !important;
   position: relative; overflow: hidden; animation: none !important; box-shadow: none !important;
   transition: border-color var(--transition), transform var(--transition) !important;
 }
@@ -294,8 +295,22 @@ a[href*="instagram.com"][style*="gradient"]::before, .ig-card::before {
 }
 a[href*="youtube.com"][style*="gradient"]::before { background: #FF0000; }
 a[href*="instagram.com"][style*="gradient"]:hover, a[href*="youtube.com"][style*="gradient"]:hover {
-  border-color: rgba(245, 247, 250, 0.45) !important; transform: translateY(-2px) !important;
+  border-color: var(--win-azul-aco) !important; transform: translateY(-2px) !important;
 }
+a[href*="instagram.com"][style*="gradient"] > div[style*="position:absolute"], a[href*="youtube.com"][style*="gradient"] > div[style*="position:absolute"] { display: none !important; }
+a[href*="instagram.com"][style*="gradient"] > svg { fill: #C13584 !important; width: 40px; height: 40px; }
+a[href*="youtube.com"][style*="gradient"] > svg { fill: #FF0000 !important; width: 40px; height: 40px; }
+a[href*="instagram.com"][style*="gradient"] > div[style*="opacity"], a[href*="youtube.com"][style*="gradient"] > div[style*="opacity"] { opacity: 1 !important; color: var(--win-azul-aco) !important; font-weight: 600; }
+a[href*="instagram.com"][style*="gradient"] > div:last-child, a[href*="youtube.com"][style*="gradient"] > div:last-child {
+  background: transparent !important; backdrop-filter: none !important;
+  border: 1px solid var(--win-cinza-azulado); color: var(--win-azul-profundo);
+  padding: 8px 20px !important; transition: border-color var(--transition), background var(--transition);
+}
+a[href*="instagram.com"][style*="gradient"]:hover > div:last-child, a[href*="youtube.com"][style*="gradient"]:hover > div:last-child { border-color: var(--win-azul-profundo); background: #fff !important; }
+.ig-card h4 { color: var(--win-azul-profundo) !important; }
+.ig-card p { color: var(--win-azul-aco) !important; opacity: 1 !important; font-weight: 600; }
+.ig-card a { border: 1px solid var(--win-cinza-azulado); background: #fff !important; }
+.ig-card a:hover { border-color: var(--win-azul-profundo); transform: none !important; }
 
 /* ── movimento: 150–250ms, sem quique, sem laços decorativos ──── */
 :is(a, .btn, .nav-links a, .footer a, .faq-q, .teacher-bio-toggle, .teacher-card, .feature-card,

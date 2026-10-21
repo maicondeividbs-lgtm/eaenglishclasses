@@ -3174,6 +3174,10 @@ body.sb-collapsed .main { margin-left: 92px !important; }
           <select id="supFilter" onchange="loadCurrentSup()" class="filter-select" style="flex:1;min-width:160px">
             <option value="">Todos os professores</option>
           </select>
+          <span style="font-size:13px;font-weight:700;color:var(--navy);margin-left:6px">Aluno:</span>
+          <select id="supStudentFilter" onchange="loadCurrentSup()" class="filter-select" style="flex:1;min-width:160px">
+            <option value="">Todos os alunos</option>
+          </select>
         </div>
 
         <!-- Homeworks pane -->
@@ -4030,6 +4034,7 @@ function recalcFinal(){const adj=toolAdjustments.reduce((s,a)=>s+a.val,0);const 
 <!-- Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase.js"></script>
+<script src="student-filter.js"></script>
 <script src="win-nav.js"></script>
 <script src="win-motion.js"></script>
 <script src="win-mobile.js"></script>
@@ -5010,7 +5015,7 @@ async function loadHomeworks() {
   const filterTeacher = supTeacherFilter();
   let query = db.from('tasks').select('*, teacher:profiles!tasks_teacher_id_fkey(full_name, id), task_submissions(*, student:profiles(full_name))').order('created_at', {ascending: false});
   if (filterTeacher) query = query.eq('teacher_id', filterTeacher);
-  const { data: tasks } = await query;
+  const tasks = EA_STU.only((await query).data, supStudentFilter());
   const since = await SUP_VIEW.since();
   SUP_VIEW.setItems('hw', tasks);
   const div = document.getElementById('hwList');
@@ -5038,7 +5043,7 @@ async function loadFeedbacks() {
   const filterTeacher = supTeacherFilter();
   let query = db.from('feedbacks').select('*, teacher:profiles!feedbacks_teacher_id_fkey(full_name, id), student:profiles!feedbacks_student_id_fkey(full_name)').order('created_at', {ascending: false});
   if (filterTeacher) query = query.eq('teacher_id', filterTeacher);
-  const { data: fbs } = await query;
+  const fbs = EA_STU.only((await query).data, supStudentFilter());
   const since = await SUP_VIEW.since();
   SUP_VIEW.setItems('fb', fbs);
   const div = document.getElementById('fbList');
@@ -5389,6 +5394,7 @@ async function loadTeachHwList(){
   var div=document.getElementById('tHwList'); if(!div) return;
   div.innerHTML='<div class="empty-state"><div class="empty-icon">⏳</div><p>Carregando...</p></div>';
   var items=[]; try{ items=await getTasksByTeacher(currentUser.id); }catch(e){}
+  if(!(items=EA_STU.apply('tHwList', items, loadTeachHwList))) return;
   if(!items.length){ div.innerHTML='<div class="empty-state"><div class="empty-icon">📝</div><p>Nenhum homework enviado ainda.</p></div>'; return; }
   var seenSince=await winSeenSince();
   div.innerHTML='<div style="padding:8px 0">'+items.map(function(t){
@@ -5407,6 +5413,7 @@ async function loadTeachFbList(){
   var div=document.getElementById('tFbList'); if(!div) return;
   div.innerHTML='<div class="empty-state"><div class="empty-icon">⏳</div><p>Carregando...</p></div>';
   var items=[]; try{ items=await getFeedbacksByTeacher(currentUser.id); }catch(e){}
+  if(!(items=EA_STU.apply('tFbList', items, loadTeachFbList))) return;
   var seenSince=await winSeenSince();
   if(!items.length){ div.innerHTML='<div class="empty-state"><div class="empty-icon">💬</div><p>Nenhum feedback enviado ainda.</p></div>'; return; }
   div.innerHTML='<div style="padding:8px 0">'+items.map(function(f){
@@ -5418,6 +5425,7 @@ async function loadTeachPrList(){
   var div=document.getElementById('tPrList'); if(!div) return;
   div.innerHTML='<div class="empty-state"><div class="empty-icon">⏳</div><p>Carregando...</p></div>';
   var items=[]; try{ items=await getPronunciationByTeacher(currentUser.id); }catch(e){}
+  if(!(items=EA_STU.apply('tPrList', items, loadTeachPrList))) return;
   var seenSince=await winSeenSince();
   if(!items.length){ div.innerHTML='<div class="empty-state"><div class="empty-icon">🎙️</div><p>Nenhuma pronúncia enviada ainda.</p></div>'; return; }
   div.innerHTML='<div style="padding:8px 0">'+items.map(function(p){
@@ -5430,6 +5438,7 @@ async function loadTeachVocList(){
   var div=document.getElementById('tVocList'); if(!div) return;
   div.innerHTML='<div class="empty-state"><div class="empty-icon">⏳</div><p>Carregando...</p></div>';
   var items=[]; try{ items=await getVocabularyByTeacher(currentUser.id); }catch(e){}
+  if(!(items=EA_STU.apply('tVocList', items, loadTeachVocList))) return;
   if(!items.length){ div.innerHTML='<div class="empty-state"><div class="empty-icon">📚</div><p>Nenhuma palavra enviada ainda.</p></div>'; return; }
   div.innerHTML='<div style="padding:8px 0">'+items.map(function(v){
     var nm=(v.student&&v.student.full_name)||'Aluno';
@@ -5440,9 +5449,10 @@ async function loadTeachVocList(){
 
 // ═══ REDAÇÃO — correção inline (portado fielmente do dashboard do professor) ═══
 async function loadTeachWriting() {
-  const items = await getWritingByTeacher(currentUser.id);
+  let items = await getWritingByTeacher(currentUser.id);
   const div = document.getElementById('tWrList');
   if (!div) return;
+  if (!(items = EA_STU.apply('tWrList', items, loadTeachWriting))) return;
   if (!items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">✍️</div><p>Nenhuma atividade de redação.</p></div>'; return; }
 
   div.innerHTML = '<div style="padding:12px 0 16px">' + items.map(w => {
@@ -5763,7 +5773,7 @@ async function loadWritingCoord() {
   const filterTeacher = supTeacherFilter();
   let query = db.from('writing_activities').select('*, teacher:profiles!writing_activities_teacher_id_fkey(full_name, id), student:profiles!writing_activities_student_id_fkey(full_name)').order('created_at', {ascending: false});
   if (filterTeacher) query = query.eq('teacher_id', filterTeacher);
-  const { data: items } = await query; window._wrCoordItems = items || [];
+  const items = EA_STU.only((await query).data, supStudentFilter()); window._wrCoordItems = items || [];
   const since = await SUP_VIEW.since();
   SUP_VIEW.setItems('wr', items);
   const div = document.getElementById('wrCoordList');
@@ -5783,7 +5793,7 @@ async function loadPronunciationCoord() {
   const filterTeacher = supTeacherFilter();
   let query = db.from('pronunciation').select('*, teacher:profiles!pronunciation_teacher_id_fkey(full_name, id), student:profiles!pronunciation_student_id_fkey(full_name)').order('created_at', {ascending: false});
   if (filterTeacher) query = query.eq('teacher_id', filterTeacher);
-  const { data: items } = await query;
+  const items = EA_STU.only((await query).data, supStudentFilter());
   const since = await SUP_VIEW.since();
   SUP_VIEW.setItems('pr', items);
   const div = document.getElementById('prCoordList');
@@ -5803,7 +5813,7 @@ async function loadVocabularyCoord() {
   if (div) div.innerHTML = '<div class="empty-state"><div class="empty-icon">⏳</div><p>Carregando...</p></div>';
   let query = db.from('vocabulary_words').select('*, teacher:profiles!vocabulary_words_teacher_id_fkey(full_name, id), student:profiles!vocabulary_words_student_id_fkey(full_name)').order('created_at', {ascending: false});
   if (filterTeacher) query = query.eq('teacher_id', filterTeacher);
-  const { data: items } = await query;
+  const items = EA_STU.only((await query).data, supStudentFilter());
   SUP_VIEW.setItems('vocab', items);
   if (!div) return;
   if (!items || !items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📚</div><p>Nenhum vocabulário no sistema.</p></div>'; return; }
@@ -5836,6 +5846,7 @@ async function loadLessonPlansCoord() {
   var plans = [];
   try { plans = await getAllLessonPlans(); } catch(e){ console.error('getAllLessonPlans', e); }
   if (filterTeacher) plans = plans.filter(function(p){ return p.teacher_id === filterTeacher; });
+  plans = EA_STU.only(plans, supStudentFilter());
   if (countEl) countEl.textContent = plans.length;
   if (!div) return;
   if (!plans.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">🗒️</div><p>Nenhum plano de aula ainda.</p></div>'; return; }
@@ -6826,6 +6837,11 @@ function supTeacherFilter() {
   var el = document.getElementById('supFilter');
   return el ? el.value : '';
 }
+// Aluno escolhido no filtro da Supervisão (vale para todas as abas)
+function supStudentFilter() {
+  var el = document.getElementById('supStudentFilter');
+  return el ? el.value : '';
+}
 
 function loadCurrentSup() {
   var filter = document.getElementById('supFilter').value;
@@ -6853,6 +6869,13 @@ async function initSupFilter() {
     var r = await db.from('profiles').select('id,full_name').eq('role','teacher').order('full_name');
     if (r.data) r.data.forEach(function(t) { sel.innerHTML += '<option value="' + t.id + '">' + t.full_name + '</option>'; });
   } catch(e) {}
+  var ss = document.getElementById('supStudentFilter');
+  if (ss && ss.options.length <= 1) {
+    try {
+      var rs = await db.from('profiles').select('id,full_name').eq('role','student').order('full_name');
+      if (rs.data) ss.innerHTML += rs.data.map(function(a) { return '<option value="' + docEsc(a.id) + '">' + docEsc(a.full_name || 'Aluno') + '</option>'; }).join('');
+    } catch(e) {}
+  }
 }
 
 

@@ -2234,6 +2234,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 <!-- Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase.js"></script>
+<script src="student-filter.js"></script>
 <script src="win-nav.js"></script>
 <script src="win-motion.js"></script>
 <script src="win-mobile.js"></script>
@@ -2473,7 +2474,8 @@ async function eaCancelSend(kind, id){
 }
 
 async function loadHomeworkList() {
-  const tasks = await getTasksByTeacher(currentUser.id);
+  let tasks = await getTasksByTeacher(currentUser.id);
+  if (!(tasks = EA_STU.apply('hwList', tasks, loadHomeworkList))) return;
   const seenSince = await winSeenSince();
   const div = document.getElementById('hwList');
   if (!tasks.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">📝</div><p>Nenhum homework enviado ainda.</p></div>'; return; }
@@ -2590,7 +2592,8 @@ async function sendVocabulary() {
 async function loadVocabularyList() {
   const div = document.getElementById("vocList");
   try {
-    const words = await getVocabularyByTeacher(currentUser.id);
+    let words = await getVocabularyByTeacher(currentUser.id);
+    if (!(words = EA_STU.apply('vocList', words, loadVocabularyList))) return;
     if (!words.length) {
       div.innerHTML = '<div class="empty-state"><div class="empty-icon">📚</div><p>Nenhuma palavra enviada ainda.</p></div>';
       return;
@@ -2665,7 +2668,8 @@ async function sendFeedback() {
 }
 
 async function loadFeedbackList() {
-  const fbs = await getFeedbacksByTeacher(currentUser.id);
+  let fbs = await getFeedbacksByTeacher(currentUser.id);
+  if (!(fbs = EA_STU.apply('fbList', fbs, loadFeedbackList))) return;
   const seenSince = await winSeenSince();
   const div = document.getElementById('fbList');
   if (!fbs.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">💬</div><p>Nenhum feedback registrado.</p></div>'; return; }
@@ -2922,7 +2926,8 @@ async function sendWriting() {
 }
 
 async function loadWritingList() {
-  const items = await getWritingByTeacher(currentUser.id);
+  let items = await getWritingByTeacher(currentUser.id);
+  if (!(items = EA_STU.apply('wrList', items, loadWritingList))) return;
   const seenSince = await winSeenSince();
   const div = document.getElementById('wrList');
   if (!items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">✍️</div><p>Nenhuma atividade de redação.</p></div>'; return; }
@@ -3196,7 +3201,8 @@ async function sendPronunciation() {
 }
 
 async function loadPronunciationList() {
-  const items = await getPronunciationByTeacher(currentUser.id);
+  let items = await getPronunciationByTeacher(currentUser.id);
+  if (!(items = EA_STU.apply('prList', items, loadPronunciationList))) return;
   const seenSince = await winSeenSince();
   const div = document.getElementById('prList');
   if (!items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">🎙️</div><p>Nenhuma prática enviada.</p></div>'; return; }

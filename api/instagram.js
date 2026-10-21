@@ -20,6 +20,34 @@ function cors(res) {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 }
 
+// Escolhe a melhor imagem do post.
+// IMPORTANTE: as URLs "cruas" do Instagram (scontent.cdninstagram.com) EXPIRAM
+// depois de alguns dias e às vezes bloqueiam hotlink → imagens quebradas no site.
+// Por isso damos preferência às cópias hospedadas pelo provedor (Behold: "sizes").
+function pickImage(p) {
+  const s = p.sizes || {};
+  const sized =
+    (s.medium && (s.medium.mediaUrl || s.medium.src)) ||
+    (s.large && (s.large.mediaUrl || s.large.src)) ||
+    (s.small && (s.small.mediaUrl || s.small.src)) ||
+    (s.full && (s.full.mediaUrl || s.full.src)) || '';
+  if (sized) return sized;
+
+  const rawType = (p.mediaType || p.media_type || p.type || '').toString().toUpperCase();
+  const isVideo = rawType.indexOf('VIDEO') >= 0 || rawType.indexOf('REEL') >= 0;
+  const thumb = p.thumbnailUrl || p.thumbnail_url || p.image || p.image_url || p.cover || '';
+  if (thumb) return thumb;
+  if (!isVideo) return p.mediaUrl || p.media_url || '';   // em vídeo, mediaUrl é o .mp4
+
+  // carrossel/vídeo sem miniatura: usa o primeiro filho
+  const kids = (p.children && (p.children.data || p.children)) || [];
+  for (const k of (Array.isArray(kids) ? kids : [])) {
+    const img = pickImage(k);
+    if (img) return img;
+  }
+  return '';
+}
+
 // Normaliza diferentes formatos de feed para { image, permalink, caption, type }
 function normalize(json) {
   let items = [];
@@ -30,18 +58,13 @@ function normalize(json) {
   else if (Array.isArray(json.media)) items = json.media;
 
   return items.map((p) => {
-    // imagem: tenta os campos mais comuns entre provedores
-    const sizes = p.sizes || {};
-    const sized = (sizes.medium || sizes.large || sizes.full || sizes.small || {});
-    const image =
-      p.image || p.thumbnailUrl || p.thumbnail_url || p.mediaUrl || p.media_url ||
-      sized.mediaUrl || sized.src || p.image_url || p.cover || '';
-    const permalink = p.permalink || p.url || p.link || p.postUrl || '#';
-    const caption = p.caption || p.prunedCaption || p.title || p.text || p.content_text || '';
+    const image = pickImage(p);
+    const permalink = p.permalink || p.url || p.link || p.postUrl || 'https://www.instagram.com/contatowin';
+    const caption = p.prunedCaption || p.caption || p.title || p.text || p.content_text || '';
     const rawType = (p.mediaType || p.media_type || p.type || '').toString().toUpperCase();
-    const type = rawType.indexOf('VIDEO') >= 0 ? 'VIDEO' : (rawType || 'IMAGE');
+    const type = (rawType.indexOf('VIDEO') >= 0 || rawType.indexOf('REEL') >= 0) ? 'VIDEO' : 'IMAGE';
     return { image, permalink, caption, type };
-  }).filter((p) => p.image);
+  }).filter((p) => p.image && /^https:\/\//.test(p.image));
 }
 
 export default async function handler(req, res) {
@@ -58,7 +81,10 @@ export default async function handler(req, res) {
   }
 
   try {
-    const r = await fetch(feedUrl, { headers: { Accept: 'application/json' } });
+    const r = await fetch(feedUrl, {
+      headers: { Accept: 'application/json' },
+      signal: AbortSignal.timeout(8000),
+    });
     if (!r.ok) {
       res.setHeader('Cache-Control', 'public, s-maxage=120');
       return res.status(200).json({ configured: true, error: 'feed_http_' + r.status, posts: [] });
@@ -66,8 +92,11 @@ export default async function handler(req, res) {
     const json = await r.json();
     const posts = normalize(json).slice(0, limit);
 
-    // Cache na CDN da Vercel (~1h) → atualização automática sem refazer a busca a cada visita.
-    res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400');
+    // Cache na CDN da Vercel (30 min). O "stale" curto evita servir por muito tempo
+    // URLs de imagem que já expiraram.
+    res.setHeader('Cache-Control', posts.length
+      ? 'public, s-maxage=1800, stale-while-revalidate=3600'
+      : 'public, s-maxage=120');
     return res.status(200).json({ configured: true, posts });
   } catch (e) {
     res.setHeader('Cache-Control', 'public, s-maxage=120');

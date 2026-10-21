@@ -2974,14 +2974,99 @@
       var cap=p.caption?'<div class="ig-cap"><span>'+esc(p.caption)+'</span></div>':'';
       var vid=(p.type==='VIDEO')?play:'';
       return '<a class="ig-item" href="'+esc(p.permalink)+'" target="_blank" rel="noopener">'
-           +'<img loading="lazy" src="'+esc(p.image)+'" alt="Publicação no Instagram da WIN">'+vid+cap+'</a>';
+           +'<img loading="lazy" referrerpolicy="no-referrer" src="'+esc(p.image)+'" alt="Publicação no Instagram da WIN" onerror="window.__igBroken(this)">'+vid+cap+'</a>';
     }).join('');
   }
+  window.__igBroken=function(img){
+    var a=img.closest('.ig-item'); if(a)a.remove();
+    var grid=document.getElementById('igGrid');
+    if(grid&&!grid.querySelector('.ig-item'))render([]);
+  };
   function load(){
     fetch('/api/instagram',{headers:{'Accept':'application/json'}})
       .then(function(r){return r.json();})
-      .then(function(d){render(d&&d.posts);})
+      .then(function(d){
+        if(d&&d.error&&window.console)console.warn('[Instagram]',d.error,d.detail||'');
+        if(d&&d.configured===false&&window.console)console.warn('[Instagram] IG_FEED_URL não configurada na Vercel');
+        render(d&&d.posts);
+      })
       .catch(function(){render([]);});
+  }
+  if(document.readyState!=='loading')load();
+  else document.addEventListener('DOMContentLoaded',load);
+})();
+</script>
+
+<!-- ═══ YOUTUBE ═══ -->
+<section class="yt-feed reveal" id="youtube">
+  <div class="container">
+    <div class="faq-header">
+      <div class="section-label orange">YouTube</div>
+      <h2 class="section-title">Assista no <em>YouTube</em></h2>
+      <p class="section-subtitle">Os vídeos mais recentes do canal — dá para assistir aqui mesmo.</p>
+    </div>
+    <div id="ytGrid" class="yt-grid" aria-live="polite">
+      <div class="yt-skel"></div><div class="yt-skel"></div><div class="yt-skel"></div>
+    </div>
+    <div class="ig-follow-wrap">
+      <a id="ytFollow" class="ig-follow-btn yt-follow-btn" href="https://www.youtube.com/@vinilbeer" target="_blank" rel="noopener">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4l6.2 3.6-6.2 3.6z"/></svg>
+        Inscrever-se no canal
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+/* ═══ YOUTUBE FEED ═══ */
+.yt-feed{padding:100px 0;background:#fff}
+.yt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:22px;margin-top:8px}
+.yt-card{display:flex;flex-direction:column;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 6px 20px rgba(11,31,51,.08);transition:transform .25s ease,box-shadow .25s ease}
+.yt-card:hover{transform:translateY(-4px);box-shadow:0 14px 32px rgba(11,31,51,.14)}
+.yt-thumb{position:relative;aspect-ratio:16/9;background:#0b1f33;border:0;padding:0;cursor:pointer;display:block;width:100%}
+.yt-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.yt-thumb iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.yt-play{position:absolute;top:50%;left:50%;width:62px;height:44px;margin:-22px 0 0 -31px;border-radius:12px;background:rgba(215,25,32,.92);display:flex;align-items:center;justify-content:center;transition:transform .2s ease}
+.yt-thumb:hover .yt-play{transform:scale(1.1)}
+.yt-info{padding:14px 16px 18px}
+.yt-info h3{margin:0;font-size:15px;line-height:1.4;color:var(--navy);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.yt-info time{display:block;margin-top:6px;font-size:12.5px;color:var(--g500,#565E6B)}
+.yt-skel{aspect-ratio:16/11;border-radius:18px;background:linear-gradient(110deg,#e9edf6 30%,#f4f6fb 50%,#e9edf6 70%);background-size:200% 100%;animation:igShimmer 1.4s infinite}
+.yt-follow-btn{background:#d71920}
+@media(max-width:560px){.yt-feed{padding:72px 0}.yt-grid{grid-template-columns:1fr;gap:16px}}
+</style>
+<script>
+(function(){
+  function esc(t){var d=document.createElement('div');d.textContent=t||'';return d.innerHTML;}
+  function fmt(d){try{return new Date(d).toLocaleDateString('pt-BR',{day:'2-digit',month:'short',year:'numeric'});}catch(e){return '';}}
+  function render(d){
+    var grid=document.getElementById('ytGrid'); if(!grid)return;
+    if(d&&d.channelUrl){var b=document.getElementById('ytFollow'); if(b)b.href=d.channelUrl;}
+    var vids=(d&&d.videos)||[];
+    if(!vids.length){
+      grid.innerHTML='<div class="ig-empty"><strong>YouTube</strong>Confira os vídeos mais recentes direto no canal.</div>';
+      return;
+    }
+    var play='<span class="yt-play"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></span>';
+    grid.innerHTML=vids.map(function(v){
+      return '<article class="yt-card">'
+        +'<button type="button" class="yt-thumb" data-id="'+esc(v.id)+'" aria-label="Assistir: '+esc(v.title)+'">'
+        +'<img loading="lazy" src="'+esc(v.thumb)+'" alt="">'+play+'</button>'
+        +'<div class="yt-info"><h3>'+esc(v.title)+'</h3><time datetime="'+esc(v.published)+'">'+fmt(v.published)+'</time></div>'
+        +'</article>';
+    }).join('');
+  }
+  // Clique → troca a miniatura pelo player (carrega o YouTube só quando a pessoa quer assistir)
+  document.addEventListener('click',function(e){
+    var btn=e.target.closest&&e.target.closest('.yt-thumb'); if(!btn||btn.querySelector('iframe'))return;
+    var id=btn.getAttribute('data-id'); if(!/^[\w-]{11}$/.test(id))return;
+    btn.innerHTML='<iframe src="https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&rel=0" title="Vídeo do YouTube" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>';
+  });
+  function load(){
+    fetch('/api/youtube',{headers:{'Accept':'application/json'}})
+      .then(function(r){return r.json();})
+      .then(function(d){if(d&&d.error&&window.console)console.warn('[YouTube]',d.error,d.detail||'');render(d);})
+      .catch(function(){render(null);});
   }
   if(document.readyState!=='loading')load();
   else document.addEventListener('DOMContentLoaded',load);

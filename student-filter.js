@@ -89,7 +89,13 @@
     else if (panel && panel.parentNode) panel.parentNode.insertBefore(el, panel);
     else list.parentNode.insertBefore(el, list);
     var sel = el.querySelector('select'), clr = el.querySelector('.ea-stu-clear');
-    sel.onfocus = sel.onmousedown = function () { readSendSelect(listId); fill(listId); };
+    sel.onfocus = function () { readSendSelect(listId); fill(listId); };
+    // Quando o seletor de envio da seção termina de carregar, atualiza a lista de alunos
+    var send = sc && sc.querySelector('.form-card select');
+    if (send && window.MutationObserver) {
+      new MutationObserver(function () { readSendSelect(listId); fill(listId); })
+        .observe(send, { childList: true });
+    }
     sel.onchange = function () { choose(sel.value); };
     clr.onclick = function () { choose(''); };
     return el;

@@ -2271,21 +2271,24 @@
 <link rel="preload" as="image" href="/img/brand/anim/win.png">
 <link rel="stylesheet" href="/win-mobile.css">
 <style>
-/* ═══ Páginas internas (O Método / A WIN) ═══ */
-.page-hero{padding:132px 0 44px;background:var(--win-off-white,#F5F7FA)}
-.page-hero h1{font-family:Montserrat,system-ui,sans-serif;font-size:clamp(1.9rem,3.6vw,2.7rem);font-weight:800;letter-spacing:-.02em;color:#0B1F33;line-height:1.15;max-width:18ch;margin:0 0 12px}
-.page-hero p{font-size:16.5px;line-height:1.6;color:#4A6075;max-width:58ch;margin:0}
-.steps{padding:72px 0;background:#fff}
-.steps h2{font-family:Montserrat,system-ui,sans-serif;font-size:clamp(1.5rem,2.6vw,2rem);font-weight:800;color:#0B1F33;margin:0 0 28px;letter-spacing:-.01em}
-.steps ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;counter-reset:st}
-.steps li{counter-increment:st;padding:22px 20px;border:1px solid #E3E8EC;border-radius:14px;background:#fff}
-.steps li::before{content:counter(st);display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:#0B1F33;color:#fff;font-weight:800;font-size:13px;margin-bottom:14px}
-.steps h3{font-size:16px;font-weight:800;color:#0B1F33;margin:0 0 6px}
-.steps p{font-size:14px;line-height:1.55;color:#4A6075;margin:0}
-.steps .note{margin-top:22px;padding:16px 18px;border-left:3px solid #D71920;background:#F5F7FA;border-radius:0 10px 10px 0;font-size:14.5px;color:#0B1F33;line-height:1.55}
-.steps .note a{color:#0B1F33;font-weight:700}
-@media(max-width:900px){.steps ol{grid-template-columns:1fr 1fr}}
-@media(max-width:560px){.page-hero{padding:112px 0 32px}.steps{padding:52px 0}.steps ol{grid-template-columns:1fr}}
+/* ═══ Páginas internas (O Método / A WIN) — mesmo cabeçalho da página Cursos ═══ */
+.page-hero{padding:150px 0 84px;background:var(--win-azul-profundo,#0B1F33);color:#fff;position:relative;overflow:hidden;text-align:center}
+.page-hero::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(700px 460px at 80% 20%,rgba(111,143,168,.16),transparent 62%),radial-gradient(600px 380px at 0% 110%,rgba(7,21,34,.8),transparent 60%)}
+.page-hero .container{position:relative;z-index:1}
+.page-hero h1{font-family:Montserrat,system-ui,sans-serif;font-size:clamp(2.3rem,4.6vw,3.5rem);font-weight:800;color:#fff;letter-spacing:-.03em;line-height:1.1;margin:0 auto 16px;max-width:16ch}
+.page-hero p{font-size:18px;line-height:1.6;color:rgba(245,247,250,.76);max-width:620px;margin:0 auto}
+.steps{padding:96px 0;background:var(--win-off-white,#F5F7FA)}
+.steps .faq-header{text-align:center;max-width:640px;margin:0 auto 48px}
+.steps ol{list-style:none;margin:0 auto;padding:0;max-width:1100px;display:grid;grid-template-columns:repeat(4,1fr);gap:18px;counter-reset:st}
+.steps li{counter-increment:st;padding:28px 24px;border:1px solid #E3E8EC;border-radius:16px;background:#fff;text-align:left}
+.steps li::before{content:counter(st);display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:#0B1F33;color:#fff;font-weight:800;font-size:14px;margin-bottom:16px}
+.steps h3{font-family:Montserrat,system-ui,sans-serif;font-size:17px;font-weight:800;color:#0B1F33;margin:0 0 8px}
+.steps p{font-size:14.5px;line-height:1.6;color:#4A6075;margin:0}
+.steps .note{max-width:760px;margin:40px auto 0;text-align:center;font-size:16px;line-height:1.6;color:#0B1F33}
+.steps .note strong{font-weight:800}
+.steps .note-cta{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:24px}
+@media(max-width:960px){.steps ol{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.page-hero{padding:124px 0 60px}.page-hero p{font-size:16px}.steps{padding:64px 0}.steps ol{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -2369,14 +2372,22 @@
 <!-- ═══ COMO FUNCIONA ═══ -->
 <section class="steps reveal">
   <div class="container">
-    <h2>Como funciona, do primeiro contato à fluência</h2>
+    <div class="faq-header">
+      <div class="section-label orange">Passo a passo</div>
+      <h2 class="section-title">Como funciona, do primeiro contato à fluência</h2>
+      <p class="section-subtitle">Um caminho simples, com o mesmo professor acompanhando você em cada etapa.</p>
+    </div>
     <ol>
       <li><h3>Nivelamento gratuito</h3><p>Um teste rápido mostra em qual nível você começa, do Intro ao C1.</p></li>
       <li><h3>Aulas ao vivo</h3><p>Aulas individuais pelo Google Meet, no horário combinado com o seu professor.</p></li>
       <li><h3>Material Cambridge</h3><p>Interchange (Intro, 1, 2 e 3) e Evolve (5 e 6), referências mundiais no ensino de inglês.</p></li>
       <li><h3>Acompanhamento</h3><p>Homework, redações e feedbacks organizados na plataforma da WIN, sempre à mão.</p></li>
     </ol>
-    <p class="note">Na WIN, quem corrige, avalia e orienta é sempre o seu professor. A tecnologia ajuda a organizar, mas o ensino é feito por gente. <a href="/cursos">Veja os cursos e níveis</a>.</p>
+    <p class="note">Na WIN, <strong>quem corrige, avalia e orienta é sempre o seu professor</strong>. A tecnologia organiza; o ensino é feito por gente.</p>
+    <div class="note-cta">
+      <a href="/contato" class="btn btn-primary btn-lg">Agendar nivelamento grátis</a>
+      <a href="/cursos" class="btn btn-outline btn-lg">Ver cursos e níveis</a>
+    </div>
   </div>
 </section>
 
@@ -2409,7 +2420,7 @@
         <a href="/">Início</a><a href="/metodo">O Método</a><a href="/sobre">A WIN</a>
         <a href="/cursos">Cursos</a>
         <a href="/contato">Contato</a>
-              <a href="/sobre#app"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg>Baixar o app</a>
+              <a href="/#app"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg>Baixar o app</a>
       </div>
       <div class="footer-col">
         <h4>Contato</h4>

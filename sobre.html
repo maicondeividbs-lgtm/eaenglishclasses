@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Conheça a WIN: coordenação, professores, o app oficial e as nossas redes no Instagram e no YouTube.">
+<meta name="description" content="Conheça a WIN: coordenação, professores e as nossas redes no Instagram e no YouTube.">
 <meta property="og:title" content="A WIN | WIN">
-<meta property="og:description" content="Conheça a WIN: coordenação, professores, o app oficial e as nossas redes no Instagram e no YouTube.">
+<meta property="og:description" content="Conheça a WIN: coordenação, professores e as nossas redes no Instagram e no YouTube.">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
 <meta name="theme-color" content="#0B1F33">
@@ -2261,9 +2261,9 @@
 <meta property="og:site_name" content="WIN">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="A WIN | WIN">
-<meta name="twitter:description" content="Conheça a WIN: coordenação, professores, o app oficial e as nossas redes no Instagram e no YouTube.">
+<meta name="twitter:description" content="Conheça a WIN: coordenação, professores e as nossas redes no Instagram e no YouTube.">
 <meta name="twitter:image" content="https://www.winenglish.com.br/img/og-cover.jpg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebPage", "name": "A WIN | WIN", "url": "https://www.winenglish.com.br/sobre", "description": "Conheça a WIN: coordenação, professores, o app oficial e as nossas redes no Instagram e no YouTube.", "inLanguage": "pt-BR", "isPartOf": {"@id": "https://www.winenglish.com.br/#org"}, "publisher": {"@id": "https://www.winenglish.com.br/#org"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebPage", "name": "A WIN | WIN", "url": "https://www.winenglish.com.br/sobre", "description": "Conheça a WIN: coordenação, professores e as nossas redes no Instagram e no YouTube.", "inLanguage": "pt-BR", "isPartOf": {"@id": "https://www.winenglish.com.br/#org"}, "publisher": {"@id": "https://www.winenglish.com.br/#org"}}</script>
 <link rel="stylesheet" href="/win-brand.css">
 <link rel="stylesheet" href="/win-motion.css">
 <link rel="stylesheet" href="/win-home.css">
@@ -2271,21 +2271,25 @@
 <link rel="preload" as="image" href="/img/brand/anim/win.png">
 <link rel="stylesheet" href="/win-mobile.css">
 <style>
-/* ═══ Páginas internas (O Método / A WIN) ═══ */
-.page-hero{padding:132px 0 44px;background:var(--win-off-white,#F5F7FA)}
-.page-hero h1{font-family:Montserrat,system-ui,sans-serif;font-size:clamp(1.9rem,3.6vw,2.7rem);font-weight:800;letter-spacing:-.02em;color:#0B1F33;line-height:1.15;max-width:18ch;margin:0 0 12px}
-.page-hero p{font-size:16.5px;line-height:1.6;color:#4A6075;max-width:58ch;margin:0}
-.steps{padding:72px 0;background:#fff}
-.steps h2{font-family:Montserrat,system-ui,sans-serif;font-size:clamp(1.5rem,2.6vw,2rem);font-weight:800;color:#0B1F33;margin:0 0 28px;letter-spacing:-.01em}
-.steps ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;counter-reset:st}
-.steps li{counter-increment:st;padding:22px 20px;border:1px solid #E3E8EC;border-radius:14px;background:#fff}
-.steps li::before{content:counter(st);display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:#0B1F33;color:#fff;font-weight:800;font-size:13px;margin-bottom:14px}
-.steps h3{font-size:16px;font-weight:800;color:#0B1F33;margin:0 0 6px}
-.steps p{font-size:14px;line-height:1.55;color:#4A6075;margin:0}
-.steps .note{margin-top:22px;padding:16px 18px;border-left:3px solid #D71920;background:#F5F7FA;border-radius:0 10px 10px 0;font-size:14.5px;color:#0B1F33;line-height:1.55}
-.steps .note a{color:#0B1F33;font-weight:700}
-@media(max-width:900px){.steps ol{grid-template-columns:1fr 1fr}}
-@media(max-width:560px){.page-hero{padding:112px 0 32px}.steps{padding:52px 0}.steps ol{grid-template-columns:1fr}}
+/* ═══ Páginas internas (O Método / A WIN) — mesmo cabeçalho da página Cursos ═══ */
+.page-hero{padding:150px 0 84px;background:var(--win-azul-profundo,#0B1F33);color:#fff;position:relative;overflow:hidden;text-align:center}
+.page-hero::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(700px 460px at 80% 20%,rgba(111,143,168,.16),transparent 62%),radial-gradient(600px 380px at 0% 110%,rgba(7,21,34,.8),transparent 60%)}
+.page-hero .container{position:relative;z-index:1}
+.page-hero h1{font-family:Montserrat,system-ui,sans-serif;font-size:clamp(2.3rem,4.6vw,3.5rem);font-weight:800;color:#fff;letter-spacing:-.03em;line-height:1.1;margin:0 auto 16px;max-width:16ch}
+.page-hero p{font-size:18px;line-height:1.6;color:rgba(245,247,250,.76);max-width:620px;margin:0 auto}
+.steps{padding:96px 0;background:var(--win-off-white,#F5F7FA)}
+.steps .faq-header{text-align:center;max-width:640px;margin:0 auto 48px}
+.steps ol{list-style:none;margin:0 auto;padding:0;max-width:1100px;display:grid;grid-template-columns:repeat(4,1fr);gap:18px;counter-reset:st}
+.steps li{counter-increment:st;padding:28px 24px;border:1px solid #E3E8EC;border-radius:16px;background:#fff;text-align:left}
+.steps li::before{content:counter(st);display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:#0B1F33;color:#fff;font-weight:800;font-size:14px;margin-bottom:16px}
+.steps h3{font-family:Montserrat,system-ui,sans-serif;font-size:17px;font-weight:800;color:#0B1F33;margin:0 0 8px}
+.steps p{font-size:14.5px;line-height:1.6;color:#4A6075;margin:0}
+.steps .note{max-width:760px;margin:40px auto 0;text-align:center;font-size:16px;line-height:1.6;color:#0B1F33}
+.steps .note strong{font-weight:800}
+.steps .note-cta{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:24px}
+section.teachers{background:#fff !important}
+@media(max-width:960px){.steps ol{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.page-hero{padding:124px 0 60px}.page-hero p{font-size:16px}.steps{padding:64px 0}.steps ol{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -2325,7 +2329,7 @@
 <section class="page-hero" id="main-content">
   <div class="container">
     <h1>A WIN</h1>
-    <p>Desde 2016 ensinando inglês com aulas individuais ao vivo. Conheça quem está por trás das aulas, o nosso app e o que publicamos nas redes.</p>
+    <p>Desde 2016 ensinando inglês com aulas individuais ao vivo. Conheça quem está por trás das aulas e o que publicamos nas redes.</p>
   </div>
 </section>
 
@@ -2710,66 +2714,6 @@ section.yt-feed{padding:28px 0 56px;background:var(--cream)}
 })();
 </script>
 
-<!-- ═══ BAIXE O APP ═══ -->
-<section class="app-cta reveal" id="app">
-  <div class="ag1"></div><div class="ag2"></div>
-  <div class="container">
-    <div class="app-grid">
-      <div class="app-copy">
-        <div class="app-logo-lockup">
-          <img src="/icons/icon-512.png" alt="App WIN" width="62" height="62" loading="lazy">
-          <div class="all-t">App WIN<span>Android · iPhone · Computador</span></div>
-        </div>
-        <div class="section-label" style="background:rgba(111,143,168,.15);color:var(--mango)">Aplicativo oficial</div>
-        <h2>Toda a sua escola de inglês <em>num só app</em></h2>
-        <p class="app-sub">Aulas, agenda, materiais e avisos sempre com você. Instala em segundos direto pelo navegador — <strong style="color:#fff">sem ocupar espaço</strong>, sem loja de apps e funcionando até offline. É a WIN na palma da mão de toda a família.</p>
-        <ul class="app-benefits">
-          <li><span class="ab-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span> Acesso em 1 toque</li>
-          <li><span class="ab-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span> Avisos na hora, com som</li>
-          <li><span class="ab-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span> Agenda e materiais à mão</li>
-          <li><span class="ab-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg></span> Funciona offline</li>
-        </ul>
-        <div class="app-audience">
-          <div class="app-aud-card"><div class="aud-emoji"><svg class="win-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 9 12 4 2 9l10 5 10-5z"/><path d="M6 11v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/><path d="M22 9v6"/></svg></div><div class="aud-txt"><div class="aud-t">Para alunos</div><div class="aud-d">Aulas, lição de casa e progresso sempre organizados.</div></div></div>
-          <div class="app-aud-card"><div class="aud-emoji"><svg class="win-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><circle cx="17" cy="9" r="2.5"/><path d="M16.2 14.1A5 5 0 0 1 21.5 20"/></svg></div><div class="aud-txt"><div class="aud-t">Para responsáveis</div><div class="aud-d">Acompanhe a evolução e a frequência de perto.</div></div></div>
-          <div class="app-aud-card"><div class="aud-emoji"><svg class="win-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="12" rx="1.5"/><path d="m8 21 4-6 4 6"/><path d="M7 8h6M7 11h4"/></svg></div><div class="aud-txt"><div class="aud-t">Para professores</div><div class="aud-d">Agenda, alunos e correções num só painel.</div></div></div>
-        </div>
-        <div class="app-actions">
-          <button type="button" class="app-install-btn" onclick="if(window.eaInstallApp)eaInstallApp()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            Instalar agora — é grátis
-          </button>
-          <div class="app-platforms">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 12.04c-.03-2.6 2.13-3.85 2.22-3.91-1.21-1.77-3.1-2.01-3.77-2.04-1.6-.16-3.13.94-3.94.94-.81 0-2.07-.92-3.4-.9-1.75.03-3.36 1.02-4.26 2.58-1.82 3.15-.47 7.81 1.3 10.37.86 1.25 1.89 2.66 3.24 2.61 1.3-.05 1.79-.84 3.36-.84 1.57 0 2.01.84 3.39.81 1.4-.02 2.29-1.28 3.15-2.54.99-1.45 1.4-2.86 1.42-2.93-.03-.01-2.72-1.04-2.75-4.12M14.5 4.66c.72-.87 1.2-2.08 1.07-3.29-1.03.04-2.28.69-3.02 1.56-.66.77-1.24 2-1.08 3.18 1.15.09 2.32-.58 3.03-1.45"/></svg>
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.6 9.48l1.84-3.18c.16-.31.04-.69-.26-.85-.29-.15-.65-.06-.83.22l-1.88 3.24a11.46 11.46 0 0 0-8.94 0L5.65 5.67c-.19-.29-.57-.38-.87-.2-.28.18-.37.54-.22.83L6.4 9.48A10.78 10.78 0 0 0 1 18h22a10.78 10.78 0 0 0-5.4-8.52M7 15.25a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5m10 0a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5"/></svg>
-            Android e iPhone
-          </div>
-        </div>
-        <div class="app-reassure">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 1.66-4 6-9 6s-9-4.34-9-6 4-6 9-6 9 4.34 9 6z" opacity="0"/><circle cx="12" cy="12" r="10"/></svg>
-          Instalação em segundos · 100% gratuito · sem cadastro na loja
-        </div>
-      </div>
-      <div class="app-visual">
-        <div class="phone">
-          <div class="notch"></div>
-          <div class="phone-screen">
-            <div class="ps-topbar"><div class="ps-ico"><img src="/icons/icon-512.png" alt="WIN"></div><div class="ps-hello">Ol&aacute;, Maria!<span>Bem-vinda de volta</span></div></div>
-            <div class="ps-card"><div class="lbl">Pr&oacute;xima aula</div><div class="big">Segunda &middot; 18:00</div><div class="small">&#128336; 60 min &middot; Prof. Laura</div></div>
-            <div class="ps-row"><div class="dot" style="background:rgba(215,25,32,.5)"></div><div style="flex:1"><div class="l1"></div><div class="l2"></div></div></div>
-            <div class="ps-row"><div class="dot" style="background:rgba(11,31,51,.65)"></div><div style="flex:1"><div class="l1"></div><div class="l2"></div></div></div>
-            <div class="ps-row"><div class="dot" style="background:rgba(111,143,168,.55)"></div><div style="flex:1"><div class="l1"></div><div class="l2"></div></div></div>
-          </div>
-        </div>
-        <div class="app-badge">
-          <img src="/icons/icon-512.png" alt="App WIN" style="width:36px;height:36px;border-radius:9px;flex-shrink:0">
-          <div style="font-size:12px;font-weight:800;color:#0B1F33;line-height:1.15">App da WIN<br><span style="font-weight:600;color:#565E6B;font-size:10px">na tela inicial</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- ═══ CTA FINAL ═══ -->
 <section class="cta-final reveal">
   <div class="container">
@@ -2799,7 +2743,7 @@ section.yt-feed{padding:28px 0 56px;background:var(--cream)}
         <a href="/">Início</a><a href="/metodo">O Método</a><a href="/sobre">A WIN</a>
         <a href="/cursos">Cursos</a>
         <a href="/contato">Contato</a>
-              <a href="/sobre#app"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg>Baixar o app</a>
+              <a href="/#app"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg>Baixar o app</a>
       </div>
       <div class="footer-col">
         <h4>Contato</h4>

@@ -120,7 +120,8 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') { res.status(405).json({ error: 'Use POST.' }); return; }
 
   try {
-    const secret = req.headers['x-ea-secret'] || (req.query && req.query.secret);
+    // Segredo só pelo cabeçalho (os gatilhos do Supabase já enviam assim).
+    const secret = req.headers['x-ea-secret'];
     if (!process.env.EA_PUSH_SECRET || secret !== process.env.EA_PUSH_SECRET) {
       res.status(401).json({ error: 'unauthorized' }); return;
     }

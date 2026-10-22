@@ -112,22 +112,46 @@ async function callGemini(items, key, model) {
   return Array.isArray(arr) ? arr : [];
 }
 
+import { applyCors, requireUser, rateLimit, readJsonBody, AuthError } from './_auth.js';
+
+// Segurança: só a coordenação (conta ativa) pode usar; domínio restrito;
+// tamanho da lista e de cada descrição limitados; limite de uso por usuário.
+const MAX_ITEMS = 2000;
+const MAX_LEN = 500;
+
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  if (req.method === 'OPTIONS') { res.status(200).end(); return; }
+  if (!applyCors(req, res, 'POST, OPTIONS')) return;
+  if (req.method === 'OPTIONS') { res.status(204).end(); return; }
   if (req.method !== 'POST') { res.status(405).json({ error: 'Use POST.' }); return; }
+
+  let descriptions = [];
+  try {
+    const { user } = await requireUser(req, ['coordinator']);
+    if (!rateLimit('cls:' + user.id, 10, 60 * 1000)) {
+      res.status(429).json({ error: 'Muitas classificações em pouco tempo. Aguarde um minuto.' });
+      return;
+    }
+    const body = readJsonBody(req, 1200000);
+    const raw = (body && Array.isArray(body.descriptions)) ? body.descriptions : [];
+    if (raw.length > MAX_ITEMS) {
+      res.status(413).json({ error: 'Lista grande demais (máximo ' + MAX_ITEMS + ' aulas por vez).' });
+      return;
+    }
+    descriptions = raw.map(d => String(d == null ? '' : d).slice(0, MAX_LEN));
+  } catch (e) {
+    const st = (e instanceof AuthError) ? e.status : 500;
+    if (st >= 500) console.error('classify auth:', e && e.message);
+    res.status(st).json({ error: st >= 500 ? 'Erro ao validar a requisição.' : e.message });
+    return;
+  }
 
   try {
     const key = getKey();
     if (!key) {
-      res.status(500).json({ error: 'Chave do Gemini ausente. Defina GEMINI_API_KEY nas variáveis de ambiente da Vercel.' });
+      console.error('Chave do Gemini ausente');
+      res.status(500).json({ error: 'Serviço de IA indisponível.' });
       return;
     }
-    let body = req.body;
-    if (typeof body === 'string') { try { body = JSON.parse(body); } catch (_) { body = {}; } }
-    const descriptions = (body && Array.isArray(body.descriptions)) ? body.descriptions : [];
     if (!descriptions.length) { res.status(200).json({ results: [] }); return; }
 
     const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash-lite';
@@ -161,6 +185,7 @@ export default async function handler(req, res) {
     });
     res.status(200).json({ results: out, model });
   } catch (err) {
-    res.status(502).json({ error: String((err && err.message) || err) });
+    console.error('classify falhou:', (err && err.message) || err);
+    res.status(502).json({ error: 'A IA não respondeu. Usando a detecção por regras.' });
   }
 }

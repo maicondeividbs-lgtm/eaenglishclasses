@@ -2369,89 +2369,127 @@
 </section>
 
 <!-- ═══ TESTIMONIALS ═══ -->
-<section class="testimonials-section reveal">
-  <div class="testimonials-bg-deco">&ldquo;</div>
-  <div class="testimonials-bg-deco-2">&ldquo;</div>
+<section class="testimonials-section t2 reveal" aria-labelledby="t2-title">
   <div class="container">
     <div class="faq-header">
       <div class="section-label orange">Depoimentos</div>
-      <h2 class="section-title">O que dizem nossos <em>alunos</em></h2>
+      <h2 class="section-title" id="t2-title">O que dizem nossos <em>alunos</em></h2>
       <p class="section-subtitle">Experiências reais de quem já estudou com a WIN.</p>
     </div>
-    
-    <!-- Approved testimonials -->
-    <div id="testimonials-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px;margin-bottom:48px">
-      <!-- Loading skeleton placeholder -->
-      <div class="testimonial-skeleton">
-        <div class="testimonial-skel-line short"></div>
-        <div class="testimonial-skel-line long"></div>
-        <div class="testimonial-skel-line long"></div>
-        <div class="testimonial-skel-line med"></div>
-        <div class="testimonial-skel-avatar"></div>
-      </div>
-      <div class="testimonial-skeleton">
-        <div class="testimonial-skel-line short"></div>
-        <div class="testimonial-skel-line long"></div>
-        <div class="testimonial-skel-line med"></div>
-        <div class="testimonial-skel-line long"></div>
-        <div class="testimonial-skel-avatar"></div>
-      </div>
-      <div class="testimonial-skeleton">
-        <div class="testimonial-skel-line short"></div>
-        <div class="testimonial-skel-line med"></div>
-        <div class="testimonial-skel-line long"></div>
-        <div class="testimonial-skel-line long"></div>
-        <div class="testimonial-skel-avatar"></div>
-      </div>
+
+    <!-- Depoimentos aprovados -->
+    <div id="testimonials-grid" class="t2-grid">
+      <div class="testimonial-skeleton"><div class="testimonial-skel-line long"></div><div class="testimonial-skel-line long"></div><div class="testimonial-skel-line med"></div><div class="testimonial-skel-avatar"></div></div>
+      <div class="testimonial-skeleton"><div class="testimonial-skel-line long"></div><div class="testimonial-skel-line med"></div><div class="testimonial-skel-line long"></div><div class="testimonial-skel-avatar"></div></div>
+      <div class="testimonial-skeleton"><div class="testimonial-skel-line med"></div><div class="testimonial-skel-line long"></div><div class="testimonial-skel-line long"></div><div class="testimonial-skel-avatar"></div></div>
     </div>
-    
-    <!-- Submit form -->
-    <div class="testimonial-form-wrap">
-      <div class="testimonial-form-header">
-        <div class="testimonial-form-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
-          </svg>
-        </div>
-        <h3>Deixe seu depoimento</h3>
-      </div>
-      <p class="form-sub">Compartilhe sua experiência com a WIN.</p>
-        <p class="form-sub" style="font-size:12.5px;opacity:.85;margin-top:-4px">Seu nome e seu depoimento serão publicados no site depois de aprovados pela coordenação. Não escreva dados pessoais no texto. Veja a <a href="/privacidade" style="color:inherit;text-decoration:underline">Política de Privacidade</a>.</p>
+
+    <!-- Envio de depoimento: fechado por padrão, abre ao clicar -->
+    <details class="t2-form" id="t2Form">
+      <summary class="t2-cta">
+        <span class="t2-cta-text"><strong>Estudou com a WIN?</strong> Conte como foi a sua experiência.</span>
+        <span class="t2-cta-btn">Deixar meu depoimento</span>
+      </summary>
+
+      <div class="t2-form-body">
         <div aria-hidden="true" style="position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden"><label for="tWebsite">Não preencha este campo</label><input type="text" id="tWebsite" tabindex="-1" autocomplete="off"></div>
 
-      <div id="testimonialSuccess" class="testimonial-form-success" role="status" aria-live="polite">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
-        </svg>
-        <span>Obrigado pelo seu depoimento! Será publicado após aprovação.</span>
-      </div>
+        <div id="t2Error" class="t2-error" role="alert"></div>
+        <div id="testimonialSuccess" class="testimonial-form-success" role="status" aria-live="polite">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+          <span>Obrigado pelo seu depoimento! Ele será publicado após a aprovação.</span>
+        </div>
 
-      <div class="testimonial-form-row">
-        <input type="text" id="tName" class="testimonial-form-input" placeholder="Seu nome" aria-label="Seu nome" maxlength="60" autocomplete="name">
-      </div>
-      <div class="testimonial-form-row">
-        <textarea id="tContent" class="testimonial-form-textarea" rows="3" placeholder="Escreva sobre sua experiência..." aria-label="Seu depoimento" maxlength="500"></textarea>
-        <div class="testimonial-char-count" id="tCharCount">0 / 500</div>
-      </div>
-      <div class="testimonial-form-row rating-row">
-        <span class="rating-label">Sua avaliação</span>
-        <div id="starRating" class="testimonial-star-rating" role="radiogroup" aria-label="Avaliação">
-          <span data-star="1" role="radio" tabindex="0" aria-label="1 estrela"></span>
-          <span data-star="2" role="radio" tabindex="0" aria-label="2 estrelas"></span>
-          <span data-star="3" role="radio" tabindex="0" aria-label="3 estrelas"></span>
-          <span data-star="4" role="radio" tabindex="0" aria-label="4 estrelas"></span>
-          <span data-star="5" role="radio" tabindex="0" aria-label="5 estrelas"></span>
+        <div class="t2-fields">
+          <div class="t2-col">
+            <label class="t2-label" for="tName">Seu nome</label>
+            <input type="text" id="tName" class="t2-input" placeholder="Como quer aparecer no site" maxlength="60" autocomplete="name">
+
+            <span class="t2-label" id="t2RateLabel">Sua avaliação</span>
+            <div id="starRating" class="testimonial-star-rating t2-stars" role="radiogroup" aria-labelledby="t2RateLabel">
+              <span data-star="1" role="radio" tabindex="0" aria-label="1 estrela"></span>
+              <span data-star="2" role="radio" tabindex="0" aria-label="2 estrelas"></span>
+              <span data-star="3" role="radio" tabindex="0" aria-label="3 estrelas"></span>
+              <span data-star="4" role="radio" tabindex="0" aria-label="4 estrelas"></span>
+              <span data-star="5" role="radio" tabindex="0" aria-label="5 estrelas"></span>
+            </div>
+          </div>
+          <div class="t2-col t2-col-wide">
+            <label class="t2-label" for="tContent">Seu depoimento</label>
+            <textarea id="tContent" class="t2-input t2-textarea" rows="4" placeholder="O que mudou no seu inglês? Como são as aulas?" maxlength="500"></textarea>
+            <div class="testimonial-char-count t2-count" id="tCharCount">0 / 500</div>
+          </div>
+        </div>
+
+        <div class="t2-actions">
+          <p class="t2-note">Seu nome e o texto serão publicados depois da aprovação da coordenação. Não escreva dados pessoais. <a href="/privacidade">Política de Privacidade</a>.</p>
+          <button id="testimonialSubmit" class="t2-submit" type="button"><span>Enviar depoimento</span></button>
         </div>
       </div>
-      <button id="testimonialSubmit" class="testimonial-form-submit" type="button">
-        <span>Enviar Depoimento</span>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-        </svg>
-      </button>
-    </div>
+    </details>
   </div>
 </section>
+<style>
+/* ═══ Depoimentos (v2): cartões claros e envio recolhido ═══ */
+.t2 .testimonials-bg-deco,.t2 .testimonials-bg-deco-2{display:none}
+.t2-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin:0 0 20px}
+.t2 .testimonial-card{position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:22px;padding:28px 26px 24px;background:#F5F7FA;border:1px solid transparent;border-radius:18px;box-shadow:none;transition:border-color .2s ease,background .2s ease;animation:none;opacity:1;transform:none}
+.t2 .testimonial-card::before{display:none}
+.t2 .testimonial-card:hover{border-color:#D8DEDD;background:#fff;transform:none;box-shadow:none}
+.t2-quote{font-family:Georgia,'Times New Roman',serif;font-size:56px;line-height:.6;height:22px;color:#D71920;display:block}
+.t2-stars-row{display:flex;gap:2px;margin:14px 0 10px}
+.t2-stars-row span{width:13px;height:13px;display:inline-block}
+.t2-stars-row span svg,.t2-stars span svg{width:100%;height:100%;display:block}
+.t2 .testimonial-text{font-size:15.5px;line-height:1.65;color:#0B1F33;margin:0;white-space:pre-line}
+.t2 .testimonial-readmore{background:none;border:0;padding:0;margin-top:8px;font:inherit;font-size:13px;font-weight:700;color:#4A6075;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.t2 .testimonial-readmore:hover{color:#0B1F33}
+.t2-author{display:flex;align-items:center;gap:12px;padding-top:16px;border-top:1px solid #E3E8EC}
+.t2-avatar{flex:none;width:38px;height:38px;border-radius:50%;background:#0B1F33;color:#fff;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center}
+.t2-author strong{display:block;font-size:14.5px;color:#0B1F33;font-weight:800;line-height:1.2}
+.t2-author span{font-size:12.5px;color:#4A6075;font-weight:600}
+.t2 .testimonial-nav{display:flex;align-items:center;justify-content:center;gap:14px;margin:4px 0 28px}
+.t2 .testimonial-nav button{width:40px;height:40px;border-radius:50%;border:1px solid #D8DEDD;background:#fff;color:#0B1F33;font-size:16px;cursor:pointer;transition:border-color .2s ease}
+.t2 .testimonial-nav button:hover{border-color:#0B1F33}
+.t2 .testimonial-nav-counter{font-size:13px;font-weight:700;color:#4A6075;min-width:48px;text-align:center}
+.t2 .testimonial-skeleton{min-height:210px;border-radius:18px;background:#F5F7FA;border:0;box-shadow:none}
+.t2 .testimonials-empty{grid-column:1/-1;background:#F5F7FA;border:0;border-radius:18px;padding:36px 24px}
+/* Formulário recolhido */
+.t2-form{margin-top:12px;border:1px solid #D8DEDD;border-radius:18px;background:#fff;overflow:hidden}
+.t2-form[open]{border-color:#0B1F33}
+.t2-cta{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:18px 22px;cursor:pointer;list-style:none}
+.t2-cta::-webkit-details-marker{display:none}
+.t2-cta:focus-visible{outline:2px solid #6F8FA8;outline-offset:-2px}
+.t2-cta-text{font-size:15px;color:#4A6075}
+.t2-cta-text strong{color:#0B1F33;font-weight:800;margin-right:4px}
+.t2-cta-btn{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border-radius:999px;border:1px solid #0B1F33;color:#0B1F33;font-weight:700;font-size:14px;white-space:nowrap;transition:background .2s ease,color .2s ease}
+.t2-cta:hover .t2-cta-btn{background:#0B1F33;color:#fff}
+.t2-form[open] .t2-cta-btn{background:#0B1F33;color:#fff}
+.t2-form[open] .t2-cta-btn::after{content:"×";font-size:16px;line-height:1;margin-left:2px}
+.t2-form-body{padding:4px 22px 22px;border-top:1px solid #EEF1F4}
+.t2-fields{display:grid;grid-template-columns:1fr 1.6fr;gap:20px;margin-top:18px}
+.t2-label{display:block;font-size:13px;font-weight:700;color:#0B1F33;margin:0 0 6px}
+.t2-col .t2-label:not(:first-child){margin-top:16px}
+.t2-input{width:100%;padding:12px 14px;border:1px solid #D8DEDD;border-radius:12px;background:#F5F7FA;font:inherit;font-size:15px;color:#0B1F33;outline:none;transition:border-color .2s ease,background .2s ease}
+.t2-input:focus{border-color:#0B1F33;background:#fff}
+.t2-textarea{min-height:132px;resize:vertical;line-height:1.55}
+.t2-count{text-align:right;font-size:12px;margin-top:4px}
+.t2-stars{display:flex;gap:6px}
+.t2-stars span{width:26px;height:26px;cursor:pointer;border-radius:6px}
+.t2-stars span:focus-visible{outline:2px solid #6F8FA8;outline-offset:2px}
+.t2-actions{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-top:18px}
+.t2-note{flex:1;min-width:240px;margin:0;font-size:12.5px;line-height:1.5;color:#4A6075}
+.t2-note a{color:#0B1F33;font-weight:700}
+.t2-submit{padding:12px 26px;border:0;border-radius:999px;background:#D71920;color:#fff;font:inherit;font-size:15px;font-weight:800;cursor:pointer;transition:background .2s ease}
+.t2-submit:hover{background:#B5141A}
+.t2-submit:focus-visible{outline:2px solid #0B1F33;outline-offset:3px}
+.t2-submit:disabled{opacity:.6;cursor:default}
+.t2-error{display:none;margin:18px 0 0;padding:12px 14px;border-radius:12px;background:#FDECEC;color:#8A1116;font-size:14px;font-weight:600}
+.t2-error.show{display:block}
+.t2 .testimonial-form-success{margin:18px 0 0;padding:12px 14px;border-radius:12px;background:#EAF6EE;color:#1E6B3A;font-size:14px;font-weight:600;align-items:center;gap:8px}
+@media(max-width:960px){.t2-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:767px){.t2-grid{grid-template-columns:1fr}.t2-fields{grid-template-columns:1fr}.t2-cta{padding:16px}.t2-form-body{padding:4px 16px 18px}.t2-submit{width:100%}}
+@media(prefers-reduced-motion:reduce){.t2 *{transition:none!important}}
+</style>
 
 <!-- ═══ ABOUT / WHY US ═══ -->
 <section class="about reveal">
@@ -2818,8 +2856,8 @@ document.querySelectorAll('.faq-item').forEach(item=>{
 
   // Cria SVG de estrela. filled=true → preenchida (laranja), false → contorno cinza
   function starSvg(filled) {
-    var fill = filled ? '#6F8FA8' : 'none';
-    var stroke = filled ? '#6F8FA8' : '#d8dce4';
+    var fill = filled ? '#D71920' : 'none';
+    var stroke = filled ? '#D71920' : '#C9D1D8';
     return '<svg viewBox="0 0 24 24" fill="' + fill + '" stroke="' + stroke + '" stroke-width="1.6" stroke-linejoin="round">' +
       '<polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>' +
       '</svg>';
@@ -2847,7 +2885,9 @@ document.querySelectorAll('.faq-item').forEach(item=>{
     if ((hp && hp.value) || (Date.now() - (window.__winFormT0 || 0) < 3000)) return; // anti-robô
     var name = document.getElementById('tName').value.trim();
     var content = document.getElementById('tContent').value.trim();
-    if (!name || !content) { alert('Preencha seu nome e depoimento.'); return; }
+    var errBox = document.getElementById('t2Error');
+    if (errBox) errBox.classList.remove('show');
+    if (!name || !content) { if (errBox) { errBox.textContent = 'Preencha seu nome e o depoimento.'; errBox.classList.add('show'); } (!name ? document.getElementById('tName') : document.getElementById('tContent')).focus(); return; }
     try {
       await submitTestimonial(name, content, selectedRating);
       var success = document.getElementById('testimonialSuccess');
@@ -2859,7 +2899,7 @@ document.querySelectorAll('.faq-item').forEach(item=>{
       // Ocultar a mensagem após 6s
       setTimeout(function(){ success.classList.remove('show'); }, 6000);
     } catch(e) {
-      alert('Erro ao enviar. Tente novamente.');
+      if (errBox) { errBox.textContent = 'Não foi possível enviar agora. Tente novamente em instantes.'; errBox.classList.add('show'); }
       console.error(e);
     }
   }
@@ -2901,27 +2941,27 @@ document.querySelectorAll('.faq-item').forEach(item=>{
     var grid = document.getElementById('testimonials-grid');
     if (!grid) return;
 
+    function tEsc(v){ return String(v == null ? '' : v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
     grid.innerHTML = visible.map(function(t, idx) {
       var stars = '';
-      for (var i = 0; i < 5; i++) {
-        stars += '<span style="width:14px;height:14px;display:inline-block">' + starSvg(i < t.rating) + '</span>';
-      }
+      for (var i = 0; i < 5; i++) stars += '<span>' + starSvg(i < t.rating) + '</span>';
       var text = t.content || '';
-      var MAX_LEN = 150;
+      var MAX_LEN = 180;
       var truncated = text.length > MAX_LEN;
-      var displayText = truncated ? text.substring(0, MAX_LEN) + '...' : text;
-      var initial = (t.author_name || '?').charAt(0).toUpperCase();
-      return '<div class="testimonial-card" style="animation-delay:' + (idx * 0.12) + 's">' +
+      var displayText = truncated ? text.substring(0, MAX_LEN).replace(/\s+\S*$/, '') + '…' : text;
+      var nome = t.author_name || 'Aluno WIN';
+      var partes = (nome.replace(/[^A-Za-zÀ-ÿ\s]/g, '').trim() || 'A').split(/\s+/);
+      var initial = (partes[0].charAt(0) + (partes.length > 1 ? partes[partes.length - 1].charAt(0) : '')).toUpperCase();
+      return '<article class="testimonial-card">' +
         '<div>' +
-        '<div class="testimonial-quote-mark">&ldquo;</div>' +
-        '<div class="testimonial-stars" style="display:flex;gap:3px;align-items:center;margin-bottom:14px">' + stars + '</div>' +
-        '<p class="testimonial-text" id="test-text-' + idx + '">' + displayText + '</p>' +
-        (truncated ? '<button class="testimonial-readmore" data-tid="' + idx + '" type="button">Ler mais &#9662;</button>' : '') +
+          '<span class="t2-quote" aria-hidden="true">&ldquo;</span>' +
+          '<div class="t2-stars-row" role="img" aria-label="' + (t.rating || 5) + ' de 5 estrelas">' + stars + '</div>' +
+          '<p class="testimonial-text" id="test-text-' + idx + '">' + tEsc(displayText) + '</p>' +
+          (truncated ? '<button class="testimonial-readmore" data-tid="' + idx + '" type="button" aria-expanded="false">Ler mais</button>' : '') +
         '</div>' +
-        '<div class="testimonial-author">' +
-        '<div class="testimonial-avatar">' + initial + '</div>' +
-        '<div class="testimonial-author-info"><p>' + t.author_name + '</p><span>Aluno WIN</span></div>' +
-        '</div></div>';
+        '<div class="t2-author"><div class="t2-avatar" aria-hidden="true">' + tEsc(initial) + '</div>' +
+          '<div><strong>' + tEsc(nome) + '</strong><span>Aluno WIN</span></div></div>' +
+      '</article>';
     }).join('');
 
     // Wire "Ler mais" via event delegation
@@ -2967,11 +3007,13 @@ document.querySelectorAll('.faq-item').forEach(item=>{
     if (btn.textContent.indexOf('mais') !== -1) {
       el.textContent = t.content;
       el.classList.add('expanded');
-      btn.innerHTML = 'Ler menos &#9652;';
+      btn.textContent = 'Ler menos';
+      btn.setAttribute('aria-expanded', 'true');
     } else {
-      el.textContent = t.content.substring(0, 150) + '...';
+      el.textContent = t.content.substring(0, 180).replace(/\s+\S*$/, '') + '…';
       el.classList.remove('expanded');
-      btn.innerHTML = 'Ler mais &#9662;';
+      btn.textContent = 'Ler mais';
+      btn.setAttribute('aria-expanded', 'false');
     }
   }
 

@@ -1971,13 +1971,13 @@ body.voc-ov-aberto .av-toast{top:16px;bottom:auto;left:50%;right:auto;transform:
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="WIN">
 <script src="/pwa.js" defer></script>
-<link rel="canonical" href="https://www.eaenglishclasses.com.br/biblioteca">
+<link rel="canonical" href="https://www.winenglish.com.br/biblioteca">
 <meta name="description" content="Biblioteca de gramática da WIN: currículo simplificado dos níveis Interchange e Evolve com explicações em português.">
 <meta property="og:title" content="Biblioteca Pedagógica | WIN">
 <meta property="og:description" content="Biblioteca de gramática da WIN: currículo simplificado dos níveis Interchange e Evolve com explicações em português.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://www.eaenglishclasses.com.br/biblioteca">
-<meta property="og:image" content="https://www.eaenglishclasses.com.br/img/og-cover.jpg">
+<meta property="og:url" content="https://www.winenglish.com.br/biblioteca">
+<meta property="og:image" content="https://www.winenglish.com.br/img/og-cover.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:site_name" content="WIN">
@@ -1985,12 +1985,15 @@ body.voc-ov-aberto .av-toast{top:16px;bottom:auto;left:50%;right:auto;transform:
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Biblioteca Pedagógica | WIN">
 <meta name="twitter:description" content="Biblioteca de gramática da WIN: currículo simplificado dos níveis Interchange e Evolve com explicações em português.">
-<meta name="twitter:image" content="https://www.eaenglishclasses.com.br/img/og-cover.jpg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebPage", "name": "Biblioteca Pedagógica | WIN", "url": "https://www.eaenglishclasses.com.br/biblioteca", "description": "Biblioteca de gramática da WIN: currículo simplificado dos níveis Interchange e Evolve com explicações em português.", "inLanguage": "pt-BR", "isPartOf": {"@id": "https://www.eaenglishclasses.com.br/#org"}, "publisher": {"@id": "https://www.eaenglishclasses.com.br/#org"}}</script>
+<meta name="twitter:image" content="https://www.winenglish.com.br/img/og-cover.jpg">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebPage", "name": "Biblioteca Pedagógica | WIN", "url": "https://www.winenglish.com.br/biblioteca", "description": "Biblioteca de gramática da WIN: currículo simplificado dos níveis Interchange e Evolve com explicações em português.", "inLanguage": "pt-BR", "isPartOf": {"@id": "https://www.winenglish.com.br/#org"}, "publisher": {"@id": "https://www.winenglish.com.br/#org"}}</script>
 <link rel="stylesheet" href="/win-brand.css">
 <link rel="stylesheet" href="/win-motion.css">
 <meta name="theme-color" content="#0B1F33">
 <link rel="stylesheet" href="/win-mobile.css">
+<meta name="robots" content="noindex, nofollow">
+<style>html.bib-locked body{visibility:hidden}</style>
+<script>document.documentElement.classList.add('bib-locked');</script>
 </head>
 <body>
 
@@ -2156,6 +2159,51 @@ const STORAGE = 'https://ktdrgvlyrotqpzlunlqs.supabase.co/storage/v1/object/publ
 // A anon key é pública por design e a RLS só permite leitura de ativos.
 const MUSIC_API = 'https://ktdrgvlyrotqpzlunlqs.supabase.co/rest/v1/music_activities';
 const MUSIC_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt0ZHJndmx5cm90cXB6bHVubHFzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0MDA2NTEsImV4cCI6MjA5MTk3NjY1MX0.Hb8e7YV-tCS89Sj7PuAUn_M1movtSGArvQXtWLdlmdQ';
+
+// ═══ ACESSO RESTRITO ═══
+// A Biblioteca é exclusiva de professores e coordenação. Usa a sessão do
+// Supabase gravada pelo login (renova o token se expirou); sem sessão
+// válida de staff, volta ao login. Os arquivos protegidos (músicas e
+// avaliações) também exigem login no próprio Supabase.
+const BIB_SB = 'https://ktdrgvlyrotqpzlunlqs.supabase.co';
+function bibSessKey(){ return Object.keys(localStorage).find(x => x.includes('ktdrgvlyrotqpzlunlqs') && x.endsWith('-auth-token')); }
+async function bibSession(){
+  try {
+    const k = bibSessKey(); if (!k) return null;
+    let d = JSON.parse(localStorage.getItem(k));
+    if (!d || !d.access_token) return null;
+    if (d.expires_at && d.expires_at * 1000 < Date.now() + 30000) {
+      if (!d.refresh_token) return null;
+      const r = await fetch(BIB_SB + '/auth/v1/token?grant_type=refresh_token', {
+        method: 'POST', headers: { 'Content-Type': 'application/json', apikey: MUSIC_KEY },
+        body: JSON.stringify({ refresh_token: d.refresh_token })
+      });
+      if (!r.ok) return null;
+      const n = await r.json();
+      if (!n || !n.access_token) return null;
+      d = Object.assign({}, d, n);
+      if (!n.expires_at && n.expires_in) d.expires_at = Math.floor(Date.now() / 1000) + n.expires_in;
+      localStorage.setItem(k, JSON.stringify(d));
+    }
+    return d;
+  } catch (e) { return null; }
+}
+const bibAccess = (async function(){
+  const sess = await bibSession();
+  let ok = false;
+  if (sess && sess.user) {
+    try {
+      const r = await fetch(BIB_SB + '/rest/v1/profiles?select=role,active&id=eq.' + sess.user.id + '&limit=1',
+        { headers: { apikey: MUSIC_KEY, Authorization: 'Bearer ' + sess.access_token } });
+      const d = r.ok ? await r.json() : [];
+      const p = d && d[0];
+      ok = !!(p && (p.role === 'teacher' || p.role === 'coordinator') && p.active !== false);
+    } catch (e) { ok = false; }
+  }
+  if (!ok) { location.replace('/login'); return null; }
+  document.documentElement.classList.remove('bib-locked');
+  return sess;
+})();
 const MUSIC_FILES = 'https://ktdrgvlyrotqpzlunlqs.supabase.co/storage/v1/object/public/music/';
 let musicData = null;      // null = ainda não carregado
 let musicError = false;
@@ -2846,8 +2894,10 @@ function musicEsc(x){
 async function loadMusicData(){
   if (musicData !== null) return musicData;
   try {
+    const sess = await bibAccess;
+    if (!sess) throw new Error('sem acesso');
     const r = await fetch(MUSIC_API + '?select=id,title,artist,level,grammar_focus,teacher_path,teacher_name,student_path,student_name&active=eq.true&order=title.asc', {
-      headers: { apikey: MUSIC_KEY, Authorization: 'Bearer ' + MUSIC_KEY }
+      headers: { apikey: MUSIC_KEY, Authorization: 'Bearer ' + sess.access_token }
     });
     if (!r.ok) throw new Error('HTTP ' + r.status);
     musicData = await r.json();
@@ -2875,7 +2925,7 @@ function musGrupo(m){
 }
 function musDl(path, nome, cls, rotulo){
   if (!path) return '<span class="mus2-dl off">' + rotulo + ' indisponível</span>';
-  return '<a class="mus2-dl ' + cls + '" href="' + musicEsc(MUSIC_FILES + path) + '" download' + (nome ? ' title="' + musicEsc(nome) + '"' : '') + '>' +
+  return '<a class="mus2-dl ' + cls + '" href="#" data-mus-path="' + musicEsc(path) + '" data-mus-name="' + musicEsc(nome || path.split('/').pop()) + '"' + (nome ? ' title="' + musicEsc(nome) + '"' : '') + '>' +
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>' + rotulo + '</a>';
 }
 function musCard(m){
@@ -3448,6 +3498,33 @@ function avSignedHref(signedURL, nome) {
   if (!/[?&]download=/.test(u.search)) u.search = (u.search ? u.search + '&' : '?') + 'download=' + encodeURIComponent(nome);
   return u.toString();
 }
+
+// Download das músicas: o bucket é privado, então cada clique gera um link
+// assinado de 5 minutos com a sessão de quem está logado.
+document.addEventListener('click', async function(ev){
+  const a = ev.target.closest('a[data-mus-path]');
+  if (!a) return;
+  ev.preventDefault();
+  if (a.dataset.busy) return;
+  a.dataset.busy = '1';
+  try {
+    const sess = await bibSession();
+    if (!sess) { location.replace('/login'); return; }
+    const path = a.getAttribute('data-mus-path');
+    const nome = a.getAttribute('data-mus-name') || path.split('/').pop();
+    const r = await fetch(BIB_SB + '/storage/v1/object/sign/music/' + path.split('/').map(encodeURIComponent).join('/'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', apikey: MUSIC_KEY, Authorization: 'Bearer ' + sess.access_token },
+      body: JSON.stringify({ expiresIn: 300 })
+    });
+    const d = r.ok ? await r.json() : null;
+    if (!d || !d.signedURL) { avToast('Não foi possível baixar este arquivo agora.', true); return; }
+    const link = document.createElement('a');
+    link.href = avSignedHref(d.signedURL, nome); link.rel = 'noopener';
+    document.body.appendChild(link); link.click(); document.body.removeChild(link);
+  } catch (e) { avToast('Erro de rede. Tente novamente.', true); }
+  finally { delete a.dataset.busy; }
+});
 
 async function avDl(btn, path) {
   const sess = avSession();

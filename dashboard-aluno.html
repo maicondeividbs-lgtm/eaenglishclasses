@@ -2983,7 +2983,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
   </main>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/supabase-js-2.117.3.min.js" integrity="sha384-BWcjm9OdFth9TbhCxZPdm+gAOUMAzQy9nmTs12ioXdCcbVnJaPMn+fMUoQCLt60R"></script>
 <script src="supabase.js"></script>
 <script src="win-nav.js"></script>
 <script src="win-motion.js"></script>
@@ -3340,11 +3340,11 @@ function renderCurrentBook(course) {
   el.innerHTML = '' +
     '<div class="book-card ' + theme + '">' +
       '<div class="book-cover-img">' +
-        '<img src="' + img + '" alt="Capa — ' + display + '" loading="lazy">' +
+        '<img src="' + wrEscapeHtml(img) + '" alt="Capa — ' + wrEscapeHtml(display) + '" loading="lazy">' +
       '</div>' +
       '<div class="book-info">' +
         (cefr ? '<div class="b-cefr">CEFR ' + cefr + '</div>' : '') +
-        '<div class="b-name">' + display + '</div>' +
+        '<div class="b-name">' + wrEscapeHtml(display) + '</div>' +
         '<div class="b-sub">' + sub + '</div>' +
         '<div class="b-series">📖 Série ' + series + '</div>' +
       '</div>' +
@@ -3374,8 +3374,8 @@ async function loadHomework() {
     return '<div class="hw-card' + stateClass + '">' +
       '<div class="hw-icon">' + iconSvg + '</div>' +
       '<div class="hw-body">' +
-        '<div class="hw-title-row"><span class="hw-title">' + (task.title||'Tarefa') + '</span>' + newBadge + '</div>' +
-        (task.description ? '<div class="hw-desc">' + task.description + '</div>' : '') +
+        '<div class="hw-title-row"><span class="hw-title">' + wrEscapeHtml(task.title||'Tarefa') + '</span>' + newBadge + '</div>' +
+        (task.description ? '<div class="hw-desc">' + wrEscapeHtml(task.description) + '</div>' : '') +
         '<div class="hw-meta">' +
           '<span class="hw-meta-item">' + dueIcon + 'Prazo: ' + formatDate(task.due_date) + '</span>' +
           '<span class="hw-meta-item">' + recIcon + 'Recebida ' + ago + '</span>' +
@@ -3431,19 +3431,19 @@ async function loadFeedbacks() {
     const cat = (f.category || 'geral');
     return '<div class="fb-card">' +
       '<div class="fb-head">' +
-        '<div class="fb-avatar">' + initial + '</div>' +
+        '<div class="fb-avatar">' + wrEscapeHtml(initial) + '</div>' +
         '<div class="fb-head-text">' +
-          '<div class="fb-title">' + f.title + '</div>' +
+          '<div class="fb-title">' + wrEscapeHtml(f.title) + '</div>' +
           '<div class="fb-meta">' +
-            '<span class="fb-meta-author">' + authorName + '</span>' +
+            '<span class="fb-meta-author">' + wrEscapeHtml(authorName) + '</span>' +
             '<span class="fb-meta-sep">•</span>' +
-            '<span class="fb-category">' + cat + '</span>' +
+            '<span class="fb-category">' + wrEscapeHtml(cat) + '</span>' +
             '<span class="fb-meta-sep">•</span>' +
             '<span>' + formatDateTime(f.created_at) + '</span>' +
           '</div>' +
         '</div>' +
       '</div>' +
-      '<div class="fb-content clamp">' + f.content + '</div>' +
+      '<div class="fb-content clamp">' + wrEscapeHtml(f.content) + '</div>' +
       '<button class="fb-readmore" type="button" onclick="eaToggleReadMore(this)">Ler mais</button>' +
     '</div>';
   }).join('');
@@ -3612,7 +3612,7 @@ function speakVocab(text, btnEl) {
 async function enrichVocabWord(word) {
   const resp = await fetch('/api/vocabulary', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: Object.assign({ 'Content-Type': 'application/json' }, await winAuthHeaders()),
     body: JSON.stringify({ word: word })
   });
 
@@ -3705,8 +3705,8 @@ function renderVocabulary(words) {
 
   words.forEach((w, i) => {
     const teacherName = (w.teacher && w.teacher.full_name) || 'Professor';
-    const wordEsc = escapeGrade(w.word).replace(/'/g, "\\'");
-    const sentEsc = w.sentence ? escapeGrade(w.sentence).replace(/'/g, "\\'") : '';
+    const wordEsc = escapeGrade(String(w.word == null ? '' : w.word).replace(/[\r\n]+/g, ' ').replace(/\\/g, '\\\\')).replace(/'/g, "\\'");
+    const sentEsc = w.sentence ? escapeGrade(String(w.sentence).replace(/[\r\n]+/g, ' ').replace(/\\/g, '\\\\')).replace(/'/g, "\\'") : '';
 
     html +=
       '<div class="vocab-card" data-id="' + w.id + '" style="animation-delay:' + (i * 0.05).toFixed(2) + 's">' +
@@ -3800,7 +3800,7 @@ async function loadWriting() {
           '</div>' +
           '<div class="wr-essay-view">' + highlighted + '</div>' +
           '<div class="wr-comments-list">' + inline.map((c, i) =>
-            '<div class="wr-comment-item cat-' + (c.category||'grammar') + '">' +
+            '<div class="wr-comment-item cat-' + String(c.category||'grammar').replace(/[^a-z_-]/gi,'') + '">' +
               '<div class="wr-comment-num">' + (i+1) + '</div>' +
               '<div class="wr-comment-body">' +
                 '<div class="wr-comment-quote">"' + wrEscapeHtml(c.text||'') + '"</div>' +
@@ -3812,7 +3812,7 @@ async function loadWriting() {
 
       bodyContent =
         '<div class="wr-grade-wrap">' +
-          '<div class="wr-grade-medal"><span class="wr-grade-num">' + (w.grade||'—') + '</span></div>' +
+          '<div class="wr-grade-medal"><span class="wr-grade-num">' + wrEscapeHtml(w.grade||'—') + '</span></div>' +
           '<div class="wr-grade-text"><strong>Redação corrigida</strong><span>Confira os comentários e o feedback geral abaixo.</span></div>' +
         '</div>' +
         commentsBlock +
@@ -3835,8 +3835,8 @@ async function loadWriting() {
       collapseSummary =
         '<div class="wr-collapse-summary">' +
           '<span class="wr-cs-item">' + dueIcon + correctedDate + '</span>' +
-          '<span class="wr-cs-item wr-cs-title">📝 ' + (w.title || 'Redação') + '</span>' +
-          '<span class="wr-cs-grade">Nota: ' + (w.grade || '—') + '</span>' +
+          '<span class="wr-cs-item wr-cs-title">📝 ' + wrEscapeHtml(w.title || 'Redação') + '</span>' +
+          '<span class="wr-cs-grade">Nota: ' + wrEscapeHtml(w.grade || '—') + '</span>' +
           '<span class="wr-cs-corrected"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>Corrigido</span>' +
         '</div>';
       toggleBtn = '<button type="button" class="wr-toggle-btn" aria-label="Expandir ou minimizar redação"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>';
@@ -3849,9 +3849,9 @@ async function loadWriting() {
             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg>' +
           '</div>' +
           '<div class="wr-header-info">' +
-            '<h4>' + w.title + '</h4>' +
+            '<h4>' + wrEscapeHtml(w.title) + '</h4>' +
             '<div class="wr-header-meta">' +
-              '<span class="wr-header-meta-item">' + teacherIcon + teacherName + '</span>' +
+              '<span class="wr-header-meta-item">' + teacherIcon + wrEscapeHtml(teacherName) + '</span>' +
               '<span class="wr-header-meta-item">' + dueIcon + 'Prazo: ' + formatDate(w.due_date) + '</span>' +
             '</div>' +
           '</div>' +
@@ -3861,7 +3861,7 @@ async function loadWriting() {
         collapseSummary +
       '</div>' +
       '<div class="wr-body">' +
-        '<div class="wr-prompt">' + w.prompt + '</div>' +
+        '<div class="wr-prompt">' + wrEscapeHtml(w.prompt) + '</div>' +
         bodyContent +
       '</div>' +
     '</div>';
@@ -3908,7 +3908,7 @@ function wrRenderHighlighted(text, inline) {
     const e = Math.max(s, Math.min(text.length, c.end||0));
     if (s < cursor) return;
     if (s > cursor) out += wrEscapeHtml(text.slice(cursor, s));
-    out += '<span class="wr-highlight cat-' + (c.category||'grammar') + '" title="' + wrEscapeHtml(c.comment||'') + '">' + wrEscapeHtml(text.slice(s, e)) + '<span class="wr-highlight-num">' + (c._i+1) + '</span></span>';
+    out += '<span class="wr-highlight cat-' + String(c.category||'grammar').replace(/[^a-z_-]/gi,'') + '" title="' + wrEscapeHtml(c.comment||'') + '">' + wrEscapeHtml(text.slice(s, e)) + '<span class="wr-highlight-num">' + (c._i+1) + '</span></span>';
     cursor = e;
   });
   if (cursor < text.length) out += wrEscapeHtml(text.slice(cursor));
@@ -3937,7 +3937,7 @@ async function loadPronunciation() {
   const checkIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
 
   div.innerHTML = items.map(p => {
-    const wordEsc = (p.word || '').replace(/"/g, '&quot;');
+    const wordEsc = wrEscapeHtml(p.word || '');
     const doneClass = p.practiced ? ' done' : '';
     const actionHtml = p.practiced
       ? '<span class="badge badge-done" style="margin-left:auto">' + checkIcon + 'Praticado</span>'
@@ -3946,9 +3946,9 @@ async function loadPronunciation() {
       '<div class="pron-card' + doneClass + '" data-pron-id="' + p.id + '">' +
         '<div class="pron-header">' +
           '<div class="pron-info">' +
-            '<div class="pron-word">' + (p.word || '') + '</div>' +
-            (p.phonetic ? '<div class="pron-phonetic">' + p.phonetic + '</div>' : '') +
-            (p.notes ? '<div class="pron-notes">💡 ' + p.notes + '</div>' : '') +
+            '<div class="pron-word">' + wrEscapeHtml(p.word || '') + '</div>' +
+            (p.phonetic ? '<div class="pron-phonetic">' + wrEscapeHtml(p.phonetic) + '</div>' : '') +
+            (p.notes ? '<div class="pron-notes">💡 ' + wrEscapeHtml(p.notes) + '</div>' : '') +
           '</div>' +
         '</div>' +
         '<div class="pron-controls">' +
@@ -4483,7 +4483,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 function escapeHtmlBasic(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
 // ═══ NOTIFICATIONS BELL ═══

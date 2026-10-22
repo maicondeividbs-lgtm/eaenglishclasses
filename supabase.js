@@ -1034,6 +1034,16 @@ async function uploadAvatar(userId, file) {
   return url;
 }
 
+// Cabeçalho de autenticação para as funções do próprio site (/api).
+// As APIs de IA exigem o token da sessão atual.
+async function winAuthHeaders() {
+  try {
+    const { data } = await db.auth.getSession();
+    const t = data && data.session && data.session.access_token;
+    return t ? { Authorization: 'Bearer ' + t } : {};
+  } catch (e) { return {}; }
+}
+
 // ═══ ASSESSMENTS ═══
 async function uploadAssessment(teacherId, studentId, month, year, title, file) {
   const ext = file.name.split('.').pop();
@@ -1328,9 +1338,31 @@ async function getProfilesForDayPanel(ids) {
 // ═══════════════════════════════════════════════════════════════
 const MUSIC_BUCKET = 'music';
 
-function musicFileUrl(path) {
+// O bucket "music" é privado: o arquivo abre por link assinado de 5 minutos.
+// Links na tela usam data-music-path (e opcionalmente data-music-name);
+// o clique é tratado abaixo, para qualquer página que carregue este arquivo.
+async function musicSignedUrl(path, name) {
   if (!path) return '';
-  return db.storage.from(MUSIC_BUCKET).getPublicUrl(path).data.publicUrl;
+  const opts = name ? { download: name } : { download: true };
+  const { data, error } = await db.storage.from(MUSIC_BUCKET).createSignedUrl(path, 300, opts);
+  if (error) throw error;
+  return data && data.signedUrl;
+}
+// Mantida por compatibilidade: devolve um marcador; use data-music-path.
+function musicFileUrl(path) { return path ? '#' : ''; }
+if (typeof document !== 'undefined') {
+  document.addEventListener('click', async function (ev) {
+    const a = ev.target.closest && ev.target.closest('a[data-music-path]');
+    if (!a) return;
+    ev.preventDefault();
+    try {
+      const url = await musicSignedUrl(a.getAttribute('data-music-path'), a.getAttribute('data-music-name') || '');
+      if (url) window.location.href = url;
+    } catch (e) {
+      console.error('musicSignedUrl', e);
+      if (typeof showToast === 'function') showToast('Não foi possível abrir o arquivo agora.', 'error');
+    }
+  });
 }
 
 async function getMusicActivities() {

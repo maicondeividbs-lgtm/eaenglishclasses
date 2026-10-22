@@ -255,7 +255,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 </script>
 
 <!-- Supabase -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/supabase-js-2.117.3.min.js" integrity="sha384-BWcjm9OdFth9TbhCxZPdm+gAOUMAzQy9nmTs12ioXdCcbVnJaPMn+fMUoQCLt60R"></script>
 <script src="supabase.js"></script>
 <script src="app-fx.js" defer></script>
 <script>
@@ -514,7 +514,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Get user profile to determine role
         const profile = await getUserProfile();
-        console.log('Profile loaded:', profile);
         
         if (profile && profile.role) {
           if (await bloquearArquivado(profile)) {
@@ -523,7 +522,6 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('loginSpinner').style.display = 'none';
             return;
           }
-          console.log('Redirecting by role:', profile.role);
           // Registra o acesso do aluno para a coordenação
           await logStudentAccess(profile.id, profile.full_name, profile.role);
           redirectByRole(profile.role);
@@ -536,7 +534,6 @@ document.addEventListener('DOMContentLoaded', () => {
               .select('id, role, full_name')
               .eq('id', session.user.id)
               .maybeSingle();
-            console.log('Fallback profile:', p2);
             if (p2 && p2.role) {
               await logStudentAccess(p2.id, p2.full_name, p2.role);
               redirectByRole(p2.role);

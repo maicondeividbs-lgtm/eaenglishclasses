@@ -7,5 +7,6 @@ Disallow: /dashboard-coordenacao
 Disallow: /teste-push
 Disallow: /supabase-email-reset
 Disallow: /api/
+Disallow: /biblioteca
 
-Sitemap: https://www.eaenglishclasses.com.br/sitemap.xml
+Sitemap: https://www.winenglish.com.br/sitemap.xml

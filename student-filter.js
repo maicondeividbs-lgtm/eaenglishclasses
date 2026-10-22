@@ -14,7 +14,7 @@
     '.ea-stu-bar{margin:6px 16px 2px;padding:12px 0 10px;border-bottom:1px solid #EEF1F4}' +
     '.ea-stu-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}' +
     '.ea-stu-title{font-size:13px;font-weight:700;color:#0B1F33}' +
-    '.ea-stu-info{font-size:12.5px;color:#6F8FA8;font-weight:600}' +
+    '.ea-stu-info{font-size:12.5px;color:#4A6075;font-weight:600}' +
     '.ea-stu-q{margin-left:auto;width:190px;max-width:100%;padding:7px 12px 7px 32px;border:1px solid #D8DEDD;border-radius:999px;font:inherit;font-size:13px;color:#0B1F33;outline:none;' +
       'background:#F5F7FA url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'14\' height=\'14\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%236F8FA8\' stroke-width=\'2.4\' stroke-linecap=\'round\'%3E%3Ccircle cx=\'11\' cy=\'11\' r=\'7\'/%3E%3Cpath d=\'m20 20-3.5-3.5\'/%3E%3C/svg%3E") no-repeat 11px center}' +
     '.ea-stu-q:focus{border-color:#6F8FA8;background-color:#fff}' +

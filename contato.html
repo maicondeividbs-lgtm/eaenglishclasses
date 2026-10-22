@@ -259,21 +259,22 @@
       <div class="contato-form-card">
         <h3><svg class="win-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg> Agendar Nivelamento Grátis</h3>
         <p class="subtitle">Preencha seus dados. Você será direcionado para o WhatsApp da coordenação.</p>
-        <div id="successMsg" style="display:none;padding:16px;background:#d1fae5;border:2px solid #10b981;border-radius:12px;color:#065f46;font-weight:600;text-align:center;margin-bottom:16px">
+        <div id="successMsg" role="status" aria-live="polite" style="display:none;padding:16px;background:#d1fae5;border:2px solid #10b981;border-radius:12px;color:#065f46;font-weight:600;text-align:center;margin-bottom:16px">
           <svg class="win-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Solicitação enviada com sucesso!<br><span style="font-weight:400;font-size:13px">Você será redirecionado para o WhatsApp. Caso não abra automaticamente, <a href="https://wa.me/5511978388843" target="_blank" style="color:#065f46;font-weight:700">clique aqui</a>.</span>
         </div>
-        <div id="errorMsg" style="display:none;padding:16px;background:#FFE4E6;border:2px solid #BE123C;border-radius:12px;color:#881337;font-weight:600;text-align:center;margin-bottom:16px"></div>
+        <div id="errorMsg" role="alert" aria-live="assertive" style="display:none;padding:16px;background:#FFE4E6;border:2px solid #BE123C;border-radius:12px;color:#881337;font-weight:600;text-align:center;margin-bottom:16px"></div>
         <form id="placementForm">
-        <div class="form-group"><label>Nome completo</label><input type="text" id="fname" placeholder="Seu nome completo" required></div>
-        <div class="form-group"><label>E-mail</label><input type="email" id="femail" placeholder="seu@email.com" required></div>
-        <div class="form-group"><label>WhatsApp</label><input type="tel" id="fphone" placeholder="(11) 99999-9999" required pattern="[0-9()+\-\s]{10,}"></div>
+        <div class="form-group"><label for="fname">Nome completo</label><input type="text" id="fname" autocomplete="name" placeholder="Seu nome completo" required></div>
+        <div class="form-group"><label for="femail">E-mail</label><input type="email" id="femail" autocomplete="email" placeholder="seu@email.com" required></div>
+        <div class="form-group"><label for="fphone">WhatsApp</label><input type="tel" id="fphone" autocomplete="tel" placeholder="(11) 99999-9999" required pattern="[0-9()+\-\s]{10,}"></div>
         <div class="form-row">
-          <div class="form-group"><label>Data preferida</label><input type="date" id="fdate"></div>
-          <div class="form-group"><label>Horário</label><select id="ftime"><option value="">Selecione</option><option>Manhã</option><option>Tarde</option><option>Noite</option></select></div>
+          <div class="form-group"><label for="fdate">Data preferida</label><input type="date" id="fdate"></div>
+          <div class="form-group"><label for="ftime">Horário</label><select id="ftime"><option value="">Selecione</option><option>Manhã</option><option>Tarde</option><option>Noite</option></select></div>
         </div>
-        <div class="form-group"><label>Qual é seu nível atual?</label><select id="flevel"><option>Nunca estudei inglês</option><option>Básico — sei frases simples</option><option>Intermediário — converso com dificuldade</option><option>Avançado — já tenho fluência</option><option>Não tenho certeza</option></select></div>
-        <div class="form-group"><label>Mensagem (opcional)</label><textarea rows="3" id="fmessage" placeholder="Conte-nos seus objetivos com o inglês..."></textarea></div>
-        <button type="submit" id="submitBtn" class="btn btn-primary btn-full btn-lg" style="margin-top:12px">Enviar via WhatsApp <svg class="win-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></button></form>
+        <div class="form-group"><label for="flevel">Qual é seu nível atual?</label><select id="flevel"><option>Nunca estudei inglês</option><option>Básico — sei frases simples</option><option>Intermediário — converso com dificuldade</option><option>Avançado — já tenho fluência</option><option>Não tenho certeza</option></select></div>
+        <div class="form-group"><label for="fmessage">Mensagem (opcional)</label><textarea rows="3" id="fmessage" placeholder="Conte-nos seus objetivos com o inglês..."></textarea></div>
+        <button type="submit" id="submitBtn" class="btn btn-primary btn-full btn-lg" style="margin-top:12px">Enviar via WhatsApp <svg class="win-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></button>
+        <p style="font-size:12.5px;line-height:1.55;color:#4A6075;margin:14px 0 0;text-align:center">Seus dados vão para a coordenação da WIN e são usados só para agendar o nivelamento e falar com você por WhatsApp ou e-mail. Para corrigir ou excluir seus dados, escreva para <a href="mailto:contatowincord@gmail.com" style="color:#0B1F33;font-weight:700">contatowincord@gmail.com</a>.</p></form>
       </div>
       <div class="contato-info">
         <div class="info-card">

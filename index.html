@@ -102,14 +102,14 @@
     padding-top: 32px;
     border-top: 2px dashed var(--g200);
   }
-  .hero-stat h3 {
+  .hero-stat h3, .hero-stat .stat-num {
     font-family: 'Montserrat',system-ui,sans-serif;
     font-size: 40px;
     color: var(--orange);
     font-weight: 900;
     line-height: 1;
   }
-  .hero-stat p {
+  .hero-stat p:not(.stat-num) {
     font-size: 13px;
     color: var(--g500);
     font-weight: 500;
@@ -404,7 +404,7 @@
   .about-stat:nth-child(3) { transform: rotate(1deg); }
   .about-stat:nth-child(4) { transform: rotate(-1deg); }
   
-  .about-stat h3 {
+  .about-stat h3, .about-stat .stat-num {
     font-family: 'Montserrat',system-ui,sans-serif;
     font-size: 48px;
     color: var(--mango);
@@ -412,7 +412,7 @@
     line-height: 1;
     margin-bottom: 8px;
   }
-  .about-stat p {
+  .about-stat p:not(.stat-num) {
     font-size: 13px;
     color: rgba(255,255,255,0.8);
     font-weight: 500;
@@ -1240,13 +1240,13 @@
     .hero-desc { font-size: 16px; margin-bottom: 28px; }
     .hero-actions { gap: 10px; margin-bottom: 36px; }
     .hero-stats { flex-wrap: wrap; gap: 24px 32px; }
-    .hero-stat h3 { font-size: 34px; }
+    .hero-stat h3, .hero-stat .stat-num { font-size: 34px; }
     .hero-video-card { padding: 14px; }
     .features-grid { grid-template-columns: 1fr; }
     .feature-card { padding: 28px 22px; }
     .about-checks, .about-stats { grid-template-columns: 1fr; }
     .about-stat { padding: 24px 20px; }
-    .about-stat h3 { font-size: 40px; }
+    .about-stat h3, .about-stat .stat-num { font-size: 40px; }
     .team { padding: 80px 0; }
     .cta-final { padding: 72px 0; }
     .cta-final .btn { padding: 16px 28px; }
@@ -1256,7 +1256,7 @@
   @media(max-width:400px) {
     .hero h1 { font-size: 2.1rem; }
     .hero-stats { gap: 16px 24px; }
-    .hero-stat h3 { font-size: 30px; }
+    .hero-stat h3, .hero-stat .stat-num { font-size: 30px; }
   }
 
   @keyframes testFadeIn {
@@ -2212,7 +2212,7 @@
 .app-logo-lockup img{width:62px;height:62px;border-radius:16px;box-shadow:0 12px 32px rgba(0,0,0,.4);flex-shrink:0}
 .app-logo-lockup .all-t{font-weight:800;font-size:15.5px;color:#fff;line-height:1.25}
 .app-logo-lockup .all-t span{display:block;font-weight:600;font-size:12.5px;color:rgba(255,255,255,.6);margin-top:2px}
-.app-audience{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:2px 0 30px;max-width:560px}
+.app-audience{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:2px 0 30px;max-width:560px}
 .app-aud-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.11);border-radius:15px;padding:15px 14px;transition:background .25s,border-color .25s}
 .app-aud-card:hover{background:rgba(255,255,255,.1);border-color:rgba(215,25,32,.4)}
 .app-aud-card .aud-emoji{font-size:21px;line-height:1}
@@ -2270,6 +2270,7 @@
 <link rel="preload" as="image" href="/img/brand/anim/lobo.png">
 <link rel="preload" as="image" href="/img/brand/anim/win.png">
 <link rel="stylesheet" href="/win-mobile.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Como funcionam as aulas online?", "acceptedAnswer": {"@type": "Answer", "text": "As aulas acontecem ao vivo pelo Google Meet, em horários pré-agendados. Você precisa apenas de um computador ou celular com conexão à internet. O material didático segue o currículo Cambridge."}}, {"@type": "Question", "name": "Preciso já saber inglês para começar?", "acceptedAnswer": {"@type": "Answer", "text": "Não! As aulas são individuais e vão do nível Intro (iniciante absoluto) até o C1 (avançado). O teste de nivelamento gratuito define exatamente qual curso é ideal para você."}}, {"@type": "Question", "name": "Qual é a duração de cada curso?", "acceptedAnswer": {"@type": "Answer", "text": "Não há uma duração fixa por nível (Intro, Interchange 1, 2 e 3, Evolve 5 e 6). O avanço acontece conforme o ritmo de cada aluno: dedicação, frequência das aulas e absorção do conteúdo. Você progride no seu tempo, com acompanhamento individual em cada etapa."}}, {"@type": "Question", "name": "O teste de nivelamento é realmente gratuito?", "acceptedAnswer": {"@type": "Answer", "text": "Sim, 100% gratuito e sem compromisso. Você faz o teste online pelo Google Meet com nosso coordenador, recebe uma avaliação completa do seu nível e uma recomendação do curso ideal — tudo isso sem pagar nada."}}, {"@type": "Question", "name": "A WIN oferece certificado de conclusão?", "acceptedAnswer": {"@type": "Answer", "text": "Sim! O certificado digital de conclusão é emitido ao final do curso completo, ou seja, somente após o aluno concluir todos os livros e níveis da jornada (do Intro ao Evolve 6). Ele atesta a conclusão integral do programa da WIN, com a carga horária total e o conteúdo estudado."}}, {"@type": "Question", "name": "Como funciona o cancelamento e reposição de aulas?", "acceptedAnswer": {"@type": "Answer", "text": "Aulas canceladas com pelo menos 24 horas de antecedência podem ser repostas em outro horário combinado com o professor. Cancelamentos feitos sem 24 horas de antecedência são contabilizados como aula dada e não dão direito a reposição."}}, {"@type": "Question", "name": "Como acompanho meu progresso?", "acceptedAnswer": {"@type": "Answer", "text": "Através da nossa plataforma exclusiva, você acompanha suas tarefas, redações e exercícios. Recebe também um assessment mensal detalhado e um feedback bimestral completo avaliando sua evolução nas 4 habilidades."}}, {"@type": "Question", "name": "Posso experimentar antes de me matricular?", "acceptedAnswer": {"@type": "Answer", "text": "Sim! Além do teste de nivelamento gratuito, oferecemos uma aula experimental para você sentir como funciona o método WIN, conhecer um de nossos professores e tirar todas as dúvidas antes de decidir."}}]}</script>
 </head>
 <body>
 <a href="#main-content" class="skip-link" style="position:absolute;top:-40px;left:0;background:var(--navy);color:#fff;padding:8px 16px;z-index:10000;transition:top 0.3s;font-size:14px;font-weight:700;border-radius:0 0 8px 0" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">Pular para o conteúdo</a>
@@ -2304,6 +2305,7 @@
   </div>
 </div>
 
+<div id="main-content" tabindex="-1"></div>
 <!-- ═══ HERO ═══ -->
 <section class="hero" id="inicio">
   <div class="blob hero-blob-1"></div>
@@ -2333,16 +2335,16 @@
         </div>
         <div class="hero-stats">
           <div class="hero-stat">
-            <h3>Muitos</h3>
-            <p>Alunos formados</p>
+            <p class="stat-num" data-count="200" data-suffix="+">200+</p>
+            <p>Alunos atendidos</p>
           </div>
           <div class="hero-stat">
-            <h3 data-count="10" data-suffix="+">0</h3>
+            <p class="stat-num" data-count="10" data-suffix="+">10+</p>
             <p>Anos de experiência</p>
           </div>
           <div class="hero-stat">
-            <h3 data-count="98" data-suffix="%">0</h3>
-            <p>Aprovação</p>
+            <p class="stat-num">A1–C1</p>
+            <p>Do básico ao avançado</p>
           </div>
         </div>
       </div>
@@ -2414,8 +2416,9 @@
         <h3>Deixe seu depoimento</h3>
       </div>
       <p class="form-sub">Compartilhe sua experiência com a WIN.</p>
+        <p class="form-sub" style="font-size:12.5px;opacity:.85;margin-top:-4px">Seu nome e seu depoimento serão publicados no site depois de aprovados pela coordenação. Não escreva dados pessoais no texto.</p>
 
-      <div id="testimonialSuccess" class="testimonial-form-success">
+      <div id="testimonialSuccess" class="testimonial-form-success" role="status" aria-live="polite">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
         </svg>
@@ -2423,10 +2426,10 @@
       </div>
 
       <div class="testimonial-form-row">
-        <input type="text" id="tName" class="testimonial-form-input" placeholder="Seu nome" maxlength="60">
+        <input type="text" id="tName" class="testimonial-form-input" placeholder="Seu nome" aria-label="Seu nome" maxlength="60" autocomplete="name">
       </div>
       <div class="testimonial-form-row">
-        <textarea id="tContent" class="testimonial-form-textarea" rows="3" placeholder="Escreva sobre sua experiência..." maxlength="500"></textarea>
+        <textarea id="tContent" class="testimonial-form-textarea" rows="3" placeholder="Escreva sobre sua experiência..." aria-label="Seu depoimento" maxlength="500"></textarea>
         <div class="testimonial-char-count" id="tCharCount">0 / 500</div>
       </div>
       <div class="testimonial-form-row rating-row">
@@ -2496,20 +2499,20 @@
       </div>
       <div class="about-stats">
         <div class="about-stat stagger-item">
-          <h3>Muitos</h3>
-          <p>Alunos formados</p>
+          <p class="stat-num" data-count="200" data-suffix="+">200+</p>
+          <p>Alunos atendidos</p>
         </div>
         <div class="about-stat stagger-item">
-          <h3 data-count="10" data-suffix="+">0</h3>
+          <p class="stat-num" data-count="10" data-suffix="+">10+</p>
           <p>Anos de mercado</p>
         </div>
         <div class="about-stat stagger-item">
-          <h3 >6</h3>
+          <p class="stat-num">6</p>
           <p>Níveis de ensino</p>
         </div>
         <div class="about-stat stagger-item">
-          <h3 data-count="98" data-suffix="%">0</h3>
-          <p>Satisfação</p>
+          <p class="stat-num">100%</p>
+          <p>Aulas ao vivo</p>
         </div>
       </div>
     </div>
@@ -2532,7 +2535,7 @@
         </div>
         <div class="faq-a">
           <div class="faq-a-inner">
-            <p>As aulas acontecem ao vivo pelo Google Meet, em horários pré-agendados. Você precisa apenas de um computador ou celular com conexão à internet e o aplicativo instalado. O material didático segue o currículo Cambridge.</p>
+            <p>As aulas acontecem ao vivo pelo Google Meet, em horários pré-agendados. Você precisa apenas de um computador ou celular com conexão à internet. O material didático segue o currículo Cambridge.</p>
           </div>
         </div>
       </div>
@@ -2543,7 +2546,7 @@
         </div>
         <div class="faq-a">
           <div class="faq-a-inner">
-            <p>Não! Temos turmas desde o nível Intro (iniciante absoluto) até C1 (avançado). O teste de nivelamento gratuito define exatamente qual curso é ideal para você.</p>
+            <p>Não! As aulas são individuais e vão do nível Intro (iniciante absoluto) até o C1 (avançado). O teste de nivelamento gratuito define exatamente qual curso é ideal para você.</p>
           </div>
         </div>
       </div>
@@ -2630,16 +2633,15 @@
         </div>
         <div class="section-label" style="background:rgba(111,143,168,.15);color:var(--mango)">Aplicativo oficial</div>
         <h2>Toda a sua escola de inglês <em>num só app</em></h2>
-        <p class="app-sub">Aulas, agenda, materiais e avisos sempre com você. Instala em segundos direto pelo navegador — <strong style="color:#fff">sem ocupar espaço</strong>, sem loja de apps e funcionando até offline. É a WIN na palma da mão de toda a família.</p>
+        <p class="app-sub">Agenda, tarefas, redações e feedbacks sempre com você. Instala em segundos direto pelo navegador — <strong style="color:#fff">sem ocupar espaço</strong> e sem loja de apps. É a WIN na palma da mão de toda a família.</p>
         <ul class="app-benefits">
           <li><span class="ab-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span> Acesso em 1 toque</li>
-          <li><span class="ab-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span> Avisos na hora, com som</li>
+          <li><span class="ab-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span> Notificação de novas tarefas e feedbacks</li>
           <li><span class="ab-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span> Agenda e materiais à mão</li>
-          <li><span class="ab-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg></span> Funciona offline</li>
+          <li><span class="ab-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg></span> Seu progresso sempre à mão</li>
         </ul>
         <div class="app-audience">
           <div class="app-aud-card"><div class="aud-emoji"><svg class="win-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 9 12 4 2 9l10 5 10-5z"/><path d="M6 11v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/><path d="M22 9v6"/></svg></div><div class="aud-txt"><div class="aud-t">Para alunos</div><div class="aud-d">Aulas, lição de casa e progresso sempre organizados.</div></div></div>
-          <div class="app-aud-card"><div class="aud-emoji"><svg class="win-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><circle cx="17" cy="9" r="2.5"/><path d="M16.2 14.1A5 5 0 0 1 21.5 20"/></svg></div><div class="aud-txt"><div class="aud-t">Para responsáveis</div><div class="aud-d">Acompanhe a evolução e a frequência de perto.</div></div></div>
           <div class="app-aud-card"><div class="aud-emoji"><svg class="win-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="12" rx="1.5"/><path d="m8 21 4-6 4 6"/><path d="M7 8h6M7 11h4"/></svg></div><div class="aud-txt"><div class="aud-t">Para professores</div><div class="aud-d">Agenda, alunos e correções num só painel.</div></div></div>
         </div>
         <div class="app-actions">

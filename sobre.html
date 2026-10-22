@@ -2570,7 +2570,7 @@ section.teachers{background:#fff !important}
 section.ig-feed{padding:56px 0 28px !important;background:var(--cream)}
 .feed-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
 .feed-title{margin:0;font-family:Montserrat,system-ui,sans-serif;font-size:20px;font-weight:800;letter-spacing:-.01em;color:#0B1F33;line-height:1.25}
-.feed-sub{margin:4px 0 0;font-size:14px;color:#6F8FA8;font-weight:500}
+.feed-sub{margin:4px 0 0;font-size:14px;color:#4A6075;font-weight:500}
 .ig-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
 .ig-item{position:relative;display:block;aspect-ratio:1/1;border-radius:12px;overflow:hidden;background:#E8EEF3;border:1px solid #E3E8EC;text-decoration:none;transition:border-color .25s ease}
 .ig-item:hover{border-color:#6F8FA8}
@@ -2604,7 +2604,8 @@ section.ig-feed{padding:56px 0 28px !important;background:var(--cream)}
     }
     var play='<div class="ig-vid"><svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div>';
     grid.innerHTML=posts.slice(0,6).map(function(p){
-      var cap=p.caption?'<div class="ig-cap"><span>'+esc(p.caption)+'</span></div>':'';
+      // Legendas antigas citam a marca anterior: mostramos só as fotos.
+      var cap='';
       var vid=(p.type==='VIDEO')?play:'';
       return '<a class="ig-item" href="'+esc(p.permalink)+'" target="_blank" rel="noopener">'
            +'<img loading="lazy" referrerpolicy="no-referrer" src="'+esc(p.image)+'" alt="Publicação no Instagram da WIN" onerror="window.__igBroken(this)">'+vid+cap+'</a>';
@@ -2669,7 +2670,7 @@ section.yt-feed{padding:28px 0 56px;background:var(--cream)}
 .yt-thumb:hover .yt-play{transform:scale(1.08)}
 .yt-info{padding:10px 12px 12px}
 .yt-info h3{margin:0;font-size:13.5px;font-weight:700;line-height:1.35;color:var(--navy);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.yt-info time{display:block;margin-top:4px;font-size:12px;font-weight:600;color:#6F8FA8}
+.yt-info time{display:block;margin-top:4px;font-size:12px;font-weight:600;color:#4A6075}
 .yt-skel{aspect-ratio:16/12;border-radius:12px;background:linear-gradient(110deg,#e9edf6 30%,#f4f6fb 50%,#e9edf6 70%);background-size:200% 100%;animation:igShimmer 1.4s infinite}
 .yt-follow-btn{background:transparent}
 @media(max-width:560px){section.yt-feed{padding:20px 0 40px}.yt-grid{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:4px;scrollbar-width:none}.yt-grid::-webkit-scrollbar{display:none}.yt-card,.yt-skel{flex:0 0 78%;scroll-snap-align:start}}

@@ -307,7 +307,7 @@ a[href*="instagram.com"][style*="gradient"] > div:last-child, a[href*="youtube.c
   padding: 8px 20px !important; transition: border-color var(--transition), background var(--transition);
 }
 a[href*="instagram.com"][style*="gradient"]:hover > div:last-child, a[href*="youtube.com"][style*="gradient"]:hover > div:last-child { border-color: var(--win-azul-profundo); background: #fff !important; }
-.ig-card h4 { color: var(--win-azul-profundo) !important; }
+.ig-card h4, .ig-card h3 { color: var(--win-azul-profundo) !important; }
 .ig-card p { color: var(--win-azul-aco) !important; opacity: 1 !important; font-weight: 600; }
 .ig-card a { border: 1px solid var(--win-cinza-azulado); background: #fff !important; }
 .ig-card a:hover { border-color: var(--win-azul-profundo); transform: none !important; }

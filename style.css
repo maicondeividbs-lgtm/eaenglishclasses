@@ -397,7 +397,7 @@ body.menu-open { overflow: hidden; }
   margin-bottom: 40px;
   position: relative;
 }
-.footer-col h4 {
+.footer-col h4, .footer-col .footer-title {
   font-family: 'Montserrat', sans-serif;
   font-size: 13px;
   font-weight: 800;
@@ -1347,3 +1347,6 @@ body.lp2-noscroll{overflow:hidden}
   .mu-save{width:100%}
   .mu-hint{width:100%;flex:none}
 }
+
+/* <picture> com WebP: não interfere no layout das imagens */
+picture { display: contents; }

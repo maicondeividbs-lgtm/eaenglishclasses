@@ -2267,6 +2267,7 @@
 <link rel="stylesheet" href="/win-brand.css">
 <link rel="stylesheet" href="/win-motion.css">
 <link rel="stylesheet" href="/win-home.css">
+<link rel="stylesheet" href="/win-professores.css">
 <link rel="preload" as="image" href="/img/brand/anim/lobo.png">
 <link rel="preload" as="image" href="/img/brand/anim/win.png">
 <link rel="stylesheet" href="/win-mobile.css">
@@ -2300,7 +2301,7 @@ section.teachers{background:#fff !important}
     <a href="/" class="nav-logo"><div class="nav-logo-icon" style="width:44px;height:44px"><img src="/img/brand/win-logo.png" alt="WIN – English is just the beginning"></div><div class="nav-logo-text">WIN<span>.</span></div></a>
     <ul class="nav-links">
       <li><a href="/">Início</a></li>
-      <li><a href="/metodo">O Método</a></li>
+      <li><a href="/metodo">O Método</a></li><li><a href="/professores">Professores</a></li>
       <li><a href="/sobre" class="active">A WIN</a></li>
       <li><a href="/cursos">Cursos</a></li>
       <li><a href="/contato">Contato</a></li>
@@ -2316,6 +2317,7 @@ section.teachers{background:#fff !important}
   <button class="mobile-close" onclick="eaToggleMenu(false)" aria-label="Fechar menu">✕</button>
   <a href="/">Início</a>
   <a href="/metodo">O Método</a>
+  <a href="/professores">Professores</a>
   <a href="/sobre" class="active">A WIN</a>
   <a href="/cursos">Cursos</a>
   <a href="/contato">Contato</a>
@@ -2405,141 +2407,42 @@ section.teachers{background:#fff !important}
   </div>
 </section>
 
-<!-- ═══ PROFESSORES PARCEIROS ═══ -->
-<section class="teachers reveal" id="professores">
-  <div class="teachers-bg-blob teachers-blob-1"></div>
-  <div class="teachers-bg-blob teachers-blob-2"></div>
-  <div class="container" style="position:relative;z-index:1">
-    <div class="teachers-header">
-      <div class="section-label orange">Nosso Time</div>
-      <h2 class="section-title">Conheça os professores <em>parceiros</em> da WIN</h2>
-      <p class="section-subtitle">Educadores treinados no método WIN, fluentes em inglês e preparados para conduzir as aulas com base no material didático Cambridge.</p>
+<!-- ═══ PROFESSORES EM DESTAQUE ═══ -->
+<section class="pstrip reveal" aria-labelledby="pstrip-title">
+  <div class="container">
+    <div class="pstrip-head">
+      <div>
+        <h2 class="pstrip-title" id="pstrip-title">Conheça os professores</h2>
+        <p class="pstrip-sub">Educadores fluentes em inglês, treinados no método WIN e preparados para conduzir as aulas com o material Cambridge.</p>
+      </div>
+      <a href="/professores" class="btn btn-primary">Conhecer os professores</a>
     </div>
-
-    <div class="teachers-grid">
-      <!-- Ed -->
-      <article class="teacher-card">
-        <div class="teacher-photo-wrap">
-          <div class="teacher-photo-bg"></div>
-          <picture><source type="image/webp" srcset="img/teachers/ed.webp"><picture><source srcset="img/teachers/ed.webp" type="image/webp"><img src="img/teachers/ed.jpg" alt="Ed — Coordenador Pedagógico e Professor" class="teacher-photo" loading="lazy" width="800" height="1000"></picture></picture>
-          <div class="teacher-badge">Coordenador</div>
-        </div>
-        <div class="teacher-content">
-          <h3 class="teacher-name">Ed</h3>
-          <p class="teacher-role">Coordenador Pedagógico &amp; Professor</p>
-          <div class="teacher-bio-wrap">
-            <p class="teacher-bio-text">Sou formado em Letras e, ao longo da minha trajetória, venho me dedicando intensamente ao ensino de idiomas. Possuo algumas certificações internacionais e tive a oportunidade de atuar em renomadas escolas como Lexical, Wise Up e Centro Britânico.</p>
-            <button type="button" class="teacher-bio-toggle" data-bio-toggle
-              data-bio-name="Ed"
-              data-bio-role="Coordenador Pedagógico &amp; Professor"
-              data-bio-photo="img/teachers/ed.jpg"
-              data-bio-full="Sou formado em Letras e, ao longo da minha trajetória, venho me dedicando intensamente ao ensino de idiomas. Possuo algumas certificações internacionais e tive a oportunidade de atuar em renomadas escolas como Lexical, Wise Up e Centro Britânico. A paixão por ensinar sempre foi uma constante na minha vida, e acredito que a educação pode ser transformadora quando feita com propósito e personalização. Em 2016, fundei a WIN com o objetivo de oferecer um ensino de inglês mais individualizado e focado nas necessidades reais de cada aluno, algo que ainda é pouco comum nas escolas tradicionais de idiomas. A proposta sempre foi criar uma experiência de aprendizado mais humana, prática e adaptada ao cotidiano dos estudantes. Além da sala de aula, também compartilho outro lado da minha paixão: a música. Tenho um canal no YouTube chamado Vinil Beer, onde exploro curiosidades do universo musical, conectando conhecimento e entretenimento de uma forma leve e acessível. Acredito que ensinar vai muito além de transmitir conteúdo, é também sobre inspirar, conectar e transformar.">
-              Ver biografia completa
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </button>
-          </div>
-          <div class="teacher-skills">
-            <span class="teacher-skill">Conversação</span>
-            <span class="teacher-skill">Gramática</span>
-            <span class="teacher-skill">Método WIN</span>
-          </div>
-        </div>
-      </article>
-
-      <!-- Maicon -->
-      <article class="teacher-card">
-        <div class="teacher-photo-wrap">
-          <div class="teacher-photo-bg"></div>
-          <picture><source type="image/webp" srcset="img/teachers/maicon.webp"><picture><source srcset="img/teachers/maicon.webp" type="image/webp"><img src="img/teachers/maicon.jpg" alt="Maicon — Professor de Inglês" class="teacher-photo" loading="lazy" width="800" height="1000"></picture></picture>
-          <div class="teacher-badge">Professor</div>
-        </div>
-        <div class="teacher-content">
-          <h3 class="teacher-name">Maicon</h3>
-          <p class="teacher-role">Professor de Inglês</p>
-          <div class="teacher-bio-wrap">
-            <p class="teacher-bio-text">Olá, eu me chamo Maicon Deivid e sou um dos professores integrantes da equipe WIN. É um prazer ter você como nosso aluno(a)! Minha jornada com a língua inglesa começou aos 12 anos, provavelmente.</p>
-            <button type="button" class="teacher-bio-toggle" data-bio-toggle
-              data-bio-name="Maicon"
-              data-bio-role="Professor de Inglês"
-              data-bio-photo="img/teachers/maicon.jpg"
-              data-bio-full="Olá, eu me chamo Maicon Deivid e sou um dos professores integrantes da equipe WIN. É um prazer ter você como nosso aluno(a)! Minha jornada com a língua inglesa começou aos 12 anos, provavelmente por achar o idioma extremamente bonito, acho que, além disso, a maior influência veio dos filmes e vídeo games. Particularmente, acredito que para alcançar a fluência em qualquer idioma, uma dose de determinação é sempre necessária. Além disso, exposição constante, conversação e gramática apresentada de maneira acessível contribuem, e muito, para esse processo. No campo profissional, além do tempo que venho atuando na equipe da WIN, tenho cerca de 1 ano e meio de experiência com Educação Especial, com foco em adaptação curricular. Tenho como filosofia educacional aulas leves, descontraídas onde aprendemos sem pressão e estresse. Será um prazer ser seu professor!">
-              Ver biografia completa
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </button>
-          </div>
-          <div class="teacher-skills">
-            <span class="teacher-skill">Conversação</span>
-            <span class="teacher-skill">Writing</span>
-            <span class="teacher-skill">Método WIN</span>
-          </div>
-        </div>
-      </article>
-
-      <!-- Luiz -->
-      <article class="teacher-card">
-        <div class="teacher-photo-wrap">
-          <div class="teacher-photo-bg"></div>
-          <picture><source type="image/webp" srcset="img/teachers/luiz.webp"><picture><source srcset="img/teachers/luiz.webp" type="image/webp"><img src="img/teachers/luiz.jpg" alt="Luiz Bergara — Professor de Inglês" class="teacher-photo" loading="lazy" width="1000" height="1000"></picture></picture>
-          <div class="teacher-badge">Professor</div>
-        </div>
-        <div class="teacher-content">
-          <h3 class="teacher-name">Luiz Bergara</h3>
-          <p class="teacher-role">Professor de Inglês</p>
-          <div class="teacher-bio-wrap">
-            <p class="teacher-bio-text">Prazer, eu sou Luiz Bergara. Tenho 32 anos, sou casado, pai de dois filhos e professor desde 2014.</p>
-            <button type="button" class="teacher-bio-toggle" data-bio-toggle
-              data-bio-name="Luiz Bergara"
-              data-bio-role="Professor de Inglês"
-              data-bio-photo="img/teachers/luiz.jpg"
-              data-bio-full="Prazer, eu sou Luiz Bergara. Tenho 32 anos, sou casado, pai de dois filhos e professor desde 2014. Minha trajetória acadêmica passou por Relações Internacionais na Universidade Estácio de Sá e pelo bacharelado em Filosofia na Universidade Federal Rural do Rio de Janeiro, experiências que contribuíram para a minha construção profissional na metodologia da WIN English, aplicada hoje em minhas aulas. Ao longo de 12 anos de experiência em colégios, cursos e projetos educacionais, tive a alegria de participar da história de mais de 600 alunos, ajudando pessoas a desenvolverem confiança para se comunicar em inglês de forma natural, leve e prática, sempre respeitando o ritmo e os objetivos de cada aluno.">
-              Ver biografia completa
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </button>
-          </div>
-          <div class="teacher-skills">
-            <span class="teacher-skill">Conversação</span>
-            <span class="teacher-skill">Grammar</span>
-            <span class="teacher-skill">Método WIN</span>
-          </div>
-        </div>
-      </article>
-
-      <!-- Gustavo -->
-      <article class="teacher-card">
-        <div class="teacher-photo-wrap">
-          <div class="teacher-photo-bg"></div>
-          <picture><source type="image/webp" srcset="img/teachers/gustavo.webp"><picture><source srcset="img/teachers/gustavo.webp" type="image/webp"><img src="img/teachers/gustavo.jpg" alt="Gustavo — Professor de Inglês" class="teacher-photo" loading="lazy" width="800" height="1000"></picture></picture>
-          <div class="teacher-badge">Professor</div>
-        </div>
-        <div class="teacher-content">
-          <h3 class="teacher-name">Gustavo</h3>
-          <p class="teacher-role">Professor de Inglês</p>
-          <div class="teacher-bio-wrap">
-            <p class="teacher-bio-text">Muito prazer, eu sou o Gustavo! Por aqui na WIN, comando turmas dinâmicas com o método Interchange.</p>
-            <button type="button" class="teacher-bio-toggle" data-bio-toggle
-              data-bio-name="Gustavo"
-              data-bio-role="Professor de Inglês"
-              data-bio-photo="img/teachers/gustavo.jpg"
-              data-bio-full="Muito prazer, eu sou o Gustavo! Por aqui na WIN, comando as turmas com as aulas dinâmicas do método Interchange. Desde que iniciei os meus estudos de inglês, aos 12 anos, me apaixonei pela língua ao ver a influência desse conhecimento nas coisas que amo fazer no meu dia a dia. Ampliei minha bagagem com a missão de transmitir esse mesmo sentimento aos alunos, garantindo que a sala de aula seja, acima de tudo, um ambiente leve, descontraído e livre de barreiras para você destravar o seu inglês com total confiança!">
-              Ver biografia completa
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </button>
-          </div>
-          <div class="teacher-skills">
-            <span class="teacher-skill">Conversação</span>
-            <span class="teacher-skill">Listening</span>
-            <span class="teacher-skill">Método WIN</span>
-          </div>
-        </div>
-      </article>
-    </div>
-
-    <div class="teachers-footnote">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="flex-shrink:0">
-        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      <span><strong>Mesmo padrão, mesma qualidade.</strong> Todos os professores e coordenadores da WIN são treinados na mesma metodologia, possuem o mesmo padrão e capacidade pedagógica e seguem o método WIN — garantindo uma experiência de aprendizado consistente em qualquer turma ou nível.</span>
-    </div>
+    <ul class="pstrip-row" role="list">
+      <li><a class="pstrip-tile" href="/professores#ed">
+        <picture><source type="image/webp" srcset="/img/teachers/ed.webp"><img src="/img/teachers/ed.jpg" alt="" loading="lazy" width="800" height="1000"></picture>
+        <span class="pstrip-name">Ed</span>
+      </a></li>
+      <li><a class="pstrip-tile" href="/professores#maicon">
+        <picture><source type="image/webp" srcset="/img/teachers/maicon.webp"><img src="/img/teachers/maicon.jpg" alt="" loading="lazy" width="800" height="1000"></picture>
+        <span class="pstrip-name">Maicon</span>
+      </a></li>
+      <li><a class="pstrip-tile" href="/professores#luiz">
+        <picture><source type="image/webp" srcset="/img/teachers/luiz.webp"><img src="/img/teachers/luiz.jpg" alt="" loading="lazy" width="1000" height="1000"></picture>
+        <span class="pstrip-name">Luiz</span>
+      </a></li>
+      <li><a class="pstrip-tile" href="/professores#gustavo">
+        <picture><source type="image/webp" srcset="/img/teachers/gustavo.webp"><img src="/img/teachers/gustavo.jpg" alt="" loading="lazy" width="800" height="1000"></picture>
+        <span class="pstrip-name">Gustavo</span>
+      </a></li>
+      <li><a class="pstrip-tile" href="/professores#pedro">
+        <picture><source type="image/webp" srcset="/img/teachers/pedro.webp"><img src="/img/teachers/pedro.jpg" alt="" loading="lazy" width="800" height="1000"></picture>
+        <span class="pstrip-name">Pedro</span>
+      </a></li>
+      <li><a class="pstrip-tile" href="/professores#ariel">
+        <picture><source type="image/webp" srcset="/img/teachers/ariel.webp"><img src="/img/teachers/ariel.jpg" alt="" loading="lazy" width="800" height="1000"></picture>
+        <span class="pstrip-name">Ariel</span>
+      </a></li>
+    </ul>
   </div>
 </section>
 
@@ -2741,7 +2644,7 @@ section.yt-feed{padding:28px 0 56px;background:var(--cream)}
       </div>
       <div class="footer-col">
         <p class="footer-title">Navegação</p>
-        <a href="/">Início</a><a href="/metodo">O Método</a><a href="/sobre">A WIN</a>
+        <a href="/">Início</a><a href="/metodo">O Método</a><a href="/professores">Professores</a><a href="/sobre">A WIN</a>
         <a href="/cursos">Cursos</a>
         <a href="/contato">Contato</a>
               <a href="/#app"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg>Baixar o app</a>

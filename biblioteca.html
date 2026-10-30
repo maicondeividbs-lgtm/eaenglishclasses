@@ -3632,6 +3632,12 @@ const AV_QUIZ = [
       {u:'U 7',f:'U07.docx',t:'_Track08.mp3'},{u:'U 8',f:'U08.docx',t:'_Track09.mp3'},
       {u:'U 9',f:'U09.docx',t:'_Track10.mp3'},{u:'U 10',f:'U10.docx',t:'_Track11.mp3'},
       {u:'U 11',f:'U11.docx',t:'_Track12.mp3'},{u:'U 12',f:'U12.docx',t:'_Track13.mp3'}]}]},
+  // Evolve: um quiz por unidade. Gabarito em PDF (k) e áudio com o mesmo nome do quiz.
+  {id:'evolve6',name:'Evolve 6',color:'#0B1F33',img:'/img/books/evolve-6.webp',porUnidade:true,ranges:[
+    {label:'Units 1-6',base:'QUIZZES/EVOLVE 6/1-6/',px:'Evolve_L6_Quiz_',items:[
+      {u:'U 1',f:'U01.docx',k:'U01_Key.pdf',t:'.mp3'},{u:'U 2',f:'U02.docx',k:'U02_Key.pdf',t:'.mp3'},
+      {u:'U 3',f:'U03.docx',k:'U03_Key.pdf',t:'.mp3'},{u:'U 4',f:'U04.docx',k:'U04_Key.pdf',t:'.mp3'},
+      {u:'U 5',f:'U05.docx',k:'U05_Key.pdf',t:'.mp3'},{u:'U 6',f:'U06.docx',k:'U06_Key.pdf',t:'.mp3'}]}]},
 ];
 
 // ── Catálogo de Provas ──
@@ -3655,7 +3661,7 @@ const AV_TEST = [
 
 // Cada livro da barra aponta para o seu conjunto de avaliações.
 // Passages não é usado pela escola: fica fora do mapa e não aparece.
-const AV_LEVEL = { intro:'intro', lvl1:'book1', lvl2:'book2', lvl3:'book3' };
+const AV_LEVEL = { intro:'intro', lvl1:'book1', lvl2:'book2', lvl3:'book3', evolve6:'evolve6' };
 const AV_LIVRO = { intro:'Interchange Intro', lvl1:'Interchange 1', lvl2:'Interchange 2', lvl3:'Interchange 3', evolve5:'Evolve 5', evolve6:'Evolve 6' };
 
 function avTipo(path){
@@ -3671,8 +3677,8 @@ function avSemAvaliacao(tipo){
   return '<div class="av-empty">'+
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2.5z"/><path d="M9 7h6M9 11h4"/></svg>'+
     '<h3>Ainda não há '+tipo+' do '+escapeHtml(nome)+'</h3>'+
-    '<p>Por enquanto, as avaliações cobrem os livros Interchange. Escolha um deles:</p>'+
-    '<div class="av-empty-books">'+Object.keys(AV_LEVEL).map(l=>'<button type="button" data-av-level="'+l+'">'+escapeHtml(AV_LIVRO[l])+'</button>').join('')+'</div></div>';
+    '<p>Escolha um dos livros que já têm '+tipo+':</p>'+
+    '<div class="av-empty-books">'+Object.keys(AV_LEVEL).filter(l=>(tipo==='provas'?AV_TEST:AV_QUIZ).some(x=>x.id===AV_LEVEL[l])).map(l=>'<button type="button" data-av-level="'+l+'">'+escapeHtml(AV_LIVRO[l])+'</button>').join('')+'</div></div>';
 }
 document.addEventListener('click', function(e){
   const b = e.target && e.target.closest ? e.target.closest('[data-av-level]') : null;
@@ -3693,15 +3699,15 @@ function renderQuizzes() {
   const div = document.getElementById('v-quizzes'); if (!div) return;
   const livro = AV_LIVRO[currentLevel] || '';
   const b = AV_QUIZ.find(x => x.id === AV_LEVEL[currentLevel]);
-  const intro = avIntro('Quizzes de unidade','Quizzes do',livro,'Um quiz a cada duas unidades, com gabarito e áudio de listening. Acesso de professores e coordenação.');
+  const intro = avIntro('Quizzes de unidade','Quizzes do',livro,(b && b.porUnidade ? 'Um quiz por unidade' : 'Um quiz a cada duas unidades')+', com gabarito e áudio de listening. Acesso de professores e coordenação.');
   avComAcesso(div, intro, 'quizzes', function(){
     if (!b) { div.innerHTML = intro + avSemAvaliacao('quizzes'); return; }
     const cols = b.ranges.map(r => {
       const rows = r.items.map(it => {
-        const kF = it.f.endsWith('.docx') ? it.f.replace('.docx','_Key.docx') : it.f.replace('.doc','_Key.doc');
+        const kF = it.k || (it.f.endsWith('.docx') ? it.f.replace('.docx','_Key.docx') : it.f.replace('.doc','_Key.doc'));
         const aF = it.f.replace(/\.docx?/, it.t);
         const u = it.u.replace(/^U\s*/,'').replace('-','–');
-        return '<div class="av-row"><div class="av-unit">'+escapeHtml(u)+'<small>units</small></div>'+
+        return '<div class="av-row"><div class="av-unit">'+escapeHtml(u)+'<small>'+(u.indexOf('–')>=0?'units':'unit')+'</small></div>'+
           '<div class="av-btns">'+avBtn('q','d','Quiz',r.base+r.px+it.f)+avBtn('k','k','Gabarito',r.base+r.px+kF)+avBtn('a','a','Áudio',r.base+r.px+aF)+'</div></div>';
       }).join('');
       return '<div class="av-panel"><div class="av-panel-h"><b>'+escapeHtml(r.label.replace('-','–'))+'</b><small>'+r.items.length+' quizzes</small></div>'+rows+'</div>';

@@ -368,6 +368,21 @@
   margin: 0 auto;
   padding: 48px 24px 80px;
 }
+/* ── Aba "Materiais": seletor de Worksheets / Listening / Quizzes / Provas ── */
+.mat-nav { display:flex; flex-direction:column; align-items:center; gap:10px; margin:0 auto 34px; }
+.mat-nav[hidden] { display:none; }
+.mat-seg { display:inline-flex; gap:4px; padding:5px; background:#fff; border:1px solid var(--g100); border-radius:14px; box-shadow:0 6px 20px rgba(11,31,51,.06); }
+.mat-opt { display:inline-flex; align-items:center; justify-content:center; gap:7px; min-height:42px; padding:0 18px; border:none; border-radius:10px; background:transparent; font-family:inherit; font-size:13.5px; font-weight:700; color:var(--g500); cursor:pointer; transition:background .2s, color .2s; white-space:nowrap; }
+.mat-opt:hover { color:var(--navy); background:var(--off-white); }
+.mat-opt.active { background:var(--navy); color:#fff; }
+.mat-opt:focus-visible { outline:2px solid var(--orange, #D71920); outline-offset:2px; }
+.mat-hint { margin:0; font-size:13px; color:var(--g500); text-align:center; max-width:560px; line-height:1.5; }
+@media (max-width:560px) {
+  .mat-nav { margin-bottom:22px; }
+  .mat-seg { display:grid; grid-template-columns:repeat(4, auto); width:100%; }
+  .mat-opt { padding:0 6px; font-size:12px; gap:5px; }
+}
+@media (max-width:400px) { .mat-opt svg { display:none; } }
 .bib-view { display: none; }
 .bib-view.active { display: block; animation: bibFade 0.45s cubic-bezier(0.4,0,0.2,1); }
 @keyframes bibFade {
@@ -1834,14 +1849,26 @@
   .mus2-grid{grid-template-columns:1fr}
 }
 
-/* barra de seções: 7 seções + livro precisam de ~1080px (a marca limitava a 980px) */
-.bib-tabs-wrap .bib-tabs{max-width:1100px!important}
-/* 8 abas (com Listening): a barra cresce até 1200px e, entre 1025 e 1279px, as abas ficam mais justas */
-@media (min-width:1025px){ .bib-tabs-wrap .bib-tabs{max-width:min(1200px, calc(100% - 32px))!important} }
-@media (min-width:1025px) and (max-width:1279px){ .bib-tabs-wrap .bib-tab{padding-left:8px!important;padding-right:8px!important;font-size:12.5px!important;gap:6px} }
-@media (min-width:641px) and (max-width:1180px){ .bib-ctx-txt{display:none} .bib-ctx{padding-right:10px} }
-@media (min-width:641px) and (max-width:1024px){ .bib-tabs-wrap .bib-tab{padding-left:7px!important;padding-right:7px!important;font-size:12.5px!important;gap:5px} }
-@media (min-width:641px) and (max-width:880px){ .bib-tabs-wrap .bib-tabs{flex-wrap:wrap;justify-content:center;row-gap:2px} .bib-ctx{border-right:none} }
+/* barra de seções: livro + 5 abas (Worksheets, Listening, Quizzes e Provas ficam em "Materiais") */
+.bib-tabs-wrap .bib-tabs{max-width:920px!important}
+@media (min-width:761px) and (max-width:880px){ .bib-ctx-txt{display:none} .bib-ctx{padding-right:10px} }
+/* celular e tablet pequeno: livro numa linha, as 5 abas embaixo com ícone e nome */
+@media (max-width:760px){
+  .bib-tabs-wrap .bib-tabs{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;padding:6px;max-width:560px!important}
+  .bib-tabs-wrap .bib-ctx{grid-column:1/-1;justify-content:center;border-right:none;border-bottom:1px solid var(--g100);margin:0 0 4px;padding:2px 6px 8px}
+  .bib-tabs-wrap .bib-ctx-txt{display:block}
+  .bib-tabs-wrap .bib-tab{flex-direction:column;justify-content:center;gap:4px;padding:8px 2px!important;min-height:54px;min-width:0}
+  .bib-tabs-wrap .bib-tab span{display:block!important;font-size:11px;line-height:1.1;letter-spacing:-.01em;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+}
+/* até 480px: 3 abas em cima e 2 embaixo (mais largas), ícone ao lado do nome */
+@media (max-width:480px){
+  .bib-tabs-wrap .bib-tabs{grid-template-columns:repeat(6,minmax(0,1fr))}
+  .bib-tabs-wrap .bib-tab{grid-column:span 2;flex-direction:row;gap:6px;min-height:44px;padding:6px 4px!important}
+  .bib-tabs-wrap .bib-tab:nth-last-child(-n+2){grid-column:span 3}
+  .bib-tabs-wrap .bib-tab span{font-size:12px}
+  .bib-tabs-wrap .bib-tab svg{width:16px;height:16px}
+}
+@media (max-width:359px){ .bib-tabs-wrap .bib-tab{padding:6px 2px!important} .bib-tabs-wrap .bib-tab svg{display:none} }
 
 /* ═══ Vocabulário por unidade ═══ */
 .vx{display:grid;grid-template-columns:172px 1fr;gap:24px;align-items:start}
@@ -2064,7 +2091,7 @@ body.voc-ov-aberto .av-toast{top:16px;bottom:auto;left:50%;right:auto;transform:
     </script>
     <div class="bib-eyebrow">Biblioteca Pedagógica</div>
     <h1 class="bib-title">Toda a jornada,<br><em>em um só lugar</em></h1>
-    <p class="bib-sub">Escolha o livro e encontre tudo dele: currículo, gramática, worksheets, quizzes, provas e conversação. As músicas ficam numa área própria, organizadas por nível.</p>
+    <p class="bib-sub">Escolha o livro e encontre tudo dele: currículo, gramática, vocabulário, conversação e os materiais de aula (worksheets, listening, quizzes e provas). As músicas ficam numa área própria, organizadas por nível.</p>
 
     <div class="bib-mode" role="tablist" aria-label="Área da biblioteca">
       <button type="button" class="bib-mode-btn active" data-mode="books" role="tab" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 5.5A1.5 1.5 0 0 1 3.5 4H9a3 3 0 0 1 3 3v13a2.5 2.5 0 0 0-2.5-2.5h-6A1.5 1.5 0 0 1 2 16z"/><path d="M22 5.5A1.5 1.5 0 0 0 20.5 4H15a3 3 0 0 0-3 3v13a2.5 2.5 0 0 1 2.5-2.5h6A1.5 1.5 0 0 0 22 16z"/></svg>Livros</button>
@@ -2125,31 +2152,28 @@ body.voc-ov-aberto .av-toast{top:16px;bottom:auto;left:50%;right:auto;transform:
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V5h9v2"/><path d="M8.5 5v14"/><path d="M6.5 19h4"/><path d="M14 12h7"/><path d="M17.5 12v7"/></svg>
       <span>Vocabulário</span>
     </button>
-    <button class="bib-tab" data-view="worksheets" type="button">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-      <span>Worksheets</span>
-    </button>
-    <button class="bib-tab" data-view="quizzes" type="button">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="3"/><path d="M9 7h6M9 11h6M9 15h4"/></svg>
-      <span>Quizzes</span>
-    </button>
-    <button class="bib-tab" data-view="tests" type="button">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11.5 11.5 14 16 9"/><rect x="3" y="3" width="18" height="18" rx="4"/></svg>
-      <span>Provas</span>
-    </button>
-    <button class="bib-tab" data-view="listening" type="button">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1v-6h3zM3 19a2 2 0 0 0 2 2h1v-6H3z"/></svg>
-      <span>Listening</span>
-    </button>
     <button class="bib-tab" data-view="conversation" type="button">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
       <span>Conversação</span>
+    </button>
+    <button class="bib-tab" data-view="materiais" type="button">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+      <span>Materiais</span>
     </button>
   </div>
 </div>
 
 <!-- Content -->
 <div class="bib-content">
+  <nav class="mat-nav" id="matNav" aria-label="Materiais" hidden>
+    <div class="mat-seg">
+    <button type="button" class="mat-opt" data-subview="worksheets"><svg width="15" height="15" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>Worksheets</span></button>
+    <button type="button" class="mat-opt" data-subview="listening"><svg width="15" height="15" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1v-6h3zM3 19a2 2 0 0 0 2 2h1v-6H3z"/></svg><span>Listening</span></button>
+    <button type="button" class="mat-opt" data-subview="quizzes"><svg width="15" height="15" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="3"/><path d="M9 7h6M9 11h6M9 15h4"/></svg><span>Quizzes</span></button>
+    <button type="button" class="mat-opt" data-subview="tests"><svg width="15" height="15" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11.5 11.5 14 16 9"/><rect x="3" y="3" width="18" height="18" rx="4"/></svg><span>Provas</span></button>
+    </div>
+    <p class="mat-hint" id="matHint"></p>
+  </nav>
   <div class="bib-view active" id="v-curriculum"></div>
   <div class="bib-view" id="v-worksheets"></div>
   <div class="bib-view" id="v-examples"></div>
@@ -2566,7 +2590,28 @@ function atualizarLivroAtual() {
 // Dois modos: LIVROS (estante + secoes do livro escolhido) e MUSICAS
 // (catalogo proprio, sem livro). Guarda a ultima secao de livro para voltar a ela.
 let ultimaSecaoLivro = 'curriculum';
+// Worksheets, Listening, Quizzes e Provas ficam juntos na aba "Materiais"
+const MAT_VIEWS = ['worksheets', 'listening', 'quizzes', 'tests'];
+const MAT_HINT = {
+  worksheets: 'Folhas de exercícios por unidade, para usar em aula ou enviar ao aluno.',
+  listening: 'Atividade, gabarito e áudio de cada unidade. Só professores e coordenação.',
+  quizzes: 'Quizzes de unidade com gabarito e áudio. Só professores e coordenação.',
+  tests: 'Provas escrita e oral de cada bloco de unidades. Só professores e coordenação.'
+};
+let ultimoMaterial = 'worksheets';
 function setView(view) {
+  if (view === 'materiais') view = ultimoMaterial;
+  const material = MAT_VIEWS.includes(view);
+  if (material) ultimoMaterial = view;
+  const nav = document.getElementById('matNav');
+  if (nav) {
+    nav.hidden = !material;
+    nav.querySelectorAll('.mat-opt').forEach(b => {
+      const on = b.dataset.subview === view;
+      b.classList.toggle('active', on); b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    const h = document.getElementById('matHint'); if (h) h.textContent = MAT_HINT[view] || '';
+  }
   currentView = view;
   const musica = view === 'music';
   if (!musica) ultimaSecaoLivro = view;
@@ -2575,7 +2620,7 @@ function setView(view) {
     const on = (b.dataset.mode === 'music') === musica;
     b.classList.toggle('active', on); b.setAttribute('aria-selected', on ? 'true' : 'false');
   });
-  document.querySelectorAll('.bib-tab').forEach(t => t.classList.toggle('active', t.dataset.view === view));
+  document.querySelectorAll('.bib-tab').forEach(t => t.classList.toggle('active', t.dataset.view === view || (t.dataset.view === 'materiais' && material)));
   const busca = document.getElementById('searchInput');
   if (busca) busca.placeholder = musica ? 'Buscar música, artista ou gramática…' : 'Buscar gramática, vocabulário, unidade…';
   const jw = document.querySelector('.journey-wrap');
@@ -3398,6 +3443,8 @@ document.addEventListener('click', (e) => {
   // Tab
   const tab = e.target.closest('.bib-tab');
   if (tab) { setView(tab.dataset.view); return; }
+  const sub = e.target.closest('.mat-opt[data-subview]');
+  if (sub) { setView(sub.dataset.subview); return; }
   const modo = e.target.closest('.bib-mode-btn');
   if (modo) { setView(modo.dataset.mode === 'music' ? 'music' : ultimaSecaoLivro); return; }
   // Conversação: abrir pop-up da unidade

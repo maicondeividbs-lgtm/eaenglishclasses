@@ -217,3 +217,173 @@
 @media (prefers-reduced-motion: reduce) {
   html body .sb { transition: none !important; }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   REVISÃO MOBILE E TABLET — out/2026
+   Auditoria medida com Playwright em 320, 360, 390, 430, 768,
+   1024 e 1440px. Nada abaixo age acima de 1024px, exceto o
+   tamanho do ícone do selo "Corrigir agora", que estava sem
+   tamanho em qualquer tela.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Selo de status com ícone sem tamanho (painel do professor) ── */
+.sent-status svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+/* ═════════ PAINÉIS: tablet deitado (901 a 1024px) ═════════
+   As páginas escondiam a barra lateral até 1024px, mas o botão de
+   menu só ganhava estilo até 900px: entre 901 e 1024 não havia
+   como trocar de seção. Aqui a barra volta a ficar fixa, como no
+   computador, e o conteúdo usa os ~760px que sobram. */
+@media (min-width: 901px) and (max-width: 1024px) {
+  html body .sb { transform: none !important; }
+  html body .main.main { margin-left: 260px !important; }
+  html body.sb-collapsed .main.main { margin-left: 92px !important; }
+  html body .topbar .mobile-menu-btn { display: none !important; }
+  html body .sb-overlay, html body .sb-overlay.open { display: none !important; }
+  html body .content { padding: 22px 20px !important; }
+}
+
+/* ═════════ PAINÉIS: celular e tablet em pé (até 900px) ═════════ */
+@media (max-width: 900px) {
+  /* Gaveta fechada: sem sombra vazando na borda e fora da ordem do Tab */
+  html body .sb:not(.open) {
+    box-shadow: none !important;
+    visibility: hidden;
+    transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 320ms !important;
+  }
+  html body .sb.open {
+    visibility: visible;
+    transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1), visibility 0s !important;
+  }
+
+  /* Barra superior: sino e avatar com área de toque de 40px */
+  html body .topbar .notif-bell-btn,
+  html body .topbar .topbar-avatar { width: 40px !important; height: 40px !important; }
+
+  /* Títulos sem palavra sozinha na última linha */
+  html body .section-head h2,
+  html body .panel-title,
+  html body .dia-ola { text-wrap: balance; }
+
+  /* Números: grade sem card sobrando na última linha */
+  html body .stat-row > .stat-card:last-child:nth-child(odd) { grid-column: 1 / -1; }
+
+  /* Controles segmentados (Ordenar / Exibir) */
+  html body .ea-seg button { min-height: 36px !important; padding-left: 12px !important; padding-right: 12px !important; }
+
+  /* Botões pequenos dentro de cartões */
+  html body .sent-card button,
+  html body .sent-cancel-btn { min-height: 36px !important; }
+  html body .win-sm-add { min-height: 36px !important; padding-left: 12px !important; padding-right: 12px !important; }
+  html body .niv-tab { min-height: 40px !important; }
+  html body #sec-testimonials .list-item button { min-height: 36px !important; min-width: 44px !important; }
+  html body #sec-users .panel-head button { min-height: 36px !important; }
+  html body .journey-arrow { width: 40px !important; height: 40px !important; }
+
+  /* Usuários: busca numa linha, filtros em 2 × 2 */
+  html body .coord-search-bar {
+    display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 8px !important;
+  }
+  html body .coord-search-bar > input { grid-column: 1 / -1; width: 100% !important; min-width: 0 !important; }
+  html body .coord-search-bar .user-filter { width: 100% !important; min-height: 40px !important; margin: 0 !important; }
+
+  /* Supervisão: rótulo em cima do campo, um filtro por linha */
+  html body #supFilterBar { padding: 14px !important; gap: 6px 8px !important; }
+  html body #supFilterBar > span { flex: 1 1 100% !important; margin-left: 0 !important; }
+  html body #supFilterBar > span:not(:first-child) { margin-top: 6px !important; }
+  html body #supFilterBar > select { flex: 1 1 100% !important; min-width: 0 !important; }
+
+  /* Pronúncia: ouvir + velocidade / gravar + comparar / praticado */
+  html body .pron-controls { display: flex !important; flex-wrap: wrap !important; gap: 8px !important; align-items: center; }
+  html body .pron-controls .pron-play-btn { width: 44px !important; height: 44px !important; flex: 0 0 44px; }
+  html body .pron-controls .pron-speed-group { flex: 1 1 calc(100% - 52px); display: flex !important; gap: 6px; margin: 0 !important; }
+  html body .pron-controls .pron-speed-btn { flex: 1 1 0; min-height: 40px !important; }
+  html body .pron-controls .pron-rec-btn,
+  html body .pron-controls .pron-compare-btn {
+    flex: 1 1 calc(50% - 4px); min-height: 44px !important; justify-content: center; margin: 0 !important;
+  }
+  html body .pron-controls .pron-timer:empty { display: none; }
+  html body .pron-controls .pron-timer { order: 5; flex-basis: 100%; text-align: center; }
+  html body .pron-controls > :last-child:not(.pron-compare-btn):not(.pron-timer) {
+    order: 6; flex: 1 1 100%; justify-content: center; margin: 0 !important;
+  }
+  html body .pron-controls .pron-mark-done { min-height: 44px !important; }
+}
+
+/* Painéis em tablet em pé (601 a 900px): aproveita a largura */
+@media (min-width: 601px) and (max-width: 900px) {
+  html body .stat-row { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important; }
+  html body .stat-row > .stat-card:last-child:nth-child(odd) { grid-column: auto; }
+  html body .dia-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important; }
+  html body .content { padding: 20px 22px calc(32px + env(safe-area-inset-bottom, 0px)) !important; }
+}
+
+/* ═════════ SITE PÚBLICO ═════════ */
+
+/* Rodapé: os links ficavam colados ("InícioO Método…") até 768px */
+@media (max-width: 768px) {
+  html body .footer-col { display: flex !important; flex-wrap: wrap; align-items: center; gap: 0 20px; }
+  html body .footer-col > .footer-title,
+  html body .footer-col > h4 { flex: 1 1 100%; margin-bottom: 6px !important; }
+  html body .footer-col > a {
+    display: inline-flex !important; align-items: center; min-height: 44px;
+    padding: 0 !important; margin: 0 !important;
+  }
+}
+@media (max-width: 480px) {
+  html body .footer-col { justify-content: center; gap: 0 18px; }
+}
+
+@media (max-width: 900px) {
+  /* Títulos equilibrados, sem palavra sozinha na última linha */
+  html body :is(.section-title, .page-hero h1, .hero h1, .pstrip-title, .cta-final h2, .coord-title, .course-name, .about h2, .faq-q h3) {
+    text-wrap: balance;
+  }
+  /* O botão do WhatsApp sai da frente enquanto a pessoa digita */
+  html body:has(input:focus, textarea:focus, select:focus) .wa-float {
+    opacity: 0 !important; pointer-events: none !important; transform: scale(.8);
+  }
+}
+
+@media (max-width: 480px) {
+  /* Hero da home: sem quebra forçada, o título se equilibra sozinho */
+  html body .hero h1 br { display: none; }
+  /* Rótulos dos números do hero estavam com 9,5px */
+  html body .hero-stat p:not(.stat-num) { font-size: 11px !important; letter-spacing: 0.06em !important; line-height: 1.35; }
+  /* Botões de ação ocupam a coluna inteira, como o principal */
+  html body .steps .note-cta .btn,
+  html body .course-info > .btn,
+  html body .coord-cta { width: 100%; justify-content: center; }
+}
+
+/* Correção de redação no toque: a dica sai de cima do texto e o
+   resumo + nota ficam um embaixo do outro */
+@media (max-width: 900px) {
+  html body .wr-essay-box[data-mode="select"]::after {
+    content: '✏️ Selecione um trecho para comentar';
+    position: static; display: block; margin-top: 10px; font-size: 11.5px;
+  }
+}
+@media (max-width: 600px) {
+  html body div[style*="grid-template-columns:1fr auto"]:has(> div > textarea[id^="wrFb-"]) {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  html body select[id^="wrGr-"] { width: 100%; min-height: 44px; }
+}
+
+/* Ordenar / Exibir: cada rótulo fica ao lado do seu controle */
+@media (max-width: 480px) {
+  html body .ea-list-controls {
+    display: grid !important; grid-template-columns: auto 1fr; justify-items: start;
+    align-items: center; gap: 8px 12px !important;
+  }
+  html body .ea-list-controls .ea-seg-label { margin: 0 !important; }
+}
+
+/* Cursos: o selo de nível encostava na capa e a seta do botão
+   caía sozinha na linha de baixo */
+@media (max-width: 640px) {
+  html body .course-img-wrap { height: auto !important; min-height: 240px; padding: 60px 16px 24px; box-sizing: border-box; }
+  html body .course-badge { top: 14px !important; left: 14px !important; }
+  html body .course-info > .btn { text-wrap: balance; }
+}

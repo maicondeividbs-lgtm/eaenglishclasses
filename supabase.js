@@ -978,7 +978,7 @@ async function getStudentScheduleSlots(studentId, studentName) {
   const all = await getScheduleSlotsMulti(teachers.map(t => t.teacher_id));
   const mine = String(studentName || '').trim().toLowerCase();
   const slots = (all || [])
-    .filter(s => s.student_name && s.student_name.trim().toLowerCase() === mine)
+    .filter(s => s.student_id ? s.student_id === studentId : (s.student_name && s.student_name.trim().toLowerCase() === mine))
     .map(s => Object.assign({}, s, { teacher_name: nameById[s.teacher_id] || '' }));
   slots.sort((a, b) => a.day_of_week !== b.day_of_week
     ? a.day_of_week - b.day_of_week

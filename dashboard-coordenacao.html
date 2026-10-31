@@ -3885,7 +3885,7 @@ async function initToolProfessors() {
     if (profiles && profiles.length > 0) {
       profiles.forEach(p => {
         const label = p.role === 'coordinator' ? p.full_name + ' (Coord)' : p.full_name;
-        s.innerHTML += '<option value="' + p.id + '">' + label + '</option>';
+        s.innerHTML += '<option value="' + escapeHtml(p.id) + '">' + escapeHtml(label) + '</option>';
       });
       toolProfLoaded = true;
       console.log('Tool: loaded ' + profiles.length + ' professors');
@@ -4211,7 +4211,7 @@ function setBadge(id, count) {
     const el = document.getElementById(fid);
     if (!el) return;
     staffList.forEach(t => {
-      el.innerHTML += '<option value="' + t.id + '">' + t.full_name + '</option>';
+      el.innerHTML += '<option value="' + escapeHtml(t.id) + '">' + escapeHtml(t.full_name) + '</option>';
     });
   });
   const unread = await getUnreadCount(currentUser.id, 'coordinator');
@@ -4235,7 +4235,7 @@ async function loadTeachersDropdown() {
   if (!el) return;
   el.innerHTML = '<option value="">Selecione o professor</option>';
   teachers.forEach(t => {
-    el.innerHTML += '<option value="' + t.id + '">' + t.full_name + '</option>';
+    el.innerHTML += '<option value="' + escapeHtml(t.id) + '">' + escapeHtml(t.full_name) + '</option>';
   });
 }
 
@@ -4267,7 +4267,7 @@ async function loadTeachStudents() {
     if(!el) return;
     el.innerHTML = '<option value="">Selecione o aluno</option>';
     students.forEach(function(s){
-      el.innerHTML += '<option value="'+s.id+'">'+s.full_name+'</option>';
+      el.innerHTML += '<option value="'+escapeHtml(s.id)+'">'+escapeHtml(s.full_name)+'</option>';
     });
   });
   teachStudentsLoaded = true;
@@ -4638,7 +4638,7 @@ async function loadOverview() {
 
     // Recent activity
     const recent = [];
-    placements.slice(0,3).forEach(p => recent.push({title:'📅 Nivelamento: ' + p.full_name, sub: p.email + ' — ' + formatDateTime(p.created_at), badge: ({pending:'Pendente',reviewed:'Avaliado',contacted:'Contatado',enrolled:'Matriculado'}[p.status] || 'Novo'), cls: 'badge-new'}));
+    placements.slice(0,3).forEach(p => recent.push({title:'📅 Nivelamento: ' + escapeHtml(p.full_name || ''), sub: escapeHtml(p.email || '') + ' — ' + formatDateTime(p.created_at), badge: ({pending:'Pendente',reviewed:'Avaliado',contacted:'Contatado',enrolled:'Matriculado'}[p.status] || 'Novo'), cls: 'badge-new'}));
 
     const div = document.getElementById('recentActivity');
     if (!recent.length) {
@@ -4677,8 +4677,8 @@ async function loadOverview() {
       const safeEmail = (s.email || '').replace(/'/g, "\\'");
       const wppPhone = (s.phone || '').replace(/\D/g, '');
       const wppLink = wppPhone ? '<a href="https://wa.me/55' + wppPhone + '" target="_blank" class="ctr-action ctr-action-wpp" title="WhatsApp">📱</a>' : '';
-      const emailLink = '<a href="mailto:' + safeEmail + '" class="ctr-action ctr-action-email" title="E-mail">📧</a>';
-      const editBtn = '<button class="ctr-action ctr-action-edit" title="Editar/renovar contrato" onclick="openEditUserFromAlert(\'' + s.id + '\')">✏️</button>';
+      const emailLink = '<a href="' + escapeHtml('mailto:' + encodeURIComponent(s.email || '').replace(/%40/g, '@')) + '" class="ctr-action ctr-action-email" title="E-mail">📧</a>';
+      const editBtn = '<button class="ctr-action ctr-action-edit" title="Editar/renovar contrato" onclick="openEditUserFromAlert(\'' + escapeHtml(String(s.id).replace(/[^0-9a-f-]/gi, '')) + '\')">✏️</button>';
       const badgeClass = isExpired ? 'ctr-badge-expired' : (days <= 7 ? 'ctr-badge-urgent' : days <= 15 ? 'ctr-badge-warn' : 'ctr-badge-soft');
       const badgeLabel = isExpired ? ('Vencido há ' + days + ' dia' + (days === 1 ? '' : 's')) : (days + ' dia' + (days === 1 ? '' : 's') + ' restante' + (days === 1 ? '' : 's'));
       return '<div class="ctr-item' + (isExpired ? ' ctr-expired' : '') + '">' +
@@ -4855,7 +4855,7 @@ function nivCardHtml(p) {
   const initial = name.charAt(0).toUpperCase();
   const phoneRaw = (p.phone || '').replace(/\D/g, '');
   const wppUrl = phoneRaw ? 'https://wa.me/55' + phoneRaw : '';
-  const emailUrl = 'mailto:' + (p.email || '');
+  const emailUrl = 'mailto:' + encodeURIComponent(p.email || '').replace(/%40/g, '@');
   const when = p.created_at ? timeAgo(p.created_at) : '';
   const safeName = name.replace(/'/g, "\\'");
   const safeEmail = (p.email || '').replace(/'/g, "\\'");
@@ -4899,12 +4899,12 @@ function nivCardHtml(p) {
     actions += '<a href="' + wppUrl + '" target="_blank" rel="noopener" class="niv-act-btn niv-act-wpp">' +
       '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8.9-.9 1.1-.2.2-.3.2-.6.1-1.8-.9-3-1.6-4.2-3.6-.3-.5.3-.5.9-1.6.1-.2 0-.4 0-.5s-.7-1.6-.9-2.2c-.2-.6-.5-.5-.7-.5H8c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3 1.8.8 2.5.8 3.4.7.5-.1 1.8-.7 2-1.5.3-.8.3-1.4.2-1.5zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.2-1.3c1.4.7 3 1.1 4.8 1.1 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>WhatsApp</a>';
   }
-  actions += '<a href="' + emailUrl + '" class="niv-act-btn niv-act-email">' + icoMail + 'E-mail</a>';
+  actions += '<a href="' + nivEsc(emailUrl) + '" class="niv-act-btn niv-act-email">' + icoMail + 'E-mail</a>';
   actions += '<button type="button" class="niv-act-btn niv-act-detail" onclick="openNivDetail(' + p.id + ')">' +
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>' +
     (nivHasDetail(p) ? 'Editar detalhes' : 'Detalhes / Agendar') + '</button>';
   if (isPending) {
-    actions += '<button type="button" class="niv-act-btn niv-act-contact" onclick="markContacted(' + p.id + ",'" + safeEmail + "','" + safeName + '\')">' +
+    actions += '<button type="button" class="niv-act-btn niv-act-contact" data-niv-id="' + nivEsc(String(p.id)) + '" onclick="nivMarkFromBtn(this)">' +
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Marcar contatado</button>';
   } else {
     actions += '<div class="niv-act-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>Atendido</div>';
@@ -5057,6 +5057,11 @@ async function loadFeedbacks() {
 
 
 // ═══ NIVELAMENTO ACTIONS ═══
+function nivMarkFromBtn(btn) {
+  const p = (_nivItems || []).find(x => String(x.id) === btn.dataset.nivId);
+  if (p) markContacted(p.id, p.email || '', p.full_name || '');
+}
+
 async function markContacted(id, email, name) {
   // Abre o Gmail com mensagem pré-preenchida
   var subject = encodeURIComponent('WIN — Agendamento de Nivelamento');
@@ -5126,10 +5131,10 @@ async function openEditModal(userId) {
   function fillTeacherSelect(el, emptyLabel) {
     el.innerHTML = '<option value="">' + emptyLabel + '</option>';
     teachers.forEach(t => {
-      el.innerHTML += '<option value="' + t.id + '">' + t.full_name + '</option>';
+      el.innerHTML += '<option value="' + escapeHtml(t.id) + '">' + escapeHtml(t.full_name) + '</option>';
     });
     coords.forEach(c => {
-      el.innerHTML += '<option value="' + c.id + '">' + c.full_name + ' (Coord)</option>';
+      el.innerHTML += '<option value="' + escapeHtml(c.id) + '">' + escapeHtml(c.full_name) + ' (Coord)</option>';
     });
   }
   const teacherSelect  = document.getElementById('editTeacher');
@@ -6148,11 +6153,11 @@ async function loadTestimonials() {
   const div = document.getElementById('testimonialsList');
   if (!items.length) { div.innerHTML = '<div class="empty-state"><div class="empty-icon">⭐</div><p>Nenhum depoimento recebido.</p></div>'; return; }
   div.innerHTML = items.map(t => {
-    const stars = '⭐'.repeat(t.rating);
+    const stars = '⭐'.repeat(Math.max(0, Math.min(5, parseInt(t.rating, 10) || 0)));
     const approveBtn = t.approved
       ? '<span class="badge badge-done">✅ Aprovado</span>'
-      : '<button onclick="approveTest(' + t.id + ')" style="padding:6px 14px;border-radius:8px;border:none;background:#10b981;color:#fff;font-size:12px;font-weight:700;cursor:pointer">Aprovar</button>';
-    return '<div class="list-item" style="' + (!t.approved ? 'background:var(--mango-soft)' : '') + '"><div style="flex:1"><div class="list-title">' + t.author_name + ' ' + stars + '</div><div class="list-sub" style="margin-top:6px;line-height:1.5;color:var(--g700)">"' + t.content + '"</div><div class="list-sub" style="margin-top:4px">' + formatDateTime(t.created_at) + '</div></div><div style="display:flex;gap:8px;align-items:center">' + approveBtn + '<button onclick="deleteTest(' + t.id + ')" style="padding:6px 10px;border-radius:8px;border:1px solid #BE123C;background:#fff;color:#BE123C;font-size:12px;font-weight:700;cursor:pointer">🗑️</button></div></div>';
+      : '<button onclick="approveTest(' + (parseInt(t.id, 10) || 0) + ')" style="padding:6px 14px;border-radius:8px;border:none;background:#10b981;color:#fff;font-size:12px;font-weight:700;cursor:pointer">Aprovar</button>';
+    return '<div class="list-item" style="' + (!t.approved ? 'background:var(--mango-soft)' : '') + '"><div style="flex:1"><div class="list-title">' + escapeHtml(t.author_name || '') + ' ' + stars + '</div><div class="list-sub" style="margin-top:6px;line-height:1.5;color:var(--g700)">"' + escapeHtml(t.content || '') + '"</div><div class="list-sub" style="margin-top:4px">' + formatDateTime(t.created_at) + '</div></div><div style="display:flex;gap:8px;align-items:center">' + approveBtn + '<button onclick="deleteTest(' + (parseInt(t.id, 10) || 0) + ')" style="padding:6px 10px;border-radius:8px;border:1px solid #BE123C;background:#fff;color:#BE123C;font-size:12px;font-weight:700;cursor:pointer">🗑️</button></div></div>';
   }).join('');
 }
 
@@ -6539,7 +6544,7 @@ async function loadCoordSchedule(){
   var students=await getMyStudents(cTeacherId);
   var pool=document.getElementById('schedStudentPool');
   if(!students.length){pool.innerHTML='<div style="padding:20px;text-align:center;color:var(--g400);font-size:12px">Nenhum aluno vinculado.</div>';}
-  else{var h='';for(var i=0;i<students.length;i++){var s=students[i],c=cGc(s.full_name),lv=s.course_name||s.level||'';h+='<div draggable="true" class="sched-student" data-name="'+s.full_name+'" data-level="'+lv+'" style="background:'+c.bg+';border:2px solid '+c.b+';color:'+c.t+';border-radius:10px;padding:10px 14px;margin-bottom:8px;cursor:grab;font-size:12px;font-weight:700;transition:all 0.2s;user-select:none">'+s.full_name+'<div style="font-size:10px;font-weight:400;opacity:0.7;margin-top:2px">'+lv+'</div></div>';}pool.innerHTML=h;}
+  else{var h='';for(var i=0;i<students.length;i++){var s=students[i],c=cGc(s.full_name),lv=s.course_name||s.level||'';h+='<div draggable="true" class="sched-student" data-name="'+escapeHtml(s.full_name)+'" data-level="'+escapeHtml(lv)+'" style="background:'+c.bg+';border:2px solid '+c.b+';color:'+c.t+';border-radius:10px;padding:10px 14px;margin-bottom:8px;cursor:grab;font-size:12px;font-weight:700;transition:all 0.2s;user-select:none">'+escapeHtml(s.full_name)+'<div style="font-size:10px;font-weight:400;opacity:0.7;margin-top:2px">'+escapeHtml(lv)+'</div></div>';}pool.innerHTML=h;}
   var slots=await getScheduleSlots(cTeacherId);
   for(var i=0;i<slots.length;i++)cGc(slots[i].student_name);
 
@@ -6878,7 +6883,7 @@ async function initSupFilter() {
   if (sel.options.length > 1) return;
   try {
     var r = await db.from('profiles').select('id,full_name').eq('role','teacher').order('full_name');
-    if (r.data) r.data.forEach(function(t) { sel.innerHTML += '<option value="' + t.id + '">' + t.full_name + '</option>'; });
+    if (r.data) r.data.forEach(function(t) { sel.innerHTML += '<option value="' + escapeHtml(t.id) + '">' + escapeHtml(t.full_name) + '</option>'; });
   } catch(e) {}
   var ss = document.getElementById('supStudentFilter');
   if (ss && ss.options.length <= 1) {

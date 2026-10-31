@@ -224,8 +224,9 @@ module.exports = async (req, res) => {
 
     // ── execuções autorizadas ──
     const auth = req.headers['authorization'] || '';
-    const isCron = !!process.env.CRON_SECRET && auth === 'Bearer ' + process.env.CRON_SECRET;
-    const isManual = !!process.env.EA_PUSH_SECRET && (q.secret === process.env.EA_PUSH_SECRET || req.headers['x-ea-secret'] === process.env.EA_PUSH_SECRET);
+    const isCron = !!process.env.CRON_SECRET && (() => { const a = Buffer.from(auth), b = Buffer.from('Bearer ' + process.env.CRON_SECRET); return a.length === b.length && crypto.timingSafeEqual(a, b); })();
+    const eqSecret = v => { const w = process.env.EA_PUSH_SECRET; if (!w || typeof v !== 'string') return false; const a = Buffer.from(v), b = Buffer.from(w); return a.length === b.length && crypto.timingSafeEqual(a, b); };
+    const isManual = eqSecret(q.secret) || eqSecret(req.headers['x-ea-secret']);
     if (!isCron && !isManual) return res.status(401).json({ error: 'unauthorized' });
     if (!SB_URL || !SB_KEY || !RESEND_KEY) return res.status(500).json({ error: 'missing env' });
 

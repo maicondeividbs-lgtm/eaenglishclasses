@@ -1,3 +1,11 @@
+import { timingSafeEqual } from 'node:crypto';
+// Compara o segredo do webhook em tempo constante.
+function secretOk(got) {
+  const want = process.env.EA_PUSH_SECRET;
+  if (!want || typeof got !== 'string') return false;
+  const a = Buffer.from(got), b = Buffer.from(want);
+  return a.length === b.length && timingSafeEqual(a, b);
+}
 // Função serverless da Vercel — envia e-mail (Resend) para o destinatário certo.
 // Acionada por um Database Webhook do Supabase (INSERT/UPDATE nas tabelas de
 // notificação) ou por chamada de teste autenticada.
@@ -273,8 +281,7 @@ export default async function handler(req, res) {
 
   try {
     // Segredo só pelo cabeçalho (os gatilhos do Supabase já enviam assim).
-    const secret = req.headers['x-ea-secret'];
-    if (!process.env.EA_PUSH_SECRET || secret !== process.env.EA_PUSH_SECRET) {
+    if (!secretOk(req.headers['x-ea-secret'])) {
       res.status(401).json({ error: 'unauthorized' }); return;
     }
     if (!SB_URL || !SB_KEY || !RESEND_KEY) {
@@ -331,6 +338,7 @@ export default async function handler(req, res) {
 
     res.status(200).json({ ok: true, table, cat: p.cat, sent, candidates: recipients.length, errors });
   } catch (e) {
-    res.status(500).json({ error: 'erro interno', detail: String((e && e.stack) || e) });
+    console.error('send-email', e);
+    res.status(500).json({ error: 'erro interno' });
   }
 }

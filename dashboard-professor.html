@@ -2374,7 +2374,7 @@ async function loadStudents() {
       return;
     }
     students.forEach(s => {
-      el.innerHTML += '<option value="' + s.id + '">' + s.full_name + (s.course_name ? ' (' + s.course_name + ')' : '') + '</option>';
+      el.innerHTML += '<option value="' + escapeHtml(s.id) + '">' + escapeHtml(s.full_name) + (s.course_name ? ' (' + escapeHtml(s.course_name) + ')' : '') + '</option>';
     });
   });
   // Update overview with student count
@@ -3544,7 +3544,7 @@ async function loadSchedule(){
   var students=window._myStudents||await getMyStudents(currentUser.id);
   var pool=document.getElementById('profSchedPool');
   if(!students.length){pool.innerHTML='<div style="padding:20px;text-align:center;color:var(--g400);font-size:12px">Nenhum aluno vinculado.</div>';}
-  else{var h='';for(var i=0;i<students.length;i++){var s=students[i],c=gc(s.full_name),lv=s.course_name||s.level||'';h+='<div draggable="true" class="sched-student" data-name="'+s.full_name+'" data-level="'+lv+'" style="background:'+c.bg+';border:2px solid '+c.b+';color:'+c.t+';border-radius:10px;padding:10px 14px;margin-bottom:8px;cursor:grab;font-size:12px;font-weight:700;transition:all 0.2s;user-select:none">'+s.full_name+'<div style="font-size:10px;font-weight:400;opacity:0.7;margin-top:2px">'+lv+'</div></div>';}pool.innerHTML=h;}
+  else{var h='';for(var i=0;i<students.length;i++){var s=students[i],c=gc(s.full_name),lv=s.course_name||s.level||'';h+='<div draggable="true" class="sched-student" data-name="'+escapeHtml(s.full_name)+'" data-level="'+escapeHtml(lv)+'" style="background:'+c.bg+';border:2px solid '+c.b+';color:'+c.t+';border-radius:10px;padding:10px 14px;margin-bottom:8px;cursor:grab;font-size:12px;font-weight:700;transition:all 0.2s;user-select:none">'+escapeHtml(s.full_name)+'<div style="font-size:10px;font-weight:400;opacity:0.7;margin-top:2px">'+escapeHtml(lv)+'</div></div>';}pool.innerHTML=h;}
 
   var slots=await getScheduleSlots(currentUser.id);
   for(var i=0;i<slots.length;i++)gc(slots[i].student_name);

@@ -1,3 +1,11 @@
+import { timingSafeEqual } from 'node:crypto';
+// Compara o segredo do webhook em tempo constante.
+function secretOk(got) {
+  const want = process.env.EA_PUSH_SECRET;
+  if (!want || typeof got !== 'string') return false;
+  const a = Buffer.from(got), b = Buffer.from(want);
+  return a.length === b.length && timingSafeEqual(a, b);
+}
 // Função serverless da Vercel — envia push para o(s) aparelho(s) do usuário.
 // Acionada por um Database Webhook do Supabase ou por chamada direta autenticada.
 //
@@ -121,8 +129,7 @@ export default async function handler(req, res) {
 
   try {
     // Segredo só pelo cabeçalho (os gatilhos do Supabase já enviam assim).
-    const secret = req.headers['x-ea-secret'];
-    if (!process.env.EA_PUSH_SECRET || secret !== process.env.EA_PUSH_SECRET) {
+    if (!secretOk(req.headers['x-ea-secret'])) {
       res.status(401).json({ error: 'unauthorized' }); return;
     }
     const envOk = {
@@ -191,7 +198,12 @@ export default async function handler(req, res) {
 
     let subs = [];
     if (r.byUser) subs = await sbSelect(`push_subscriptions?user_id=eq.${r.byUser}&select=endpoint,subscription`);
-    else if (r.byRole) subs = await sbSelect(`push_subscriptions?role=eq.${r.byRole}&select=endpoint,subscription`);
+    else if (r.byRole) {
+      // O papel vem do perfil (fonte confiável), não da coluna gravada pelo navegador.
+      const donos = await sbSelect(`profiles?role=eq.${encodeURIComponent(r.byRole)}&active=eq.true&archived_at=is.null&select=id`);
+      const ids = (donos || []).map(p => p.id).filter(Boolean);
+      subs = ids.length ? await sbSelect(`push_subscriptions?user_id=in.(${ids.map(encodeURIComponent).join(',')})&select=endpoint,subscription`) : [];
+    }
     else subs = await sbSelect(`push_subscriptions?select=endpoint,subscription`);
 
     // Personaliza pelo primeiro nome quando o destino é um usuário específico
@@ -214,6 +226,7 @@ export default async function handler(req, res) {
 
     res.status(200).json({ ok: true, cat: r.cat, sent, candidates: (subs || []).length });
   } catch (e) {
-    res.status(500).json({ error: 'erro interno', detail: String((e && e.stack) || e) });
+    console.error('send-push', e);
+    res.status(500).json({ error: 'erro interno' });
   }
 }

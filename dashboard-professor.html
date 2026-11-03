@@ -2419,8 +2419,8 @@ async function loadOverview() {
 
     // ── Atividade recente ──
     const recent = [];
-    tasks.slice(0,3).forEach(function(t){ recent.push({title:'📝 ' + t.title, sub: formatDateTime(t.created_at), type:'homework'}); });
-    feedbacks.slice(0,3).forEach(function(f){ recent.push({title:'💬 ' + f.title, sub: ((f.student&&f.student.full_name)||'') + ' — ' + formatDateTime(f.created_at), type:'feedback'}); });
+    tasks.slice(0,3).forEach(function(t){ recent.push({title:'📝 ' + escapeHtml(t.title), sub: formatDateTime(t.created_at), type:'homework'}); });
+    feedbacks.slice(0,3).forEach(function(f){ recent.push({title:'💬 ' + escapeHtml(f.title), sub: escapeHtml((f.student&&f.student.full_name)||'') + ' — ' + formatDateTime(f.created_at), type:'feedback'}); });
     const actDiv = document.getElementById('recentActivity');
     if(actDiv){
       if (recent.length === 0) { actDiv.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>Nenhuma atividade ainda.</p></div>'; }
@@ -2680,9 +2680,9 @@ async function loadFeedbackList() {
       '<div class="sent-head">' +
         '<div class="sent-icon">' + fbIcon + '</div>' +
         '<div class="sent-body">' +
-          '<div class="sent-title">' + f.title + (f.cancelled ? ' <span class="sent-status" style="background:#FFE4E6;color:#881337;vertical-align:middle">🚫 Cancelado</span>' : '') + '</div>' +
+          '<div class="sent-title">' + escapeHtml(f.title) + (f.cancelled ? ' <span class="sent-status" style="background:#FFE4E6;color:#881337;vertical-align:middle">🚫 Cancelado</span>' : '') + '</div>' +
           '<div class="sent-meta">' +
-            '<span class="sent-meta-author">Para: ' + studentName + '</span>' +
+            '<span class="sent-meta-author">Para: ' + escapeHtml(studentName) + '</span>' +
             '<span class="sent-meta-sep">•</span>' +
             '<span>' + formatDateTime(f.created_at) + '</span>' +
             (f.cancelled ? '' : ' ' + winSeenTag(f, seenSince)) +
@@ -3044,7 +3044,7 @@ function getCommentsFor(id) {
 }
 
 function escapeHtml(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
 function parseWritingFeedback(raw) {
@@ -3594,7 +3594,7 @@ async function loadSchedule(){
         var durTxt=dur===30?' 30m':dur===90?' 90m':'';
         var h2=span>1?' rowspan="'+span+'"':'';
         var cellH=span*48;
-        cells+='<td class="sched-cell sched-filled" data-day="'+di+'" data-hour="'+hour+'"'+h2+' style="height:'+cellH+'px"><div draggable="true" class="sched-slot" data-name="'+slot.student_name+'" data-level="'+(slot.student_level||'')+'" data-slotid="'+slot.id+'" data-dur="'+dur+'" data-dow="'+di+'" data-time="'+(slot.time_slot||'')+'" style="background:'+c.bg+';border:2px solid '+c.b+';color:'+c.t+';cursor:grab;height:100%"><div class="sched-slot-name">'+slot.student_name+durTxt+'</div><div class="sched-slot-level">'+(slot.student_level||'')+'</div><div class="sched-slot-x" data-delid="'+slot.id+'">✕</div></div></td>';
+        cells+='<td class="sched-cell sched-filled" data-day="'+di+'" data-hour="'+hour+'"'+h2+' style="height:'+cellH+'px"><div draggable="true" class="sched-slot" data-name="'+escapeHtml(slot.student_name)+'" data-level="'+escapeHtml(slot.student_level||'')+'" data-slotid="'+slot.id+'" data-dur="'+dur+'" data-dow="'+di+'" data-time="'+(slot.time_slot||'')+'" style="background:'+c.bg+';border:2px solid '+c.b+';color:'+c.t+';cursor:grab;height:100%"><div class="sched-slot-name">'+escapeHtml(slot.student_name)+durTxt+'</div><div class="sched-slot-level">'+escapeHtml(slot.student_level||'')+'</div><div class="sched-slot-x" data-delid="'+slot.id+'">✕</div></div></td>';
       } else if(cellEvts.length>0){
         // Show event on grid
         var ev=cellEvts[0];
@@ -4054,6 +4054,8 @@ document.addEventListener('DOMContentLoaded', function(){
 
 // ═══ MEU PERFIL ═══
 function setAvatarEverywhere(url) {
+  // Só aceita imagens https:// (avatar do Supabase); evita injeção de HTML pelo endereço.
+  url = /^https:\/\/[^\s"'<>]+$/i.test(String(url||'').trim()) ? String(url).trim() : '';
   const profAv = document.getElementById('profileAvatar');
   if (profAv && url) {
     profAv.innerHTML = '<img src="' + url + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';

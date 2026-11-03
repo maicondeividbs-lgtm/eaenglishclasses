@@ -301,16 +301,36 @@
     if (!list) return;
     var sc = scopeOf(list), sel = sc && sc.querySelector('.form-card select');
     if (!sel) return;
+    var l = lists[listId], roster = {}, n = 0;
+    l.hasRoster = true;
     Array.prototype.forEach.call(sel.options, function (o) {
       if (!o.value) return;
-      if (!names[o.value]) names[o.value] = o.textContent.replace(/\s*\([^)]*\)\s*$/, '').trim() || 'Aluno';
-      lists[listId].ids[o.value] = 1;
+      names[o.value] = o.textContent.replace(/\s*\([^)]*\)\s*$/, '').trim() || names[o.value] || 'Aluno';
+      roster[o.value] = 1; n++;
     });
+    var changed = Object.keys(roster).sort().join() !== Object.keys(l.roster || {}).sort().join();
+    l.roster = roster; l.rosterReady = n > 0;
+    return changed;
+  }
+
+  // Alunos que podem aparecer: com seletor de envio na seção, só os da turma
+  // ativa (matrícula ativa). Assim quem está no arquivo morto não aparece.
+  function allowed(l, sid) { return !l.hasRoster || !!(l.roster && l.roster[sid]); }
+  function keepAllowed(l, items) {
+    if (!l.hasRoster || !l.rosterReady) return items;
+    var out = [];
+    items.forEach(function (it) {
+      if (Array.isArray(it.task_submissions)) {
+        var subs = it.task_submissions.filter(function (s) { return allowed(l, s.student_id); });
+        if (subs.length) out.push(subs.length === it.task_submissions.length ? it : Object.assign({}, it, { task_submissions: subs }));
+      } else if (!it.student_id || allowed(l, it.student_id)) out.push(it);
+    });
+    return out;
   }
 
   function optionsFor(listId) {
     var l = lists[listId];
-    return Object.keys(l.ids).sort(function (a, c) {
+    return Object.keys(l.ids).filter(function (id) { return allowed(l, id); }).sort(function (a, c) {
       return String(names[a]).localeCompare(String(names[c]), 'pt', { sensitivity: 'base' });
     }).map(function (id) {
       var n = l.counts[id] || 0, p = l.pend[id] || 0;
@@ -356,7 +376,7 @@
     // Quando o seletor de envio da seção termina de carregar, atualiza os alunos
     var send = sc && sc.querySelector('.form-card select');
     if (send && window.MutationObserver) {
-      new MutationObserver(function () { readSendSelect(listId); fill(listId); })
+      new MutationObserver(function () { if (readSendSelect(listId)) reloadList(listId); else fill(listId); })
         .observe(send, { childList: true });
     }
     return el;
@@ -388,7 +408,7 @@
       cur = sid; ssSet(KEY, cur);
       Object.keys(lists).forEach(function (lid) {
         var l = lists[lid];
-        if (cur && !l.ids[cur] && names[cur]) l.ids[cur] = 1;
+        if (cur && !l.ids[cur] && names[cur] && allowed(l, cur)) l.ids[cur] = 1;
         reloadList(lid);
       });
     } else {
@@ -419,11 +439,13 @@
 
   function apply(listId, items, reload) {
     items = items || [];
-    if (!lists[listId]) lists[listId] = { reload: reload, ids: {}, count: 0, counts: {}, pend: {}, cur: ssGet(KEY + ':' + listId) };
+    if (!lists[listId]) lists[listId] = { reload: reload, ids: {}, count: 0, counts: {}, pend: {}, cur: ssGet(KEY + ':' + listId), roster: {} };
     var l = lists[listId];
     l.reload = reload;
     var b = bar(listId);
     if (!b) return items;
+    readSendSelect(listId);
+    items = keepAllowed(l, items);
 
     l.counts = {}; l.pend = {};
     items.forEach(function (it) {
@@ -434,8 +456,13 @@
         if (s.pend) l.pend[s.id] = (l.pend[s.id] || 0) + 1;
       });
     });
-    readSendSelect(listId);
+    Object.keys(l.roster || {}).forEach(function (id) { l.ids[id] = 1; });
     var sid = curFor(listId);
+    if (sid && l.rosterReady && !allowed(l, sid)) {
+      // O aluno escolhido não está mais na turma ativa (ex.: arquivado): limpa.
+      if (mode === 'all') { cur = ''; ssSet(KEY, ''); } else { l.cur = ''; ssSet(KEY + ':' + listId, ''); }
+      sid = '';
+    }
     if (sid && names[sid]) l.ids[sid] = 1;
 
     var out = sid ? only(items, sid) : items;

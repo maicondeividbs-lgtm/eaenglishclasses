@@ -10,23 +10,28 @@ const ALLOWED_ORIGINS = [
   'https://www.winenglish.com.br',
   'https://winenglish.com.br',
 ];
-// Pré-visualizações deste projeto na Vercel
-const PREVIEW_RE = /^https:\/\/maicondeividbs-lgtm-eaenglishclasses[a-z0-9-]*\.vercel\.app$/i;
+// Pré-visualizações deste projeto na Vercel: só domínios do próprio time
+// (sufixo "-maicondeividbs-4415s-projects.vercel.app"). Um prefixo genérico
+// aceitaria projetos de outras contas com nome parecido.
+const PREVIEW_RE = /^https:\/\/[a-z0-9-]+-maicondeividbs-4415s-projects\.vercel\.app$/i;
 
-export function originAllowed(origin) {
+export function originAllowed(origin, host) {
   if (!origin) return true; // mesma origem sem cabeçalho Origin (ex.: navegação direta)
+  // A própria página que chamou (ex.: um deployment de preview chamando /api dele mesmo).
+  if (host && origin.toLowerCase() === ('https://' + String(host).toLowerCase())) return true;
   return ALLOWED_ORIGINS.includes(origin) || PREVIEW_RE.test(origin);
 }
 
 // Aplica CORS restrito. Retorna false (e já responde 403) se a origem não for permitida.
 export function applyCors(req, res, methods) {
   const origin = req.headers.origin || '';
+  const host = req.headers.host || '';
   res.setHeader('Vary', 'Origin');
-  if (origin && originAllowed(origin)) res.setHeader('Access-Control-Allow-Origin', origin);
+  if (origin && originAllowed(origin, host)) res.setHeader('Access-Control-Allow-Origin', origin);
   res.setHeader('Access-Control-Allow-Methods', methods || 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   res.setHeader('Cache-Control', 'no-store');
-  if (!originAllowed(origin)) {
+  if (!originAllowed(origin, host)) {
     res.status(403).json({ error: 'Origem não permitida.' });
     return false;
   }

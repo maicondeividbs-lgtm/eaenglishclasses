@@ -4098,7 +4098,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('userName').textContent = currentUser.full_name || 'Coordenação';
   const avatarEl = document.getElementById('userAvatar');
   if (currentUser.avatar_url) {
-    avatarEl.innerHTML = '<img src="' + currentUser.avatar_url + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
+    avatarEl.innerHTML = '<img src="' + escapeHtml(safeImgUrl(currentUser.avatar_url)) + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
   } else {
     avatarEl.textContent = (currentUser.full_name || 'C')[0];
   }
@@ -5158,7 +5158,7 @@ async function openEditModal(userId) {
   courseSelect.innerHTML = '<option value="">Sem curso</option>';
   courses.forEach(c => {
     const selected = (courseId != null && c.id === courseId) ? ' selected' : '';
-    courseSelect.innerHTML += '<option value="' + c.id + '"' + selected + '>' + c.name + ' (' + c.cefr_level + ')</option>';
+    courseSelect.innerHTML += '<option value="' + c.id + '"' + selected + '>' + escapeHtml(c.name) + ' (' + escapeHtml(c.cefr_level) + ')</option>';
   });
   
   document.getElementById('editModal').style.display = 'flex';
@@ -5565,7 +5565,12 @@ function getCommentsFor(id) {
   return _wrInlineComments[id];
 }
 function escapeHtml(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+// Só aceita imagens https:// (ex.: avatar do Supabase); qualquer outra coisa vira vazio.
+function safeImgUrl(u) {
+  u = String(u||'').trim();
+  return /^https:\/\/[^\s"'<>]+$/i.test(u) ? u : '';
 }
 function parseWritingFeedback(raw) {
   if (!raw) return { general: '', inline: [] };
@@ -6534,7 +6539,7 @@ async function initCoordSchedule(){
   initCoordDragDrop();
   if(coordSchedLoaded)return;
   var sel=document.getElementById('schedProfSelect');
-  try{var r=await db.from('profiles').select('id,full_name,role').in('role',['teacher','coordinator']).order('full_name');if(r.data)r.data.forEach(function(p){sel.innerHTML+='<option value="'+p.id+'">'+p.full_name+(p.role==='coordinator'?' (Coord)':'')+'</option>';});coordSchedLoaded=true;}catch(e){}
+  try{var r=await db.from('profiles').select('id,full_name,role').in('role',['teacher','coordinator']).order('full_name');if(r.data)r.data.forEach(function(p){sel.innerHTML+='<option value="'+escapeHtml(p.id)+'">'+escapeHtml(p.full_name)+(p.role==='coordinator'?' (Coord)':'')+'</option>';});coordSchedLoaded=true;}catch(e){}
 }
 
 async function loadCoordSchedule(){
@@ -6588,7 +6593,7 @@ async function loadCoordSchedule(){
         var durTxt=dur===30?' 30m':dur===90?' 90m':'';
         var rs=span>1?' rowspan="'+span+'"':'';
         var ch=span*48;
-        cells+='<td class="sched-cell sched-filled" data-day="'+di+'" data-hour="'+hour+'"'+rs+' style="height:'+ch+'px"><div draggable="true" class="sched-slot" data-name="'+slot.student_name+'" data-level="'+(slot.student_level||'')+'" data-slotid="'+slot.id+'" data-dur="'+dur+'" data-dow="'+di+'" data-time="'+(slot.time_slot||'')+'" style="background:'+c.bg+';border:2px solid '+c.b+';color:'+c.t+';cursor:grab;height:100%"><div class="sched-slot-name">'+slot.student_name+durTxt+'</div><div class="sched-slot-level">'+(slot.student_level||'')+'</div><div class="sched-slot-x" data-delid="'+slot.id+'">✕</div></div></td>';
+        cells+='<td class="sched-cell sched-filled" data-day="'+di+'" data-hour="'+hour+'"'+rs+' style="height:'+ch+'px"><div draggable="true" class="sched-slot" data-name="'+escapeHtml(slot.student_name)+'" data-level="'+escapeHtml(slot.student_level||'')+'" data-slotid="'+slot.id+'" data-dur="'+dur+'" data-dow="'+di+'" data-time="'+(slot.time_slot||'')+'" style="background:'+c.bg+';border:2px solid '+c.b+';color:'+c.t+';cursor:grab;height:100%"><div class="sched-slot-name">'+escapeHtml(slot.student_name)+durTxt+'</div><div class="sched-slot-level">'+escapeHtml(slot.student_level||'')+'</div><div class="sched-slot-x" data-delid="'+slot.id+'">✕</div></div></td>';
       }else if(cellEvts.length>0){
         var ev=cellEvts[0];
         var evIcon=ev.event_type==='cancellation'?'❌':'🔄';
@@ -6903,7 +6908,7 @@ function loadMyProfile() {
   document.getElementById('profEmail').value = currentUser.email || '';
   var av = document.getElementById('profileAvatar');
   if (currentUser.avatar_url) {
-    av.innerHTML = '<img src="' + currentUser.avatar_url + '" style="width:100%;height:100%;object-fit:cover">';
+    av.innerHTML = '<img src="' + escapeHtml(safeImgUrl(currentUser.avatar_url)) + '" style="width:100%;height:100%;object-fit:cover">';
   } else {
     av.textContent = (currentUser.full_name || 'C')[0];
   }
@@ -7005,8 +7010,8 @@ function applyUserFilters() {
     const roleLabel = {student:'Aluno',teacher:'Professor',coordinator:'Coordenador'}[p.role] || p.role;
     const roleEmoji = {student:'🎓',teacher:'👨‍🏫',coordinator:'📊'}[p.role] || '';
     const avatarInner = p.avatar_url 
-      ? '<img src="' + p.avatar_url + '">' 
-      : (p.full_name||'?')[0];
+      ? '<img src="' + escapeHtml(safeImgUrl(p.avatar_url)) + '">' 
+      : escapeHtml((p.full_name||'?')[0]);
     
     // Contract status
     let contractBadge = '';
@@ -7019,9 +7024,9 @@ function applyUserFilters() {
     return '<div class="user-card" style="cursor:pointer" onclick="openEditModal(\'' + p.id + '\')">' +
       '<div class="user-card-avatar ' + p.role + '">' + avatarInner + '</div>' +
       '<div style="flex:1;min-width:0">' +
-        '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap"><div class="user-card-name">' + (p.full_name||'Sem nome') + '</div>' + contractBadge + '</div>' +
+        '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap"><div class="user-card-name">' + escapeHtml(p.full_name||'Sem nome') + '</div>' + contractBadge + '</div>' +
         '<div class="user-card-role ' + p.role + '">' + roleEmoji + ' ' + roleLabel + (p.level ? ' • ' + p.level : '') + '</div>' +
-        '<div class="user-card-email" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + p.email + '</div>' +
+        '<div class="user-card-email" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + escapeHtml(p.email) + '</div>' +
       '</div></div>';
   }).join('');
 }
@@ -7235,7 +7240,7 @@ function renderCtrlInactive(list, total) {
     return '<div class="list-item" style="display:flex;align-items:center;gap:12px;padding:12px 18px">' +
       '<div style="width:34px;height:34px;border-radius:50%;flex-shrink:0;background:#F5F7FA;color:var(--orange);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px">' + initial + '</div>' +
       '<div style="flex:1;min-width:0">' +
-        '<div style="font-weight:700;color:var(--navy);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + s.name + '</div>' +
+        '<div style="font-weight:700;color:var(--navy);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + escapeHtml(s.name) + '</div>' +
         '<div style="font-size:11px;color:var(--orange);font-weight:600">' + info + '</div>' +
       '</div></div>';
   }).join('');
@@ -7257,7 +7262,7 @@ function renderCtrlTeachers(list, total) {
     return '<div class="list-item" style="display:flex;align-items:center;gap:12px;padding:12px 18px">' +
       '<div style="width:34px;height:34px;border-radius:50%;flex-shrink:0;background:var(--blue-soft);color:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px">' + initial + '</div>' +
       '<div style="flex:1;min-width:0">' +
-        '<div style="font-weight:700;color:var(--navy);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + t.name + '</div>' +
+        '<div style="font-weight:700;color:var(--navy);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + escapeHtml(t.name) + '</div>' +
         '<div style="font-size:11px;color:' + accent + ';font-weight:600">' + lbl + '</div>' +
       '</div>' +
       '<div style="font-weight:800;font-size:17px;color:' + (t.count === 0 ? 'var(--orange)' : 'var(--mango)') + ';flex-shrink:0">' + t.count + '×</div>' +
@@ -7280,7 +7285,7 @@ function renderCtrlBirthdays(list) {
     return '<div class="list-item" style="display:flex;align-items:center;gap:12px;padding:12px 18px">' +
       '<div style="width:34px;height:34px;border-radius:50%;flex-shrink:0;background:#F5F7FA;display:flex;align-items:center;justify-content:center;font-size:16px">🎂</div>' +
       '<div style="flex:1;min-width:0">' +
-        '<div style="font-weight:700;color:var(--navy);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + b.name + '</div>' +
+        '<div style="font-weight:700;color:var(--navy);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + escapeHtml(b.name) + '</div>' +
         '<div style="font-size:11px;color:var(--g500)">' + roleLabel(b.role) + ' • ' + dia + '</div>' +
       '</div>' +
       '<span style="display:inline-block;background:var(--mango);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;flex-shrink:0">' + b.when + '</span>' +

@@ -4161,6 +4161,8 @@ async function handleAvatarUpload(file) {
 }
 
 function setAvatarEverywhere(url) {
+  // Só aceita imagens https:// (avatar do Supabase); evita injeção de HTML pelo endereço.
+  url = /^https:\/\/[^\s"'<>]+$/i.test(String(url||'').trim()) ? String(url).trim() : '';
   // Profile page avatar
   const profAv = document.getElementById('profileAvatar');
   if (profAv) {

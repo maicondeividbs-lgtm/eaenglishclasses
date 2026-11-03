@@ -3170,14 +3170,15 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 
         <!-- Shared filter -->
         <div class="coord-filter-row" style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;align-items:center;background:#fff;padding:16px 20px;border-radius:14px;border:1px solid var(--g100)" id="supFilterBar">
-          <span style="font-size:13px;font-weight:700;color:var(--navy)">Filtrar por professor:</span>
-          <select id="supFilter" onchange="loadCurrentSup()" class="filter-select" style="flex:1;min-width:160px">
+          <select id="supFilter" onchange="supTeacherChanged()" class="filter-select" style="flex:1;min-width:160px">
             <option value="">Todos os professores</option>
           </select>
-          <span style="font-size:13px;font-weight:700;color:var(--navy);margin-left:6px">Aluno:</span>
           <select id="supStudentFilter" onchange="loadCurrentSup()" class="filter-select" style="flex:1;min-width:160px">
             <option value="">Todos os alunos</option>
           </select>
+          <label style="display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:#4A6075;cursor:pointer;user-select:none">
+            <input type="checkbox" id="supInclArchived" onchange="supArchivedChanged()" style="width:15px;height:15px;accent-color:#0B1F33;margin:0"> Incluir arquivados
+          </label>
         </div>
 
         <!-- Homeworks pane -->
@@ -6883,20 +6884,78 @@ function loadCurrentSup() {
 }
 
 // Populate supFilter on init
+// ── Filtros da Supervisão (professor → aluno) ──
+// O seletor de alunos mostra só os alunos do professor escolhido e, por padrão,
+// esconde arquivados/inativos (caixa "Incluir arquivados" mostra todos).
+var _supStudents = null, _supEnroll = null, _supInitDone = false;
 async function initSupFilter() {
+  if (_supInitDone) return;
+  _supInitDone = true;
   var sel = document.getElementById('supFilter');
-  if (sel.options.length > 1) return;
-  try {
-    var r = await db.from('profiles').select('id,full_name').eq('role','teacher').order('full_name');
-    if (r.data) r.data.forEach(function(t) { sel.innerHTML += '<option value="' + escapeHtml(t.id) + '">' + escapeHtml(t.full_name) + '</option>'; });
-  } catch(e) {}
   var ss = document.getElementById('supStudentFilter');
-  if (ss && ss.options.length <= 1) {
-    try {
-      var rs = await db.from('profiles').select('id,full_name').eq('role','student').order('full_name');
-      if (rs.data) ss.innerHTML += rs.data.map(function(a) { return '<option value="' + docEsc(a.id) + '">' + docEsc(a.full_name || 'Aluno') + '</option>'; }).join('');
-    } catch(e) {}
+  try {
+    var r = await db.from('profiles').select('id,full_name,active,archived_at').eq('role','teacher').order('full_name');
+    if (r.data) sel.innerHTML = '<option value="">Todos os professores</option>' + r.data.map(function(t) {
+      var off = t.archived_at || t.active === false;
+      return '<option value="' + escapeHtml(t.id) + '"' + (off ? ' data-sub="Inativo"' : '') + '>' + escapeHtml(t.full_name || 'Professor') + '</option>';
+    }).join('');
+  } catch(e) {}
+  try {
+    var rs = await db.from('profiles').select('id,full_name,active,archived_at').eq('role','student').order('full_name');
+    _supStudents = rs.data || [];
+  } catch(e) { _supStudents = []; }
+  try {
+    var re = await db.from('enrollments').select('student_id,teacher_id,active');
+    _supEnroll = re.data || [];
+  } catch(e) { _supEnroll = []; }
+  if (window.EA_STU && EA_STU.enhanceSelect) {
+    EA_STU.enhanceSelect(sel, { label: 'Professor', allLabel: 'Todos os professores', placeholder: 'Buscar professor pelo nome', grow: true });
+    EA_STU.enhanceSelect(ss, { label: 'Aluno', allLabel: 'Todos os alunos', placeholder: 'Buscar aluno pelo nome', grow: true });
   }
+  supFillStudents();
+}
+
+// Preenche o seletor de alunos conforme o professor escolhido.
+// Devolve true se o aluno que estava escolhido saiu da lista (filtro limpo).
+function supFillStudents() {
+  var ss = document.getElementById('supStudentFilter');
+  if (!ss || !_supStudents) return false;
+  var teacher = (document.getElementById('supFilter') || {}).value || '';
+  var incl = !!(document.getElementById('supInclArchived') || {}).checked;
+  var mine = null;
+  if (teacher) {
+    mine = {};
+    (_supEnroll || []).forEach(function(e) {
+      if (e.teacher_id === teacher && (incl || e.active !== false)) mine[e.student_id] = 1;
+    });
+  }
+  var list = _supStudents.filter(function(a) {
+    var off = a.archived_at || a.active === false;
+    return (incl || !off) && (!mine || mine[a.id]);
+  });
+  var prev = ss.value;
+  var still = !prev || list.some(function(a) { return a.id === prev; });
+  var tName = teacher ? ((document.querySelector('#supFilter option[value="' + teacher.replace(/"/g, '') + '"]') || {}).textContent || '') : '';
+  ss.innerHTML = '<option value="">' + (tName ? 'Todos os alunos de ' + escapeHtml(tName.split(/\s+/)[0]) : 'Todos os alunos') + '</option>' +
+    list.map(function(a) {
+      var sub = a.archived_at ? 'Arquivado' : (a.active === false ? 'Inativo' : '');
+      return '<option value="' + escapeHtml(a.id) + '"' + (sub ? ' data-sub="' + sub + '"' : '') + '>' + escapeHtml(a.full_name || 'Aluno') + '</option>';
+    }).join('');
+  ss.value = still ? prev : '';
+  if (ss._eaPicker) {
+    ss._eaPicker.o.allLabel = ss.options[0].textContent;
+    ss._eaPicker.render();
+  }
+  return !still;
+}
+
+function supTeacherChanged() {
+  supFillStudents();
+  loadCurrentSup();
+}
+
+function supArchivedChanged() {
+  if (supFillStudents()) loadCurrentSup();
 }
 
 

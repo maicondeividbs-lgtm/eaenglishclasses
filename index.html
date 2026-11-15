@@ -2379,6 +2379,33 @@
       <p class="section-subtitle">Experiências reais de quem já estudou com a WIN.</p>
     </div>
 
+    <!-- Depoimentos em vídeo: só a capa carrega; o vídeo baixa ao clicar e abre num player sobreposto.
+         Para adicionar outro: comprima para /video/depoimentos/<nome>.mp4 (+ capa .webp/.jpg) e duplique um <li>. -->
+    <div class="tv" aria-labelledby="tv-title">
+      <h3 class="tv-title" id="tv-title">Assista aos depoimentos</h3>
+      <ul class="tv-row" role="list">
+        <li>
+          <button type="button" class="tv-card" data-src="/video/depoimentos/cristian.mp4" data-poster="/video/depoimentos/cristian.jpg" data-name="Cristian" aria-label="Assistir ao depoimento de Cristian, 1 minuto">
+            <picture>
+              <source srcset="/video/depoimentos/cristian.webp" type="image/webp">
+              <img src="/video/depoimentos/cristian.jpg" alt="" width="478" height="850" loading="lazy" decoding="async">
+            </picture>
+            <span class="tv-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg></span>
+            <span class="tv-dur" aria-hidden="true">1:04</span>
+            <span class="tv-meta"><strong>Cristian</strong><span>Aluno WIN</span></span>
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <dialog class="tv-dialog" id="tvDialog" aria-label="Depoimento em vídeo">
+      <div class="tv-frame">
+        <button type="button" class="tv-close" aria-label="Fechar vídeo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
+        <video controls playsinline preload="none"></video>
+        <p class="tv-caption"></p>
+      </div>
+    </dialog>
+
     <!-- Depoimentos aprovados -->
     <div id="testimonials-grid" class="t2-grid">
       <div class="testimonial-skeleton"><div class="testimonial-skel-line long"></div><div class="testimonial-skel-line long"></div><div class="testimonial-skel-line med"></div><div class="testimonial-skel-avatar"></div></div>
@@ -2491,7 +2518,65 @@
 @media(max-width:960px){.t2-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:767px){.t2-grid{grid-template-columns:1fr}.t2-fields{grid-template-columns:1fr}.t2-cta{padding:16px}.t2-form-body{padding:4px 16px 18px}.t2-submit{width:100%}}
 @media(prefers-reduced-motion:reduce){.t2 *{transition:none!important}}
+
+/* ═══ Depoimentos em vídeo ═══ */
+.tv{margin:0 0 36px}
+.tv-title{font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#4A6075;text-align:center;margin:0 0 16px}
+.tv-row{list-style:none;margin:0;padding:4px 2px 8px;display:flex;justify-content:center;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
+.tv-row>li{flex:none;scroll-snap-align:center}
+.tv-card{position:relative;display:block;width:190px;aspect-ratio:9/16;padding:0;border:0;border-radius:18px;overflow:hidden;background:#0B1F33;cursor:pointer;color:#fff;font:inherit;text-align:left;box-shadow:0 6px 20px rgba(11,31,51,.12);transition:transform .25s ease,box-shadow .25s ease}
+.tv-card img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s ease}
+.tv-card::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(11,31,51,.85) 0%,rgba(11,31,51,0) 45%);pointer-events:none}
+.tv-card:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(11,31,51,.2)}
+.tv-card:hover img{transform:scale(1.04)}
+.tv-card:focus-visible{outline:3px solid #6F8FA8;outline-offset:3px}
+.tv-play{position:absolute;top:50%;left:50%;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;background:rgba(255,255,255,.92);color:#D71920;display:flex;align-items:center;justify-content:center;z-index:1;box-shadow:0 4px 14px rgba(0,0,0,.25);transition:transform .2s ease}
+.tv-play svg{width:24px;height:24px;margin-left:3px}
+.tv-card:hover .tv-play{transform:scale(1.08)}
+.tv-dur{position:absolute;top:10px;right:10px;z-index:1;padding:3px 8px;border-radius:999px;background:rgba(11,31,51,.7);font-size:11.5px;font-weight:700}
+.tv-meta{position:absolute;left:14px;right:14px;bottom:12px;z-index:1;line-height:1.25}
+.tv-meta strong{display:block;font-size:15px;font-weight:800}
+.tv-meta span{font-size:12px;opacity:.85;font-weight:600}
+.tv-dialog{padding:0;border:0;background:transparent;max-width:none;max-height:none;width:100%;height:100%;margin:0;display:none;align-items:center;justify-content:center;overflow:hidden}
+.tv-dialog[open]{display:flex}
+.tv-dialog::backdrop{background:rgba(6,14,24,.86)}
+.tv-frame{position:relative;width:min(420px,92vw,calc((88vh - 34px) * .5625));display:flex;flex-direction:column}
+.tv-frame video{width:100%;height:auto;aspect-ratio:9/16;border-radius:16px;background:#000;object-fit:contain;display:block}
+.tv-caption{margin:8px 0 0;text-align:center;color:#fff;font-size:14px;font-weight:700}
+.tv-close{position:absolute;top:-14px;right:-14px;z-index:2;width:40px;height:40px;border-radius:50%;border:0;background:#fff;color:#0B1F33;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.tv-close svg{width:18px;height:18px}
+.tv-close:focus-visible{outline:3px solid #6F8FA8;outline-offset:2px}
+html.tv-lock{overflow:hidden}
+@media(max-width:767px){.tv-row{justify-content:flex-start;padding-left:16px;padding-right:16px;margin:0 -16px}.tv-row:has(>li:only-child){justify-content:center}.tv-card{width:min(62vw,220px)}.tv-close{top:8px;right:8px}}
+@media(prefers-reduced-motion:reduce){.tv-card,.tv-card img,.tv-play{transition:none}.tv-card:hover{transform:none}.tv-card:hover img{transform:none}}
 </style>
+<script>
+(function(){
+  var dlg=document.getElementById('tvDialog');
+  if(!dlg||typeof dlg.showModal!=='function'){
+    // Navegadores sem <dialog>: abre o arquivo de vídeo diretamente.
+    document.querySelectorAll('.tv-card').forEach(function(b){b.addEventListener('click',function(){location.href=b.dataset.src;});});
+    return;
+  }
+  var vid=dlg.querySelector('video'),cap=dlg.querySelector('.tv-caption');
+  document.querySelectorAll('.tv-card').forEach(function(b){
+    b.addEventListener('click',function(){
+      vid.poster=b.dataset.poster||'';
+      vid.src=b.dataset.src;
+      cap.textContent=b.dataset.name||'';
+      document.documentElement.classList.add('tv-lock');
+      dlg.showModal();
+      var p=vid.play(); if(p&&p.catch)p.catch(function(){});
+    });
+  });
+  dlg.querySelector('.tv-close').addEventListener('click',function(){dlg.close();});
+  dlg.addEventListener('click',function(e){ if(e.target===dlg)dlg.close(); });
+  dlg.addEventListener('close',function(){
+    vid.pause(); vid.removeAttribute('src'); vid.load();
+    document.documentElement.classList.remove('tv-lock');
+  });
+})();
+</script>
 
 <!-- ═══ PROFESSORES EM DESTAQUE ═══ -->
 <section class="pstrip reveal" aria-labelledby="pstrip-title">

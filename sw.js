@@ -4,7 +4,7 @@
    - Supabase/API/CDNs (cross-origin) e POST/PUT passam direto (dados e auth sempre ao vivo).
    - Páginas autenticadas (dashboards/login) nunca são armazenadas em cache.
 */
-const VERSION = 'win-v68';
+const VERSION = 'win-v69';
 const CACHE = 'win-shell-' + VERSION;
 const PRECACHE = [
   '/offline',
@@ -85,6 +85,7 @@ self.addEventListener('fetch', (e) => {
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;  // Supabase/CDNs → rede
   if (url.pathname.startsWith('/api/')) return;      // serverless → rede
+  if (url.pathname.startsWith('/video/')) return;    // vídeos → rede (range requests, sem inchar o cache)
 
   // MESMA ORIGEM: network-first (sempre a versão mais recente do site quando online),
   // com cache apenas como reserva offline. Dashboards/login nunca são gravados em cache.

@@ -2381,42 +2381,55 @@
 
     <!-- Depoimentos em vídeo: só a capa carrega; o vídeo baixa ao clicar e abre num player sobreposto.
          Para adicionar outro: comprima para /video/depoimentos/<nome>.mp4 (+ capa .webp/.jpg) e duplique um <li>. -->
-    <div class="tv" aria-labelledby="tv-title">
-      <div class="tv-copy">
-        <span class="tv-eyebrow"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>Depoimento em vídeo</span>
-        <h3 class="tv-title" id="tv-title">De iniciante ao avançado: ouça quem viveu isso</h3>
-        <blockquote class="tv-quote">
-          <p>“Antes de começar na WIN, minha maior dificuldade era falar inglês. Nesses 3 anos, fui de iniciante ao nível avançado.”</p>
-          <cite class="tv-cite"><strong>Cristian</strong> · aluno há 3 anos</cite>
-        </blockquote>
-        <ul class="tv-facts" role="list">
-          <li><strong>3 anos</strong><span>na WIN</span></li>
-          <li><strong>Particulares</strong><span>aulas sob medida</span></li>
-          <li><strong>Avançado</strong><span>nível atual</span></li>
-        </ul>
-        <button type="button" class="tv-watch" data-play="cristian"><span class="tv-watch-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg></span>Assistir depoimento <span class="tv-watch-dur">1:04</span></button>
-      </div>
+    <!-- ═══ Depoimentos em vídeo (carrossel) ═══
+         Para adicionar um vídeo: comprima para /video/depoimentos/<nome>.mp4 (+ capa <nome>.webp/.jpg),
+         duplique um <article class="tv-slide"> e troque textos e arquivos. Setas, indicadores e
+         navegação no player aparecem sozinhos quando houver mais de um vídeo. -->
+    <div class="tv" id="tv" role="region" aria-roledescription="carrossel" aria-label="Depoimentos em vídeo">
+      <div class="tv-track" id="tvTrack">
 
-      <!-- Para adicionar outro vídeo: comprima para /video/depoimentos/<nome>.mp4 (+ capa .webp/.jpg) e duplique um <li>. -->
-      <ul class="tv-row" role="list">
-        <li>
-          <button type="button" class="tv-card" id="tv-cristian" data-src="/video/depoimentos/cristian.mp4" data-poster="/video/depoimentos/cristian.jpg" data-name="Cristian · aluno há 3 anos" aria-label="Assistir ao depoimento de Cristian, 1 minuto">
-            <picture>
-              <source srcset="/video/depoimentos/cristian.webp" type="image/webp">
-              <img src="/video/depoimentos/cristian.jpg" alt="" width="478" height="850" loading="lazy" decoding="async">
-            </picture>
-            <span class="tv-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg></span>
-            <span class="tv-dur" aria-hidden="true">1:04</span>
-            <span class="tv-meta"><strong>Cristian</strong><span>Aluno há 3 anos</span></span>
-          </button>
-        </li>
-      </ul>
+        <article class="tv-slide" aria-roledescription="slide">
+          <div class="tv-copy">
+            <span class="tv-eyebrow"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>Depoimento em vídeo</span>
+            <h3 class="tv-title">De iniciante ao avançado: ouça quem viveu isso</h3>
+            <blockquote class="tv-quote">
+              <p>“Antes de começar na WIN, minha maior dificuldade era falar inglês. Nesses 3 anos, fui de iniciante ao nível avançado.”</p>
+              <cite class="tv-cite"><strong>Cristian</strong> · aluno há 3 anos</cite>
+            </blockquote>
+            <ul class="tv-facts" role="list">
+              <li><strong>3 anos</strong><span>na WIN</span></li>
+              <li><strong>Particulares</strong><span>aulas sob medida</span></li>
+              <li><strong>Avançado</strong><span>nível atual</span></li>
+            </ul>
+            <button type="button" class="tv-watch"><span class="tv-watch-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg></span>Assistir depoimento <span class="tv-watch-dur">1:04</span></button>
+          </div>
+          <div class="tv-media">
+            <button type="button" class="tv-card" data-src="/video/depoimentos/cristian.mp4" data-poster="/video/depoimentos/cristian.jpg" data-name="Cristian · aluno há 3 anos" aria-label="Assistir ao depoimento de Cristian, 1 minuto">
+              <picture>
+                <source srcset="/video/depoimentos/cristian.webp" type="image/webp">
+                <img src="/video/depoimentos/cristian.jpg" alt="" width="478" height="850" loading="lazy" decoding="async">
+              </picture>
+              <span class="tv-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg></span>
+              <span class="tv-dur" aria-hidden="true">1:04</span>
+              <span class="tv-meta"><strong>Cristian</strong><span>Aluno há 3 anos</span></span>
+            </button>
+          </div>
+        </article>
+
+      </div>
+      <div class="tv-nav" id="tvNav" hidden>
+        <button type="button" class="tv-arrow" data-dir="-1" aria-label="Depoimento anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="tv-dots" id="tvDots"></div>
+        <button type="button" class="tv-arrow" data-dir="1" aria-label="Próximo depoimento"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
     </div>
 
     <dialog class="tv-dialog" id="tvDialog" aria-label="Depoimento em vídeo">
       <div class="tv-frame">
         <button type="button" class="tv-close" aria-label="Fechar vídeo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
-        <video controls playsinline preload="none"></video>
+        <video controls playsinline preload="none" controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback></video>
+        <button type="button" class="tv-dnav tv-dprev" data-dir="-1" aria-label="Vídeo anterior" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button type="button" class="tv-dnav tv-dnext" data-dir="1" aria-label="Próximo vídeo" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <p class="tv-caption"></p>
       </div>
     </dialog>
@@ -2535,9 +2548,13 @@
 @media(prefers-reduced-motion:reduce){.t2 *{transition:none!important}}
 
 /* ═══ Depoimentos em vídeo ═══ */
-.tv{position:relative;display:grid;grid-template-columns:1.15fr .85fr;align-items:center;gap:48px;margin:0 0 40px;padding:52px 56px;border-radius:28px;background:#0B1F33;color:#F5F7FA;overflow:hidden;isolation:isolate}
-.tv::before{content:"";position:absolute;z-index:-1;right:-120px;top:-140px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(111,143,168,.35) 0%,rgba(111,143,168,0) 65%)}
-.tv::after{content:"";position:absolute;z-index:-1;left:-80px;bottom:-160px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(215,25,32,.22) 0%,rgba(215,25,32,0) 65%)}
+.tv{position:relative;margin:0 0 40px;border-radius:28px;background:#0B1F33;color:#F5F7FA;overflow:hidden;isolation:isolate}
+.tv::before{content:"";position:absolute;z-index:-1;right:-120px;top:-140px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(111,143,168,.35) 0%,rgba(111,143,168,0) 65%);pointer-events:none}
+.tv::after{content:"";position:absolute;z-index:-1;left:-80px;bottom:-160px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(215,25,32,.22) 0%,rgba(215,25,32,0) 65%);pointer-events:none}
+.tv-track{display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scroll-behavior:smooth;overscroll-behavior-x:contain;scrollbar-width:none;-ms-overflow-style:none}
+.tv-track::-webkit-scrollbar{display:none}
+.tv-slide{flex:0 0 100%;min-width:0;scroll-snap-align:start;display:grid;grid-template-columns:1.15fr .85fr;align-items:center;gap:48px;padding:52px 56px}
+.tv.has-nav .tv-slide{padding-bottom:28px}
 .tv-eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 12px 6px 8px;border-radius:999px;background:rgba(215,25,32,.16);color:#FF8A8F;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
 .tv-eyebrow svg{width:16px;height:16px;padding:3px;border-radius:50%;background:#D71920;color:#fff}
 .tv-title{margin:16px 0 0;font-size:clamp(24px,2.6vw,32px);line-height:1.2;font-weight:800;color:#fff;letter-spacing:-.01em;text-wrap:balance}
@@ -2555,11 +2572,10 @@
 .tv-watch-ico{width:36px;height:36px;border-radius:50%;background:#D71920;color:#fff;display:flex;align-items:center;justify-content:center}
 .tv-watch-ico svg{width:16px;height:16px;margin-left:2px}
 .tv-watch-dur{font-weight:600;color:#4A6075;font-size:13px}
-.tv-row{list-style:none;margin:0;padding:8px 4px 12px;display:flex;justify-content:center;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
-.tv-row>li{flex:none;scroll-snap-align:center;position:relative}
-.tv-row>li:only-child::before{content:"";position:absolute;inset:18px -14px -14px 18px;border-radius:22px;border:2px solid rgba(111,143,168,.45);transform:rotate(4deg);z-index:0}
-.tv-card{position:relative;z-index:1;display:block;width:250px;aspect-ratio:9/16;padding:0;border:0;border-radius:22px;overflow:hidden;background:#071522;cursor:pointer;color:#fff;font:inherit;text-align:left;box-shadow:0 24px 50px rgba(0,0,0,.45);transition:transform .3s ease,box-shadow .3s ease}
-.tv-card img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
+.tv-media{position:relative;display:flex;justify-content:center;padding:8px 0}
+.tv-media::before{content:"";position:absolute;top:26px;bottom:-6px;left:50%;width:250px;margin-left:-111px;border-radius:22px;border:2px solid rgba(111,143,168,.45);transform:rotate(4deg);pointer-events:none}
+.tv-card{position:relative;z-index:1;display:block;width:250px;aspect-ratio:9/16;padding:0;border:0;border-radius:22px;overflow:hidden;background:#071522;cursor:pointer;color:#fff;font:inherit;text-align:left;box-shadow:0 24px 50px rgba(0,0,0,.45);transition:transform .3s ease}
+.tv-card img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease;-webkit-user-drag:none;user-select:none}
 .tv-card::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(7,21,34,.9) 0%,rgba(7,21,34,0) 42%);pointer-events:none}
 .tv-card:hover{transform:translateY(-4px)}
 .tv-card:hover img{transform:scale(1.04)}
@@ -2569,52 +2585,111 @@
 .tv-play svg{width:26px;height:26px;margin-left:3px}
 .tv-card:hover .tv-play{transform:scale(1.08)}
 @keyframes tvPulse{0%{transform:scale(1);opacity:.9}80%,100%{transform:scale(1.45);opacity:0}}
-.tv-dur{position:absolute;top:12px;right:12px;z-index:1;padding:4px 9px;border-radius:999px;background:rgba(7,21,34,.72);font-size:11.5px;font-weight:700;backdrop-filter:blur(4px)}
+.tv-dur{position:absolute;top:12px;right:12px;z-index:1;padding:4px 9px;border-radius:999px;background:rgba(7,21,34,.72);font-size:11.5px;font-weight:700}
 .tv-meta{position:absolute;left:16px;right:16px;bottom:14px;z-index:1;line-height:1.25}
 .tv-meta strong{display:block;font-size:16px;font-weight:800}
 .tv-meta span{font-size:12.5px;opacity:.85;font-weight:600}
+.tv-nav{display:flex;align-items:center;justify-content:center;gap:18px;padding:4px 24px 30px}
+.tv-nav[hidden]{display:none}
+.tv-arrow{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.04);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s ease,border-color .2s ease,opacity .2s ease}
+.tv-arrow svg{width:18px;height:18px}
+@media(hover:hover){.tv-arrow:hover:not(:disabled){background:#fff;color:#0B1F33;border-color:#fff}}
+.tv-arrow:disabled{opacity:.3;cursor:default}
+.tv-arrow:focus-visible,.tv-dot:focus-visible{outline:3px solid #6F8FA8;outline-offset:3px}
+.tv-dots{display:flex;align-items:center;gap:8px}
+.tv-dot{width:8px;height:8px;padding:0;border:0;border-radius:999px;background:rgba(255,255,255,.3);cursor:pointer;transition:width .3s ease,background .3s ease}
+.tv-dot[aria-current="true"]{width:28px;background:#D71920}
 .tv-dialog{padding:0;border:0;background:transparent;max-width:none;max-height:none;width:100%;height:100%;margin:0;display:none;align-items:center;justify-content:center;overflow:hidden}
 .tv-dialog[open]{display:flex}
-.tv-dialog::backdrop{background:rgba(6,14,24,.88)}
+.tv-dialog::backdrop{background:rgba(6,14,24,.9)}
 .tv-frame{position:relative;width:min(420px,92vw,calc((88vh - 34px) * .5625));display:flex;flex-direction:column}
 .tv-frame video{width:100%;height:auto;aspect-ratio:9/16;border-radius:16px;background:#000;object-fit:contain;display:block}
 .tv-caption{margin:8px 0 0;text-align:center;color:#fff;font-size:14px;font-weight:700}
 .tv-close{position:absolute;top:-14px;right:-14px;z-index:2;width:40px;height:40px;border-radius:50%;border:0;background:#fff;color:#0B1F33;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.3)}
 .tv-close svg{width:18px;height:18px}
-.tv-close:focus-visible{outline:3px solid #6F8FA8;outline-offset:2px}
+.tv-close:focus-visible,.tv-dnav:focus-visible{outline:3px solid #6F8FA8;outline-offset:2px}
+.tv-dnav{position:absolute;top:calc(50% - 40px);width:48px;height:48px;border-radius:50%;border:0;background:rgba(255,255,255,.14);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s ease}
+.tv-dnav[hidden]{display:none}
+.tv-dnav:hover{background:rgba(255,255,255,.28)}
+.tv-dnav svg{width:22px;height:22px}
+.tv-dprev{left:-68px}.tv-dnext{right:-68px}
 html.tv-lock{overflow:hidden}
-@media(max-width:960px){.tv{gap:32px;padding:44px 36px}.tv-card{width:220px}}
+@media(max-width:960px){.tv-slide{gap:32px;padding:44px 36px}.tv-card{width:220px}.tv-media::before{width:220px;margin-left:-96px}}
 @media(max-width:767px){
-  .tv{grid-template-columns:1fr;gap:28px;padding:32px 20px 28px;border-radius:22px;margin-left:-4px;margin-right:-4px}
-  .tv-row{order:-1;justify-content:flex-start;padding:8px 20px 14px;margin:0 -20px}
-  .tv-row:has(>li:only-child){justify-content:center}
-  .tv-card{width:min(58vw,230px)}
+  .tv{border-radius:22px;margin-left:-4px;margin-right:-4px}
+  .tv-slide{grid-template-columns:1fr;gap:28px;padding:32px 20px 28px}
+  .tv.has-nav .tv-slide{padding-bottom:20px}
+  .tv-media{order:-1}
+  .tv-card{width:min(58vw,230px)}.tv-media::before{width:min(58vw,230px);margin-left:calc(min(58vw,230px) / -2 + 14px)}
   .tv-facts{gap:8px}.tv-facts li{padding:12px 10px 10px}.tv-facts strong{font-size:14.5px}.tv-facts span{font-size:11.5px}
   .tv-watch{width:100%;justify-content:center}
+  .tv-nav{padding:0 20px 24px}
   .tv-close{top:8px;right:8px}
+  .tv-dnav{top:auto;bottom:-6px;width:40px;height:40px}.tv-dprev{left:0}.tv-dnext{right:0}
 }
-@media(prefers-reduced-motion:reduce){.tv-card,.tv-card img,.tv-play,.tv-watch{transition:none}.tv-card:hover,.tv-watch:hover{transform:none}.tv-card:hover img{transform:none}.tv-play::before{animation:none;opacity:0}}
+@media(prefers-reduced-motion:reduce){.tv-track{scroll-behavior:auto}.tv-card,.tv-card img,.tv-play,.tv-watch,.tv-dot{transition:none}.tv-card:hover,.tv-watch:hover{transform:none}.tv-card:hover img{transform:none}.tv-play::before{animation:none;opacity:0}}
 </style>
 <script>
 (function(){
+  var root=document.getElementById('tv'); if(!root) return;
+  var track=document.getElementById('tvTrack');
+  var slides=[].slice.call(track.querySelectorAll('.tv-slide'));
+  var cards=slides.map(function(sl){return sl.querySelector('.tv-card');});
+  var n=slides.length, cur=0;
+
+  /* ── Carrossel ── */
+  slides.forEach(function(sl,i){
+    sl.setAttribute('aria-label',(i+1)+' de '+n);
+    var w=sl.querySelector('.tv-watch'); if(w) w.addEventListener('click',function(){cards[i].click();});
+  });
+  var nav=document.getElementById('tvNav'),dotsBox=document.getElementById('tvDots'),dots=[],arrows=nav.querySelectorAll('.tv-arrow');
+  function go(i){ i=Math.max(0,Math.min(n-1,i)); track.scrollTo({left:i*track.clientWidth}); }
+  function mark(i){
+    cur=i;
+    dots.forEach(function(d,k){d.setAttribute('aria-current',k===i?'true':'false');});
+    arrows[0].disabled=i===0; arrows[1].disabled=i===n-1;
+    slides.forEach(function(sl,k){ if(k===i) sl.removeAttribute('inert'); else sl.setAttribute('inert',''); });
+  }
+  if(n>1){
+    root.classList.add('has-nav'); nav.hidden=false;
+    slides.forEach(function(_,i){
+      var d=document.createElement('button'); d.type='button'; d.className='tv-dot';
+      d.setAttribute('aria-label','Ir para o depoimento '+(i+1));
+      d.addEventListener('click',function(){go(i);}); dotsBox.appendChild(d); dots.push(d);
+    });
+    [].forEach.call(arrows,function(a){a.addEventListener('click',function(){go(cur+ +a.dataset.dir);});});
+    var t; track.addEventListener('scroll',function(){clearTimeout(t);t=setTimeout(function(){mark(Math.round(track.scrollLeft/track.clientWidth));},60);},{passive:true});
+    mark(0);
+  }
+
+  /* ── Player (o vídeo só é baixado ao clicar) ── */
   var dlg=document.getElementById('tvDialog');
-  document.querySelectorAll('[data-play]').forEach(function(b){b.addEventListener('click',function(){var c=document.getElementById('tv-'+b.dataset.play);if(c)c.click();});});
   if(!dlg||typeof dlg.showModal!=='function'){
-    // Navegadores sem <dialog>: abre o arquivo de vídeo diretamente.
-    document.querySelectorAll('.tv-card').forEach(function(b){b.addEventListener('click',function(){location.href=b.dataset.src;});});
+    cards.forEach(function(b){b.addEventListener('click',function(){location.href=b.dataset.src;});});
     return;
   }
   var vid=dlg.querySelector('video'),cap=dlg.querySelector('.tv-caption');
-  document.querySelectorAll('.tv-card').forEach(function(b){
+  var dprev=dlg.querySelector('.tv-dprev'),dnext=dlg.querySelector('.tv-dnext'),playing=0;
+  function load(i){
+    var b=cards[i]; playing=i;
+    vid.poster=b.dataset.poster||''; vid.src=b.dataset.src; cap.textContent=b.dataset.name||'';
+    dprev.hidden=n<2||i===0; dnext.hidden=n<2||i===n-1;
+    var p=vid.play(); if(p&&p.catch)p.catch(function(){});
+  }
+  cards.forEach(function(b,i){
     b.addEventListener('click',function(){
-      vid.poster=b.dataset.poster||'';
-      vid.src=b.dataset.src;
-      cap.textContent=b.dataset.name||'';
       document.documentElement.classList.add('tv-lock');
-      dlg.showModal();
-      var p=vid.play(); if(p&&p.catch)p.catch(function(){});
+      dlg.showModal(); load(i);
     });
   });
+  [dprev,dnext].forEach(function(btn){btn.addEventListener('click',function(){var i=playing+ +btn.dataset.dir;load(i);go(i);});});
+  dlg.addEventListener('keydown',function(e){
+    if(n<2||e.target===vid) return;
+    if(e.key==='ArrowRight'&&playing<n-1){load(playing+1);go(playing);}
+    if(e.key==='ArrowLeft'&&playing>0){load(playing-1);go(playing);}
+  });
+  // Sem menu de contexto (evita "Salvar vídeo como…")
+  vid.addEventListener('contextmenu',function(e){e.preventDefault();});
   dlg.querySelector('.tv-close').addEventListener('click',function(){dlg.close();});
   dlg.addEventListener('click',function(e){ if(e.target===dlg)dlg.close(); });
   dlg.addEventListener('close',function(){

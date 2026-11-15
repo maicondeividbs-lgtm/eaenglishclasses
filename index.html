@@ -2382,17 +2382,32 @@
     <!-- Depoimentos em vídeo: só a capa carrega; o vídeo baixa ao clicar e abre num player sobreposto.
          Para adicionar outro: comprima para /video/depoimentos/<nome>.mp4 (+ capa .webp/.jpg) e duplique um <li>. -->
     <div class="tv" aria-labelledby="tv-title">
-      <h3 class="tv-title" id="tv-title">Assista aos depoimentos</h3>
+      <div class="tv-copy">
+        <span class="tv-eyebrow"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>Depoimento em vídeo</span>
+        <h3 class="tv-title" id="tv-title">De iniciante ao avançado: ouça quem viveu isso</h3>
+        <blockquote class="tv-quote">
+          <p>“Antes de começar na WIN, minha maior dificuldade era falar inglês. Nesses 3 anos, fui de iniciante ao nível avançado.”</p>
+          <cite class="tv-cite"><strong>Cristian</strong> · aluno há 3 anos</cite>
+        </blockquote>
+        <ul class="tv-facts" role="list">
+          <li><strong>3 anos</strong><span>na WIN</span></li>
+          <li><strong>Particulares</strong><span>aulas sob medida</span></li>
+          <li><strong>Avançado</strong><span>nível atual</span></li>
+        </ul>
+        <button type="button" class="tv-watch" data-play="cristian"><span class="tv-watch-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg></span>Assistir depoimento <span class="tv-watch-dur">1:04</span></button>
+      </div>
+
+      <!-- Para adicionar outro vídeo: comprima para /video/depoimentos/<nome>.mp4 (+ capa .webp/.jpg) e duplique um <li>. -->
       <ul class="tv-row" role="list">
         <li>
-          <button type="button" class="tv-card" data-src="/video/depoimentos/cristian.mp4" data-poster="/video/depoimentos/cristian.jpg" data-name="Cristian" aria-label="Assistir ao depoimento de Cristian, 1 minuto">
+          <button type="button" class="tv-card" id="tv-cristian" data-src="/video/depoimentos/cristian.mp4" data-poster="/video/depoimentos/cristian.jpg" data-name="Cristian · aluno há 3 anos" aria-label="Assistir ao depoimento de Cristian, 1 minuto">
             <picture>
               <source srcset="/video/depoimentos/cristian.webp" type="image/webp">
               <img src="/video/depoimentos/cristian.jpg" alt="" width="478" height="850" loading="lazy" decoding="async">
             </picture>
             <span class="tv-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg></span>
             <span class="tv-dur" aria-hidden="true">1:04</span>
-            <span class="tv-meta"><strong>Cristian</strong><span>Aluno WIN</span></span>
+            <span class="tv-meta"><strong>Cristian</strong><span>Aluno há 3 anos</span></span>
           </button>
         </li>
       </ul>
@@ -2520,26 +2535,47 @@
 @media(prefers-reduced-motion:reduce){.t2 *{transition:none!important}}
 
 /* ═══ Depoimentos em vídeo ═══ */
-.tv{margin:0 0 36px}
-.tv-title{font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#4A6075;text-align:center;margin:0 0 16px}
-.tv-row{list-style:none;margin:0;padding:4px 2px 8px;display:flex;justify-content:center;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
-.tv-row>li{flex:none;scroll-snap-align:center}
-.tv-card{position:relative;display:block;width:190px;aspect-ratio:9/16;padding:0;border:0;border-radius:18px;overflow:hidden;background:#0B1F33;cursor:pointer;color:#fff;font:inherit;text-align:left;box-shadow:0 6px 20px rgba(11,31,51,.12);transition:transform .25s ease,box-shadow .25s ease}
-.tv-card img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s ease}
-.tv-card::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(11,31,51,.85) 0%,rgba(11,31,51,0) 45%);pointer-events:none}
-.tv-card:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(11,31,51,.2)}
+.tv{position:relative;display:grid;grid-template-columns:1.15fr .85fr;align-items:center;gap:48px;margin:0 0 40px;padding:52px 56px;border-radius:28px;background:#0B1F33;color:#F5F7FA;overflow:hidden;isolation:isolate}
+.tv::before{content:"";position:absolute;z-index:-1;right:-120px;top:-140px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(111,143,168,.35) 0%,rgba(111,143,168,0) 65%)}
+.tv::after{content:"";position:absolute;z-index:-1;left:-80px;bottom:-160px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(215,25,32,.22) 0%,rgba(215,25,32,0) 65%)}
+.tv-eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 12px 6px 8px;border-radius:999px;background:rgba(215,25,32,.16);color:#FF8A8F;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.tv-eyebrow svg{width:16px;height:16px;padding:3px;border-radius:50%;background:#D71920;color:#fff}
+.tv-title{margin:16px 0 0;font-size:clamp(24px,2.6vw,32px);line-height:1.2;font-weight:800;color:#fff;letter-spacing:-.01em;text-wrap:balance}
+.tv-quote{margin:22px 0 0;padding:0 0 0 18px;border-left:3px solid #D71920}
+.tv-quote p{margin:0;font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:clamp(17px,1.6vw,19.5px);line-height:1.6;color:#DCE4EC}
+.tv-cite{display:block;margin-top:10px;font-style:normal;font-size:13.5px;color:#9FB3C6}
+.tv-cite strong{color:#fff;font-weight:800}
+.tv-facts{list-style:none;margin:26px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.tv-facts li{padding:14px 14px 12px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08)}
+.tv-facts strong{display:block;font-size:16px;font-weight:800;color:#fff;line-height:1.2}
+.tv-facts span{display:block;margin-top:2px;font-size:12.5px;color:#9FB3C6;font-weight:600}
+.tv-watch{display:inline-flex;align-items:center;gap:12px;margin-top:28px;padding:8px 20px 8px 8px;border:0;border-radius:999px;background:#fff;color:#0B1F33;font:inherit;font-size:15px;font-weight:800;cursor:pointer;transition:transform .2s ease,box-shadow .2s ease}
+.tv-watch:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.3)}
+.tv-watch:focus-visible{outline:3px solid #6F8FA8;outline-offset:3px}
+.tv-watch-ico{width:36px;height:36px;border-radius:50%;background:#D71920;color:#fff;display:flex;align-items:center;justify-content:center}
+.tv-watch-ico svg{width:16px;height:16px;margin-left:2px}
+.tv-watch-dur{font-weight:600;color:#4A6075;font-size:13px}
+.tv-row{list-style:none;margin:0;padding:8px 4px 12px;display:flex;justify-content:center;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
+.tv-row>li{flex:none;scroll-snap-align:center;position:relative}
+.tv-row>li:only-child::before{content:"";position:absolute;inset:18px -14px -14px 18px;border-radius:22px;border:2px solid rgba(111,143,168,.45);transform:rotate(4deg);z-index:0}
+.tv-card{position:relative;z-index:1;display:block;width:250px;aspect-ratio:9/16;padding:0;border:0;border-radius:22px;overflow:hidden;background:#071522;cursor:pointer;color:#fff;font:inherit;text-align:left;box-shadow:0 24px 50px rgba(0,0,0,.45);transition:transform .3s ease,box-shadow .3s ease}
+.tv-card img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
+.tv-card::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(7,21,34,.9) 0%,rgba(7,21,34,0) 42%);pointer-events:none}
+.tv-card:hover{transform:translateY(-4px)}
 .tv-card:hover img{transform:scale(1.04)}
-.tv-card:focus-visible{outline:3px solid #6F8FA8;outline-offset:3px}
-.tv-play{position:absolute;top:50%;left:50%;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;background:rgba(255,255,255,.92);color:#D71920;display:flex;align-items:center;justify-content:center;z-index:1;box-shadow:0 4px 14px rgba(0,0,0,.25);transition:transform .2s ease}
-.tv-play svg{width:24px;height:24px;margin-left:3px}
+.tv-card:focus-visible{outline:3px solid #6F8FA8;outline-offset:4px}
+.tv-play{position:absolute;top:50%;left:50%;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;background:#D71920;color:#fff;display:flex;align-items:center;justify-content:center;z-index:1;box-shadow:0 0 0 8px rgba(215,25,32,.25),0 8px 20px rgba(0,0,0,.35);transition:transform .2s ease}
+.tv-play::before{content:"";position:absolute;inset:-8px;border-radius:50%;border:2px solid rgba(255,255,255,.55);animation:tvPulse 2.4s ease-out infinite}
+.tv-play svg{width:26px;height:26px;margin-left:3px}
 .tv-card:hover .tv-play{transform:scale(1.08)}
-.tv-dur{position:absolute;top:10px;right:10px;z-index:1;padding:3px 8px;border-radius:999px;background:rgba(11,31,51,.7);font-size:11.5px;font-weight:700}
-.tv-meta{position:absolute;left:14px;right:14px;bottom:12px;z-index:1;line-height:1.25}
-.tv-meta strong{display:block;font-size:15px;font-weight:800}
-.tv-meta span{font-size:12px;opacity:.85;font-weight:600}
+@keyframes tvPulse{0%{transform:scale(1);opacity:.9}80%,100%{transform:scale(1.45);opacity:0}}
+.tv-dur{position:absolute;top:12px;right:12px;z-index:1;padding:4px 9px;border-radius:999px;background:rgba(7,21,34,.72);font-size:11.5px;font-weight:700;backdrop-filter:blur(4px)}
+.tv-meta{position:absolute;left:16px;right:16px;bottom:14px;z-index:1;line-height:1.25}
+.tv-meta strong{display:block;font-size:16px;font-weight:800}
+.tv-meta span{font-size:12.5px;opacity:.85;font-weight:600}
 .tv-dialog{padding:0;border:0;background:transparent;max-width:none;max-height:none;width:100%;height:100%;margin:0;display:none;align-items:center;justify-content:center;overflow:hidden}
 .tv-dialog[open]{display:flex}
-.tv-dialog::backdrop{background:rgba(6,14,24,.86)}
+.tv-dialog::backdrop{background:rgba(6,14,24,.88)}
 .tv-frame{position:relative;width:min(420px,92vw,calc((88vh - 34px) * .5625));display:flex;flex-direction:column}
 .tv-frame video{width:100%;height:auto;aspect-ratio:9/16;border-radius:16px;background:#000;object-fit:contain;display:block}
 .tv-caption{margin:8px 0 0;text-align:center;color:#fff;font-size:14px;font-weight:700}
@@ -2547,12 +2583,22 @@
 .tv-close svg{width:18px;height:18px}
 .tv-close:focus-visible{outline:3px solid #6F8FA8;outline-offset:2px}
 html.tv-lock{overflow:hidden}
-@media(max-width:767px){.tv-row{justify-content:flex-start;padding-left:16px;padding-right:16px;margin:0 -16px}.tv-row:has(>li:only-child){justify-content:center}.tv-card{width:min(62vw,220px)}.tv-close{top:8px;right:8px}}
-@media(prefers-reduced-motion:reduce){.tv-card,.tv-card img,.tv-play{transition:none}.tv-card:hover{transform:none}.tv-card:hover img{transform:none}}
+@media(max-width:960px){.tv{gap:32px;padding:44px 36px}.tv-card{width:220px}}
+@media(max-width:767px){
+  .tv{grid-template-columns:1fr;gap:28px;padding:32px 20px 28px;border-radius:22px;margin-left:-4px;margin-right:-4px}
+  .tv-row{order:-1;justify-content:flex-start;padding:8px 20px 14px;margin:0 -20px}
+  .tv-row:has(>li:only-child){justify-content:center}
+  .tv-card{width:min(58vw,230px)}
+  .tv-facts{gap:8px}.tv-facts li{padding:12px 10px 10px}.tv-facts strong{font-size:14.5px}.tv-facts span{font-size:11.5px}
+  .tv-watch{width:100%;justify-content:center}
+  .tv-close{top:8px;right:8px}
+}
+@media(prefers-reduced-motion:reduce){.tv-card,.tv-card img,.tv-play,.tv-watch{transition:none}.tv-card:hover,.tv-watch:hover{transform:none}.tv-card:hover img{transform:none}.tv-play::before{animation:none;opacity:0}}
 </style>
 <script>
 (function(){
   var dlg=document.getElementById('tvDialog');
+  document.querySelectorAll('[data-play]').forEach(function(b){b.addEventListener('click',function(){var c=document.getElementById('tv-'+b.dataset.play);if(c)c.click();});});
   if(!dlg||typeof dlg.showModal!=='function'){
     // Navegadores sem <dialog>: abre o arquivo de vídeo diretamente.
     document.querySelectorAll('.tv-card').forEach(function(b){b.addEventListener('click',function(){location.href=b.dataset.src;});});

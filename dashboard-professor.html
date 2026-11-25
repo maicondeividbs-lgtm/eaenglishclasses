@@ -2979,7 +2979,7 @@ async function loadWritingList() {
 
           '<div class="wr-comments-list" data-wr-comments="' + w.id + '"></div>' +
 
-          '<div style="display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end;margin-top:14px"><div><label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px">Feedback geral (resumo)</label><textarea id="wrFb-' + w.id + '" rows="3" placeholder="Comentário geral sobre a redação (parabéns, pontos a melhorar, próximos passos...)" style="width:100%;padding:11px 14px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;color:var(--navy);outline:none;resize:vertical"></textarea></div><div><label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px">Nota</label><select id="wrGr-' + w.id + '" style="padding:11px 14px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;color:var(--navy)"><option value="A+">A+</option><option value="A">A</option><option value="A-">A-</option><option value="B+">B+</option><option value="B">B</option><option value="B-">B-</option><option value="C+">C+</option><option value="C">C</option><option value="D">D</option></select></div></div>' +
+          '<div style="display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end;margin-top:14px"><div><label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px">Feedback geral (resumo)</label><textarea id="wrFb-' + w.id + '" rows="3" placeholder="Comentário geral sobre a redação (parabéns, pontos a melhorar, próximos passos...)" style="width:100%;padding:11px 14px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;color:var(--navy);outline:none;resize:vertical"></textarea></div><div><label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px">Nota</label><select id="wrGr-' + w.id + '" style="padding:11px 14px;border:2px solid var(--g200);border-radius:10px;font-family:inherit;font-size:13px;color:var(--navy)">' + wrGradeOptions() + '</select></div></div>' +
 
           '<button onclick="gradeWritingActivity(' + w.id + ')" style="margin-top:14px;padding:12px 24px;border:none;border-radius:12px;background:linear-gradient(var(--win-vermelho), var(--win-vermelho));color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 6px 16px rgba(215,25,32,0.25);transition:all 0.25s;display:inline-flex;align-items:center;gap:8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Enviar Correção</button>' +
         '</div>' +
@@ -3003,12 +3003,12 @@ async function loadWritingList() {
             '<h4>' + escapeHtml(w.title) + '</h4>' +
             '<div class="prof-wr-header-meta">' + escapeHtml(studentName) + ' · Corrigida em ' + formatDateTime(w.reviewed_at) + wrReviewerTag(w) + wrAuthorTag(w) + '</div>' +
           '</div>' +
-          '<span class="sent-status graded"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Nota: ' + (w.grade||'') + '</span>' +
+          '<span class="sent-status graded"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Nota: ' + escapeHtml(wrFmtGrade(w.grade)) + '</span>' +
           '<button type="button" class="prof-wr-toggle-btn" aria-label="Expandir ou minimizar redação"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>' +
           '<div class="prof-wr-collapse-summary">' +
             '<span class="pwr-cs-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' + formatDate(w.reviewed_at) + '</span>' +
             '<span class="pwr-cs-item">📝 ' + escapeHtml(w.title) + '</span>' +
-            '<span class="pwr-cs-grade">Nota: ' + (w.grade||'—') + '</span>' +
+            '<span class="pwr-cs-grade">Nota: ' + escapeHtml(wrFmtGrade(w.grade)||'—') + '</span>' +
             '<span class="pwr-cs-corrected"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>Corrigido</span>' +
           '</div>' +
         '</div>' +
@@ -3043,6 +3043,18 @@ function getCommentsFor(id) {
   return _wrInlineComments[id];
 }
 
+// Nota da redação no sistema brasileiro (0 a 10, de meio em meio ponto).
+// Guarda "8.5" no banco e mostra "8,5"; notas antigas (A+, B...) aparecem como estão.
+function wrFmtGrade(g) {
+  if (g == null || g === '') return '';
+  var s = String(g).trim();
+  return /^\d+(\.\d+)?$/.test(s) ? s.replace('.', ',') : s;
+}
+function wrGradeOptions() {
+  var h = '<option value="" selected disabled>—</option>';
+  for (var v = 10; v >= 0; v -= 0.5) h += '<option value="' + v + '">' + wrFmtGrade(String(v)) + '</option>';
+  return h;
+}
 function escapeHtml(s) {
   return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
@@ -3166,6 +3178,7 @@ function removeInlineComment(activityId, idx) {
 async function gradeWritingActivity(activityId) {
   const general = document.getElementById('wrFb-' + activityId).value.trim();
   const grade = document.getElementById('wrGr-' + activityId).value;
+  if (grade === '') { showToast('Escolha a nota da redação (0 a 10).','error'); return; }
   const inline = getCommentsFor(activityId);
   if (!general && !inline.length) { showToast('Adicione pelo menos um comentário ou feedback geral.','error'); return; }
   // Always store as JSON so the student dashboard can render highlights
@@ -3838,7 +3851,7 @@ function eaStuRender(k){
   } else if(k==='vocab'){
     h=(d.vocab&&d.vocab.length)?d.vocab.map(function(v){return '<div class="stu-row"><b>'+escapeHtml(v.word||'')+'</b>'+(v.translation?'<span style="font-size:12px;color:var(--g500)"> — '+escapeHtml(v.translation)+'</span>':'')+(v.sentence?'<div style="font-size:12px;color:var(--g600);margin-top:4px;font-style:italic">'+escapeHtml(v.sentence)+'</div>':'')+'</div>';}).join(''):empty('Nenhuma palavra enviada.');
   } else if(k==='wr'){
-    h=(d.wr&&d.wr.length)?d.wr.map(function(w){var st=w.status==='graded'?'<span class="stu-pill" style="background:#dcfce7;color:#16a34a">nota '+(w.grade!=null?w.grade:'-')+'</span>':(w.status==='submitted'?'<span class="stu-pill" style="background:#fef9c3;color:#a16207">aguardando</span>':'<span class="stu-pill" style="background:#F5F7FA;color:#d97706">tema</span>');return '<div class="stu-row"><b>'+escapeHtml(w.title||'')+'</b>'+st+(w.prompt?'<div style="font-size:12px;color:var(--g600);margin-top:4px">'+escapeHtml(w.prompt)+'</div>':'')+'</div>';}).join(''):empty('Nenhuma redação.');
+    h=(d.wr&&d.wr.length)?d.wr.map(function(w){var st=w.status==='graded'?'<span class="stu-pill" style="background:#dcfce7;color:#16a34a">nota '+escapeHtml(w.grade!=null?wrFmtGrade(w.grade):'-')+'</span>':(w.status==='submitted'?'<span class="stu-pill" style="background:#fef9c3;color:#a16207">aguardando</span>':'<span class="stu-pill" style="background:#F5F7FA;color:#d97706">tema</span>');return '<div class="stu-row"><b>'+escapeHtml(w.title||'')+'</b>'+st+(w.prompt?'<div style="font-size:12px;color:var(--g600);margin-top:4px">'+escapeHtml(w.prompt)+'</div>':'')+'</div>';}).join(''):empty('Nenhuma redação.');
   } else if(k==='grades'){
     if(d.grades===null){ h=empty('Sem acesso às notas deste aluno.'); }
     else h=(d.grades&&d.grades.length)?d.grades.map(function(g){return '<div class="stu-row"><b>'+escapeHtml((g.book||'')+' • '+(g.period||''))+'</b><span class="stu-pill" style="background:var(--navy);color:#fff">média '+(g.final_average!=null?g.final_average:'-')+'</span><div style="font-size:12px;color:var(--g500);margin-top:4px">Oral '+(g.oral_score!=null?g.oral_score:'-')+' · Escrita '+(g.written_score!=null?g.written_score:'-')+' · Assessment '+(g.assessment_score!=null?g.assessment_score:'-')+'</div></div>';}).join(''):empty('Nenhuma nota lançada.');

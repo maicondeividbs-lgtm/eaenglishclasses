@@ -90,6 +90,12 @@ async function emailsForRoles(roles) {
   }
   return out;
 }
+// Nome completo do aluno (para o professor identificar quem enviou já pelo assunto).
+async function studentName(studentId) {
+  if (!studentId) return '';
+  const rows = await sbSelect(`profiles?id=eq.${encodeURIComponent(studentId)}&select=full_name`);
+  return String((rows && rows[0] && rows[0].full_name) || '').trim();
+}
 async function lookupTask(taskId) {
   if (!taskId) return null;
   const rows = await sbSelect(`tasks?id=eq.${encodeURIComponent(taskId)}&select=teacher_id,title`);
@@ -104,9 +110,11 @@ async function plan(table, rec, old) {
       if (delivered) {
         const t = await lookupTask(rec.task_id);
         if (t && t.teacher_id) {
-          return { userIds: [t.teacher_id], cat: 'homework', subject: '📬 Homework entregue',
-            heading: 'Um aluno entregou um homework',
-            message: 'A tarefa “' + (t.title || 'homework') + '” foi marcada como entregue e está pronta para sua correção.',
+          const aluno = await studentName(rec.student_id);
+          return { userIds: [t.teacher_id], cat: 'homework',
+            subject: aluno ? '📬 ' + aluno + ' entregou um homework' : '📬 Homework entregue',
+            heading: aluno ? aluno + ' entregou um homework' : 'Um aluno entregou um homework',
+            message: 'A tarefa “' + (t.title || 'homework') + '” foi marcada como entregue' + (aluno ? ' por ' + aluno : '') + ' e está pronta para sua correção.',
             ctaLabel: 'Ver entrega', path: '/login' };
         }
         return null;
@@ -136,9 +144,11 @@ async function plan(table, rec, old) {
       }
       if (rec.status === 'submitted') {
         if (!rec.teacher_id) return null;
-        return { userIds: [rec.teacher_id], cat: 'redacao', subject: '✍️ Redação enviada para correção',
-          heading: 'Um aluno enviou uma redação',
-          message: 'Há uma redação aguardando a sua correção no painel.',
+        const aluno = await studentName(rec.student_id);
+        return { userIds: [rec.teacher_id], cat: 'redacao',
+          subject: aluno ? '✍️ ' + aluno + ' enviou uma redação' : '✍️ Redação enviada para correção',
+          heading: aluno ? aluno + ' enviou uma redação' : 'Um aluno enviou uma redação',
+          message: (aluno ? 'A redação de ' + aluno : 'Há uma redação') + (rec.title ? ' (“' + rec.title + '”)' : '') + (aluno ? ' está' : '') + ' aguardando a sua correção no painel.',
           ctaLabel: 'Corrigir agora', path: '/login' };
       }
       if (!rec.student_id) return null;
@@ -187,8 +197,10 @@ async function plan(table, rec, old) {
       // Nova pergunta (INSERT) → e-mail para o PROFESSOR
       if (old) return null;                                       // updates que não são resposta não enviam
       if (!rec.teacher_id) return null;
-      return { userIds: [rec.teacher_id], cat: 'pergunta', subject: '❓ Nova pergunta de aluno',
-        heading: 'Um aluno enviou uma pergunta',
+      const aluno = await studentName(rec.student_id);
+      return { userIds: [rec.teacher_id], cat: 'pergunta',
+        subject: aluno ? '❓ ' + aluno + ' enviou uma pergunta' : '❓ Nova pergunta de aluno',
+        heading: aluno ? aluno + ' enviou uma pergunta' : 'Um aluno enviou uma pergunta',
         message: (rec.subject ? '“' + rec.subject + '”. ' : '') + 'Há uma nova pergunta aguardando a sua resposta no painel.',
         ctaLabel: 'Responder', path: '/login' };
     }

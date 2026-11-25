@@ -3812,7 +3812,7 @@ async function loadWriting() {
 
       bodyContent =
         '<div class="wr-grade-wrap">' +
-          '<div class="wr-grade-medal"><span class="wr-grade-num">' + wrEscapeHtml(w.grade||'—') + '</span></div>' +
+          '<div class="wr-grade-medal"><span class="wr-grade-num">' + wrEscapeHtml(wrFmtGrade(w.grade)||'—') + '</span></div>' +
           '<div class="wr-grade-text"><strong>Redação corrigida</strong><span>Confira os comentários e o feedback geral abaixo.</span></div>' +
         '</div>' +
         commentsBlock +
@@ -3836,7 +3836,7 @@ async function loadWriting() {
         '<div class="wr-collapse-summary">' +
           '<span class="wr-cs-item">' + dueIcon + correctedDate + '</span>' +
           '<span class="wr-cs-item wr-cs-title">📝 ' + wrEscapeHtml(w.title || 'Redação') + '</span>' +
-          '<span class="wr-cs-grade">Nota: ' + wrEscapeHtml(w.grade || '—') + '</span>' +
+          '<span class="wr-cs-grade">Nota: ' + wrEscapeHtml(wrFmtGrade(w.grade) || '—') + '</span>' +
           '<span class="wr-cs-corrected"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>Corrigido</span>' +
         '</div>';
       toggleBtn = '<button type="button" class="wr-toggle-btn" aria-label="Expandir ou minimizar redação"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>';
@@ -3883,6 +3883,12 @@ function wrUpdateCount(id) {
   if (ta && counter) counter.textContent = ta.value.length + ' caracteres';
 }
 
+// Nota da redação: guarda "8.5" no banco e mostra "8,5" (0 a 10).
+function wrFmtGrade(g) {
+  if (g == null || g === '') return '';
+  var s = String(g).trim();
+  return /^\d+(\.\d+)?$/.test(s) ? s.replace('.', ',') : s;
+}
 function wrEscapeHtml(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }

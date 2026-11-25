@@ -2984,6 +2984,7 @@ body.sb-collapsed .main { margin-left: 92px !important; }
 </div>
 
 <script src="/supabase-js-2.117.3.min.js" integrity="sha384-BWcjm9OdFth9TbhCxZPdm+gAOUMAzQy9nmTs12ioXdCcbVnJaPMn+fMUoQCLt60R"></script>
+<script src="escape-html.js"></script>
 <script src="supabase.js"></script>
 <script src="win-nav.js"></script>
 <script src="win-motion.js"></script>
@@ -3464,7 +3465,7 @@ function examAverage(g) {
 
 function escapeGrade(s) {
   return String(s == null ? '' : s)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
 async function loadGrades() {
@@ -3890,7 +3891,7 @@ function wrFmtGrade(g) {
   return /^\d+(\.\d+)?$/.test(s) ? s.replace('.', ',') : s;
 }
 function wrEscapeHtml(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
 function wrParseFeedback(raw) {

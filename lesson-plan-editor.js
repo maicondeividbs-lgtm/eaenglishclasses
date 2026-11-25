@@ -22,7 +22,7 @@ async function loadLessonPlansSection() {
       try { students = await getMyStudents(currentUser.id); window._myStudents = students; }
       catch(e){ students = []; }
     }
-    var esc = function(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); };
+    var esc = function(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); };
     sel.innerHTML = '<option value="">Selecione um aluno</option>' +
       (students||[]).map(function(s){ return '<option value="'+s.id+'">'+esc(s.full_name||'')+'</option>'; }).join('');
     sel.dataset.lpLoaded = '1';
@@ -407,7 +407,7 @@ function lpLibMatchesForCard(card){
   if (!Object.keys(pages).length) return [];
   return idx[level].filter(function(t){ return pages[t.page]; });
 }
-function lpLibEsc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function lpLibEsc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 function lpRenderLib(card){
   var box = card.querySelector('.lp2-lib'); if (!box) return;
   var matches = lpLibMatchesForCard(card);

@@ -26,8 +26,8 @@ var WIN_NAV = (function () {
   var lastSec = null;
 
   function esc(s) {
-    return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
-      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
   function btnFor(sec) { return document.querySelector('.sb-link[data-section="' + sec + '"]'); }

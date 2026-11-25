@@ -593,21 +593,21 @@
     var help = q.help_text ? '<div style="font-size:12px;color:var(--g500);margin-bottom:6px">' + esc(q.help_text) + '</div>' : '';
     var inner = '';
     if (q.type === 'scale') {
-      var min = (q.options && q.options.min) || 1, max = (q.options && q.options.max) || 5, btns = '';
+      var min = parseInt(q.options && q.options.min, 10) || 1, max = parseInt(q.options && q.options.max, 10) || 5, btns = '';
       for (var v = min; v <= max; v++) btns += '<button type="button" data-v="' + v + '">' + v + '</button>';
       var labels = (q.options && (q.options.min_label || q.options.max_label))
         ? '<div class="sat-meta" style="margin-top:4px"><span>' + esc(q.options.min_label || '') + '</span><span>' + esc(q.options.max_label || '') + '</span></div>' : '';
-      inner = '<div class="sat-scale" data-qwrap data-qid="' + q.id + '" data-type="scale">' + btns + '</div>' + labels;
+      inner = '<div class="sat-scale" data-qwrap data-qid="' + esc(q.id) + '" data-type="scale">' + btns + '</div>' + labels;
     } else if (q.type === 'single_choice' || q.type === 'multi_choice') {
       var isMulti = q.type === 'multi_choice';
-      inner = '<div data-qwrap data-qid="' + q.id + '" data-type="' + q.type + '">' +
+      inner = '<div data-qwrap data-qid="' + esc(q.id) + '" data-type="' + q.type + '">' +
         (q.options || []).map(function (op) {
-          return '<label class="sat-choice"><input type="' + (isMulti ? 'checkbox' : 'radio') + '" name="opt_' + q.id + '" value="' + esc(op) + '"><span>' + esc(op) + '</span></label>';
+          return '<label class="sat-choice"><input type="' + (isMulti ? 'checkbox' : 'radio') + '" name="opt_' + esc(q.id) + '" value="' + esc(op) + '"><span>' + esc(op) + '</span></label>';
         }).join('') + '</div>';
     } else if (q.type === 'short_text') {
-      inner = '<input class="sat-in" data-qwrap data-qid="' + q.id + '" data-type="short_text">';
+      inner = '<input class="sat-in" data-qwrap data-qid="' + esc(q.id) + '" data-type="short_text">';
     } else {
-      inner = '<textarea class="sat-ta" data-qwrap data-qid="' + q.id + '" data-type="' + q.type + '"></textarea>';
+      inner = '<textarea class="sat-ta" data-qwrap data-qid="' + esc(q.id) + '" data-type="' + esc(q.type) + '"></textarea>';
     }
     return '<div class="sat-field"><label class="sat-lbl">' + (i + 1) + '. ' + esc(q.label) + req + '</label>' + help + inner + '</div>';
   }
@@ -615,7 +615,7 @@
   function collectAnswers(questions) {
     var answers = [], missing = false;
     questions.forEach(function (q) {
-      var el = document.querySelector('[data-qwrap][data-qid="' + q.id + '"]');
+      var el = document.querySelector('[data-qwrap][data-qid="' + esc(q.id) + '"]');
       var a = { question_id: q.id };
       var has = false;
       if (q.type === 'scale') {

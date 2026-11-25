@@ -636,7 +636,7 @@ async function deleteSpeakingNote(noteId) {
 // header = {student, book, level, monthLabel, teacher?}
 function eaBuildLessonPlanPrintHTML(header, rows) {
   const e = (s) => String(s == null ? '' : s)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
   const fmt = (d) => {
     if (!d) return '';
     const p = String(d).split('-');
@@ -689,7 +689,7 @@ function eaBuildLessonPlanPrintHTML(header, rows) {
 function eaBuildSpeakingPrintHTML(speaking, e) {
   if (!speaking || !speaking.length) return '';
   const esc = e || ((s) => String(s == null ? '' : s)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'));
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'));
   const blocks = speaking.map(n => {
     const p = String(n.note_date || '').split('-');
     const d = p.length === 3 ? (p[2] + '/' + p[1]) : '';

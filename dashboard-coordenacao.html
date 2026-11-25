@@ -4034,6 +4034,7 @@ function recalcFinal(){const adj=toolAdjustments.reduce((s,a)=>s+a.val,0);const 
 
 <!-- Supabase -->
 <script src="/supabase-js-2.117.3.min.js" integrity="sha384-BWcjm9OdFth9TbhCxZPdm+gAOUMAzQy9nmTs12ioXdCcbVnJaPMn+fMUoQCLt60R"></script>
+<script src="escape-html.js"></script>
 <script src="supabase.js"></script>
 <script src="student-filter.js"></script>
 <script src="win-nav.js"></script>
@@ -4329,7 +4330,7 @@ async function sendTeachPr() {
 // ── Minhas Tarefas (com periodicidade / tarefas fixas) ──
 var TODO_RECUR_LABEL={none:'',daily:'Todo dia',weekly:'1x/semana',biweekly:'A cada 15 dias',monthly:'1x/mês'};
 function todoPeriodDays(r){return {daily:1,weekly:7,biweekly:15,monthly:30}[r]||0;}
-function todoEsc(x){return String(x==null?'':x).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function todoEsc(x){return String(x==null?'':x).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 // Tarefas fixas concluídas voltam a aparecer quando o período se cumpre.
 function todoRollover(list){
   var now=Date.now(),changed=false;
@@ -4603,7 +4604,7 @@ async function loadNotifications(role) {
   }
 }
 
-function notifEsc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function notifEsc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 
 function notifFormatTime(iso) {
   if (!iso) return '';
@@ -4798,7 +4799,7 @@ function nivWireControls() {
 }
 
 function nivEsc(s) {
-  return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
 // Renderiza a lista aplicando filtro de status + busca textual
@@ -6006,7 +6007,7 @@ async function confirmDeleteUser() {
 var _muFiles = { teacher: null, student: null };
 var _muList = [];
 
-function muEsc(x){ return String(x==null?'':x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function muEsc(x){ return String(x==null?'':x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 
 function muPickFile(kind){
   var input = document.getElementById(kind === 'teacher' ? 'muTeacherFile' : 'muStudentFile');
@@ -6767,8 +6768,8 @@ function renderSalaryEstimate(slots, monthInput) {
 }
 
 // ═══ SCHEDULE — agenda mobile (lista por dia) ═══
-function cEsc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){
-  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function cEsc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(ch){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
 function renderCoordSchedMobile(slots,evts){
   var box=document.getElementById('coordSchedMobileBody');
   if(!box)return;
@@ -7502,7 +7503,7 @@ function periodsForBook(book) {
 
 function docEsc(s) {
   return String(s == null ? '' : s)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
 // ── Visão A: lista de alunos ──

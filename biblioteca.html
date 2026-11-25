@@ -2185,6 +2185,7 @@ body.voc-ov-aberto .av-toast{top:16px;bottom:auto;left:50%;right:auto;transform:
   <div class="bib-view" id="v-listening"></div>
 </div>
 
+<script src="escape-html.js"></script>
 <script>
 const STORAGE = 'https://ktdrgvlyrotqpzlunlqs.supabase.co/storage/v1/object/public/worksheets';
 
@@ -2945,7 +2946,7 @@ function renderWorksheets() {
 // === MÚSICA: catálogo único com as duas versões para download ===
 function musicEsc(x){
   return String(x==null?'':x).replace(/&/g,'&amp;').replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
 async function loadMusicData(){

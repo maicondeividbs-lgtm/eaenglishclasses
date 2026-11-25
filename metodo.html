@@ -2509,6 +2509,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 
 <!-- Supabase for testimonials -->
 <script src="/supabase-js-2.117.3.min.js" integrity="sha384-BWcjm9OdFth9TbhCxZPdm+gAOUMAzQy9nmTs12ioXdCcbVnJaPMn+fMUoQCLt60R"></script>
+<script src="escape-html.js"></script>
 <script src="supabase.js"></script>
 <script>
 // ════════════════════════════════════════════════════════
@@ -2617,12 +2618,12 @@ document.addEventListener('DOMContentLoaded',()=>{
         '<div>' +
         '<div class="testimonial-quote-mark">&ldquo;</div>' +
         '<div class="testimonial-stars" style="display:flex;gap:3px;align-items:center;margin-bottom:14px">' + stars + '</div>' +
-        '<p class="testimonial-text" id="test-text-' + idx + '">' + displayText + '</p>' +
+        '<p class="testimonial-text" id="test-text-' + idx + '">' + winEscapeHtml(displayText) + '</p>' +
         (truncated ? '<button class="testimonial-readmore" data-tid="' + idx + '" type="button">Ler mais &#9662;</button>' : '') +
         '</div>' +
         '<div class="testimonial-author">' +
-        '<div class="testimonial-avatar">' + initial + '</div>' +
-        '<div class="testimonial-author-info"><p>' + t.author_name + '</p><span>Aluno WIN</span></div>' +
+        '<div class="testimonial-avatar">' + winEscapeHtml(initial) + '</div>' +
+        '<div class="testimonial-author-info"><p>' + winEscapeHtml(t.author_name || 'Aluno WIN') + '</p><span>Aluno WIN</span></div>' +
         '</div></div>';
     }).join('');
 

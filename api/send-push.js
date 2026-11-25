@@ -58,14 +58,25 @@ async function nameOf(userId) {
   return n ? String(n).trim().split(/\s+/)[0] : '';
 }
 
+// Nome completo do aluno (o professor identifica quem enviou sem abrir o app).
+async function fullNameOf(userId) {
+  if (!userId) return '';
+  const rows = await sbSelect(`profiles?id=eq.${encodeURIComponent(userId)}&select=full_name`);
+  return String((rows && rows[0] && rows[0].full_name) || '').trim();
+}
+
 // Define destinatário + conteúdo (títulos claros, humanos e informativos).
 async function resolve(table, rec, old) {
   switch (table) {
     case 'task_submissions': {
       const t = await lookupTask(rec.task_id);
       if (rec.status && rec.status !== 'pending') {
-        if (t && t.teacher_id) return { byUser: t.teacher_id, cat: 'homework',
-          title: '📚 Homework entregue', body: 'A tarefa “' + (t.title || 'homework') + '” foi entregue e está pronta para correção.' };
+        if (t && t.teacher_id) {
+          const aluno = await fullNameOf(rec.student_id);
+          return { byUser: t.teacher_id, cat: 'homework',
+            title: aluno ? '📚 ' + aluno + ' entregou um homework' : '📚 Homework entregue',
+            body: 'A tarefa “' + (t.title || 'homework') + '” foi entregue e está pronta para correção.' };
+        }
         return null;
       }
       if (!rec.student_id) return null;
@@ -79,8 +90,12 @@ async function resolve(table, rec, old) {
     case 'writing_activities':
       if (rec.status === 'graded') return { byUser: rec.student_id, cat: 'redacao', url: '/login?ir=writing', title: '✅ Redação corrigida',
         body: (rec.title ? '“' + rec.title + '” ' : 'Sua redação ') + 'recebeu comentários e nota.' };
-      if (rec.status === 'submitted') return { byUser: rec.teacher_id, cat: 'redacao', title: '✍️ Redação enviada',
-        body: 'Um aluno enviou uma redação para correção.' };
+      if (rec.status === 'submitted') {
+        const aluno = await fullNameOf(rec.student_id);
+        return { byUser: rec.teacher_id, cat: 'redacao',
+          title: aluno ? '✍️ ' + aluno + ' enviou uma redação' : '✍️ Redação enviada',
+          body: (rec.title ? '“' + rec.title + '” — ' : '') + (aluno ? 'aguardando sua correção.' : 'Um aluno enviou uma redação para correção.') };
+      }
       return { byUser: rec.student_id, cat: 'redacao', url: '/login?ir=writing', title: '✍️ Novo tema de redação',
         body: (rec.title ? '“' + rec.title + '” ' : 'Há um novo tema ') + 'para você escrever.' };
     case 'pronunciation':
@@ -112,8 +127,10 @@ async function resolve(table, rec, old) {
       // Nova pergunta (somente na criação) → notifica o PROFESSOR
       if (old) return null;                                       // updates que não são resposta não notificam
       if (!rec.teacher_id) return null;
-      return { byUser: rec.teacher_id, cat: 'pergunta', title: '❓ Nova pergunta de aluno',
-        body: (rec.subject ? '“' + rec.subject + '” — ' : '') + 'um aluno enviou uma pergunta para você.' };
+      const aluno = await fullNameOf(rec.student_id);
+      return { byUser: rec.teacher_id, cat: 'pergunta',
+        title: aluno ? '❓ ' + aluno + ' enviou uma pergunta' : '❓ Nova pergunta de aluno',
+        body: (rec.subject ? '“' + rec.subject + '” — ' : '') + (aluno ? 'aguardando sua resposta.' : 'um aluno enviou uma pergunta para você.') };
     }
     default:
       return null;

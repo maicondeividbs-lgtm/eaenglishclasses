@@ -3043,7 +3043,7 @@ function getCommentsFor(id) {
   return _wrInlineComments[id];
 }
 
-// Nota da redação no sistema brasileiro (0 a 10, de meio em meio ponto).
+// Nota da redação no sistema brasileiro (notas inteiras de 0 a 10).
 // Guarda "8.5" no banco e mostra "8,5"; notas antigas (A+, B...) aparecem como estão.
 function wrFmtGrade(g) {
   if (g == null || g === '') return '';
@@ -3052,7 +3052,7 @@ function wrFmtGrade(g) {
 }
 function wrGradeOptions() {
   var h = '<option value="" selected disabled>—</option>';
-  for (var v = 10; v >= 0; v -= 0.5) h += '<option value="' + v + '">' + wrFmtGrade(String(v)) + '</option>';
+  for (var v = 10; v >= 0; v--) h += '<option value="' + v + '">' + wrFmtGrade(String(v)) + '</option>';
   return h;
 }
 function escapeHtml(s) {

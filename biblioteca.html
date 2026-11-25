@@ -2187,7 +2187,11 @@ body.voc-ov-aberto .av-toast{top:16px;bottom:auto;left:50%;right:auto;transform:
 
 <script src="escape-html.js"></script>
 <script>
-const STORAGE = 'https://ktdrgvlyrotqpzlunlqs.supabase.co/storage/v1/object/public/worksheets';
+// Worksheets: bucket PRIVADO. Cada clique gera um link assinado com a sessão
+// de quem está logado (staff). "Abrir" vale 1 hora; "Copiar" gera um link
+// para enviar ao aluno, válido por WS_SHARE_TTL.
+const WS_OPEN_TTL = 3600;
+const WS_SHARE_TTL = 7 * 24 * 3600;
 
 // ── Atividades de música ──
 // Catálogo público. Lemos a tabela direto pela REST do Supabase, sem SDK:
@@ -2862,7 +2866,7 @@ const WS_TYPE_ICONS = {
 
 // Card de worksheet no formato clássico (1 arquivo padrão) — usado pelos livros Evolve.
 function wsCardSingle(i, levelName, levelKey, available) {
-  const path = STORAGE + '/' + levelKey + '/unit-' + String(i).padStart(2,'0') + '.pdf';
+  const path = levelKey + '/unit-' + String(i).padStart(2,'0') + '.pdf';
   if (i > available) {
     return '<div class="ws-card ws-card-soon" data-level="' + currentLevel + '">' +
       '<div class="ws-num-wrap">' + i + '</div>' +
@@ -2874,8 +2878,8 @@ function wsCardSingle(i, levelName, levelKey, available) {
     '<div class="ws-num-wrap">' + i + '</div>' +
     '<div class="ws-label">Unit ' + i + ' · ' + levelName + '</div>' +
     '<div class="ws-actions">' +
-      '<a href="' + path + '" target="_blank" rel="noopener" class="ws-btn ws-dl">' + WS_ICON_DL + 'Baixar</a>' +
-      '<button class="ws-btn ws-copy" data-copy="' + path + '" type="button">' + WS_ICON_COPY + 'Copiar</button>' +
+      '<a href="#" data-ws-open="' + escapeHtml(path) + '" class="ws-btn ws-dl">' + WS_ICON_DL + 'Baixar</a>' +
+      '<button class="ws-btn ws-copy" data-ws-copy="' + escapeHtml(path) + '" type="button">' + WS_ICON_COPY + 'Copiar</button>' +
     '</div>' +
   '</div>';
 }
@@ -2887,17 +2891,17 @@ function wsCardMulti(i, levelName, levelKey) {
   const typeAvail = WS_TYPE_AVAILABLE[levelKey] || {};
   let rows = '';
   WS_TYPE_DEFS.forEach(function(t) {
-    const path = STORAGE + '/' + levelKey + '/unit-' + nn + t.suffix + '.pdf';
+    const path = levelKey + '/unit-' + nn + t.suffix + '.pdf';
     const avail = (t.key === 'std') ? stdAvail : (typeAvail[t.key] || 0);
     const ready = i <= avail;
     if (ready) {
       rows += '<div class="ws-type ws-type-' + t.accent + '">' +
-        '<a class="ws-type-main" href="' + path + '" target="_blank" rel="noopener">' +
+        '<a class="ws-type-main" href="#" data-ws-open="' + escapeHtml(path) + '">' +
           '<span class="ws-type-ico">' + WS_TYPE_ICONS[t.accent] + '</span>' +
           '<span class="ws-type-name">' + t.label + '</span>' +
           '<span class="ws-type-dl">' + WS_ICON_DL + '</span>' +
         '</a>' +
-        '<button class="ws-type-copy" data-copy="' + path + '" type="button" title="Copiar link do worksheet ' + t.label + '">' + WS_ICON_COPY + '</button>' +
+        '<button class="ws-type-copy" data-ws-copy="' + escapeHtml(path) + '" type="button" title="Copiar link do worksheet ' + t.label + '">' + WS_ICON_COPY + '</button>' +
       '</div>';
     } else {
       rows += '<div class="ws-type ws-type-' + t.accent + ' ws-type-soon">' +
@@ -3558,6 +3562,62 @@ function avSignedHref(signedURL, nome) {
   if (!/[?&]download=/.test(u.search)) u.search = (u.search ? u.search + '&' : '?') + 'download=' + encodeURIComponent(nome);
   return u.toString();
 }
+
+// Worksheets (bucket privado): gera o link assinado na hora do clique.
+async function wsSignedUrl(path, ttl) {
+  const sess = await bibSession();
+  if (!sess) { location.replace('/login'); return null; }
+  const r = await fetch(BIB_SB + '/storage/v1/object/sign/worksheets/' + path.split('/').map(encodeURIComponent).join('/'), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', apikey: MUSIC_KEY, Authorization: 'Bearer ' + sess.access_token },
+    body: JSON.stringify({ expiresIn: ttl })
+  });
+  const d = r.ok ? await r.json() : null;
+  if (!d || !d.signedURL) return null;
+  let rel = String(d.signedURL);
+  if (/^https?:\/\//i.test(rel)) return rel;
+  if (rel.indexOf('/storage/v1') !== 0) rel = '/storage/v1' + (rel.charAt(0) === '/' ? '' : '/') + rel;
+  return new URL(BIB_SB + rel).toString();
+}
+document.addEventListener('click', async function(ev){
+  const open = ev.target.closest('[data-ws-open]');
+  const copy = !open && ev.target.closest('[data-ws-copy]');
+  const el = open || copy;
+  if (!el) return;
+  ev.preventDefault();
+  if (el.dataset.busy) return;
+  el.dataset.busy = '1';
+  // Abre a aba já no clique (senão o navegador bloqueia como pop-up) e
+  // só depois aponta para o link assinado.
+  const win = open ? window.open('', '_blank') : null;
+  if (win) win.opener = null;
+  try {
+    if (open) {
+      const url = await wsSignedUrl(el.getAttribute('data-ws-open'), WS_OPEN_TTL);
+      if (!url) { if (win) win.close(); showToast('Não foi possível abrir este worksheet agora.'); return; }
+      if (win) win.location.href = url; else location.href = url;
+    } else {
+      const done = function(){ showToast('Link copiado! Válido por 7 dias.'); };
+      const urlP = wsSignedUrl(el.getAttribute('data-ws-copy'), WS_SHARE_TTL);
+      // ClipboardItem com Promise mantém a permissão do clique (Safari/Chrome).
+      if (window.ClipboardItem && navigator.clipboard && navigator.clipboard.write) {
+        try {
+          await navigator.clipboard.write([new ClipboardItem({ 'text/plain': urlP.then(function(u){
+            if (!u) throw new Error('sign'); return new Blob([u], { type: 'text/plain' }); }) })]);
+          done(); return;
+        } catch (e) { /* cai no caminho abaixo */ }
+      }
+      const url = await urlP;
+      if (!url) { showToast('Não foi possível gerar o link agora.'); return; }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(done).catch(function(){ fallbackCopy(url, done); });
+      } else fallbackCopy(url, done);
+    }
+  } catch (e) {
+    if (win) win.close();
+    showToast('Erro de rede. Tente novamente.');
+  } finally { delete el.dataset.busy; }
+});
 
 // Download das músicas: o bucket é privado, então cada clique gera um link
 // assinado de 5 minutos com a sessão de quem está logado.
